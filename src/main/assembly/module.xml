@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.1" name="biz.paluch.logging">
+
+    <resources>
+        <resource-root path="${project.artifactId}-${project.version}.jar" />
+        <resource-root path="json-simple-${com.googlecode.json-simple.version}.jar" />
+    </resources>
+
+    <dependencies>
+        <module name="org.apache.log4j" />
+    </dependencies>
+</module>
