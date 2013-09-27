@@ -11,7 +11,7 @@
 
     <appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
         <param name="GraylogHost" value="udp:localhost" />
-        <param name="GraylogPort" value="12202" />
+        <param name="GraylogPort" value="12201" />
         <param name="Facility" value="java-test" />
         <param name="ExtractStackTrace" value="true" />
         <param name="FilterStackTrace" value="true" />

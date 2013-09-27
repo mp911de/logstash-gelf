@@ -50,7 +50,7 @@ Maven
     </dependency>
 
 
-Java Util Logging Configuration:
+Java Util Logging Configuration
 --------------
 Properties:
 
@@ -60,7 +60,7 @@ Properties:
     .level = INFO
 
     biz.paluch.logging.gelf.jul.GelfLogHandler.graylogHost=udp:localhost
-    biz.paluch.logging.gelf.jul.GelfLogHandler.graylogPort=12202
+    biz.paluch.logging.gelf.jul.GelfLogHandler.graylogPort=12201
     biz.paluch.logging.gelf.jul.GelfLogHandler.facility=java-test
     biz.paluch.logging.gelf.jul.GelfLogHandler.extractStackTrace=true
     biz.paluch.logging.gelf.jul.GelfLogHandler.filterStackTrace=true
@@ -77,7 +77,7 @@ Properties:
     log4j.appender.gelf=biz.paluch.logging.gelf.log4j.GelfLogAppender
     log4j.appender.gelf.Threshold=INFO
     log4j.appender.gelf.GraylogHost=udp:localhost
-    log4j.appender.gelf.GraylogPort=12202
+    log4j.appender.gelf.GraylogPort=12201
     log4j.appender.gelf.Facility=java-test
     log4j.appender.gelf.ExtractStackTrace=true
     log4j.appender.gelf.FilterStackTrace=true
@@ -93,7 +93,7 @@ XML:
     <appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
         <param name="Threshold" value="INFO" />
         <param name="GraylogHost" value="udp:localhost" />
-        <param name="GraylogPort" value="12202" />
+        <param name="GraylogPort" value="12201" />
         <param name="Facility" value="java-test" />
         <param name="ExtractStackTrace" value="true" />
         <param name="FilterStackTrace" value="true" />
@@ -116,7 +116,7 @@ standalone.xml
         <properties>
             <property name="threshold" value="INFO" />
             <property name="graylogHost" value="udp:localhost" />
-            <property name="graylogPort" value="12202" />
+            <property name="graylogPort" value="12201" />
             <property name="facility" value="java-test" />
             <property name="extractStackTrace" value="true" />
             <property name="filterStackTrace" value="true" />

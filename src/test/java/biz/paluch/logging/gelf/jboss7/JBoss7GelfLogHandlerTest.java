@@ -73,7 +73,7 @@ public class JBoss7GelfLogHandlerTest {
         JBoss7GelfLogHandler handler = new JBoss7GelfLogHandler();
 
         handler.setGraylogHost("udp:localhost");
-        handler.setGraylogPort(12202);
+        handler.setGraylogPort(12201);
         handler.setFacility("java-test");
         handler.setExtractStackTrace(true);
         handler.setFilterStackTrace(true);
