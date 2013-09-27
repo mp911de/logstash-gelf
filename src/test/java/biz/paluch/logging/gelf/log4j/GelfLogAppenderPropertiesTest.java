@@ -16,7 +16,7 @@ public class GelfLogAppenderPropertiesTest extends AbstractGelfLogAppenderTest {
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();
         PropertyConfigurator.configure(getClass().getResource("/log4j-test.properties"));
-        MDC.clear();
+        MDC.remove("mdcField1");
     }
 
 }

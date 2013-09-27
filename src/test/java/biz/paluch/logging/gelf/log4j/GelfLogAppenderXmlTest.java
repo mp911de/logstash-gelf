@@ -16,7 +16,7 @@ public class GelfLogAppenderXmlTest extends AbstractGelfLogAppenderTest {
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();
         DOMConfigurator.configure(getClass().getResource("/log4j.xml"));
-        MDC.clear();
+        MDC.remove("mdcField1");
     }
 
 }

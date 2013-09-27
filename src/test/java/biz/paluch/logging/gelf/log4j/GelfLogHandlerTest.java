@@ -20,7 +20,7 @@ public class GelfLogHandlerTest {
 
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/test-logging.properties"));
-        MDC.clear();
+        MDC.remove("mdcField1");
     }
 
     @Test

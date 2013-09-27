@@ -24,7 +24,7 @@ public class JBoss7GelfLogHandlerTest {
 
         LogManager.getLogManager().reset();
 
-        MDC.clear();
+        MDC.remove("mdcField1");
     }
 
     @Test
