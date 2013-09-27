@@ -79,7 +79,15 @@ public class JulLogEvent implements LogEvent {
         }
         if (parameters != null && parameters.length > 0) {
             // by default, using {0}, {1}, etc. -> MessageFormat
-            message = MessageFormat.format(message, parameters);
+
+            try {
+                message = MessageFormat.format(message, parameters);
+            } catch (IllegalFormatConversionException e) {
+                // leaving message as it is to avoid compatibility problems
+                message = record.getMessage();
+            } catch (NullPointerException e) {
+                // ignore
+            }
 
             if (message.equals(record.getMessage())) {
                 // if the text is the same, assuming this is String.format type log (%s, %d, etc.)

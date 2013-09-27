@@ -26,8 +26,7 @@ public class Log4jLogEvent implements MdcLogEvent {
 
     @Override
     public Object[] getParameters() {
-        Collection collection = loggingEvent.getProperties().values();
-        return collection.toArray(new Object[collection.size()]);
+        return new Object[0];
     }
 
     @Override
