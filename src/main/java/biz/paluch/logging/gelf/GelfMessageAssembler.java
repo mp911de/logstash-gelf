@@ -1,15 +1,15 @@
 package biz.paluch.logging.gelf;
 
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.StackTraceFilter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import org.apache.log4j.MDC;
-
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.StackTraceFilter;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -22,10 +22,11 @@ public class GelfMessageAssembler {
     public static final String PROPERTY_GRAYLOG_HOST = "graylogHost";
     public static final String PROPERTY_GRAYLOG_PORT = "graylogPort";
     public static final String PROPERTY_ORIGIN_HOST = "originHost";
-    public static final String PROPERTY_EXTRACT_STACKTRACE = "extractStacktrace";
+    public static final String PROPERTY_EXTRACT_STACKTRACE = "extractStackTrace";
     public static final String PROPERTY_FILTER_STACK_TRACE = "filterStackTrace";
-    public static final String PROPERTY_MDC_PROFILING = "mdcProfiling";
     public static final String PROPERTY_FACILITY = "facility";
+    public static final String PROPERTY_MAX_MESSAGE_SIZE = "maximumMessageSize";
+    public static final String PROPERTY_ADDITIONAL_FIELD = "additionalField.";
 
     public static final String FIELD_TIME = "Time";
     public static final String FIELD_SEVERITY = "Severity";
@@ -36,40 +37,48 @@ public class GelfMessageAssembler {
     public static final String FIELD_MESSAGE_PARAM = "MessageParam";
     public static final String FIELD_SERVER = "Server";
     public static final String FIELD_STACK_TRACE = "StackTrace";
-    public static final String PROPERTY_ADDITIONAL_FIELD = "additionalField.";
-    public static final String PROPERTY_MDC_FIELD = "mdcField.";
 
     private String graylogHost;
     private String originHost;
     private int graylogPort;
     private String facility;
-    private boolean extractStacktrace;
+    private boolean extractStackTrace;
     private boolean filterStackTrace;
+    private int maximumMessageSize;
 
-    private Map<String, String> fields;
-    private Set<String> mdcFields;
-    private boolean mdcProfiling;
+    private Map<String, String> fields = new HashMap<String, String>();
 
-    private String timestampFormatPattern = "yyyy-MM-dd HH:mm:ss,SSSS";
+    private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSSS";
 
-    public void initialize(FrameworkPropertyProvider propertyProvider) {
-        final String prefix = getClass().getName();
-
+    /**
+     * Initialize datastructure from property provider.
+     * 
+     * @param propertyProvider
+     */
+    public void initialize(PropertyProvider propertyProvider) {
         graylogHost = propertyProvider.getProperty(PROPERTY_GRAYLOG_HOST);
-        final String port = propertyProvider.getProperty(PROPERTY_GRAYLOG_PORT);
+
+        String port = propertyProvider.getProperty(PROPERTY_GRAYLOG_PORT);
         graylogPort = null == port ? 12201 : Integer.parseInt(port);
+
         originHost = propertyProvider.getProperty(PROPERTY_ORIGIN_HOST);
-        extractStacktrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PROPERTY_EXTRACT_STACKTRACE));
+        extractStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PROPERTY_EXTRACT_STACKTRACE));
         filterStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PROPERTY_FILTER_STACK_TRACE));
-        mdcProfiling = "true".equalsIgnoreCase(propertyProvider.getProperty(PROPERTY_MDC_PROFILING));
 
         setupStaticFields(propertyProvider);
-        setupMdcFields(propertyProvider);
-
         facility = propertyProvider.getProperty(PROPERTY_FACILITY);
+
+        String messageSize = propertyProvider.getProperty(PROPERTY_MAX_MESSAGE_SIZE);
+        maximumMessageSize = null == port ? 8192 : Integer.parseInt(messageSize);
     }
 
-    public GelfMessage createGelfMessage(MessageFieldProvider logEvent) {
+    /**
+     * Producte a Gelf message.
+     * 
+     * @param logEvent
+     * @return GelfMessage
+     */
+    public GelfMessage createGelfMessage(LogEvent logEvent) {
         String message = logEvent.getMessage();
 
         String shortMessage = message;
@@ -80,7 +89,7 @@ public class GelfMessageAssembler {
         final GelfMessage gelfMessage = new GelfMessage(shortMessage, message, logEvent.getLogTimestamp(),
                 logEvent.getSyslogLevel());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat(timestampFormatPattern);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(timestampPattern);
         gelfMessage.addField(FIELD_TIME, dateFormat.format(new Date(logEvent.getLogTimestamp())));
         gelfMessage.addField(FIELD_SEVERITY, logEvent.getLevelName());
 
@@ -96,7 +105,7 @@ public class GelfMessageAssembler {
         gelfMessage.addField(FIELD_SOURCE_SIMPLE_CLASS_NAME, simpleClassName);
         gelfMessage.addField(FIELD_SOURCE_METHOD_NAME, logEvent.getSourceMethodName());
 
-        if (extractStacktrace) {
+        if (extractStackTrace) {
             addStackTrace(logEvent, gelfMessage);
         }
 
@@ -114,25 +123,15 @@ public class GelfMessageAssembler {
             gelfMessage.setFacility(facility);
         }
 
-        if (mdcProfiling) {
-            GelfUtil.addMdcProfiling(gelfMessage);
-        }
-
         for (Map.Entry<String, String> entry : fields.entrySet()) {
             gelfMessage.addField(entry.getKey(), entry.getValue());
         }
 
-        for (String mdcField : mdcFields) {
-            Object value = MDC.get(mdcField);
-            if (value != null && !value.toString().equals("")) {
-                gelfMessage.addField(mdcField, value.toString());
-            }
-        }
-
+        gelfMessage.setMaximumMessageSize(maximumMessageSize);
         return gelfMessage;
     }
 
-    private void addStackTrace(MessageFieldProvider logEvent, GelfMessage gelfMessage) {
+    private void addStackTrace(LogEvent logEvent, GelfMessage gelfMessage) {
         final Throwable thrown = logEvent.getThrowable();
         if (null != thrown) {
             if (filterStackTrace) {
@@ -145,7 +144,7 @@ public class GelfMessageAssembler {
         }
     }
 
-    private void setupStaticFields(FrameworkPropertyProvider propertyProvider) {
+    private void setupStaticFields(PropertyProvider propertyProvider) {
         int fieldNumber = 0;
         fields = new HashMap<String, String>();
         while (true) {
@@ -157,20 +156,6 @@ public class GelfMessageAssembler {
             if (-1 != index) {
                 fields.put(property.substring(0, index), property.substring(index + 1));
             }
-
-            fieldNumber++;
-        }
-    }
-
-    private void setupMdcFields(FrameworkPropertyProvider propertyProvider) {
-        int fieldNumber = 0;
-        mdcFields = new HashSet<String>();
-        while (true) {
-            final String property = propertyProvider.getProperty(PROPERTY_MDC_FIELD + fieldNumber);
-            if (null == property) {
-                break;
-            }
-            mdcFields.add(property);
 
             fieldNumber++;
         }
@@ -211,12 +196,12 @@ public class GelfMessageAssembler {
         this.facility = facility;
     }
 
-    public boolean isExtractStacktrace() {
-        return extractStacktrace;
+    public boolean isExtractStackTrace() {
+        return extractStackTrace;
     }
 
-    public void setExtractStacktrace(boolean extractStacktrace) {
-        this.extractStacktrace = extractStacktrace;
+    public void setExtractStackTrace(boolean extractStackTrace) {
+        this.extractStackTrace = extractStackTrace;
     }
 
     public boolean isFilterStackTrace() {
@@ -235,20 +220,19 @@ public class GelfMessageAssembler {
         this.fields = fields;
     }
 
-    public Set<String> getMdcFields() {
-        return mdcFields;
+    public String getTimestampPattern() {
+        return timestampPattern;
     }
 
-    public void setMdcFields(Set<String> mdcFields) {
-        this.mdcFields = mdcFields;
+    public void setTimestampPattern(String timestampPattern) {
+        this.timestampPattern = timestampPattern;
     }
 
-    public boolean isMdcProfiling() {
-        return mdcProfiling;
+    public int getMaximumMessageSize() {
+        return maximumMessageSize;
     }
 
-    public void setMdcProfiling(boolean mdcProfiling) {
-        this.mdcProfiling = mdcProfiling;
+    public void setMaximumMessageSize(int maximumMessageSize) {
+        this.maximumMessageSize = maximumMessageSize;
     }
-
 }

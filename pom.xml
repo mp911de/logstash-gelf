@@ -4,13 +4,55 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <groupId>biz.paluch.logging</groupId>
     <version>1.0.0-SNAPSHOT</version>
-    <artifactId>logstash-gelf-java-logger</artifactId>
+    <artifactId>logstash-gelf-java</artifactId>
+
+    <name>logstash logging connectors</name>
+    <url>https://github.com/mp911de/logstash-gelf-java/</url>
+    <inceptionYear>2013</inceptionYear>
+
+    <scm>
+        <connection>scm:git://github.com/mp911de/logstash-gelf-java.git</connection>
+        <developerConnection>scm:git:git@github.com:mp911de/logstash-gelf-java.git</developerConnection>
+        <url>http://github.com/mp911de/logstash-gelf-java/</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/mp911de/logstash-gelf-java/issues</url>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.source>1.6</maven.compiler.source>
         <com.googlecode.json-simple.version>1.1</com.googlecode.json-simple.version>
     </properties>
+
+    <developers>
+        <developer>
+            <email>mpaluch@paluch.biz</email>
+            <name>Mark Paluch</name>
+            <timezone>Europe/Berlin</timezone>
+            <url>http://www.paluch.biz</url>
+        </developer>
+    </developers>
 
     <build>
         <resources>
@@ -34,6 +76,16 @@
                 </executions>
                 <configuration>
                     <descriptor>src/main/assembly/assembly.xml</descriptor>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <releaseProfiles>sonatype-oss-release</releaseProfiles>
+                    <goals>deploy</goals>
                 </configuration>
             </plugin>
         </plugins>

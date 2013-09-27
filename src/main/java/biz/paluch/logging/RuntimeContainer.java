@@ -1,12 +1,12 @@
 package biz.paluch.logging;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
-
-import org.apache.log4j.Logger;
 
 /**
  * Static Details about the runtime container: Hostname (simple/fqdn), Address and timestamp of the first access (time when the

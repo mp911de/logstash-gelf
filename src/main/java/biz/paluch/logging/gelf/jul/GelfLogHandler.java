@@ -8,9 +8,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.*;
 
 /**
@@ -27,7 +25,7 @@ import java.util.logging.*;
  * </li>
  * <li>graylogPort (Optional): Port, default 12201</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
- * <li>extractStacktrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
@@ -35,37 +33,21 @@ import java.util.logging.*;
  * <li>level (Optional): Log-Level, default INFO</li>
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
  * <li>additionalField.(number) (Optional): Post additional fields. Eg. .GelfLogHandler.additionalField.0=fieldName=Value</li>
- * <li>mdcField.(number) (Optional): Post additional fields, pull Values from MDC Eg. .GelfLogHandler.mdcField.0=Application</li>
- * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
- * .GelfLogHandler.mdcFields=Application,Version,SomeOtherFieldName</li>
+ * <li>additionalFields(number) (Optional): Post additional fields. Eg.
+ * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
  * </ul>
- * <p/>
- * <a name="mdcProfiling"></a>
- * <h2>MDC Profiling</h2>
- * <p>
- * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must
- * set one valuev in the MDC:
- * <ul>
- * <li>profiling.requestStart.millis: Time Millis of the Request-Start (Long or String)</li>
- * </ul>
- * <p/>
- * Two values are set by the Log Appender:
- * <ul>
- * <li>profiling.requestEnd: End-Time of the Request-End in Date.toString-representation</li>
- * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
- * </ul>
- * <p/>
  * </p>
  */
 public class GelfLogHandler extends Handler {
 
-    private GelfSender gelfSender;
-    private GelfMessageAssembler gelfMessageAssembler;
+    protected GelfSender gelfSender;
+    protected GelfMessageAssembler gelfMessageAssembler;
 
     public GelfLogHandler() {
-        gelfMessageAssembler = new GelfMessageAssembler();
+        gelfMessageAssembler = createGelfMessageAssembler();
 
-        JulFrameworkPropertyProvider propertyProvider = new JulFrameworkPropertyProvider(GelfLogHandler.class);
+        JulPropertyProvider propertyProvider = new JulPropertyProvider(GelfLogHandler.class);
+        gelfMessageAssembler.initialize(propertyProvider);
 
         final String level = propertyProvider.getProperty("level");
         if (null != level) {
@@ -84,7 +66,7 @@ public class GelfLogHandler extends Handler {
             // ignore
         }
         // This only used for testing
-        final String testSender = propertyProvider.getProperty("graylogTestSenderClass");
+        final String testSender = propertyProvider.getProperty("testSenderClass");
         try {
             if (null != testSender) {
                 final Class clazz = ClassLoader.getSystemClassLoader().loadClass(testSender);
@@ -94,6 +76,10 @@ public class GelfLogHandler extends Handler {
             // ignore
         }
 
+    }
+
+    protected GelfMessageAssembler createGelfMessageAssembler() {
+        return new GelfMessageAssembler();
     }
 
     @Override
@@ -111,8 +97,8 @@ public class GelfLogHandler extends Handler {
                 reportError("Graylog2 hostname is empty!", null, 1);
             } else {
                 try {
-                    this.gelfSender = GelfSenderFactory
-                            .createSender(gelfMessageAssembler.getGraylogHost(), gelfMessageAssembler.getGraylogPort());
+                    this.gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler.getGraylogHost(),
+                            gelfMessageAssembler.getGraylogPort());
                 } catch (UnknownHostException e) {
                     reportError("Unknown Graylog2 hostname:" + gelfMessageAssembler.getGraylogHost(), e,
                             ErrorManager.WRITE_FAILURE);
@@ -146,8 +132,8 @@ public class GelfLogHandler extends Handler {
         }
     }
 
-    private GelfMessage createGelfMessage(final LogRecord record) {
-        return gelfMessageAssembler.createGelfMessage(new JulLogRecordEventProvider(record));
+    protected GelfMessage createGelfMessage(final LogRecord record) {
+        return gelfMessageAssembler.createGelfMessage(new JulLogEvent(record));
     }
 
     public void setAdditionalFields(String fieldSpec) {
@@ -160,16 +146,6 @@ public class GelfLogHandler extends Handler {
                 gelfMessageAssembler.getFields().put(field.substring(0, index), field.substring(index + 1));
             }
         }
-    }
-
-    public void setMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(",");
-
-        Set<String> mdcFields = new HashSet<String>();
-        for (String field : fields) {
-            mdcFields.add(field.trim());
-        }
-        gelfMessageAssembler.setMdcFields(mdcFields);
     }
 
     public String getGraylogHost() {
@@ -204,12 +180,12 @@ public class GelfLogHandler extends Handler {
         gelfMessageAssembler.setFacility(facility);
     }
 
-    public boolean isExtractStacktrace() {
-        return gelfMessageAssembler.isExtractStacktrace();
+    public boolean isExtractStackTrace() {
+        return gelfMessageAssembler.isExtractStackTrace();
     }
 
-    public void setExtractStacktrace(boolean extractStacktrace) {
-        gelfMessageAssembler.setExtractStacktrace(extractStacktrace);
+    public void setExtractStackTrace(boolean extractStacktrace) {
+        gelfMessageAssembler.setExtractStackTrace(extractStacktrace);
     }
 
     public boolean isFilterStackTrace() {
@@ -228,19 +204,31 @@ public class GelfLogHandler extends Handler {
         gelfMessageAssembler.setFields(fields);
     }
 
-    public Set<String> getMdcFields() {
-        return gelfMessageAssembler.getMdcFields();
+    public String getTimestampPattern() {
+        return gelfMessageAssembler.getTimestampPattern();
     }
 
-    public void setMdcFields(Set<String> mdcFields) {
-        gelfMessageAssembler.setMdcFields(mdcFields);
+    public void setTimestampPattern(String timestampPattern) {
+        gelfMessageAssembler.setTimestampPattern(timestampPattern);
     }
 
-    public boolean isMdcProfiling() {
-        return gelfMessageAssembler.isMdcProfiling();
+    public int getMaximumMessageSize() {
+        return gelfMessageAssembler.getMaximumMessageSize();
     }
 
-    public void setMdcProfiling(boolean mdcProfiling) {
-        gelfMessageAssembler.setMdcProfiling(mdcProfiling);
+    public void setMaximumMessageSize(int maximumMessageSize) {
+        gelfMessageAssembler.setMaximumMessageSize(maximumMessageSize);
+    }
+
+    public void setTestSenderClass(String testSender) {
+        // This only used for testing
+        try {
+            if (null != testSender) {
+                final Class clazz = Class.forName(testSender);
+                gelfSender = (GelfSender) clazz.newInstance();
+            }
+        } catch (final Exception e) {
+            // ignore
+        }
     }
 }

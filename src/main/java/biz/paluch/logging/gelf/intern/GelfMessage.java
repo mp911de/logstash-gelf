@@ -19,8 +19,7 @@ public class GelfMessage {
 
     private static final String ID_NAME = "id";
     private static final String GELF_VERSION = "1.0";
-    private static final byte[] GELF_CHUNKED_ID = new byte[]{0x1e, 0x0f};
-    private static final int MAXIMUM_CHUNK_SIZE = 8192;
+    private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
     private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
 
     private String version = GELF_VERSION;
@@ -31,30 +30,24 @@ public class GelfMessage {
     private long javaTimestamp;
     private String level;
     private String facility = "gelf-java";
-    private String line;
-    private String file;
-    private Map<String, Object> additonalFields = new HashMap<String, Object>();
+    private Map<String, String> additonalFields = new HashMap<String, String>();
+    private int maximumMessageSize = 8192;
 
     public GelfMessage() {
     }
 
     public GelfMessage(String shortMessage, String fullMessage, long timestamp, String level) {
-        this(shortMessage, fullMessage, timestamp, level, null, null);
-    }
 
-    public GelfMessage(String shortMessage, String fullMessage, Long timestamp, String level, String line, String file) {
         this.shortMessage = shortMessage;
         this.fullMessage = fullMessage;
         this.javaTimestamp = timestamp;
         this.level = level;
-        this.line = line;
-        this.file = file;
     }
 
     public String toJson() {
         Map<String, Object> map = new HashMap<String, Object>();
 
-       // map.put("version", getVersion());
+        // map.put("version", getVersion());
         map.put("host", getHost());
         map.put("short_message", getShortMessage());
         map.put("full_message", getFullMessage());
@@ -62,14 +55,8 @@ public class GelfMessage {
 
         map.put("level", getLevel());
         map.put("facility", getFacility());
-        if (null != getFile()) {
-            map.put("file", getFile());
-        }
-        if (null != getLine()) {
-            map.put("line", getLine());
-        }
 
-        for (Map.Entry<String, Object> additionalField : additonalFields.entrySet()) {
+        for (Map.Entry<String, String> additionalField : additonalFields.entrySet()) {
             if (!ID_NAME.equals(additionalField.getKey())) {
                 map.put("_" + additionalField.getKey(), additionalField.getValue());
             }
@@ -81,13 +68,13 @@ public class GelfMessage {
     public ByteBuffer[] toUDPBuffers() {
         byte[] messageBytes = gzipMessage(toJson());
         // calculate the length of the datagrams array
-        int diagrams_length = messageBytes.length / MAXIMUM_CHUNK_SIZE;
+        int diagrams_length = messageBytes.length / maximumMessageSize;
         // In case of a remainder, due to the integer division, add a extra datagram
-        if (messageBytes.length % MAXIMUM_CHUNK_SIZE != 0) {
+        if (messageBytes.length % maximumMessageSize != 0) {
             diagrams_length++;
         }
         ByteBuffer[] datagrams = new ByteBuffer[diagrams_length];
-        if (messageBytes.length > MAXIMUM_CHUNK_SIZE) {
+        if (messageBytes.length > maximumMessageSize) {
             sliceDatagrams(messageBytes, datagrams);
         } else {
             datagrams[0] = ByteBuffer.allocate(messageBytes.length);
@@ -103,7 +90,7 @@ public class GelfMessage {
             // Do not use GZIP, as the headers will contain \0 bytes
             // graylog2-server uses \0 as a delimiter for TCP frames
             // see: https://github.com/Graylog2/graylog2-server/issues/127
-            String json = toJson() ;
+            String json = toJson();
             json += '\0';
             messageBytes = json.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -126,17 +113,16 @@ public class GelfMessage {
 
     private void sliceDatagrams(byte[] messageBytes, ByteBuffer[] datagrams) {
         int messageLength = messageBytes.length;
-        byte[] messageId = ByteBuffer.allocate(8)
-                .putInt(getCurrentMillis())       // 4 least-significant-bytes of the time in millis
-                .put(hostBytes)                                // 4 least-significant-bytes of the host
+        byte[] messageId = ByteBuffer.allocate(8).putInt(getCurrentMillis()) // 4 least-significant-bytes of the time in millis
+                .put(hostBytes) // 4 least-significant-bytes of the host
                 .array();
 
         // Reuse length of datagrams array since this is supposed to be the correct number of datagrams
         int num = datagrams.length;
         for (int idx = 0; idx < num; idx++) {
-            byte[] header = concatByteArray(GELF_CHUNKED_ID, concatByteArray(messageId, new byte[]{(byte) idx, (byte) num}));
-            int from = idx * MAXIMUM_CHUNK_SIZE;
-            int to = from + MAXIMUM_CHUNK_SIZE;
+            byte[] header = concatByteArray(GELF_CHUNKED_ID, concatByteArray(messageId, new byte[] { (byte) idx, (byte) num }));
+            int from = idx * maximumMessageSize;
+            int to = from + maximumMessageSize;
             if (to >= messageLength) {
                 to = messageLength;
             }
@@ -243,37 +229,16 @@ public class GelfMessage {
         this.facility = facility;
     }
 
-    public String getLine() {
-        return line;
-    }
-
-    public void setLine(String line) {
-        this.line = line;
-    }
-
-    public String getFile() {
-        return file;
-    }
-
-    public void setFile(String file) {
-        this.file = file;
-    }
-
     public GelfMessage addField(String key, String value) {
         getAdditonalFields().put(key, value);
         return this;
     }
 
-    public GelfMessage addField(String key, Object value) {
-        getAdditonalFields().put(key, value);
-        return this;
-    }
-
-    public Map<String, Object> getAdditonalFields() {
+    public Map<String, String> getAdditonalFields() {
         return additonalFields;
     }
 
-    public void setAdditonalFields(Map<String, Object> additonalFields) {
+    public void setAdditonalFields(Map<String, String> additonalFields) {
         this.additonalFields = additonalFields;
     }
 
@@ -293,5 +258,17 @@ public class GelfMessage {
         byte[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;
+    }
+
+    public int getMaximumMessageSize() {
+        return maximumMessageSize;
+    }
+
+    public void setMaximumMessageSize(int maximumMessageSize) {
+        this.maximumMessageSize = maximumMessageSize;
+    }
+
+    public String getField(String fieldName) {
+        return getAdditonalFields().get(fieldName);
     }
 }

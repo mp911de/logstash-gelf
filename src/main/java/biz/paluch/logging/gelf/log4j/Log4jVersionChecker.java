@@ -1,9 +1,9 @@
 package biz.paluch.logging.gelf.log4j;
 
-import org.apache.log4j.spi.LoggingEvent;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import org.apache.log4j.spi.LoggingEvent;
 
 public class Log4jVersionChecker {
 
@@ -11,7 +11,7 @@ public class Log4jVersionChecker {
 
     static {
         Method[] declaredMethods = LoggingEvent.class.getDeclaredMethods();
-        for(Method m : declaredMethods) {
+        for (Method m : declaredMethods) {
             if (m.getName().equals("getTimeStamp")) {
                 methodGetTimeStamp = m;
                 break;
@@ -22,7 +22,7 @@ public class Log4jVersionChecker {
     public static long getTimeStamp(LoggingEvent event) {
 
         long timeStamp = 0;
-        if(methodGetTimeStamp != null) {
+        if (methodGetTimeStamp != null) {
 
             try {
                 timeStamp = (Long) methodGetTimeStamp.invoke(event);

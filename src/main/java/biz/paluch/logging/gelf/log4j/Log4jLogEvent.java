@@ -1,21 +1,21 @@
 package biz.paluch.logging.gelf.log4j;
 
-import java.util.Collection;
-
-import biz.paluch.logging.gelf.MessageFieldProvider;
+import biz.paluch.logging.gelf.MdcLogEvent;
+import org.apache.log4j.Level;
 import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
+
+import java.util.Collection;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 15:37
  */
-public class Log4jLoggingEventProvider implements MessageFieldProvider
-{
+public class Log4jLogEvent implements MdcLogEvent {
     private LoggingEvent loggingEvent;
 
-    public Log4jLoggingEventProvider(LoggingEvent loggingEvent) {
+    public Log4jLogEvent(LoggingEvent loggingEvent) {
         this.loggingEvent = loggingEvent;
     }
 
@@ -57,7 +57,7 @@ public class Log4jLoggingEventProvider implements MessageFieldProvider
 
     @Override
     public String getSyslogLevel() {
-        return null;
+        return "" + levelToSyslogLevel(loggingEvent.getLevel());
     }
 
     @Override
@@ -77,5 +77,28 @@ public class Log4jLoggingEventProvider implements MessageFieldProvider
             return locationInfo.getMethodName();
         }
         return "";
+    }
+
+    @Override
+    public Object getMDC(String item) {
+        return loggingEvent.getMDC(item);
+    }
+
+    private int levelToSyslogLevel(final Level level) {
+        final int syslogLevel;
+
+        switch (level.toInt()) {
+            case Level.FATAL_INT:
+                return 2;
+            case Level.ERROR_INT:
+                return 3;
+            case Level.WARN_INT:
+                return 4;
+            case Level.INFO_INT:
+                return 6;
+            default:
+                return 7;
+
+        }
     }
 }

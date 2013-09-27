@@ -1,21 +1,17 @@
 package biz.paluch.logging.gelf.log4j;
 
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import biz.paluch.logging.gelf.jul.JulPropertyProvider;
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.spi.LoggingEvent;
+
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-
-import biz.paluch.logging.gelf.jul.JulFrameworkPropertyProvider;
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.spi.LoggingEvent;
-
-import biz.paluch.logging.gelf.GelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -31,24 +27,24 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
  * </li>
  * <li>graylogPort (Optional): Port, default 12201</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
- * <li>extractStacktrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
- * <li>level (Optional): Log-Level, default INFO</li>
+ * <li>threshold (Optional): Log-Level, default INFO</li>
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
  * <li>additionalField.(number) (Optional): Post additional fields. Eg. .GelfLogHandler.additionalField.0=fieldName=Value</li>
  * <li>mdcField.(number) (Optional): Post additional fields, pull Values from MDC Eg. .GelfLogHandler.mdcField.0=Application</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
- * .GelfLogHandler.mdcFields=Application,Version,SomeOtherFieldName</li>
+ * mdcFields=Application,Version,SomeOtherFieldName</li>
  * </ul>
  * <p/>
  * <a name="mdcProfiling"></a>
  * <h2>MDC Profiling</h2>
  * <p>
  * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must
- * set one valuev in the MDC:
+ * set one value in the MDC:
  * <ul>
  * <li>profiling.requestStart.millis: Time Millis of the Request-Start (Long or String)</li>
  * </ul>
@@ -63,25 +59,13 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
  */
 public class GelfLogAppender extends AppenderSkeleton {
 
-    private GelfSender gelfSender;
-    private GelfMessageAssembler gelfMessageAssembler;
+    protected GelfSender gelfSender;
+    protected MdcGelfMessageAssembler gelfMessageAssembler;
 
     public GelfLogAppender() {
-        gelfMessageAssembler = new GelfMessageAssembler();
+        gelfMessageAssembler = new MdcGelfMessageAssembler();
 
-        JulFrameworkPropertyProvider propertyProvider = new JulFrameworkPropertyProvider(GelfLogAppender.class);
-
-        // This only used for testing
-        final String testSender = propertyProvider.getProperty("graylogTestSenderClass");
-        try {
-            if (null != testSender) {
-                final Class clazz = ClassLoader.getSystemClassLoader().loadClass(testSender);
-                gelfSender = (GelfSender) clazz.newInstance();
-            }
-        } catch (final Exception e) {
-            // ignore
-        }
-
+        JulPropertyProvider propertyProvider = new JulPropertyProvider(GelfLogAppender.class);
     }
 
     @Override
@@ -138,8 +122,8 @@ public class GelfLogAppender extends AppenderSkeleton {
         }
     }
 
-    private GelfMessage createGelfMessage(final LoggingEvent loggingEvent) {
-        return gelfMessageAssembler.createGelfMessage(new Log4jLoggingEventProvider(loggingEvent));
+    protected GelfMessage createGelfMessage(final LoggingEvent loggingEvent) {
+        return gelfMessageAssembler.createGelfMessage(new Log4jLogEvent(loggingEvent));
     }
 
     public void setAdditionalFields(String fieldSpec) {
@@ -196,12 +180,12 @@ public class GelfLogAppender extends AppenderSkeleton {
         gelfMessageAssembler.setFacility(facility);
     }
 
-    public boolean isExtractStacktrace() {
-        return gelfMessageAssembler.isExtractStacktrace();
+    public boolean isExtractStackTrace() {
+        return gelfMessageAssembler.isExtractStackTrace();
     }
 
-    public void setExtractStacktrace(boolean extractStacktrace) {
-        gelfMessageAssembler.setExtractStacktrace(extractStacktrace);
+    public void setExtractStackTrace(boolean extractStacktrace) {
+        gelfMessageAssembler.setExtractStackTrace(extractStacktrace);
     }
 
     public boolean isFilterStackTrace() {
@@ -212,27 +196,39 @@ public class GelfLogAppender extends AppenderSkeleton {
         gelfMessageAssembler.setFilterStackTrace(filterStackTrace);
     }
 
-    public Map<String, String> getFields() {
-        return gelfMessageAssembler.getFields();
-    }
-
-    public void setFields(Map<String, String> fields) {
-        gelfMessageAssembler.setFields(fields);
-    }
-
-    public Set<String> getMdcFields() {
-        return gelfMessageAssembler.getMdcFields();
-    }
-
-    public void setMdcFields(Set<String> mdcFields) {
-        gelfMessageAssembler.setMdcFields(mdcFields);
-    }
-
     public boolean isMdcProfiling() {
         return gelfMessageAssembler.isMdcProfiling();
     }
 
     public void setMdcProfiling(boolean mdcProfiling) {
         gelfMessageAssembler.setMdcProfiling(mdcProfiling);
+    }
+
+    public String getTimestampPattern() {
+        return gelfMessageAssembler.getTimestampPattern();
+    }
+
+    public void setTimestampPattern(String timestampPattern) {
+        gelfMessageAssembler.setTimestampPattern(timestampPattern);
+    }
+
+    public int getMaximumMessageSize() {
+        return gelfMessageAssembler.getMaximumMessageSize();
+    }
+
+    public void setMaximumMessageSize(int maximumMessageSize) {
+        gelfMessageAssembler.setMaximumMessageSize(maximumMessageSize);
+    }
+
+    public void setTestSenderClass(String testSender) {
+        // This only used for testing
+        try {
+            if (null != testSender) {
+                final Class clazz = Class.forName(testSender);
+                gelfSender = (GelfSender) clazz.newInstance();
+            }
+        } catch (final Exception e) {
+            // ignore
+        }
     }
 }

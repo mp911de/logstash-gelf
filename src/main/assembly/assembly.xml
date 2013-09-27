@@ -26,7 +26,6 @@
         <dependencySet>
             <outputDirectory>/biz/paluch/logging/main</outputDirectory>
             <includes>
-                <include>org.graylog2:gelfj</include>
                 <include>com.googlecode.json-simple:json-simple</include>
             </includes>
         </dependencySet>
@@ -36,7 +35,7 @@
         <file>
             <source>src/main/assembly/module.xml</source>
             <filtered>true</filtered>
-            <outputDirectory>/biz/paluch/logging//main</outputDirectory>
+            <outputDirectory>/biz/paluch/logging/main</outputDirectory>
         </file>
     </files>
 </assembly>

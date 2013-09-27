@@ -1,7 +1,5 @@
 package biz.paluch.logging.gelf.jul;
 
-import biz.paluch.logging.gelf.MessageFieldProvider;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -12,17 +10,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import biz.paluch.logging.gelf.LogEvent;
+
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 15:22
  */
-public class JulLogRecordEventProvider implements MessageFieldProvider
-{
+public class JulLogEvent implements LogEvent {
     private static Map<String, String> threadNameCache = new ConcurrentHashMap<String, String>();
 
     private LogRecord logRecord;
 
-    public JulLogRecordEventProvider(LogRecord logRecord) {
+    public JulLogEvent(LogRecord logRecord) {
         this.logRecord = logRecord;
     }
 
