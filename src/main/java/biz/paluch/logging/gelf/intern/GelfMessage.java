@@ -29,7 +29,7 @@ public class GelfMessage {
     private String fullMessage;
     private long javaTimestamp;
     private String level;
-    private String facility = "gelf-java";
+    private String facility = "logstash-gelf";
     private Map<String, String> additonalFields = new HashMap<String, String>();
     private int maximumMessageSize = 8192;
 

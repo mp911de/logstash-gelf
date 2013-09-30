@@ -1,4 +1,4 @@
-logstash-gelf-java
+logstash-gelf
 =========================
 Provides logging to logstash using the Graylog Extended Logging Format (GELF). This implementation comes with support for three areas:
 
@@ -19,7 +19,7 @@ Following settings can be used:
 * extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false
 * filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
 * mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false
-* facility (Optional): Name of the Facility, default gelf-java
+* facility (Optional): Name of the Facility, default logstash-gelf
 * threshold/level (Optional): Log-Level, default INFO
 * filter (Optional): Class-Name of a Log-Filter, default none
 * additionalFields (Optional): Post additional fields. Eg. .GelfLogHandler.additionalFields=fieldName=Value
@@ -41,13 +41,24 @@ profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)
 Including it in your project
 --------------
 
-Maven
+Maven:
 
     <dependency>
         <groupId>biz.paluch.logging</groupId>
-        <version>1.0.0-SNAPSHOT</version>
-        <artifactId>logstash-gelf-java</artifactId>
+        <version>1.0.0</version>
+        <artifactId>logstash-gelf</artifactId>
     </dependency>
+
+JBoss Module Download:
+
+    <dependency>
+        <groupId>biz.paluch.logging</groupId>
+        <version>1.0.0</version>
+        <artifactId>logstash-gelf</artifactId>
+        <classifier>module</classifier>
+    </dependency>
+
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.0.0/logstash-gelf-1.0.0-module.zip
 
 
 Java Util Logging Configuration
@@ -107,7 +118,7 @@ XML:
 
 JBoss 7 Configuration
 --------------
-You need to include the library as module, then add following lines to your configuration:
+You need to include the library as module (see download above), then add following lines to your configuration:
 
 standalone.xml
 

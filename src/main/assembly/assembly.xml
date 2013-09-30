@@ -17,6 +17,7 @@
             </includes>
             <excludes>
                 <exclude>*sources*</exclude>
+                <exclude>*javadoc*</exclude>
                 <exclude>*tests*</exclude>
             </excludes>
         </fileSet>

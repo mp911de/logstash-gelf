@@ -12,22 +12,22 @@
 
     <groupId>biz.paluch.logging</groupId>
     <version>1.0.0-SNAPSHOT</version>
-    <artifactId>logstash-gelf-java</artifactId>
+    <artifactId>logstash-gelf</artifactId>
 
     <name>logstash logging connectors</name>
-    <url>https://github.com/mp911de/logstash-gelf-java/</url>
+    <url>https://github.com/mp911de/logstash-gelf/</url>
     <inceptionYear>2013</inceptionYear>
 
     <scm>
-        <connection>scm:git://github.com/mp911de/logstash-gelf-java.git</connection>
-        <developerConnection>scm:git:git@github.com:mp911de/logstash-gelf-java.git</developerConnection>
+        <connection>scm:git://github.com/mp911de/logstash-gelf.git</connection>
+        <developerConnection>scm:git:git@github.com:mp911de/logstash-gelf.git</developerConnection>
         <url>http://github.com/mp911de/logstash-gelf-java/</url>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/mp911de/logstash-gelf-java/issues</url>
+        <url>https://github.com/mp911de/logstash-gelf/issues</url>
     </issueManagement>
 
     <licenses>
@@ -70,12 +70,14 @@
                         <id>dist-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>assembly</goal>
+                            <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
                     <descriptor>src/main/assembly/assembly.xml</descriptor>
+                    <attach>true</attach>
+                    <classifier>module</classifier>
                 </configuration>
             </plugin>
 
