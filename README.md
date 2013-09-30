@@ -55,10 +55,10 @@ JBoss Module Download:
         <groupId>biz.paluch.logging</groupId>
         <version>1.0.0</version>
         <artifactId>logstash-gelf</artifactId>
-        <classifier>module</classifier>
+        <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.0.0/logstash-gelf-1.0.0-module.zip
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.0.0/logstash-gelf-1.0.0-logging-module.zip
 
 
 Java Util Logging Configuration
