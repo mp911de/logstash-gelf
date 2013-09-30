@@ -33,8 +33,6 @@ import java.util.logging.*;
  * <li>level (Optional): Log-Level, default INFO</li>
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
  * <li>additionalField.(number) (Optional): Post additional fields. Eg. .GelfLogHandler.additionalField.0=fieldName=Value</li>
- * <li>additionalFields(number) (Optional): Post additional fields. Eg.
- * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
  * </ul>
  * </p>
  */

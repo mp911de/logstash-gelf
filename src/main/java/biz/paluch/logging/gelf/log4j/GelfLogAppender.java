@@ -34,8 +34,8 @@ import java.util.Set;
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>threshold (Optional): Log-Level, default INFO</li>
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
- * <li>additionalField.(number) (Optional): Post additional fields. Eg. .GelfLogHandler.additionalField.0=fieldName=Value</li>
- * <li>mdcField.(number) (Optional): Post additional fields, pull Values from MDC Eg. .GelfLogHandler.mdcField.0=Application</li>
+ * <li>additionalFields(number) (Optional): Post additional fields. Eg.
+  * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * mdcFields=Application,Version,SomeOtherFieldName</li>
  * </ul>
@@ -64,8 +64,6 @@ public class GelfLogAppender extends AppenderSkeleton {
 
     public GelfLogAppender() {
         gelfMessageAssembler = new MdcGelfMessageAssembler();
-
-        JulPropertyProvider propertyProvider = new JulPropertyProvider(GelfLogAppender.class);
     }
 
     @Override
