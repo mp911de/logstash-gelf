@@ -5,6 +5,8 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF). T
 * Java Util Logging
 * log4j 1.2.x
 * JBoss 7 (mix of Java Util Logging with log4j MDC)
+ 
+Snap-CI: [![Build Status](https://snap-ci.com/POmpG5OoXqifv_rjGSisv-wer9OYazjEtkuDT_7rrPA/build_image)](https://snap-ci.com/projects/mp911de/logstash-gelf/build_history)
 
 
 Settings
