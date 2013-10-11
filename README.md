@@ -2,10 +2,10 @@ logstash-gelf [![Build Status](https://snap-ci.com/POmpG5OoXqifv_rjGSisv-wer9OYa
 =========================
 Provides logging to logstash using the Graylog Extended Logging Format (GELF). This implementation comes with support for three areas:
 
-* Java Util Logging
-* log4j 1.2.x
-* JBoss 7 (mix of Java Util Logging with log4j MDC)
-* Logback
+* [Java Util Logging](#jul)
+* [log4j 1.2.x](#log4j)
+* [JBoss 7 (mix of Java Util Logging with log4j MDC)](#jbossas7)
+* [Logback](#logback)
 
 
 Settings
@@ -46,7 +46,7 @@ Maven:
 
     <dependency>
         <groupId>biz.paluch.logging</groupId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <artifactId>logstash-gelf</artifactId>
     </dependency>
 
@@ -54,15 +54,15 @@ JBoss Module Download:
 
     <dependency>
         <groupId>biz.paluch.logging</groupId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <artifactId>logstash-gelf</artifactId>
         <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.0.0/logstash-gelf-1.0.0-logging-module.zip
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.1.0/logstash-gelf-1.1.0-logging-module.zip
 
 
-Java Util Logging Configuration
+<a name="jul"/>Java Util Logging configuration
 --------------
 Properties:
 
@@ -82,7 +82,8 @@ Properties:
     biz.paluch.logging.gelf.jul.GelfLogHandler.level=INFO
 
 
-log4j Configuration
+<a name="log4j"/>
+log4j configuration
 --------------
 Properties:
 
@@ -116,8 +117,8 @@ XML:
         <param name="MdcFields" value="mdcField1,mdcField2" />
     </appender>
 
-
-JBoss 7 Configuration
+<a name="jbossas7"/>
+JBoss 7 configuration
 --------------
 You need to include the library as module (see download above), then add following lines to your configuration:
 
@@ -140,6 +141,7 @@ standalone.xml
         </properties>
     </custom-handler>
 
+<a name="logback"/>
 Logback configuration
 --------------
 logback.xml Example:
@@ -176,3 +178,5 @@ License
 -------
 * [The MIT License (MIT)] (http://opensource.org/licenses/MIT)
 * Contains also code from https://github.com/t0xa/gelfj
+
+
