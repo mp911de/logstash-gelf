@@ -5,6 +5,7 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF). T
 * Java Util Logging
 * log4j 1.2.x
 * JBoss 7 (mix of Java Util Logging with log4j MDC)
+* Logback
 
 
 Settings
@@ -139,7 +140,37 @@ standalone.xml
         </properties>
     </custom-handler>
 
+Logback configuration
+--------------
+logback.xml Example:
 
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <!DOCTYPE configuration>
+
+    <configuration>
+        <contextName>test</contextName>
+        <jmxConfigurator/>
+
+        <appender name="gelf" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
+            <graylogHost>udp:localhost</graylogHost>
+            <graylogPort>12201</graylogPort>
+            <facility>java-test</facility>
+            <extractStackTrace>true</extractStackTrace>
+            <filterStackTrace>true</filterStackTrace>
+            <mdcProfiling>true</mdcProfiling>
+            <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
+            <maximumMessageSize>8192</maximumMessageSize>
+            <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
+            <mdcFields>mdcField1,mdcField2</mdcFields>
+            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+                <level>INFO</level>
+            </filter>
+        </appender>
+
+        <root level="DEBUG">
+            <appender-ref ref="gelf" />
+        </root>
+    </configuration>
 
 License
 -------
