@@ -5,8 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import ch.qos.logback.classic.Logger;
 import org.junit.Test;
-import org.slf4j.Logger;
 import org.slf4j.MDC;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;

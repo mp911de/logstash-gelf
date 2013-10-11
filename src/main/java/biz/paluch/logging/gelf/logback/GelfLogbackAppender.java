@@ -31,8 +31,7 @@ import ch.qos.logback.core.AppenderBase;
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
- * <li>threshold (Optional): Log-Level, default INFO</li>
- * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
+ * <li>filter (Optional): logback filter (incl. log level)</li>
  * <li>additionalFields(number) (Optional): Post additional fields. Eg.
  * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
@@ -55,7 +54,7 @@ import ch.qos.logback.core.AppenderBase;
  * </ul>
  * <p/>
  * </p>
- * 
+ *
  * @author <a href="mailto:tobiassebastian.kaefer@1und1.de">Tobias Kaefer</a>
  * @since 2013-10-08
  */
@@ -106,7 +105,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> {
     }
 
     private void reportError(String message, Exception exception) {
-        System.out.print(message + exception.getCause());
+        addError(message, exception);
     }
 
     protected GelfMessage createGelfMessage(final ILoggingEvent loggingEvent) {
@@ -215,7 +214,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> {
                 gelfSender = (GelfSender) clazz.newInstance();
             }
         } catch (final Exception e) {
-            // ignore
+            reportError("Could not instantiate the testSenderClass", e);
         }
     }
 }
