@@ -49,10 +49,10 @@ public class RuntimeContainer {
 
         FIRST_ACCESS = System.currentTimeMillis();
 
-        String myHostName = "";
-        String myFQDNHostName = "";
+        String myHostName = "aaa";
+        String myFQDNHostName = "aaa";
         String myAddress = "";
-        try {
+        /*try {
 
             InetAddress inetAddress = getInetAddressWithHostname();
 
@@ -66,7 +66,7 @@ public class RuntimeContainer {
         } catch (IOException e) {
             LOGGER.info(e.getMessage(), e);
         }
-
+          */
         FQDN_HOSTNAME = myFQDNHostName;
         HOSTNAME = myHostName;
         ADDRESS = myAddress;

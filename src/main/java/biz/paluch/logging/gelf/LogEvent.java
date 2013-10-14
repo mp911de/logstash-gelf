@@ -9,18 +9,11 @@ public interface LogEvent {
 
     Object[] getParameters();
 
-    String getThreadName();
-
     Throwable getThrowable();
 
     long getLogTimestamp();
 
-    String getLevelName();
-
     String getSyslogLevel();
 
-    String getSourceClassName();
-
-    String getSourceMethodName();
-
+    String getValue(MessageField field);
 }

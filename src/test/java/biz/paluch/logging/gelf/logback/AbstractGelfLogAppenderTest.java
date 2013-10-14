@@ -1,18 +1,17 @@
 package biz.paluch.logging.gelf.logback;
 
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.log4j.GelfTestSender;
+import biz.paluch.logging.gelf.log4j.MdcGelfMessageAssembler;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import org.junit.Test;
+import org.slf4j.MDC;
+
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
-import ch.qos.logback.classic.Logger;
-import org.junit.Test;
-import org.slf4j.MDC;
-
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.log4j.GelfTestSender;
-import biz.paluch.logging.gelf.log4j.MdcGelfMessageAssembler;
-import ch.qos.logback.classic.LoggerContext;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -66,8 +65,7 @@ public abstract class AbstractGelfLogAppenderTest {
                 gelfMessage.getField(MdcGelfMessageAssembler.FIELD_SOURCE_CLASS_NAME));
         assertEquals("testException", gelfMessage.getField(MdcGelfMessageAssembler.FIELD_SOURCE_METHOD_NAME));
 
-        assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE),
-                containsString("this is an exception"));
+        assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("this is an exception"));
         assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("skipped"));
         assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("skipped"));
 

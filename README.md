@@ -11,11 +11,11 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF). T
 Settings
 --------------
 Following settings can be used:
-* graylogHost (Mandatory): Hostname/IP-Address of the Graylog Host
+* host (Mandatory): Hostname/IP-Address of the Logstasg Host
     * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
     * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
     * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
-* graylogPort (Optional): Port, default 12201
+* port (Optional): Port, default 12201
 * originHost (Optional): Originating Hostname, default FQDN Hostname
 * extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false
 * filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
@@ -71,8 +71,8 @@ Properties:
     .handlers = biz.paluch.logging.gelf.jul.GelfLogHandler, java.util.logging.ConsoleHandler
     .level = INFO
 
-    biz.paluch.logging.gelf.jul.GelfLogHandler.graylogHost=udp:localhost
-    biz.paluch.logging.gelf.jul.GelfLogHandler.graylogPort=12201
+    biz.paluch.logging.gelf.jul.GelfLogHandler.host=udp:localhost
+    biz.paluch.logging.gelf.jul.GelfLogHandler.port=12201
     biz.paluch.logging.gelf.jul.GelfLogHandler.facility=java-test
     biz.paluch.logging.gelf.jul.GelfLogHandler.extractStackTrace=true
     biz.paluch.logging.gelf.jul.GelfLogHandler.filterStackTrace=true
@@ -89,8 +89,8 @@ Properties:
 
     log4j.appender.gelf=biz.paluch.logging.gelf.log4j.GelfLogAppender
     log4j.appender.gelf.Threshold=INFO
-    log4j.appender.gelf.GraylogHost=udp:localhost
-    log4j.appender.gelf.GraylogPort=12201
+    log4j.appender.gelf.Host=udp:localhost
+    log4j.appender.gelf.Port=12201
     log4j.appender.gelf.Facility=java-test
     log4j.appender.gelf.ExtractStackTrace=true
     log4j.appender.gelf.FilterStackTrace=true
@@ -105,8 +105,8 @@ XML:
 
     <appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
         <param name="Threshold" value="INFO" />
-        <param name="GraylogHost" value="udp:localhost" />
-        <param name="GraylogPort" value="12201" />
+        <param name="Host" value="udp:localhost" />
+        <param name="Port" value="12201" />
         <param name="Facility" value="java-test" />
         <param name="ExtractStackTrace" value="true" />
         <param name="FilterStackTrace" value="true" />
@@ -128,8 +128,8 @@ standalone.xml
         <level name="INFO" />
         <properties>
             <property name="threshold" value="INFO" />
-            <property name="graylogHost" value="udp:localhost" />
-            <property name="graylogPort" value="12201" />
+            <property name="host" value="udp:localhost" />
+            <property name="port" value="12201" />
             <property name="facility" value="java-test" />
             <property name="extractStackTrace" value="true" />
             <property name="filterStackTrace" value="true" />
@@ -154,8 +154,8 @@ logback.xml Example:
         <jmxConfigurator/>
 
         <appender name="gelf" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
-            <graylogHost>udp:localhost</graylogHost>
-            <graylogPort>12201</graylogPort>
+            <host>udp:localhost</host>
+            <port>12201</port>
             <facility>java-test</facility>
             <extractStackTrace>true</extractStackTrace>
             <filterStackTrace>true</filterStackTrace>

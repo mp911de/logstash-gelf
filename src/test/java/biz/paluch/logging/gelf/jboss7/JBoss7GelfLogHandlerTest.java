@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNull;
  * @since 27.09.13 08:36
  */
 public class JBoss7GelfLogHandlerTest {
+
     @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
@@ -43,6 +44,46 @@ public class JBoss7GelfLogHandlerTest {
         assertEquals("Blubb Test", gelfMessage.getFullMessage());
         assertEquals("6", gelfMessage.getLevel());
         assertEquals("Blubb Test", gelfMessage.getShortMessage());
+        assertEquals(8192, gelfMessage.getMaximumMessageSize());
+
+    }
+
+    @Test
+    public void testSimpleWithMsgFormatSubstitution() throws Exception {
+
+        JBoss7GelfLogHandler handler = getjBoss7GelfLogHandler();
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        logger.log(Level.INFO, "Blubb Test {0}", new String[] { "aaa" });
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("Blubb Test aaa", gelfMessage.getFullMessage());
+        assertEquals("6", gelfMessage.getLevel());
+        assertEquals("Blubb Test aaa", gelfMessage.getShortMessage());
+        assertEquals(8192, gelfMessage.getMaximumMessageSize());
+
+    }
+
+    @Test
+    public void testSimpleWithStringFormatSubstitution() throws Exception {
+
+        JBoss7GelfLogHandler handler = getjBoss7GelfLogHandler();
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        logger.log(Level.INFO, "Blubb Test %s", new String[] { "aaa" });
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("Blubb Test aaa", gelfMessage.getFullMessage());
+        assertEquals("6", gelfMessage.getLevel());
+        assertEquals("Blubb Test aaa", gelfMessage.getShortMessage());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 
     }

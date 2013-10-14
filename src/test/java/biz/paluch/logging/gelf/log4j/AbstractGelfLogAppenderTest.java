@@ -1,21 +1,23 @@
 package biz.paluch.logging.gelf.log4j;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
+import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.junit.Test;
 
-import biz.paluch.logging.gelf.intern.GelfMessage;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 27.09.13 08:16
  */
 public abstract class AbstractGelfLogAppenderTest {
+
     @Test
     public void testSimpleDebug() throws Exception {
 
@@ -70,6 +72,7 @@ public abstract class AbstractGelfLogAppenderTest {
 
         Logger logger = Logger.getLogger(getClass());
         MDC.put("mdcField1", "a value");
+        MDC.remove(GelfUtil.MDC_REQUEST_START_MS);
 
         logger.info("Blubb Test");
         assertEquals(1, GelfTestSender.getMessages().size());
@@ -80,6 +83,25 @@ public abstract class AbstractGelfLogAppenderTest {
         assertEquals("fieldValue2", gelfMessage.getField("fieldName2"));
         assertEquals("a value", gelfMessage.getField("mdcField1"));
         assertNull(gelfMessage.getField("mdcField2"));
+
+        assertNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION));
+        assertNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
+
+    }
+
+    @Test
+    public void testProfiling() throws Exception {
+
+        Logger logger = Logger.getLogger(getClass());
+        MDC.put(GelfUtil.MDC_REQUEST_START_MS, "" + System.currentTimeMillis());
+
+        logger.info("Blubb Test");
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION));
+        assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
 
     }
 }

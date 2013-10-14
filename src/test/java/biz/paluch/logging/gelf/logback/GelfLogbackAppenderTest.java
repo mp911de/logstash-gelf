@@ -1,13 +1,12 @@
 package biz.paluch.logging.gelf.logback;
 
-import java.net.URL;
-
-import org.junit.Before;
-import org.slf4j.MDC;
-
 import biz.paluch.logging.gelf.log4j.GelfTestSender;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
+import org.junit.Before;
+import org.slf4j.MDC;
+
+import java.net.URL;
 
 /**
  * @author <a href="mailto:tobiassebastian.kaefer@1und1.de">Tobias Kaefer</a>

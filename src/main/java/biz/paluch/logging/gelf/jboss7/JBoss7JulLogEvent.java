@@ -1,23 +1,41 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import biz.paluch.logging.gelf.MdcLogEvent;
-import biz.paluch.logging.gelf.jul.JulLogEvent;
+import java.util.logging.LogRecord;
+
 import org.apache.log4j.MDC;
 
-import java.util.logging.LogRecord;
+import biz.paluch.logging.gelf.MdcMessageField;
+import biz.paluch.logging.gelf.MessageField;
+import biz.paluch.logging.gelf.jul.JulLogEvent;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 18:32
  */
-public class JBoss7JulLogEvent extends JulLogEvent implements MdcLogEvent {
+public class JBoss7JulLogEvent extends JulLogEvent {
 
-    public JBoss7JulLogEvent(LogRecord logRecord) {
-        super(logRecord);
-    }
+	public JBoss7JulLogEvent(LogRecord logRecord) {
+		super(logRecord);
+	}
 
-    @Override
-    public Object getMDC(String item) {
-        return MDC.get(item);
-    }
+	@Override
+	public String getValue(MessageField field) {
+
+		if (field instanceof MdcMessageField) {
+			return getValue((MdcMessageField) field);
+
+		}
+
+		return super.getValue(field);
+	}
+
+	private String getValue(MdcMessageField field) {
+
+		Object value = MDC.get(field.getMdcName());
+		if (value != null) {
+			return value.toString();
+		}
+
+		return null;
+	}
 }
