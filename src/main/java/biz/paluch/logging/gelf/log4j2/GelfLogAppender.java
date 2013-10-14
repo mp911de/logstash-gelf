@@ -56,7 +56,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
  * <li>level (syslog level)</li>
  * <li>host</li>
  * <li>facility</li>
- * <li>short_message</li>
+ * <li>message</li>
  * <li>short_message</li>
  * </ul>
  * </br>

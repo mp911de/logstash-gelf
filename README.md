@@ -4,6 +4,7 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF). T
 
 * [Java Util Logging](#jul)
 * [log4j 1.2.x](#log4j)
+* [log4j 2.x](#log4j2)
 * [JBoss 7 (mix of Java Util Logging with log4j MDC)](#jbossas7)
 * [Logback](#logback)
 
@@ -116,6 +117,73 @@ XML:
         <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
         <param name="MdcFields" value="mdcField1,mdcField2" />
     </appender>
+    
+<a name="log4j2"/>
+log4j2 configuration
+--------------
+
+### Fields
+
+Log4j v2 supports an extensive and flexible configuration in contrast to other log frameworks (JUL, log4j v1). This allows you to specify your needed fields you want to use in the GELF message. An empty field configuration results in a message containing only
+
+ * timestamp
+ * level (syslog level)
+ * host
+ * facility
+ * message
+ * short_message
+
+You can add different fields:
+
+ * Static Literals
+ * MDC Fields
+ * Log-Event fields (using Pattern Layout)
+
+In order to do so, use nested Field elements below the Appender element.
+
+### Static Literals
+
+    <Field name="fieldName1" literal="your literal value" />
+    
+### MDC Fields
+
+    <Field name="fieldName1" mdc="name of the MDC entry" />
+    
+### Log-Event fields
+
+See also: [Pattern Layout](http://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout)
+
+Set the desired pattern and the field will be sent using the specified pattern value. 
+
+Additionally, you can add the host-Field, which can supply you either the FQDN hostname, the simple hostname or the local address.
+
+Option | Description
+--- | ---
+host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, the simple hostname or the local address. You can follow the throwable conversion word with an option in the form %host{option}. <br/> %host{fqdn} default setting, outputs the FQDN hostname, e.g. www.you.host.name.com. <br/>%host{simple} outputs simple hostname, e.g. www. <br/>%host{address} outputs the local IP address of the found hostname, e.g. 1.2.3.4 or affe:affe:affe::1. 
+
+XML:
+    
+    <Configuration>
+        <Appenders>
+            <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="12201" extractStackTrace="true"
+                  filterStackTrace="true" mdcProfiling="true" maximumMessageSize="8192">
+                <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
+                <Field name="level" pattern="%level" />
+                <Field name="simpleClassName" pattern="%C{1}" />
+                <Field name="className" pattern="%C" />
+                <Field name="server" pattern="%host" />
+                <Field name="server.fqdn" pattern="%host{fqdn}" />
+                <Field name="fieldName2" literal="fieldValue2" /> <!-- This is a static field -->
+                <Field name="mdcField2" mdc="mdcField2" /> <!-- This is a field using MDC -->
+            </Gelf>
+        </Appenders>
+        <Loggers>
+            <Root level="INFO">
+                <AppenderRef ref="gelf" />
+            </Root>
+        </Loggers>
+    </Configuration>    
+    
 
 <a name="jbossas7"/>
 JBoss 7 configuration
@@ -173,6 +241,17 @@ logback.xml Example:
             <appender-ref ref="gelf" />
         </root>
     </configuration>
+
+
+MDC Profiling
+--------------
+MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must set one value in the MDC:
+
+profiling.requestStart.millis: Time Millis of the Request-Start (Long or String)
+Two values are set by the Log Appender:
+
+ * profiling.requestEnd: End-Time of the Request-End in Date.toString-representation
+ * profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)
 
 License
 -------
