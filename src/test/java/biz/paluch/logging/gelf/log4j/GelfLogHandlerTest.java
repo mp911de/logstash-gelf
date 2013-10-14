@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf.log4j;
 
+import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.MDC;
 import org.junit.Before;

@@ -8,7 +8,7 @@ import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.log4j.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts them using UDP

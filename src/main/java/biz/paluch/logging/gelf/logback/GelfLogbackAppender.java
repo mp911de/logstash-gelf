@@ -10,6 +10,7 @@ import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 
@@ -61,10 +62,10 @@ import ch.qos.logback.core.AppenderBase;
 public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> {
 
 	protected GelfSender gelfSender;
-	protected MdcLogbackGelfMessageAssembler gelfMessageAssembler;
+	protected MdcGelfMessageAssembler gelfMessageAssembler;
 
 	public GelfLogbackAppender() {
-		gelfMessageAssembler = new MdcLogbackGelfMessageAssembler();
+		gelfMessageAssembler = new MdcGelfMessageAssembler();
         gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping());
 	}
 

@@ -1,8 +1,9 @@
 package biz.paluch.logging.gelf.logback;
 
+import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.log4j.GelfTestSender;
-import biz.paluch.logging.gelf.log4j.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import org.junit.Test;
@@ -62,8 +63,8 @@ public abstract class AbstractGelfLogAppenderTest {
 
         assertEquals("Blubb Test", gelfMessage.getFullMessage());
         assertEquals("biz.paluch.logging.gelf.logback.AbstractGelfLogAppenderTest",
-                gelfMessage.getField(MdcGelfMessageAssembler.FIELD_SOURCE_CLASS_NAME));
-        assertEquals("testException", gelfMessage.getField(MdcGelfMessageAssembler.FIELD_SOURCE_METHOD_NAME));
+                gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.getFieldName()));
+        assertEquals("testException", gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.getFieldName()));
 
         assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("this is an exception"));
         assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("skipped"));

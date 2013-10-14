@@ -1,16 +1,20 @@
 package biz.paluch.logging.gelf.log4j;
 
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.junit.Test;
+
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -58,8 +62,8 @@ public abstract class AbstractGelfLogAppenderTest {
 
         assertEquals("Blubb Test", gelfMessage.getFullMessage());
         assertEquals("biz.paluch.logging.gelf.log4j.AbstractGelfLogAppenderTest",
-                gelfMessage.getField(MdcGelfMessageAssembler.FIELD_SOURCE_CLASS_NAME));
-        assertEquals("testException", gelfMessage.getField(MdcGelfMessageAssembler.FIELD_SOURCE_METHOD_NAME));
+                gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.getFieldName()));
+        assertEquals("testException", gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.getFieldName()));
 
         assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("this is an exception"));
         assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("skipped"));

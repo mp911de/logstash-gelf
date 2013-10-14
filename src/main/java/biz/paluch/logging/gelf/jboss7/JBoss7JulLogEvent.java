@@ -14,28 +14,32 @@ import biz.paluch.logging.gelf.jul.JulLogEvent;
  */
 public class JBoss7JulLogEvent extends JulLogEvent {
 
-	public JBoss7JulLogEvent(LogRecord logRecord) {
-		super(logRecord);
-	}
+    public JBoss7JulLogEvent(LogRecord logRecord) {
+        super(logRecord);
+    }
 
-	@Override
-	public String getValue(MessageField field) {
+    @Override
+    public String getValue(MessageField field) {
 
-		if (field instanceof MdcMessageField) {
-			return getValue((MdcMessageField) field);
+        if (field instanceof MdcMessageField) {
+            return getValue((MdcMessageField) field);
 
-		}
+        }
 
-		return super.getValue(field);
-	}
+        return super.getValue(field);
+    }
 
-	private String getValue(MdcMessageField field) {
+    private String getValue(MdcMessageField field) {
 
-		Object value = MDC.get(field.getMdcName());
-		if (value != null) {
-			return value.toString();
-		}
+        return getMdc(field.getMdcName());
+    }
 
-		return null;
-	}
+    @Override
+    public String getMdc(String mdcName) {
+        Object value = MDC.get(mdcName);
+        if (value != null) {
+            return value.toString();
+        }
+        return null;
+    }
 }

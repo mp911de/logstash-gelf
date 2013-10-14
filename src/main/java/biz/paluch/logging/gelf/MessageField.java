@@ -5,5 +5,9 @@ package biz.paluch.logging.gelf;
  */
 public interface MessageField
 {
+    /**
+     * 
+     * @return the field name.
+     */
     String getName();
 }

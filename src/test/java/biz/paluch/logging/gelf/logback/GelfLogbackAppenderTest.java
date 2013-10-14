@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.logback;
 
-import biz.paluch.logging.gelf.log4j.GelfTestSender;
+import biz.paluch.logging.gelf.GelfTestSender;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import org.junit.Before;

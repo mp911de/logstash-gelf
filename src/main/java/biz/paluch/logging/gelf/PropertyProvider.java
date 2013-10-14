@@ -7,5 +7,29 @@ package biz.paluch.logging.gelf;
  * @since 26.09.13 15:04
  */
 public interface PropertyProvider {
+
+
+    /**
+     * @deprecated Use host.
+     */
+    @Deprecated
+    String PROPERTY_GRAYLOG_HOST = "graylogHost";
+
+    /**
+     * @deprecated use port.
+     */
+    @Deprecated
+    String PROPERTY_GRAYLOG_PORT = "graylogPort";
+    
+    String PROPERTY_HOST = "host";
+    String PROPERTY_PORT = "port";
+    
+    String PROPERTY_ORIGIN_HOST = "originHost";
+    String PROPERTY_EXTRACT_STACKTRACE = "extractStackTrace";
+    String PROPERTY_FILTER_STACK_TRACE = "filterStackTrace";
+    String PROPERTY_FACILITY = "facility";
+    String PROPERTY_MAX_MESSAGE_SIZE = "maximumMessageSize";
+    String PROPERTY_ADDITIONAL_FIELD = "additionalField.";
+
     String getProperty(String propertyName);
 }

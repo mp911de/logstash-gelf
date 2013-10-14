@@ -1,7 +1,7 @@
 package biz.paluch.logging.gelf.jboss7;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.log4j.GelfTestSender;
+import biz.paluch.logging.gelf.GelfTestSender;
 import org.apache.log4j.MDC;
 import org.junit.Before;
 import org.junit.Test;
@@ -121,9 +121,9 @@ public class JBoss7GelfLogHandlerTest {
         handler.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSSS");
         handler.setMaximumMessageSize(8192);
         handler.setAdditionalFields("fieldName1=fieldValue1,fieldName2=fieldValue2");
-        handler.setTestSenderClass("biz.paluch.logging.gelf.log4j.GelfTestSender");
         handler.setLevel(Level.INFO);
         handler.setMdcFields("mdcField1,mdcField2");
+        handler.setTestSenderClass(GelfTestSender.class.getName());
         return handler;
     }
 }

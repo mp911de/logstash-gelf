@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.StackTraceFilter;
@@ -21,24 +20,6 @@ public class GelfMessageAssembler {
 
 	private static final int MAX_SHORT_MESSAGE_LENGTH = 250;
 
-	@Deprecated
-	public static final String PROPERTY_GRAYLOG_HOST = "graylogHost";
-
-	@Deprecated
-	public static final String PROPERTY_GRAYLOG_PORT = "graylogPort";
-
-	public static final String PROPERTY_HOST = "host";
-	public static final String PROPERTY_PORT = "port";
-
-	public static final String PROPERTY_ORIGIN_HOST = "originHost";
-	public static final String PROPERTY_EXTRACT_STACKTRACE = "extractStackTrace";
-	public static final String PROPERTY_FILTER_STACK_TRACE = "filterStackTrace";
-	public static final String PROPERTY_FACILITY = "facility";
-	public static final String PROPERTY_MAX_MESSAGE_SIZE = "maximumMessageSize";
-	public static final String PROPERTY_ADDITIONAL_FIELD = "additionalField.";
-
-	public static final String FIELD_SOURCE_CLASS_NAME = "SourceClassName";
-	public static final String FIELD_SOURCE_METHOD_NAME = "SourceMethodName";
 	public static final String FIELD_MESSAGE_PARAM = "MessageParam";
 	public static final String FIELD_STACK_TRACE = "StackTrace";
 
@@ -60,25 +41,25 @@ public class GelfMessageAssembler {
 	 * @param propertyProvider
 	 */
 	public void initialize(PropertyProvider propertyProvider) {
-		host = propertyProvider.getProperty(PROPERTY_HOST);
+		host = propertyProvider.getProperty(PropertyProvider.PROPERTY_HOST);
 		if (host == null) {
-			host = propertyProvider.getProperty(PROPERTY_GRAYLOG_HOST);
+			host = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_HOST);
 		}
 
-		String port = propertyProvider.getProperty(PROPERTY_PORT);
+		String port = propertyProvider.getProperty(PropertyProvider.PROPERTY_PORT);
 		if (port == null) {
-			port = propertyProvider.getProperty(PROPERTY_GRAYLOG_PORT);
+			port = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_PORT);
 		}
 		this.port = null == port ? 12201 : Integer.parseInt(port);
 
-		originHost = propertyProvider.getProperty(PROPERTY_ORIGIN_HOST);
-		extractStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PROPERTY_EXTRACT_STACKTRACE));
-		filterStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PROPERTY_FILTER_STACK_TRACE));
+		originHost = propertyProvider.getProperty(PropertyProvider.PROPERTY_ORIGIN_HOST);
+		extractStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_EXTRACT_STACKTRACE));
+		filterStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE));
 
 		setupStaticFields(propertyProvider);
-		facility = propertyProvider.getProperty(PROPERTY_FACILITY);
+		facility = propertyProvider.getProperty(PropertyProvider.PROPERTY_FACILITY);
 
-		String messageSize = propertyProvider.getProperty(PROPERTY_MAX_MESSAGE_SIZE);
+		String messageSize = propertyProvider.getProperty(PropertyProvider.PROPERTY_MAX_MESSAGE_SIZE);
 		maximumMessageSize = null == port ? 8192 : Integer.parseInt(messageSize);
 	}
 
@@ -169,7 +150,8 @@ public class GelfMessageAssembler {
 	private void setupStaticFields(PropertyProvider propertyProvider) {
 		int fieldNumber = 0;
 		while (true) {
-			final String property = propertyProvider.getProperty(PROPERTY_ADDITIONAL_FIELD + fieldNumber);
+			final String property = propertyProvider.getProperty(
+                    PropertyProvider.PROPERTY_ADDITIONAL_FIELD + fieldNumber);
 			if (null == property) {
 				break;
 			}

@@ -154,4 +154,10 @@ public class JulLogEvent implements LogEvent {
 
 		throw new UnsupportedOperationException("Cannot provide value for " + field);
 	}
+
+    @Override
+    public String getMdc(String mdcName)
+    {
+        return null;
+    }
 }
