@@ -16,4 +16,7 @@ public interface LogEvent {
     String getSyslogLevel();
 
     String getValue(MessageField field);
+
+    String getMdc(String mdcName);
+    
 }

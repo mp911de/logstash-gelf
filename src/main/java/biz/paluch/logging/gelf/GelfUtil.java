@@ -30,8 +30,8 @@ public class GelfUtil {
 
 	}
 
-	public static void addMdcProfiling(GelfMessage gelfMessage) {
-		Object requestStartMs = MDC.get(MDC_REQUEST_START_MS);
+	public static void addMdcProfiling(LogEvent logEvent, GelfMessage gelfMessage) {
+		Object requestStartMs = logEvent.getMdc(MDC_REQUEST_START_MS);
 		long timestamp = -1;
 
 		if (requestStartMs instanceof Long) {

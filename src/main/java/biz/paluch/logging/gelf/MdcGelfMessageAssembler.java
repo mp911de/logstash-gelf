@@ -1,14 +1,9 @@
-package biz.paluch.logging.gelf.log4j;
+package biz.paluch.logging.gelf;
 
-import biz.paluch.logging.gelf.LogEvent;
-
-import biz.paluch.logging.gelf.GelfMessageAssembler;
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.PropertyProvider;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
+ * Message-Assembler using MDC.
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 15:05
  */
@@ -32,7 +27,7 @@ public class MdcGelfMessageAssembler extends GelfMessageAssembler {
 
 		GelfMessage gelfMessage = super.createGelfMessage(logEvent);
 		if (mdcProfiling) {
-			GelfUtil.addMdcProfiling(gelfMessage);
+			GelfUtil.addMdcProfiling(logEvent, gelfMessage);
 		}
 
 		return gelfMessage;

@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 
-    <groupId>biz.paluch.logging</groupId>
-    <version>1.1.1-SNAPSHOT</version>
-    <artifactId>logstash-gelf</artifactId>
+	<groupId>biz.paluch.logging</groupId>
+	<version>1.1.1-SNAPSHOT</version>
+	<artifactId>logstash-gelf</artifactId>
 
-    <name>logstash logging connectors</name>
-    <url>https://github.com/mp911de/logstash-gelf/</url>
-    <inceptionYear>2013</inceptionYear>
+	<name>logstash logging connectors</name>
+	<url>https://github.com/mp911de/logstash-gelf/</url>
+	<inceptionYear>2013</inceptionYear>
 
-    <scm>
-        <connection>scm:git://github.com/mp911de/logstash-gelf.git</connection>
-        <developerConnection>scm:git:git@github.com:mp911de/logstash-gelf.git</developerConnection>
-        <url>http://github.com/mp911de/logstash-gelf/</url>
-        <tag>HEAD</tag>
-    </scm>
+	<scm>
+		<connection>scm:git://github.com/mp911de/logstash-gelf.git</connection>
+		<developerConnection>scm:git:git@github.com:mp911de/logstash-gelf.git</developerConnection>
+		<url>http://github.com/mp911de/logstash-gelf/</url>
+		<tag>HEAD</tag>
+	</scm>
 
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/mp911de/logstash-gelf/issues</url>
-    </issueManagement>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/mp911de/logstash-gelf/issues</url>
+	</issueManagement>
 
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.source>1.6</maven.compiler.source>
+
 		<!-- Versions -->
 		<com.googlecode.json-simple.version>1.1</com.googlecode.json-simple.version>
 		<log4j.version>1.2.14</log4j.version>
@@ -49,80 +50,111 @@
 		<ch.qos.logback.logback-classic.version>1.0.6</ch.qos.logback.logback-classic.version>
 	</properties>
 
-    <developers>
-        <developer>
-            <email>mpaluch@paluch.biz</email>
-            <name>Mark Paluch</name>
-            <timezone>Europe/Berlin</timezone>
-            <url>http://www.paluch.biz</url>
-        </developer>
-    </developers>
+	<developers>
+		<developer>
+			<email>mpaluch@paluch.biz</email>
+			<name>Mark Paluch</name>
+			<timezone>Europe/Berlin</timezone>
+			<url>http://www.paluch.biz</url>
+		</developer>
+	</developers>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>dist-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <descriptor>src/main/assembly/assembly.xml</descriptor>
-                    <attach>true</attach>
-                    <classifier>module</classifier>
-                </configuration>
-            </plugin>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>dist-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptor>src/main/assembly/assembly.xml</descriptor>
+					<attach>true</attach>
+					<classifier>module</classifier>
+				</configuration>
+			</plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.4.1</version>
-                <configuration>
-                    <releaseProfiles>sonatype-oss-release</releaseProfiles>
-                    <goals>deploy</goals>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<releaseProfiles>sonatype-oss-release</releaseProfiles>
+					<goals>deploy</goals>
+				</configuration>
+			</plugin>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>${com.googlecode.json-simple.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j.slf4j-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${ch.qos.logback.logback-classic.version}</version>
-        </dependency>
-    </dependencies>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>org.apache.logging.log4j.core.config.plugins.PluginManager</mainClass>
+					<arguments>
+						<argument>${project.build.outputDirectory}</argument>
+						<argument>biz.paluch.logging.gelf.log4j2</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>${com.googlecode.json-simple.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.0-beta9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.0-beta9</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${org.slf4j.slf4j-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${ch.qos.logback.logback-classic.version}</version>
+		</dependency>
+	</dependencies>
 </project>

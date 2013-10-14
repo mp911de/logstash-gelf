@@ -5,6 +5,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.spi.LoggingEvent;
 

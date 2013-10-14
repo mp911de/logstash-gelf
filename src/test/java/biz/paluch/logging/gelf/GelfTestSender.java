@@ -1,4 +1,4 @@
-package biz.paluch.logging.gelf.log4j;
+package biz.paluch.logging.gelf;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
