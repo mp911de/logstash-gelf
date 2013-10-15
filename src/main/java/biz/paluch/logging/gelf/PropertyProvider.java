@@ -8,7 +8,6 @@ package biz.paluch.logging.gelf;
  */
 public interface PropertyProvider {
 
-
     /**
      * @deprecated Use host.
      */
@@ -20,10 +19,10 @@ public interface PropertyProvider {
      */
     @Deprecated
     String PROPERTY_GRAYLOG_PORT = "graylogPort";
-    
+
     String PROPERTY_HOST = "host";
     String PROPERTY_PORT = "port";
-    
+
     String PROPERTY_ORIGIN_HOST = "originHost";
     String PROPERTY_EXTRACT_STACKTRACE = "extractStackTrace";
     String PROPERTY_FILTER_STACK_TRACE = "filterStackTrace";

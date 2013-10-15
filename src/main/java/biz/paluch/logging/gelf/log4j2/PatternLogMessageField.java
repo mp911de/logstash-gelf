@@ -1,7 +1,8 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import biz.paluch.logging.gelf.LogMessageField;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+
+import biz.paluch.logging.gelf.LogMessageField;
 
 /**
  */

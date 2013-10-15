@@ -1,9 +1,9 @@
 package biz.paluch.logging.gelf.logback;
 
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import org.junit.Test;

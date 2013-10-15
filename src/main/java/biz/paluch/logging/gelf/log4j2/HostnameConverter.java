@@ -1,11 +1,10 @@
 package biz.paluch.logging.gelf.log4j2;
 
+import biz.paluch.logging.RuntimeContainer;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.pattern.ConverterKeys;
 import org.apache.logging.log4j.core.pattern.LogEventPatternConverter;
-
-import biz.paluch.logging.RuntimeContainer;
 
 /**
  * Provides the servername/Hostname.

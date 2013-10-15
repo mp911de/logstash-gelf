@@ -1,10 +1,10 @@
 package biz.paluch.logging.gelf;
 
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>

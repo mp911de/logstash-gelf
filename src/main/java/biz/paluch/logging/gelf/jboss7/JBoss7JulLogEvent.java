@@ -1,12 +1,11 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import java.util.logging.LogRecord;
-
-import org.apache.log4j.MDC;
-
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
 import biz.paluch.logging.gelf.jul.JulLogEvent;
+import org.apache.log4j.MDC;
+
+import java.util.logging.LogRecord;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>

@@ -1,15 +1,16 @@
 package biz.paluch.logging.gelf.log4j;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import org.apache.log4j.MDC;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertEquals;
+import org.apache.log4j.MDC;
+import org.junit.Before;
+import org.junit.Test;
+
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>

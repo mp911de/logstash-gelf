@@ -1,20 +1,19 @@
 package biz.paluch.logging.gelf.log4j;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.junit.Test;
-
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.GelfMessage;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>

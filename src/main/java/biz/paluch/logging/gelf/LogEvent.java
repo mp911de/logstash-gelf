@@ -3,6 +3,7 @@ package biz.paluch.logging.gelf;
 /**
  * 
  * Generic Log Event.
+ * 
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 15:16
  */
@@ -51,5 +52,5 @@ public interface LogEvent {
      * @return MDC value, if available, else null.
      */
     String getMdc(String mdcName);
-    
+
 }

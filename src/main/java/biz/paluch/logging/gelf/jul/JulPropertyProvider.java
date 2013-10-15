@@ -1,8 +1,8 @@
 package biz.paluch.logging.gelf.jul;
 
-import java.util.logging.LogManager;
-
 import biz.paluch.logging.gelf.PropertyProvider;
+
+import java.util.logging.LogManager;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>

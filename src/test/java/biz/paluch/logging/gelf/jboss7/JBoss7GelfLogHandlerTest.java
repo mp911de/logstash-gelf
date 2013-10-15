@@ -1,7 +1,7 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.MDC;
 import org.junit.Before;
 import org.junit.Test;

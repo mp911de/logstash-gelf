@@ -1,9 +1,9 @@
 package biz.paluch.logging.gelf.log4j;
 
+import org.apache.log4j.spi.LoggingEvent;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import org.apache.log4j.spi.LoggingEvent;
 
 class Log4jVersionChecker {
 

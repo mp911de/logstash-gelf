@@ -1,18 +1,18 @@
 package biz.paluch.logging.gelf.jboss7;
 
+import biz.paluch.logging.gelf.GelfMessageAssembler;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.MdcMessageField;
+import biz.paluch.logging.gelf.StaticMessageField;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.LogRecord;
 
-import biz.paluch.logging.gelf.GelfMessageAssembler;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-
 /**
- * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts them using UDP
- * (default) or TCP. Following parameters are supported/needed:
+ * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
+ * them using UDP (default) or TCP. Following parameters are supported/needed:
  * <p/>
  * <ul>
  * <li>graylogHost (Mandatory): Hostname/IP-Address of the Logstash Host
@@ -26,12 +26,13 @@ import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStacktrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
- * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC Profiling</a>, default
- * false</li>
+ * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
+ * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>level (Optional): Log-Level, default INFO</li>
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
- * <li>additionalFields(number) (Optional): Post additional fields. Eg. .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
+ * <li>additionalFields(number) (Optional): Post additional fields. Eg.
+ * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * .JBoss7GelfLogHandler.mdcFields=Application,Version,SomeOtherFieldName</li>
  * </ul>
@@ -39,8 +40,8 @@ import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
  * <a name="mdcProfiling"></a>
  * <h2>MDC Profiling</h2>
  * <p>
- * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must set one
- * value in the MDC:
+ * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must
+ * set one value in the MDC:
  * <ul>
  * <li>profiling.requestStart.millis: Time Millis of the Request-Start (Long or String)</li>
  * </ul>
@@ -55,47 +56,49 @@ import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
  */
 public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHandler {
 
-	public JBoss7GelfLogHandler() {}
+    public JBoss7GelfLogHandler() {
+    }
 
-	@Override
-	protected GelfMessageAssembler createGelfMessageAssembler() {
-		return new MdcGelfMessageAssembler();
-	}
+    @Override
+    protected GelfMessageAssembler createGelfMessageAssembler() {
+        return new MdcGelfMessageAssembler();
+    }
 
-	protected GelfMessage createGelfMessage(final LogRecord record) {
-		return getGelfMessageAssembler().createGelfMessage(new JBoss7JulLogEvent(record));
-	}
+    protected GelfMessage createGelfMessage(final LogRecord record) {
+        return getGelfMessageAssembler().createGelfMessage(new JBoss7JulLogEvent(record));
+    }
 
-	public void setAdditionalFields(String fieldSpec) {
+    public void setAdditionalFields(String fieldSpec) {
 
-		String[] properties = fieldSpec.split(",");
+        String[] properties = fieldSpec.split(",");
 
-		for (String field : properties) {
-			final int index = field.indexOf('=');
-			if (-1 != index) {
-				getGelfMessageAssembler().addField(new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
-			}
-		}
-	}
+        for (String field : properties) {
+            final int index = field.indexOf('=');
+            if (-1 != index) {
+                getGelfMessageAssembler().addField(
+                        new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
+            }
+        }
+    }
 
-	public void setMdcFields(String fieldSpec) {
-		String[] fields = fieldSpec.split(",");
+    public void setMdcFields(String fieldSpec) {
+        String[] fields = fieldSpec.split(",");
 
-		Set<String> mdcFields = new HashSet<String>();
-		for (String field : fields) {
-			getGelfMessageAssembler().addField(new MdcMessageField(field.trim(), field.trim()));
-		}
-	}
+        Set<String> mdcFields = new HashSet<String>();
+        for (String field : fields) {
+            getGelfMessageAssembler().addField(new MdcMessageField(field.trim(), field.trim()));
+        }
+    }
 
-	public boolean isMdcProfiling() {
-		return getGelfMessageAssembler().isMdcProfiling();
-	}
+    public boolean isMdcProfiling() {
+        return getGelfMessageAssembler().isMdcProfiling();
+    }
 
-	public void setMdcProfiling(boolean mdcProfiling) {
-		getGelfMessageAssembler().setMdcProfiling(mdcProfiling);
-	}
+    public void setMdcProfiling(boolean mdcProfiling) {
+        getGelfMessageAssembler().setMdcProfiling(mdcProfiling);
+    }
 
-	private MdcGelfMessageAssembler getGelfMessageAssembler() {
-		return (MdcGelfMessageAssembler) gelfMessageAssembler;
-	}
+    private MdcGelfMessageAssembler getGelfMessageAssembler() {
+        return (MdcGelfMessageAssembler) gelfMessageAssembler;
+    }
 }
