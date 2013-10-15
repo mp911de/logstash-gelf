@@ -1,0 +1,40 @@
+Introduction [![Build Status](https://snap-ci.com/POmpG5OoXqifv_rjGSisv-wer9OYazjEtkuDT_7rrPA/build_image)](https://snap-ci.com/projects/mp911de/logstash-gelf/build_history)
+=============
+
+${project.name} (${project.artifactId})
+
+Provides logging to logstash using the Graylog Extended Logging Format (GELF). This implementation comes with support for three areas:
+
+* [Java Util Logging](examples/jul.html)
+* [log4j 1.2.x](examples/log4j-1.2.x.html)
+* [log4j 2.x](examples/log4j-2.x.html)
+* JBoss 7 (mix of Java Util Logging with log4j MDC)
+* [Logback](examples/logback.html)
+
+
+
+ [Download ZIP File](https://github.com/mp911de/configurator-maven-plugin/zipball/master)
+ [Download TAR Ball](https://github.com/mp911de/configurator-maven-plugin/tarball/master)
+ 
+How to get
+-------------
+
+Maven:
+
+    <dependency>
+        <groupId>biz.paluch.logging</groupId>
+        <artifactId>${project.artifactId}</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+JBoss Module Download:
+
+    <dependency>
+        <groupId>biz.paluch.logging</groupId>
+        <artifactId>${project.artifactId}</artifactId>
+        <version>${project.version}</version>
+        <classifier>logging-module</classifier>
+    </dependency>
+
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${project.version}/${project.artifactId}-${project.version}-logging-module.zip
+
