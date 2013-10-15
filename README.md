@@ -8,6 +8,8 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF). T
 * [JBoss 7 (mix of Java Util Logging with log4j MDC)](#jbossas7)
 * [Logback](#logback)
 
+See also http://logging.paluch.biz/ for further documentation.
+
 
 Settings
 --------------
