@@ -18,226 +18,226 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  */
 public class GelfMessageAssembler {
 
-	private static final int MAX_SHORT_MESSAGE_LENGTH = 250;
+    private static final int MAX_SHORT_MESSAGE_LENGTH = 250;
 
-	public static final String FIELD_MESSAGE_PARAM = "MessageParam";
-	public static final String FIELD_STACK_TRACE = "StackTrace";
+    public static final String FIELD_MESSAGE_PARAM = "MessageParam";
+    public static final String FIELD_STACK_TRACE = "StackTrace";
 
-	private String host;
-	private String originHost;
-	private int port;
-	private String facility;
-	private boolean extractStackTrace;
-	private boolean filterStackTrace;
-	private int maximumMessageSize;
+    private String host;
+    private String originHost;
+    private int port;
+    private String facility;
+    private boolean extractStackTrace;
+    private boolean filterStackTrace;
+    private int maximumMessageSize;
 
-	private List<MessageField> fields = new ArrayList<MessageField>();
+    private List<MessageField> fields = new ArrayList<MessageField>();
 
-	private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSSS";
+    private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSSS";
 
-	/**
-	 * Initialize datastructure from property provider.
-	 * 
-	 * @param propertyProvider
-	 */
-	public void initialize(PropertyProvider propertyProvider) {
-		host = propertyProvider.getProperty(PropertyProvider.PROPERTY_HOST);
-		if (host == null) {
-			host = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_HOST);
-		}
+    /**
+     * Initialize datastructure from property provider.
+     * 
+     * @param propertyProvider
+     */
+    public void initialize(PropertyProvider propertyProvider) {
+        host = propertyProvider.getProperty(PropertyProvider.PROPERTY_HOST);
+        if (host == null) {
+            host = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_HOST);
+        }
 
-		String port = propertyProvider.getProperty(PropertyProvider.PROPERTY_PORT);
-		if (port == null) {
-			port = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_PORT);
-		}
-		this.port = null == port ? 12201 : Integer.parseInt(port);
+        String port = propertyProvider.getProperty(PropertyProvider.PROPERTY_PORT);
+        if (port == null) {
+            port = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_PORT);
+        }
+        this.port = null == port ? 12201 : Integer.parseInt(port);
 
-		originHost = propertyProvider.getProperty(PropertyProvider.PROPERTY_ORIGIN_HOST);
-		extractStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_EXTRACT_STACKTRACE));
-		filterStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE));
+        originHost = propertyProvider.getProperty(PropertyProvider.PROPERTY_ORIGIN_HOST);
+        extractStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_EXTRACT_STACKTRACE));
+        filterStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE));
 
-		setupStaticFields(propertyProvider);
-		facility = propertyProvider.getProperty(PropertyProvider.PROPERTY_FACILITY);
+        setupStaticFields(propertyProvider);
+        facility = propertyProvider.getProperty(PropertyProvider.PROPERTY_FACILITY);
 
-		String messageSize = propertyProvider.getProperty(PropertyProvider.PROPERTY_MAX_MESSAGE_SIZE);
-		maximumMessageSize = null == port ? 8192 : Integer.parseInt(messageSize);
-	}
+        String messageSize = propertyProvider.getProperty(PropertyProvider.PROPERTY_MAX_MESSAGE_SIZE);
+        maximumMessageSize = null == port ? 8192 : Integer.parseInt(messageSize);
+    }
 
-	/**
-	 * Producte a Gelf message.
-	 * 
-	 * @param logEvent
-	 * @return GelfMessage
-	 */
-	public GelfMessage createGelfMessage(LogEvent logEvent) {
-		String message = logEvent.getMessage();
+    /**
+     * Producte a Gelf message.
+     * 
+     * @param logEvent
+     * @return GelfMessage
+     */
+    public GelfMessage createGelfMessage(LogEvent logEvent) {
+        String message = logEvent.getMessage();
 
-		String shortMessage = message;
-		if (message.length() > MAX_SHORT_MESSAGE_LENGTH) {
-			shortMessage = message.substring(0, MAX_SHORT_MESSAGE_LENGTH - 1);
-		}
+        String shortMessage = message;
+        if (message.length() > MAX_SHORT_MESSAGE_LENGTH) {
+            shortMessage = message.substring(0, MAX_SHORT_MESSAGE_LENGTH - 1);
+        }
 
-		final GelfMessage gelfMessage = new GelfMessage(shortMessage, message, logEvent.getLogTimestamp(), logEvent.getSyslogLevel());
+        final GelfMessage gelfMessage = new GelfMessage(shortMessage, message, logEvent.getLogTimestamp(),
+                logEvent.getSyslogLevel());
 
-		for (MessageField field : fields) {
-			String value = getValue(logEvent, field);
+        for (MessageField field : fields) {
+            String value = getValue(logEvent, field);
+            if (value == null) {
+                continue;
+            }
+            
+            gelfMessage.addField(field.getName(), value);
+        }
 
-			gelfMessage.addField(field.getName(), value);
-		}
+        if (extractStackTrace) {
+            addStackTrace(logEvent, gelfMessage);
+        }
 
-		
-		if (extractStackTrace) {
-			addStackTrace(logEvent, gelfMessage);
-		}
+        if (logEvent.getParameters() != null) {
+            for (int i = 0; i < logEvent.getParameters().length; i++) {
+                Object param = logEvent.getParameters()[i];
+                gelfMessage.addField(FIELD_MESSAGE_PARAM + i, "" + param);
+            }
+        }
 
-		if (logEvent.getParameters() != null) {
-			for (int i = 0; i < logEvent.getParameters().length; i++) {
-				Object param = logEvent.getParameters()[i];
-				gelfMessage.addField(FIELD_MESSAGE_PARAM + i, "" + param);
-			}
-		}
+        gelfMessage.setHost(getOriginHost());
 
-		gelfMessage.setHost(getOriginHost());
+        if (null != facility) {
+            gelfMessage.setFacility(facility);
+        }
 
-		if (null != facility) {
-			gelfMessage.setFacility(facility);
-		}
-
-		gelfMessage.setMaximumMessageSize(maximumMessageSize);
-		return gelfMessage;
-	}
-
-    
+        gelfMessage.setMaximumMessageSize(maximumMessageSize);
+        return gelfMessage;
+    }
 
     private String getValue(LogEvent logEvent, MessageField field) {
 
-		if (field instanceof StaticMessageField) {
-			return getValue((StaticMessageField) field);
-		}
+        if (field instanceof StaticMessageField) {
+            return getValue((StaticMessageField) field);
+        }
 
-		if (field instanceof LogMessageField) {
-			LogMessageField logMessageField = (LogMessageField) field;
-			if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Time) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(timestampPattern);
-				return dateFormat.format(new Date(logEvent.getLogTimestamp()));
-			}
-            
+        if (field instanceof LogMessageField) {
+            LogMessageField logMessageField = (LogMessageField) field;
+            if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Time) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat(timestampPattern);
+                return dateFormat.format(new Date(logEvent.getLogTimestamp()));
+            }
+
             if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Server) {
                 return getOriginHost();
             }
-		}
+        }
 
-		return logEvent.getValue(field);
-	}
+        return logEvent.getValue(field);
+    }
 
-	private String getValue(StaticMessageField field) {
-		return field.getValue();
-	}
+    private String getValue(StaticMessageField field) {
+        return field.getValue();
+    }
 
-	private void addStackTrace(LogEvent logEvent, GelfMessage gelfMessage) {
-		final Throwable thrown = logEvent.getThrowable();
-		if (null != thrown) {
-			if (filterStackTrace) {
-				gelfMessage.addField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
-			} else {
-				final StringWriter sw = new StringWriter();
-				thrown.printStackTrace(new PrintWriter(sw));
-				gelfMessage.addField(FIELD_STACK_TRACE, sw.toString());
-			}
-		}
-	}
+    private void addStackTrace(LogEvent logEvent, GelfMessage gelfMessage) {
+        final Throwable thrown = logEvent.getThrowable();
+        if (null != thrown) {
+            if (filterStackTrace) {
+                gelfMessage.addField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
+            } else {
+                final StringWriter sw = new StringWriter();
+                thrown.printStackTrace(new PrintWriter(sw));
+                gelfMessage.addField(FIELD_STACK_TRACE, sw.toString());
+            }
+        }
+    }
 
-	private void setupStaticFields(PropertyProvider propertyProvider) {
-		int fieldNumber = 0;
-		while (true) {
-			final String property = propertyProvider.getProperty(
-                    PropertyProvider.PROPERTY_ADDITIONAL_FIELD + fieldNumber);
-			if (null == property) {
-				break;
-			}
-			final int index = property.indexOf('=');
-			if (-1 != index) {
+    private void setupStaticFields(PropertyProvider propertyProvider) {
+        int fieldNumber = 0;
+        while (true) {
+            final String property = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELD + fieldNumber);
+            if (null == property) {
+                break;
+            }
+            final int index = property.indexOf('=');
+            if (-1 != index) {
 
-				StaticMessageField field = new StaticMessageField(property.substring(0, index), property.substring(index + 1));
-				addField(field);
-			}
+                StaticMessageField field = new StaticMessageField(property.substring(0, index), property.substring(index + 1));
+                addField(field);
+            }
 
-			fieldNumber++;
-		}
-	}
+            fieldNumber++;
+        }
+    }
 
-	public void addField(MessageField field) {
-		this.fields.add(field);
-	}
+    public void addField(MessageField field) {
+        this.fields.add(field);
+    }
 
-	public void addFields(Collection<? extends MessageField> fields) {
-		this.fields.addAll(fields);
-	}
+    public void addFields(Collection<? extends MessageField> fields) {
+        this.fields.addAll(fields);
+    }
 
-	public String getHost() {
-		return host;
-	}
+    public String getHost() {
+        return host;
+    }
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-	public String getOriginHost() {
-		if (null == originHost) {
-			originHost = RuntimeContainer.FQDN_HOSTNAME;
-		}
-		return originHost;
-	}
+    public String getOriginHost() {
+        if (null == originHost) {
+            originHost = RuntimeContainer.FQDN_HOSTNAME;
+        }
+        return originHost;
+    }
 
-	public void setOriginHost(String originHost) {
-		this.originHost = originHost;
-	}
+    public void setOriginHost(String originHost) {
+        this.originHost = originHost;
+    }
 
-	public int getPort() {
-		return port;
-	}
+    public int getPort() {
+        return port;
+    }
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-	public String getFacility() {
-		return facility;
-	}
+    public String getFacility() {
+        return facility;
+    }
 
-	public void setFacility(String facility) {
-		this.facility = facility;
-	}
+    public void setFacility(String facility) {
+        this.facility = facility;
+    }
 
-	public boolean isExtractStackTrace() {
-		return extractStackTrace;
-	}
+    public boolean isExtractStackTrace() {
+        return extractStackTrace;
+    }
 
-	public void setExtractStackTrace(boolean extractStackTrace) {
-		this.extractStackTrace = extractStackTrace;
-	}
+    public void setExtractStackTrace(boolean extractStackTrace) {
+        this.extractStackTrace = extractStackTrace;
+    }
 
-	public boolean isFilterStackTrace() {
-		return filterStackTrace;
-	}
+    public boolean isFilterStackTrace() {
+        return filterStackTrace;
+    }
 
-	public void setFilterStackTrace(boolean filterStackTrace) {
-		this.filterStackTrace = filterStackTrace;
-	}
+    public void setFilterStackTrace(boolean filterStackTrace) {
+        this.filterStackTrace = filterStackTrace;
+    }
 
-	public String getTimestampPattern() {
-		return timestampPattern;
-	}
+    public String getTimestampPattern() {
+        return timestampPattern;
+    }
 
-	public void setTimestampPattern(String timestampPattern) {
-		this.timestampPattern = timestampPattern;
-	}
+    public void setTimestampPattern(String timestampPattern) {
+        this.timestampPattern = timestampPattern;
+    }
 
-	public int getMaximumMessageSize() {
-		return maximumMessageSize;
-	}
+    public int getMaximumMessageSize() {
+        return maximumMessageSize;
+    }
 
-	public void setMaximumMessageSize(int maximumMessageSize) {
-		this.maximumMessageSize = maximumMessageSize;
-	}
+    public void setMaximumMessageSize(int maximumMessageSize) {
+        this.maximumMessageSize = maximumMessageSize;
+    }
 }
