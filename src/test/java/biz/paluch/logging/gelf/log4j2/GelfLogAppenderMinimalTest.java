@@ -23,6 +23,7 @@ public class GelfLogAppenderMinimalTest {
     public static void beforeClass() {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2-minimal.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
+        loggerContext.reconfigure();
     }
 
     @AfterClass

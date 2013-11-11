@@ -1,4 +1,4 @@
-package biz.paluch.logging.gelf.log4j;
+package biz.paluch.logging.gelf.jul;
 
 import static org.junit.Assert.assertEquals;
 

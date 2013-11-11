@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="19392" extractStackTrace="true"
+              filterStackTrace="true" mdcProfiling="true" maximumMessageSize="2000">
+            <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
+            <Field name="level" pattern="%level" />
+            <Field name="simpleClassName" pattern="%C{1}" />
+            <Field name="className" pattern="%C" />
+            <Field name="server" pattern="%host" />
+            <Field name="server.simple" pattern="%host{simple}" />
+            <Field name="server.fqdn" pattern="%host{fqdn}" />
+            <Field name="server.addr" pattern="%host{address}" />
+            <Field name="fieldName1" literal="fieldValue1" />
+            <Field name="fieldName2" literal="fieldValue2" />
+            <Field name="mdcField1" mdc="mdcField1" />
+            <Field name="mdcField2" mdc="mdcField2" />
+        </Gelf>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="gelf" />
+        </Root>
+    </Loggers>
+</Configuration>

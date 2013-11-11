@@ -21,7 +21,7 @@ public class GelfLogbackAppenderTest extends AbstractGelfLogAppenderTest {
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
 
-        URL xmlConfigFile = getClass().getResource("/logback.xml");
+        URL xmlConfigFile = getClass().getResource("/logback-gelf.xml");
 
         configurator.doConfigure(xmlConfigFile);
 

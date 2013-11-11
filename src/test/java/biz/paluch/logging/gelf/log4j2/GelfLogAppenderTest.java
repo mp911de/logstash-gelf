@@ -26,6 +26,7 @@ public class GelfLogAppenderTest {
     public static void setupClass() {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
+        loggerContext.reconfigure();
     }
 
     @AfterClass
