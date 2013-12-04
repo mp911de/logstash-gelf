@@ -134,7 +134,6 @@ Log4j v2 supports an extensive and flexible configuration in contrast to other l
  * timestamp
  * level (syslog level)
  * host
- * port
  * facility
  * message
  * short_message
