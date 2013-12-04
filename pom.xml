@@ -46,7 +46,7 @@
         <log4j.version>1.2.14</log4j.version>
         <junit.version>4.11</junit.version>
         <org.slf4j.slf4j-api.version>1.7.5</org.slf4j.slf4j-api.version>
-        <ch.qos.logback.logback-classic.version>1.0.6</ch.qos.logback.logback-classic.version>
+        <ch.qos.logback.logback-classic.version>1.0.13</ch.qos.logback.logback-classic.version>
 
         <version.org.apache.maven.plugins.site-plugin>3.3</version.org.apache.maven.plugins.site-plugin>
         <version.org.apache.maven.plugins.maven-javadoc-plugin>2.7

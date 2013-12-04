@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+
+<configuration debug="true">
+    <contextName>test</contextName>
+    <jmxConfigurator />
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - ${HOSTNAME} %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="GELF" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
+        <graylogHost>udp:localhost</graylogHost>
+        <graylogPort>12201</graylogPort>
+        <facility>java-test</facility>
+        <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
+        <additionalFields>crossCheckHostName=${HOSTNAME}</additionalFields>
+        <testSenderClass>biz.paluch.logging.gelf.GelfTestSender</testSenderClass>
+        <originHost>${HOSTNAME}</originHost>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="GELF" />
+        <appender-ref ref="console" />
+    </root>
+</configuration>
