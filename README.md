@@ -14,11 +14,14 @@ See also http://logging.paluch.biz/ for further documentation.
 Settings
 --------------
 Following settings can be used:
-* host (Mandatory): Hostname/IP-Address of the Logstasg Host
+
+* host (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash Host
     * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
     * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
     * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
-* port (Optional): Port, default 12201
+* port (since version 1.2.0, Optional): Port, default 12201
+* graylogHost (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
+* graylogPort (until version 1.1.0, Optional): Port, default 12201
 * originHost (Optional): Originating Hostname, default FQDN Hostname
 * extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false
 * filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
@@ -131,6 +134,7 @@ Log4j v2 supports an extensive and flexible configuration in contrast to other l
  * timestamp
  * level (syslog level)
  * host
+ * port
  * facility
  * message
  * short_message
