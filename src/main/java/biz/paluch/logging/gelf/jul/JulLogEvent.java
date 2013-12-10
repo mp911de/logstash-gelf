@@ -9,7 +9,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.text.MessageFormat;
-import java.util.IllegalFormatConversionException;
+import java.util.IllegalFormatException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -66,7 +66,7 @@ public class JulLogEvent implements LogEvent {
 
             try {
                 message = MessageFormat.format(message, parameters);
-            } catch (IllegalFormatConversionException e) {
+            } catch (IllegalArgumentException e) {
                 // leaving message as it is to avoid compatibility problems
                 message = record.getMessage();
             } catch (NullPointerException e) {
@@ -77,7 +77,7 @@ public class JulLogEvent implements LogEvent {
                 // if the text is the same, assuming this is String.format type log (%s, %d, etc.)
                 try {
                     message = String.format(message, parameters);
-                } catch (IllegalFormatConversionException e) {
+                } catch (IllegalFormatException e) {
                     // leaving message as it is to avoid compatibility problems
                     message = record.getMessage();
                 } catch (NullPointerException e) {
