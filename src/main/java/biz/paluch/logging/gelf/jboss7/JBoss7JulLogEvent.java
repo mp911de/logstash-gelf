@@ -39,6 +39,7 @@ public class JBoss7JulLogEvent extends JulLogEvent {
         if (value != null) {
             return value.toString();
         }
-        return null;
+        String slf4jValue = org.slf4j.MDC.get(mdcName);
+        return slf4jValue;
     }
 }
