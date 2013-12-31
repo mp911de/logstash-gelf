@@ -1,16 +1,13 @@
 package biz.paluch.logging.gelf;
 
+import java.util.List;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
-import org.json.simple.JSONValue;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -42,13 +39,11 @@ public class NettyLocalServer {
         f = null;
     }
 
-    public List<Object> getJsonValues()
-    {
+    public List<Object> getJsonValues() {
         return handler.getJsonValues();
     }
 
-    public void clear()
-    {
+    public void clear() {
         handler.clear();
     }
 }

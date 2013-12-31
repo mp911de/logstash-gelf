@@ -1,14 +1,15 @@
 package biz.paluch.logging.gelf.log4j;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.MDC;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.spi.ThrowableInformation;
+
 import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogEvent;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
-import org.apache.log4j.Level;
-import org.apache.log4j.MDC;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.log4j.spi.ThrowableInformation;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>

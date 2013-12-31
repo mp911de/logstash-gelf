@@ -1,11 +1,12 @@
 package biz.paluch.logging.gelf.log4j2;
 
+import java.util.Map;
+
+import org.apache.logging.log4j.Level;
+
 import biz.paluch.logging.gelf.LogEvent;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
-import org.apache.logging.log4j.Level;
-
-import java.util.Map;
 
 /**
  */
