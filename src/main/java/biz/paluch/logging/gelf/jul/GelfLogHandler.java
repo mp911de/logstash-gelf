@@ -1,12 +1,5 @@
 package biz.paluch.logging.gelf.jul;
 
-import biz.paluch.logging.gelf.GelfMessageAssembler;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.GelfSenderFactory;
-
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -15,6 +8,13 @@ import java.util.logging.Filter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+
+import biz.paluch.logging.gelf.GelfMessageAssembler;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.StaticMessageField;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -106,9 +106,9 @@ public class GelfLogHandler extends Handler {
                 } catch (UnknownHostException e) {
                     reportError("Unknown Graylog2 hostname:" + gelfMessageAssembler.getHost(), e, ErrorManager.WRITE_FAILURE);
                 } catch (SocketException e) {
-                    reportError("Socket exception", e, ErrorManager.WRITE_FAILURE);
+                    reportError("Socket exception: " + e.getMessage(), e, ErrorManager.WRITE_FAILURE);
                 } catch (IOException e) {
-                    reportError("IO exception", e, ErrorManager.WRITE_FAILURE);
+                    reportError("IO exception: " + e.getMessage(), e, ErrorManager.WRITE_FAILURE);
                 }
             }
         }
@@ -123,7 +123,7 @@ public class GelfLogHandler extends Handler {
                 reportError("Could not send GELF message", null, ErrorManager.WRITE_FAILURE);
             }
         } catch (Exception e) {
-            reportError("Could not send GELF message", e, ErrorManager.FORMAT_FAILURE);
+            reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.FORMAT_FAILURE);
         }
     }
 

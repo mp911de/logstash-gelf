@@ -1,5 +1,9 @@
 package biz.paluch.logging.gelf.logback;
 
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
@@ -9,10 +13,6 @@ import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-
-import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Logback Handler creates GELF Messages and posts them using
@@ -86,9 +86,9 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> {
                 } catch (UnknownHostException e) {
                     reportError("Unknown Graylog2 hostname:" + gelfMessageAssembler.getHost(), e);
                 } catch (SocketException e) {
-                    reportError("Socket exception", e);
+                    reportError("Socket exception: " + e.getMessage(), e);
                 } catch (IOException e) {
-                    reportError("IO exception", e);
+                    reportError("IO exception: " + e.getMessage(), e);
                 }
             }
         }
@@ -103,7 +103,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> {
                 reportError("Could not send GELF message", null);
             }
         } catch (Exception e) {
-            reportError("Could not send GELF message", e);
+            reportError("Could not send GELF message: " + e.getMessage(), e);
         }
     }
 

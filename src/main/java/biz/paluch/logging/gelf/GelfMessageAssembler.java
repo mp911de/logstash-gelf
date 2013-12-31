@@ -1,9 +1,5 @@
 package biz.paluch.logging.gelf;
 
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.StackTraceFilter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -11,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.StackTraceFilter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -25,11 +25,11 @@ public class GelfMessageAssembler {
 
     private String host;
     private String originHost;
-    private int port;
+    private int port = 12201;
     private String facility;
     private boolean extractStackTrace;
     private boolean filterStackTrace;
-    private int maximumMessageSize;
+    private int maximumMessageSize = 8192;
 
     private List<MessageField> fields = new ArrayList<MessageField>();
 
@@ -50,7 +50,10 @@ public class GelfMessageAssembler {
         if (port == null) {
             port = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_PORT);
         }
-        this.port = null == port ? 12201 : Integer.parseInt(port);
+
+        if (port != null) {
+            this.port = Integer.parseInt(port);
+        }
 
         originHost = propertyProvider.getProperty(PropertyProvider.PROPERTY_ORIGIN_HOST);
         extractStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_EXTRACT_STACKTRACE));
@@ -60,7 +63,9 @@ public class GelfMessageAssembler {
         facility = propertyProvider.getProperty(PropertyProvider.PROPERTY_FACILITY);
 
         String messageSize = propertyProvider.getProperty(PropertyProvider.PROPERTY_MAX_MESSAGE_SIZE);
-        maximumMessageSize = null == port ? 8192 : Integer.parseInt(messageSize);
+        if (messageSize != null) {
+            maximumMessageSize = Integer.parseInt(messageSize);
+        }
     }
 
     /**

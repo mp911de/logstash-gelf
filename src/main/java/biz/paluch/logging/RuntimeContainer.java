@@ -52,7 +52,7 @@ public class RuntimeContainer {
         String myHostName = "unknown";
         String myFQDNHostName = "unknown";
         String myAddress = "";
-        /*try {
+        try {
 
             InetAddress inetAddress = getInetAddressWithHostname();
 
@@ -65,7 +65,7 @@ public class RuntimeContainer {
             myAddress = inetAddress.getHostAddress();
         } catch (IOException e) {
             LOGGER.info(e.getMessage(), e);
-        } */
+        }
 
         FQDN_HOSTNAME = myFQDNHostName;
         HOSTNAME = myHostName;
