@@ -58,11 +58,11 @@ public class GelfMessage {
 
         for (Map.Entry<String, String> additionalField : additonalFields.entrySet()) {
             if (!ID_NAME.equals(additionalField.getKey())) {
-                // try adding the value as an integer
+                // try adding the value as a double
                 Object value;
                 try
                 {
-                    value = Integer.parseInt(additionalField.getValue());
+                    value = Double.parseDouble(additionalField.getValue());
                 }
                 catch (NumberFormatException ex)
                 {
