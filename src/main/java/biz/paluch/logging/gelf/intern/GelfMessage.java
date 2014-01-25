@@ -58,7 +58,18 @@ public class GelfMessage {
 
         for (Map.Entry<String, String> additionalField : additonalFields.entrySet()) {
             if (!ID_NAME.equals(additionalField.getKey())) {
-                map.put("_" + additionalField.getKey(), additionalField.getValue());
+                // try adding the value as an integer
+                Object value;
+                try
+                {
+                    value = Integer.parseInt(additionalField.getValue());
+                }
+                catch (NumberFormatException ex)
+                {
+                    // fallback on the string value
+                    value = additionalField.getValue();
+                }
+                map.put("_" + additionalField.getKey(), value);
             }
         }
 
