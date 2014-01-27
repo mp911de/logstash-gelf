@@ -48,6 +48,7 @@ public class GelfUDPSender implements GelfSender {
                 channel.write(buffer);
             }
         } catch (IOException e) {
+            errorReporter.reportError(e.getMessage(), e);
             return false;
         }
 
