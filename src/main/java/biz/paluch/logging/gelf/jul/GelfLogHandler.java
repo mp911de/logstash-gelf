@@ -1,8 +1,5 @@
 package biz.paluch.logging.gelf.jul;
 
-import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.logging.ErrorManager;
 import java.util.logging.Filter;
 import java.util.logging.Handler;
@@ -12,6 +9,7 @@ import java.util.logging.LogRecord;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
+import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
@@ -41,7 +39,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
  * </ul>
  * </p>
  */
-public class GelfLogHandler extends Handler {
+public class GelfLogHandler extends Handler implements ErrorReporter {
 
     protected GelfSender gelfSender;
     protected GelfMessageAssembler gelfMessageAssembler;
@@ -97,20 +95,7 @@ public class GelfLogHandler extends Handler {
         }
 
         if (null == gelfSender) {
-            if (gelfMessageAssembler.getHost() == null) {
-                reportError("Graylog2 hostname is empty!", null, 1);
-            } else {
-                try {
-                    this.gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler.getHost(),
-                            gelfMessageAssembler.getPort());
-                } catch (UnknownHostException e) {
-                    reportError("Unknown Graylog2 hostname:" + gelfMessageAssembler.getHost(), e, ErrorManager.WRITE_FAILURE);
-                } catch (SocketException e) {
-                    reportError("Socket exception: " + e.getMessage(), e, ErrorManager.WRITE_FAILURE);
-                } catch (IOException e) {
-                    reportError("IO exception: " + e.getMessage(), e, ErrorManager.WRITE_FAILURE);
-                }
-            }
+            gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
         }
 
         try {
@@ -125,6 +110,11 @@ public class GelfLogHandler extends Handler {
         } catch (Exception e) {
             reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.FORMAT_FAILURE);
         }
+    }
+
+    @Override
+    public void reportError(String message, Exception e) {
+        reportError(message, e, ErrorManager.GENERIC_FAILURE);
     }
 
     @Override

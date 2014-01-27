@@ -1,13 +1,10 @@
 package biz.paluch.logging.gelf.logback;
 
-import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
+import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
@@ -60,7 +57,7 @@ import ch.qos.logback.core.AppenderBase;
  * @author <a href="mailto:tobiassebastian.kaefer@1und1.de">Tobias Kaefer</a>
  * @since 2013-10-08
  */
-public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> {
+public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements ErrorReporter {
 
     protected GelfSender gelfSender;
     protected MdcGelfMessageAssembler gelfMessageAssembler;
@@ -77,20 +74,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> {
         }
 
         if (null == gelfSender) {
-            if (gelfMessageAssembler.getHost() == null) {
-                reportError("Graylog2 hostname is empty!", null);
-            } else {
-                try {
-                    this.gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler.getHost(),
-                            gelfMessageAssembler.getPort());
-                } catch (UnknownHostException e) {
-                    reportError("Unknown Graylog2 hostname:" + gelfMessageAssembler.getHost(), e);
-                } catch (SocketException e) {
-                    reportError("Socket exception: " + e.getMessage(), e);
-                } catch (IOException e) {
-                    reportError("IO exception: " + e.getMessage(), e);
-                }
-            }
+            gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
         }
 
         try {
@@ -107,7 +91,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> {
         }
     }
 
-    private void reportError(String message, Exception exception) {
+    public void reportError(String message, Exception exception) {
         addError(message, exception);
     }
 

@@ -1,9 +1,5 @@
 package biz.paluch.logging.gelf.log4j;
 
-import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.spi.LoggingEvent;
 
@@ -11,6 +7,7 @@ import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
+import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
@@ -59,7 +56,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
  * <p/>
  * </p>
  */
-public class GelfLogAppender extends AppenderSkeleton {
+public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
 
     protected GelfSender gelfSender;
     protected MdcGelfMessageAssembler gelfMessageAssembler;
@@ -76,20 +73,7 @@ public class GelfLogAppender extends AppenderSkeleton {
         }
 
         if (null == gelfSender) {
-            if (gelfMessageAssembler.getHost() == null) {
-                reportError("Graylog2 hostname is empty!", null);
-            } else {
-                try {
-                    this.gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler.getHost(),
-                            gelfMessageAssembler.getPort());
-                } catch (UnknownHostException e) {
-                    reportError("Unknown Graylog2 hostname:" + gelfMessageAssembler.getHost(), e);
-                } catch (SocketException e) {
-                    reportError("Socket exception: " + e.getMessage(), e);
-                } catch (IOException e) {
-                    reportError("IO exception: " + e.getMessage(), e);
-                }
-            }
+            gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
         }
 
         try {
@@ -106,7 +90,7 @@ public class GelfLogAppender extends AppenderSkeleton {
         }
     }
 
-    private void reportError(String message, Exception exception) {
+    public void reportError(String message, Exception exception) {
         errorHandler.error(message, exception, 0);
     }
 

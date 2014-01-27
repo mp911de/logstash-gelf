@@ -12,14 +12,13 @@ public class GelfTCPSender implements GelfSender {
     private InetAddress host;
     private int port;
     private Socket socket;
+    private ErrorReporter errorReporter;
 
-    public GelfTCPSender() {
-    }
-
-    public GelfTCPSender(String host, int port) throws IOException {
+    public GelfTCPSender(String host, int port, ErrorReporter errorReporter) throws IOException {
         this.host = InetAddress.getByName(host);
         this.port = port;
         this.socket = new Socket(host, port);
+        this.errorReporter = errorReporter;
     }
 
     public boolean sendMessage(GelfMessage message) {
@@ -50,7 +49,7 @@ public class GelfTCPSender implements GelfSender {
                 socket.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            errorReporter.reportError(e.getMessage(), e);
         }
     }
 }

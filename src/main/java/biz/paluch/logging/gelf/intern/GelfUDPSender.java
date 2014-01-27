@@ -3,6 +3,7 @@ package biz.paluch.logging.gelf.intern;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
@@ -13,23 +14,24 @@ public class GelfUDPSender implements GelfSender {
     private InetAddress host;
     private int port;
     private DatagramChannel channel;
+    private ErrorReporter errorReporter;
 
-    public GelfUDPSender() {
-    }
-
-    public GelfUDPSender(String host) throws IOException {
-        this(host, DEFAULT_PORT);
-    }
-
-    public GelfUDPSender(String host, int port) throws IOException {
+    public GelfUDPSender(String host, int port, ErrorReporter errorReporter) throws IOException {
         this.host = InetAddress.getByName(host);
         this.port = port;
+        this.errorReporter = errorReporter;
         this.channel = initiateChannel();
     }
 
     private DatagramChannel initiateChannel() throws IOException {
         DatagramChannel resultingChannel = DatagramChannel.open();
-        resultingChannel.socket().bind(new InetSocketAddress(0));
+
+        try {
+            resultingChannel.socket().bind(new InetSocketAddress(0));
+        } catch (SocketException e) {
+            errorReporter.reportError(e.getMessage(), e);
+        }
+
         resultingChannel.connect(new InetSocketAddress(this.host, this.port));
         resultingChannel.configureBlocking(false);
 
@@ -56,7 +58,7 @@ public class GelfUDPSender implements GelfSender {
         try {
             channel.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            errorReporter.reportError(e.getMessage(), e);
         }
     }
 }
