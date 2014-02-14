@@ -85,11 +85,11 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
     }
 
     @Override
-    public synchronized void flush() {
+    public void flush() {
     }
 
     @Override
-    public synchronized void publish(final LogRecord record) {
+    public void publish(final LogRecord record) {
         if (!isLoggable(record)) {
             return;
         }
