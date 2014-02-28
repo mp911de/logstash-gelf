@@ -42,15 +42,15 @@ public interface LogEvent {
     /**
      * 
      * @param field
-     * @return value (or null) for the requested field.
+     * @return values for the requested field.
      */
-    String getValue(MessageField field);
+    Values getValues(MessageField field);
 
     /**
-     * 
-     * @param mdcName
-     * @return MDC value, if available, else null.
+     *
+     * @param mdcName Name of the MDC entry.
+     * @return one MDC value (or null)
      */
-    String getMdc(String mdcName);
+    String getMdcValue(String mdcName);
 
 }

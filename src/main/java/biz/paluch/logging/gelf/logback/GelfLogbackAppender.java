@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf.logback;
 
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
@@ -35,6 +36,8 @@ import ch.qos.logback.core.AppenderBase;
  * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * mdcFields=Application,Version,SomeOtherFieldName</li>
+ * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
+ * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.</li>
  * </ul>
  * <p/>
  * <a name="mdcProfiling"></a>
@@ -205,6 +208,14 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
 
     public void setMaximumMessageSize(int maximumMessageSize) {
         gelfMessageAssembler.setMaximumMessageSize(maximumMessageSize);
+    }
+
+    public void setDynamicMdcFields(String fieldSpec) {
+        String[] fields = fieldSpec.split(",");
+
+        for (String field : fields) {
+            gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
+        }
     }
 
     public void setTestSenderClass(String testSender) {

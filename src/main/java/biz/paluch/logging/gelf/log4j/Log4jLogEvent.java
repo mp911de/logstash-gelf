@@ -1,15 +1,20 @@
 package biz.paluch.logging.gelf.log4j;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.MDC;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogEvent;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
+import biz.paluch.logging.gelf.Values;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -72,13 +77,17 @@ class Log4jLogEvent implements LogEvent {
     }
 
     @Override
-    public String getValue(MessageField field) {
+    public Values getValues(MessageField field) {
         if (field instanceof LogMessageField) {
-            return getValue((LogMessageField) field);
+            return new Values(field.getName(), getValue((LogMessageField) field));
         }
 
         if (field instanceof MdcMessageField) {
-            return getValue((MdcMessageField) field);
+            return new Values(field.getName(), getValue((MdcMessageField) field));
+        }
+
+        if (field instanceof DynamicMdcMessageField) {
+            return getMdcValues((DynamicMdcMessageField) field);
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);
@@ -104,15 +113,51 @@ class Log4jLogEvent implements LogEvent {
 
     private String getValue(MdcMessageField field) {
 
-        return getMdc(field.getMdcName());
+        return getMdcValue(field.getMdcName());
     }
 
     @Override
-    public String getMdc(String mdcName) {
+    public String getMdcValue(String mdcName) {
         Object value = MDC.get(mdcName);
         if (value != null) {
             return value.toString();
         }
         return null;
+    }
+
+    private Values getMdcValues(DynamicMdcMessageField field) {
+        Values result = new Values();
+
+        Set<String> mdcNames = getAllMdcNames();
+        Set<String> matchingMdcNames = getMatchingMdcNames(field, mdcNames);
+
+        for (String mdcName : matchingMdcNames) {
+            String mdcValue = getMdcValue(mdcName);
+            if (mdcName != null) {
+                result.setValue(mdcName, mdcValue);
+            }
+        }
+
+        return result;
+    }
+
+    private Set<String> getAllMdcNames() {
+        Set<String> mdcNames = new HashSet<String>();
+
+        mdcNames.addAll(MDC.getContext().keySet());
+        return mdcNames;
+    }
+
+    private Set<String> getMatchingMdcNames(DynamicMdcMessageField field, Set<String> mdcNames) {
+        Set<String> matchingMdcNames = new HashSet<String>();
+
+        for (String mdcName : mdcNames) {
+            if (field.getPattern().matcher(mdcName).matches()) {
+
+                matchingMdcNames.add(mdcName);
+
+            }
+        }
+        return matchingMdcNames;
     }
 }

@@ -86,12 +86,21 @@ public class GelfMessageAssembler {
                 logEvent.getSyslogLevel());
 
         for (MessageField field : fields) {
-            String value = getValue(logEvent, field);
-            if (value == null) {
+            Values values = getValues(logEvent, field);
+            if (values == null || !values.hasValues()) {
                 continue;
             }
 
-            gelfMessage.addField(field.getName(), value);
+            for (String entryName : values.getEntryNames())
+            {
+                String value = values.getValue(entryName);
+                if(value == null)
+                {
+                    continue;
+
+                }
+                gelfMessage.addField(entryName, value);
+            }
         }
 
         if (extractStackTrace) {
@@ -115,25 +124,25 @@ public class GelfMessageAssembler {
         return gelfMessage;
     }
 
-    private String getValue(LogEvent logEvent, MessageField field) {
+    private Values getValues(LogEvent logEvent, MessageField field) {
 
         if (field instanceof StaticMessageField) {
-            return getValue((StaticMessageField) field);
+            return new Values(field.getName(),getValue((StaticMessageField) field));
         }
 
         if (field instanceof LogMessageField) {
             LogMessageField logMessageField = (LogMessageField) field;
             if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Time) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(timestampPattern);
-                return dateFormat.format(new Date(logEvent.getLogTimestamp()));
+                return new Values(field.getName(),dateFormat.format(new Date(logEvent.getLogTimestamp())));
             }
 
             if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Server) {
-                return getOriginHost();
+                return new Values(field.getName(), getOriginHost());
             }
         }
 
-        return logEvent.getValue(field);
+        return logEvent.getValues(field);
     }
 
     private String getValue(StaticMessageField field) {

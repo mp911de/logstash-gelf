@@ -14,6 +14,7 @@ import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogEvent;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MessageField;
+import biz.paluch.logging.gelf.Values;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -127,10 +128,9 @@ public class JulLogEvent implements LogEvent {
         return syslogLevel;
     }
 
-    @Override
-    public String getValue(MessageField field) {
+    public Values getValues(MessageField field) {
         if (field instanceof LogMessageField) {
-            return getValue((LogMessageField) field);
+            return new Values(field.getName(), getValue((LogMessageField) field));
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);
@@ -156,7 +156,8 @@ public class JulLogEvent implements LogEvent {
     }
 
     @Override
-    public String getMdc(String mdcName) {
+    public String getMdcValue(String mdcName)
+    {
         return null;
     }
 }

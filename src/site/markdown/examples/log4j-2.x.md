@@ -41,6 +41,12 @@ In order to do so, use nested Field elements below the Appender element.
 ### MDC Fields
 
     <Field name="fieldName1" mdc="name of the MDC entry" />
+
+### Dynamic MDC Fields
+
+    <DynamicMdcFields regex="mdc.*" />
+
+In contrast to the configuration of other log frameworks log4j2 config uses one `DynamicMdcFields` element per regex (not separated by comma).
     
 ### Log-Event fields
 
@@ -68,6 +74,8 @@ XML:
                 <Field name="server.fqdn" pattern="%host{fqdn}" />
                 <Field name="fieldName2" literal="fieldValue2" /> <!-- This is a static field -->
                 <Field name="mdcField2" mdc="mdcField2" /> <!-- This is a field using MDC -->
+                <DynamicMdcFields regex="mdc.*" />
+                <DynamicMdcFields regex="(mdc|MDC)fields" />
             </Gelf>
         </Appenders>
         <Loggers>

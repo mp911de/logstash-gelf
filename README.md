@@ -24,6 +24,8 @@ Settings
 --------------
 Following settings can be used:
 
+Basic Properties
+---------------
 * host (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash Host
     * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
     * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
@@ -34,12 +36,16 @@ Following settings can be used:
 * originHost (Optional): Originating Hostname, default FQDN Hostname
 * extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false
 * filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
-* mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false
 * facility (Optional): Name of the Facility, default logstash-gelf
 * threshold/level (Optional): Log-Level, default INFO
+
+Advanced Properties
+---------------
 * filter (Optional): Class-Name of a Log-Filter, default none
-* additionalFields (Optional): Post additional fields. Eg. .GelfLogHandler.additionalFields=fieldName=Value
+* mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false
+* additionalFields (Optional): Post additional fields. Example: .GelfLogHandler.additionalFields=fieldName=Value
 * mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
+* dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
 
 MDC Profiling
 --------------
@@ -114,6 +120,7 @@ Properties:
     log4j.appender.gelf.MaximumMessageSize=8192
     log4j.appender.gelf.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
     log4j.appender.gelf.MdcFields=mdcField1,mdcField2
+    log4j.appender.gelf.DynamicMdcFields=mdc.*,(mdc|MDC)fields
 
 
 XML:
@@ -130,6 +137,7 @@ XML:
         <param name="MaximumMessageSize" value="8192" />
         <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
         <param name="MdcFields" value="mdcField1,mdcField2" />
+        <param name="DynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
     </appender>
     
 <a name="log4j2"/>
@@ -162,7 +170,13 @@ In order to do so, use nested Field elements below the Appender element.
 ### MDC Fields
 
     <Field name="fieldName1" mdc="name of the MDC entry" />
-    
+
+### Dynamic MDC Fields
+
+    <DynamicMdcFields regex="mdc.*" />
+
+In contrast to the configuration of other log frameworks log4j2 config uses one `DynamicMdcFields` element per regex (not separated by comma).
+
 ### Log-Event fields
 
 See also: [Pattern Layout](http://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout)
@@ -189,6 +203,8 @@ XML:
                 <Field name="server.fqdn" pattern="%host{fqdn}" />
                 <Field name="fieldName2" literal="fieldValue2" /> <!-- This is a static field -->
                 <Field name="mdcField2" mdc="mdcField2" /> <!-- This is a field using MDC -->
+                <DynamicMdcFields regex="mdc.*" />
+                <DynamicMdcFields regex="(mdc|MDC)fields" />
             </Gelf>
         </Appenders>
         <Loggers>
@@ -220,6 +236,7 @@ standalone.xml
             <property name="maximumMessageSize" value="8192" />
             <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
             <property name="mdcFields" value="mdcField1,mdcField2" />
+            <property name="dynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
         </properties>
     </custom-handler>
 
@@ -246,6 +263,7 @@ logback.xml Example:
             <maximumMessageSize>8192</maximumMessageSize>
             <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
             <mdcFields>mdcField1,mdcField2</mdcFields>
+            <dynamicMdcFields>mdc.*,(mdc|MDC)fields</dynamicMdcFields>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>INFO</level>
             </filter>

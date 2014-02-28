@@ -3,6 +3,7 @@ package biz.paluch.logging.gelf.log4j;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.spi.LoggingEvent;
 
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
@@ -37,6 +38,8 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
  * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * mdcFields=Application,Version,SomeOtherFieldName</li>
+ * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
+ * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.</li>
  * </ul>
  * <p/>
  * <a name="mdcProfiling"></a>
@@ -217,6 +220,14 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
 
     public void setMaximumMessageSize(int maximumMessageSize) {
         gelfMessageAssembler.setMaximumMessageSize(maximumMessageSize);
+    }
+
+    public void setDynamicMdcFields(String fieldSpec) {
+        String[] fields = fieldSpec.split(",");
+
+        for (String field : fields) {
+            gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
+        }
     }
 
     public void setTestSenderClass(String testSender) {

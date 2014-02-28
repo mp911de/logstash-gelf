@@ -18,6 +18,7 @@ Following settings can be used:
  * filter (Optional): Class-Name of a Log-Filter, default none
  * additionalFields (Optional): Post additional fields. Eg. .GelfLogHandler.additionalFields=fieldName=Value
  * mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
+ * dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
 
 
 Logback configuration
@@ -43,6 +44,7 @@ logback.xml Example:
             <maximumMessageSize>8192</maximumMessageSize>
             <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
             <mdcFields>mdcField1,mdcField2</mdcFields>
+            <dynamicMdcFields>myMdc.*,[a-z]+Field</dynamicMdcFields>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>INFO</level>
             </filter>

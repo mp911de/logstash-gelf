@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+
+<configuration debug="true">
+    <contextName>test</contextName>
+    <jmxConfigurator/>
+
+    <appender name="GELF" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
+        <graylogHost>udp:localhost</graylogHost>
+        <graylogPort>12201</graylogPort>
+        <facility>java-test</facility>
+        <extractStackTrace>true</extractStackTrace>
+        <filterStackTrace>true</filterStackTrace>
+        <mdcProfiling>true</mdcProfiling>
+        <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
+        <maximumMessageSize>8192</maximumMessageSize>
+        <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
+        <mdcFields>mdcField1,mdcField2</mdcFields>
+        <testSenderClass>biz.paluch.logging.gelf.GelfTestSender</testSenderClass>
+        <dynamicMdcFields>myMdc.*,[a-z]+Field</dynamicMdcFields>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="GELF" />
+    </root>
+</configuration>

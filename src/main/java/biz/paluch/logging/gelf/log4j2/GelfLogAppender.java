@@ -11,6 +11,7 @@ import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.helpers.Strings;
 import org.apache.logging.log4j.status.StatusLogger;
 
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
@@ -78,6 +79,10 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
  * 
  * <h3>MDC Fields</h3> <code>
     &lt;Field name="fieldName1" mdc="name of the MDC entry" /&gt;
+ * </code>
+ *
+ * <h3>Dynamic MDC Fields</h3> <code>
+     &lt;DynamicMdcFields regex="mdc.*"  /&gt;
  * </code>
  * 
  * 
@@ -182,7 +187,7 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
      */
     @PluginFactory
     public static GelfLogAppender createAppender(@PluginAttribute("name") String name, @PluginElement("Filter") Filter filter,
-            @PluginElement("Field") final GelfLogField[] fields, @PluginAttribute("graylogHost") String graylogHost,
+            @PluginElement("Field") final GelfLogField[] fields,@PluginElement("DynamicMdcFields") final GelfDynamicMdcLogFields[] dynamicFieldArray, @PluginAttribute("graylogHost") String graylogHost,
             @PluginAttribute("host") String host, @PluginAttribute("graylogPort") String graylogPort,
             @PluginAttribute("port") String port, @PluginAttribute("extractStackTrace") String extractStackTrace,
             @PluginAttribute("facility") String facility, @PluginAttribute("filterStackTrace") String filterStackTrace,
@@ -238,7 +243,7 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
             mdcGelfMessageAssembler.setMaximumMessageSize(Integer.parseInt(maximumMessageSize));
         }
 
-        configureFields(mdcGelfMessageAssembler, fields);
+        configureFields(mdcGelfMessageAssembler, fields, dynamicFieldArray);
 
         GelfLogAppender result = new GelfLogAppender(name, filter, mdcGelfMessageAssembler);
 
@@ -252,11 +257,13 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
 
     /**
      * Configure fields (literals, MDC, layout).
-     * 
+     *
      * @param mdcGelfMessageAssembler
      * @param fields
+     * @param dynamicFieldArray
      */
-    private static void configureFields(MdcGelfMessageAssembler mdcGelfMessageAssembler, GelfLogField[] fields) {
+    private static void configureFields(MdcGelfMessageAssembler mdcGelfMessageAssembler, GelfLogField[] fields,
+                                        GelfDynamicMdcLogFields[] dynamicFieldArray) {
         if (fields == null) {
             mdcGelfMessageAssembler.addFields(LogMessageField.getDefaultMapping());
             return;
@@ -274,6 +281,14 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
 
             if (field.getPatternLayout() != null) {
                 mdcGelfMessageAssembler.addField(new PatternLogMessageField(field.getName(), null, field.getPatternLayout()));
+            }
+        }
+
+        if(dynamicFieldArray != null)
+        {
+            for (GelfDynamicMdcLogFields gelfDynamicMdcLogFields : dynamicFieldArray)
+            {
+                mdcGelfMessageAssembler.addField(new DynamicMdcMessageField(gelfDynamicMdcLogFields.getRegex()));
             }
         }
     }

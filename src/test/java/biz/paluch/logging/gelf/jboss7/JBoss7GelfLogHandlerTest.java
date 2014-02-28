@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf.jboss7;
 
+import static biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandlerTestFactory.getJBoss7GelfLogHandler;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -32,7 +33,7 @@ public class JBoss7GelfLogHandlerTest {
     @Test
     public void testSimple() throws Exception {
 
-        JBoss7GelfLogHandler handler = getjBoss7GelfLogHandler();
+        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
         Logger logger = Logger.getLogger(getClass().getName());
         logger.addHandler(handler);
@@ -52,7 +53,7 @@ public class JBoss7GelfLogHandlerTest {
     @Test
     public void testSimpleWithMsgFormatSubstitution() throws Exception {
 
-        JBoss7GelfLogHandler handler = getjBoss7GelfLogHandler();
+        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
         Logger logger = Logger.getLogger(getClass().getName());
         logger.addHandler(handler);
@@ -72,7 +73,7 @@ public class JBoss7GelfLogHandlerTest {
     @Test
     public void testSimpleWithStringFormatSubstitution() throws Exception {
 
-        JBoss7GelfLogHandler handler = getjBoss7GelfLogHandler();
+        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
         Logger logger = Logger.getLogger(getClass().getName());
         logger.addHandler(handler);
@@ -92,7 +93,7 @@ public class JBoss7GelfLogHandlerTest {
     @Test
     public void testFields() throws Exception {
 
-        JBoss7GelfLogHandler handler = getjBoss7GelfLogHandler();
+        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
         Logger logger = Logger.getLogger(getClass().getName());
         logger.addHandler(handler);
@@ -111,20 +112,5 @@ public class JBoss7GelfLogHandlerTest {
 
     }
 
-    private JBoss7GelfLogHandler getjBoss7GelfLogHandler() {
-        JBoss7GelfLogHandler handler = new JBoss7GelfLogHandler();
 
-        handler.setGraylogHost("udp:localhost");
-        handler.setGraylogPort(12201);
-        handler.setFacility("java-test");
-        handler.setExtractStackTrace(true);
-        handler.setFilterStackTrace(true);
-        handler.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSSS");
-        handler.setMaximumMessageSize(8192);
-        handler.setAdditionalFields("fieldName1=fieldValue1,fieldName2=fieldValue2");
-        handler.setLevel(Level.INFO);
-        handler.setMdcFields("mdcField1,mdcField2");
-        handler.setTestSenderClass(GelfTestSender.class.getName());
-        return handler;
-    }
 }

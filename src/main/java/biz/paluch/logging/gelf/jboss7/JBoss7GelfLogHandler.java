@@ -1,9 +1,8 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.LogRecord;
 
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
@@ -35,6 +34,8 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * .JBoss7GelfLogHandler.mdcFields=Application,Version,SomeOtherFieldName</li>
+ * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
+ * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name. .JBoss7GelfLogHandler.dynamicMdcFields=mdc.*,[mdc|MDC]fields</li>
  * </ul>
  * <p/>
  * <a name="mdcProfiling"></a>
@@ -84,9 +85,16 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
     public void setMdcFields(String fieldSpec) {
         String[] fields = fieldSpec.split(",");
 
-        Set<String> mdcFields = new HashSet<String>();
         for (String field : fields) {
             getGelfMessageAssembler().addField(new MdcMessageField(field.trim(), field.trim()));
+        }
+    }
+
+    public void setDynamicMdcFields(String fieldSpec) {
+        String[] fields = fieldSpec.split(",");
+
+        for (String field : fields) {
+            gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
         }
     }
 

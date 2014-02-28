@@ -1,12 +1,16 @@
 package biz.paluch.logging.gelf.logback;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogEvent;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
+import biz.paluch.logging.gelf.Values;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
@@ -101,13 +105,17 @@ class LogbackLogEvent implements LogEvent {
     }
 
     @Override
-    public String getValue(MessageField field) {
+    public Values getValues(MessageField field) {
         if (field instanceof LogMessageField) {
-            return getValue((LogMessageField) field);
+            return new Values(field.getName(), getValue((LogMessageField) field));
         }
 
         if (field instanceof MdcMessageField) {
-            return getValue((MdcMessageField) field);
+            return new Values(field.getName(), getValue((MdcMessageField) field));
+        }
+
+        if (field instanceof DynamicMdcMessageField) {
+            return getMdcValues((DynamicMdcMessageField) field);
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);
@@ -131,13 +139,36 @@ class LogbackLogEvent implements LogEvent {
         throw new UnsupportedOperationException("Cannot provide value for " + field);
     }
 
+    private Values getMdcValues(DynamicMdcMessageField field) {
+        Values result = new Values();
+
+        Set<String> mdcNames = getAllMdcNames();
+        Set<String> matchingMdcNames = GelfUtil.getMatchingMdcNames(field, mdcNames);
+
+        for (String mdcName : matchingMdcNames) {
+            String mdcValue = getMdcValue(mdcName);
+            if (mdcName != null) {
+                result.setValue(mdcName, mdcValue);
+            }
+        }
+
+        return result;
+    }
+
+    private Set<String> getAllMdcNames() {
+        Set<String> mdcNames = new HashSet<String>();
+
+        mdcNames.addAll(loggingEvent.getMDCPropertyMap().keySet());
+        return mdcNames;
+    }
+
     private String getValue(MdcMessageField field) {
 
-        return getMdc(field.getMdcName());
+        return getMdcValue(field.getMdcName());
     }
 
     @Override
-    public String getMdc(String mdcName) {
+    public String getMdcValue(String mdcName) {
         Map<String, String> mdcPropertyMap = loggingEvent.getMDCPropertyMap();
         if (null != mdcPropertyMap && mdcPropertyMap.containsKey(mdcName)) {
             return mdcPropertyMap.get(mdcName);

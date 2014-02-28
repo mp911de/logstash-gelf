@@ -1,6 +1,8 @@
 package biz.paluch.logging.gelf;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
@@ -29,7 +31,7 @@ public class GelfUtil {
     }
 
     public static void addMdcProfiling(LogEvent logEvent, GelfMessage gelfMessage) {
-        Object requestStartMs = logEvent.getMdc(MDC_REQUEST_START_MS);
+        Object requestStartMs = logEvent.getMdcValue(MDC_REQUEST_START_MS);
         long timestamp = -1;
 
         if (requestStartMs instanceof Long) {
@@ -67,5 +69,18 @@ public class GelfUtil {
             return className.substring(index + 1);
         }
         return className;
+    }
+
+    public static Set<String> getMatchingMdcNames(DynamicMdcMessageField field, Set<String> mdcNames) {
+        Set<String> matchingMdcNames = new HashSet<String>();
+
+        for (String mdcName : mdcNames) {
+            if (field.getPattern().matcher(mdcName).matches()) {
+
+                matchingMdcNames.add(mdcName);
+
+            }
+        }
+        return matchingMdcNames;
     }
 }

@@ -12,6 +12,7 @@ public class MdcGelfMessageAssembler extends GelfMessageAssembler {
 
     public static final String PROPERTY_MDC_PROFILING = "mdcProfiling";
     public static final String PROPERTY_MDC_FIELD = "mdcField.";
+    public static final String PROPERTY_DYNAMIC_MDC_FIELD = "dynamicMdcFields.";
 
     private boolean mdcProfiling;
 
@@ -21,6 +22,7 @@ public class MdcGelfMessageAssembler extends GelfMessageAssembler {
         mdcProfiling = "true".equalsIgnoreCase(propertyProvider.getProperty(PROPERTY_MDC_PROFILING));
 
         setupMdcFields(propertyProvider);
+        setupDynamicMdcFields(propertyProvider);
 
     }
 
@@ -43,6 +45,20 @@ public class MdcGelfMessageAssembler extends GelfMessageAssembler {
             }
 
             MdcMessageField field = new MdcMessageField(property, property);
+            addField(field);
+            fieldNumber++;
+        }
+    }
+
+    private void setupDynamicMdcFields(PropertyProvider propertyProvider) {
+        int fieldNumber = 0;
+        while (true) {
+            final String property = propertyProvider.getProperty(PROPERTY_DYNAMIC_MDC_FIELD + fieldNumber);
+            if (null == property) {
+                break;
+            }
+
+            DynamicMdcMessageField field = new DynamicMdcMessageField(property);
             addField(field);
             fieldNumber++;
         }
