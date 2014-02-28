@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import static biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandlerTestFactory.getJBoss7GelfLogHandler;
+import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.getJBoss7GelfLogHandler;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 

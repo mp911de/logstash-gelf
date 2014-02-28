@@ -26,26 +26,26 @@ Following settings can be used:
 
 Basic Properties
 ---------------
-* host (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash Host
+* `host` (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash Host
     * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
     * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
     * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
-* port (since version 1.2.0, Optional): Port, default 12201
-* graylogHost (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
-* graylogPort (until version 1.1.0, Optional): Port, default 12201
-* originHost (Optional): Originating Hostname, default FQDN Hostname
-* extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false
-* filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
-* facility (Optional): Name of the Facility, default logstash-gelf
-* threshold/level (Optional): Log-Level, default INFO
+* `port` (since version 1.2.0, Optional): Port, default 12201
+* `graylogHost` (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
+* `graylogPort` (until version 1.1.0, Optional): Port, default 12201
+* `originHost` (Optional): Originating Hostname, default FQDN Hostname
+* `extractStackTrace` (Optional): Post Stack-Trace to StackTrace field, default false
+* `filterStackTrace` (Optional): Perform Stack-Trace filtering (true/false), default false
+* `facility` (Optional): Name of the Facility, default logstash-gelf
+* `threshold`/`level` (Optional): Log-Level, default INFO
 
 Advanced Properties
 ---------------
-* filter (Optional): Class-Name of a Log-Filter, default none
-* mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false
-* additionalFields (Optional): Post additional fields. Example: .GelfLogHandler.additionalFields=fieldName=Value
-* mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
-* dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
+* `filter` (Optional): Class-Name of a Log-Filter, default none
+* `mdcProfiling` (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false
+* `additionalFields` (Optional): Post additional fields. Example: .GelfLogHandler.additionalFields=fieldName=Value
+* `mdcFields` (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
+* `dynamicMdcFields` (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
 
 MDC Profiling
 --------------
