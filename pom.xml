@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -44,6 +45,7 @@
         <!-- Versions -->
         <com.googlecode.json-simple.version>1.1</com.googlecode.json-simple.version>
         <log4j.version>1.2.14</log4j.version>
+        <log4j2.version>2.0-rc1</log4j2.version>
         <junit.version>4.11</junit.version>
         <org.slf4j.slf4j-api.version>1.7.5</org.slf4j.slf4j-api.version>
         <ch.qos.logback.logback-classic.version>1.0.13</ch.qos.logback.logback-classic.version>
@@ -54,6 +56,7 @@
         <version.org.apache.maven.doxia.doxia-module-markdown>1.3</version.org.apache.maven.doxia.doxia-module-markdown>
         <version.org.apache.maven.plugins.maven-project-info-reports-plugin>2.7
         </version.org.apache.maven.plugins.maven-project-info-reports-plugin>
+
     </properties>
 
     <developers>
@@ -153,36 +156,47 @@
             <artifactId>json-simple</artifactId>
             <version>${com.googlecode.json-simple.version}</version>
         </dependency>
+
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+
+        <!-- log4j2 START -->
+
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.0-beta9</version>
+            <version>${log4j2.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.0-beta9</version>
+            <version>${log4j2.version}</version>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
+
+        <!-- log4j2 END -->
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${org.slf4j.slf4j-api.version}</version>
         </dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${ch.qos.logback.logback-classic.version}</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

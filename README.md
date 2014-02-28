@@ -10,6 +10,15 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF). T
 
 See also http://logging.paluch.biz/ for further documentation.
 
+Versions/Dependencies
+--------------
+This project is built against following dependencies/versions:
+
+* log4j 1.2.14
+* log4j2 2.0-rc1
+* Java Util Logging JDK Version 1.6
+* logback 1.0.13
+* slf4j-api 1.7.5
 
 Settings
 --------------

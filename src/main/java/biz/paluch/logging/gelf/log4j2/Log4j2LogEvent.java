@@ -46,7 +46,7 @@ class Log4j2LogEvent implements LogEvent {
     private int levelToSyslogLevel(final Level level) {
         final int syslogLevel;
 
-        switch (level) {
+        switch (level.getStandardLevel()) {
             case FATAL:
                 return 2;
             case ERROR:

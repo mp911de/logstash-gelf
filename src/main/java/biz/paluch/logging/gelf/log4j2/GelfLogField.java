@@ -66,7 +66,7 @@ public class GelfLogField {
         }
 
         if (isPattern) {
-            return new GelfLogField(name, null, null, PatternLayout.createLayout(pattern, config, null, null, "false"));
+            return new GelfLogField(name, null, null, PatternLayout.createLayout(pattern, config, null, null, "false", "false"));
         }
 
         return new GelfLogField(name, literalValue, mdc, null);
