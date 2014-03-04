@@ -6,8 +6,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import org.apache.log4j.Logger;
-
 /**
  * Static Details about the runtime container: Hostname (simple/fqdn), Address and timestamp of the first access (time when the
  * application was loaded).
@@ -15,6 +13,10 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class RuntimeContainer {
+
+    public static final String PROPERTY_LOGSTASH_GELF_HOSTNAME = "logstash-gelf.hostname";
+    public static final String PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME = "logstash-gelf.fqdn.hostname";
+    public static final String PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION = "logstash-gelf.skipHostnameResolution";
 
     /**
      * Current Hostname.
@@ -36,8 +38,6 @@ public class RuntimeContainer {
      */
     public static final long FIRST_ACCESS;
 
-    private static final Logger LOGGER = Logger.getLogger(RuntimeContainer.class);
-
     /**
      * Utility Constructor.
      */
@@ -49,22 +49,27 @@ public class RuntimeContainer {
 
         FIRST_ACCESS = System.currentTimeMillis();
 
-        String myHostName = "unknown";
-        String myFQDNHostName = "unknown";
+        String myHostName = System.getProperty(PROPERTY_LOGSTASH_GELF_HOSTNAME, "unknown");
+        String myFQDNHostName = System.getProperty(PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME, "unknown");
         String myAddress = "";
-        try {
 
-            InetAddress inetAddress = getInetAddressWithHostname();
+        if (!Boolean.getBoolean(PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION)) {
 
-            if (inetAddress == null) {
-                inetAddress = InetAddress.getLocalHost();
+            try {
+
+                InetAddress inetAddress = getInetAddressWithHostname();
+
+                if (inetAddress == null) {
+                    inetAddress = InetAddress.getLocalHost();
+                }
+
+                myHostName = getHostname(inetAddress, false);
+                myFQDNHostName = getHostname(inetAddress, true);
+                myAddress = inetAddress.getHostAddress();
+            } catch (IOException e) {
+                System.err.print("Cannot resolve hostname");
+                e.printStackTrace(System.err);
             }
-
-            myHostName = getHostname(inetAddress, false);
-            myFQDNHostName = getHostname(inetAddress, true);
-            myAddress = inetAddress.getHostAddress();
-        } catch (IOException e) {
-            LOGGER.info(e.getMessage(), e);
         }
 
         FQDN_HOSTNAME = myFQDNHostName;
