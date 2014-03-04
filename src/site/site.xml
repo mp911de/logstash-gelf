@@ -16,6 +16,7 @@
 			<item name="log4j v2.x" href="examples/log4j-2.x.html"/>
             <item name="Logback" href="examples/logback.html"/>
             <item name="MDC Profiling" href="mdcprofiling.html"/>
+            <item name="Hostname Lookup" href="hostname-lookup.html"/>
         </menu>
 
         <menu name="Project Documentation">
