@@ -48,7 +48,7 @@ public class GelfUDPSender implements GelfSender {
                 channel.write(buffer);
             }
         } catch (IOException e) {
-            errorReporter.reportError(e.getMessage(), e);
+            errorReporter.reportError(e.getMessage(), new IOException("Cannot send data to " + host + ":" + port, e));
             return false;
         }
 

@@ -36,7 +36,7 @@ public class GelfTCPSender implements GelfSender {
 
             return true;
         } catch (IOException e) {
-            errorReporter.reportError(e.getMessage(), e);
+            errorReporter.reportError(e.getMessage(), new IOException("Cannot send data to " + host + ":" + port, e));
             // if an error occours, signal failure
             socket = null;
             return false;
