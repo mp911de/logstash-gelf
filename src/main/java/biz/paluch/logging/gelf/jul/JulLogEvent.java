@@ -1,5 +1,11 @@
 package biz.paluch.logging.gelf.jul;
 
+import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.LogEvent;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MessageField;
+import biz.paluch.logging.gelf.Values;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -9,12 +15,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.LogEvent;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MessageField;
-import biz.paluch.logging.gelf.Values;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -63,6 +63,11 @@ public class JulLogEvent implements LogEvent {
             message = "";
         }
         if (parameters != null && parameters.length > 0) {
+            if (record.getResourceBundle() != null && record.getResourceBundle().containsKey(record.getMessage())) {
+                message = record.getResourceBundle().getString(record.getMessage());
+            }
+            String originalMessage = message;
+
             // by default, using {0}, {1}, etc. -> MessageFormat
 
             try {
@@ -74,7 +79,7 @@ public class JulLogEvent implements LogEvent {
                 // ignore
             }
 
-            if (message.equals(record.getMessage())) {
+            if (message.equals(originalMessage)) {
                 // if the text is the same, assuming this is String.format type log (%s, %d, etc.)
                 try {
                     message = String.format(message, parameters);
@@ -156,8 +161,7 @@ public class JulLogEvent implements LogEvent {
     }
 
     @Override
-    public String getMdcValue(String mdcName)
-    {
+    public String getMdcValue(String mdcName) {
         return null;
     }
 }
