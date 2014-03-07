@@ -18,6 +18,9 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  */
 public class GelfLogAppenderMinimalTest {
+    public static final String LOG_MESSAGE = "foo bar test log message";
+    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+
     private static LoggerContext loggerContext;
 
     @BeforeClass
@@ -44,7 +47,7 @@ public class GelfLogAppenderMinimalTest {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
         assertEquals(0, GelfTestSender.getMessages().size());
-        logger.debug("Blubb Test");
+        logger.debug(LOG_MESSAGE);
         assertEquals(0, GelfTestSender.getMessages().size());
 
     }
@@ -54,13 +57,13 @@ public class GelfLogAppenderMinimalTest {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-        assertEquals("Blubb Test", gelfMessage.getFullMessage());
+        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
+        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
         assertEquals("6", gelfMessage.getLevel());
-        assertEquals("Blubb Test", gelfMessage.getShortMessage());
 
     }
 }

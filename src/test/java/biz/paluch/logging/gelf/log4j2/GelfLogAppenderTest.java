@@ -21,6 +21,9 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  */
 public class GelfLogAppenderTest {
+    public static final String LOG_MESSAGE = "foo bar test log message";
+    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+
     private static LoggerContext loggerContext;
 
     @BeforeClass
@@ -47,7 +50,7 @@ public class GelfLogAppenderTest {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
         assertEquals(0, GelfTestSender.getMessages().size());
-        logger.debug("Blubb Test");
+        logger.debug(LOG_MESSAGE);
         assertEquals(0, GelfTestSender.getMessages().size());
 
     }
@@ -57,13 +60,13 @@ public class GelfLogAppenderTest {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-        assertEquals("Blubb Test", gelfMessage.getFullMessage());
+        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
+        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
         assertEquals("6", gelfMessage.getLevel());
-        assertEquals("Blubb Test", gelfMessage.getShortMessage());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 
         assertEquals(RuntimeContainer.FQDN_HOSTNAME, gelfMessage.getField("server"));
@@ -83,7 +86,7 @@ public class GelfLogAppenderTest {
         ThreadContext.put("mdcField1", "my mdc value");
         ThreadContext.put(GelfUtil.MDC_REQUEST_START_MS, "" + System.currentTimeMillis());
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);

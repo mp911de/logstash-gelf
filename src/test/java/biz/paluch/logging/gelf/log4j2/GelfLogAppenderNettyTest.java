@@ -19,6 +19,7 @@ import org.junit.Test;
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.NettyLocalServer;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 import com.google.code.tempusfugit.temporal.Condition;
 import com.google.code.tempusfugit.temporal.Duration;
@@ -28,6 +29,9 @@ import com.google.code.tempusfugit.temporal.WaitFor;
 /**
  */
 public class GelfLogAppenderNettyTest {
+    public static final String LOG_MESSAGE = "foo bar test log message";
+    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+
     private static LoggerContext loggerContext;
     private static NettyLocalServer server = new NettyLocalServer();
 
@@ -59,7 +63,7 @@ public class GelfLogAppenderNettyTest {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
 
         waitForGelf();
 
@@ -68,7 +72,7 @@ public class GelfLogAppenderNettyTest {
 
         JSONObject jsonValue = (JSONObject) jsonValues.get(0);
 
-        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get("host"));
+        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get(GelfMessage.FIELD_HOST));
         assertEquals(RuntimeContainer.HOSTNAME, jsonValue.get("_server.simple"));
         assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get("_server.fqdn"));
         assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get("_server"));
@@ -77,13 +81,13 @@ public class GelfLogAppenderNettyTest {
         assertEquals(getClass().getName(), jsonValue.get("_className"));
         assertEquals(getClass().getSimpleName(), jsonValue.get("_simpleClassName"));
 
-        assertEquals("Blubb Test", jsonValue.get("full_message"));
-        assertEquals("Blubb Test", jsonValue.get("short_message"));
+        assertEquals(EXPECTED_LOG_MESSAGE, jsonValue.get(GelfMessage.FIELD_FULL_MESSAGE));
+        assertEquals(EXPECTED_LOG_MESSAGE, jsonValue.get(GelfMessage.FIELD_SHORT_MESSAGE));
 
         assertEquals("INFO", jsonValue.get("_level"));
-        assertEquals("6", jsonValue.get("level"));
+        assertEquals("6", jsonValue.get(GelfMessage.FIELD_LEVEL));
 
-        assertEquals("logstash-gelf", jsonValue.get("facility"));
+        assertEquals("logstash-gelf", jsonValue.get(GelfMessage.FIELD_FACILITY));
         assertEquals("fieldValue1", jsonValue.get("_fieldName1"));
         assertEquals("fieldValue2", jsonValue.get("_fieldName2"));
 

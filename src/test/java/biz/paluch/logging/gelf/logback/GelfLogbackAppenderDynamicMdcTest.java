@@ -21,6 +21,15 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
  */
 public class GelfLogbackAppenderDynamicMdcTest {
 
+    public static final String LOG_MESSAGE = "foo bar test log message";
+    public static final String MDC_MY_MDC = "myMdc";
+    public static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
+    public static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
+    public static final String VALUE_1 = "value1";
+    public static final String VALUE_2 = "value2";
+    public static final String VALUE_3 = "value3";
+    public static final String SOME_FIELD = "someField";
+    public static final String SOME_OTHER_FIELD = "someOtherField";
     LoggerContext lc = null;
 
     @Before
@@ -43,12 +52,12 @@ public class GelfLogbackAppenderDynamicMdcTest {
 
         Logger logger = lc.getLogger(getClass());
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        String myMdc = gelfMessage.getField("myMdc");
+        String myMdc = gelfMessage.getField(MDC_MY_MDC);
         assertNull(myMdc);
     }
 
@@ -56,18 +65,18 @@ public class GelfLogbackAppenderDynamicMdcTest {
     public void testWithMdcPrefix() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
-        MDC.put("myMdc", "value");
-        MDC.put("myMdc-with-suffix1", "value1");
-        MDC.put("myMdc-with-suffix2", "value2");
+        MDC.put(MDC_MY_MDC, VALUE_1);
+        MDC.put(MY_MDC_WITH_SUFFIX1, VALUE_2);
+        MDC.put(MY_MDC_WITH_SUFFIX2, VALUE_3);
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("value", gelfMessage.getField("myMdc"));
-        assertEquals("value1", gelfMessage.getField("myMdc-with-suffix1"));
-        assertEquals("value2", gelfMessage.getField("myMdc-with-suffix2"));
+        assertEquals(VALUE_1, gelfMessage.getField(MDC_MY_MDC));
+        assertEquals(VALUE_2, gelfMessage.getField(MY_MDC_WITH_SUFFIX1));
+        assertEquals(VALUE_3, gelfMessage.getField(MY_MDC_WITH_SUFFIX2));
 
     }
 
@@ -75,16 +84,16 @@ public class GelfLogbackAppenderDynamicMdcTest {
     public void testWithMdcRegex() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
-        MDC.put("someField", "included");
-        MDC.put("someOtherField", "excluded");
+        MDC.put(SOME_FIELD, "included");
+        MDC.put(SOME_OTHER_FIELD, "excluded");
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("included", gelfMessage.getField("someField"));
-        assertNull(gelfMessage.getField("someOtherField"));
+        assertEquals("included", gelfMessage.getField(SOME_FIELD));
+        assertNull(gelfMessage.getField(SOME_OTHER_FIELD));
 
     }
 

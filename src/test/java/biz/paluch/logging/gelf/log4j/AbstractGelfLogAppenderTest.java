@@ -22,13 +22,16 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  */
 public abstract class AbstractGelfLogAppenderTest {
 
+    public static final String LOG_MESSAGE = "foo bar test log message";
+    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+
     @Test
     public void testSimpleDebug() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
 
         assertEquals(0, GelfTestSender.getMessages().size());
-        logger.debug("Blubb Test");
+        logger.debug(LOG_MESSAGE);
         assertEquals(0, GelfTestSender.getMessages().size());
 
     }
@@ -38,14 +41,14 @@ public abstract class AbstractGelfLogAppenderTest {
 
         Logger logger = Logger.getLogger(getClass());
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("Blubb Test", gelfMessage.getFullMessage());
+        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
+        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
         assertEquals("6", gelfMessage.getLevel());
-        assertEquals("Blubb Test", gelfMessage.getShortMessage());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 
     }
@@ -55,13 +58,13 @@ public abstract class AbstractGelfLogAppenderTest {
 
         Logger logger = Logger.getLogger(getClass());
 
-        logger.info("Blubb Test", new Exception("this is an exception"));
+        logger.info(LOG_MESSAGE, new Exception("this is an exception"));
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("Blubb Test", gelfMessage.getFullMessage());
-        assertEquals("biz.paluch.logging.gelf.log4j.AbstractGelfLogAppenderTest",
+        assertEquals(LOG_MESSAGE, gelfMessage.getFullMessage());
+        assertEquals(AbstractGelfLogAppenderTest.class.getName(),
                 gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.getFieldName()));
         assertEquals("testException", gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.getFieldName()));
 
@@ -78,7 +81,7 @@ public abstract class AbstractGelfLogAppenderTest {
         MDC.put("mdcField1", "a value");
         MDC.remove(GelfUtil.MDC_REQUEST_START_MS);
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
@@ -99,7 +102,7 @@ public abstract class AbstractGelfLogAppenderTest {
         Logger logger = Logger.getLogger(getClass());
         MDC.put(GelfUtil.MDC_REQUEST_START_MS, "" + System.currentTimeMillis());
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);

@@ -22,6 +22,7 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
  */
 public class GelfLogbackAppenderHostnameTest {
 
+    public static final String LOG_MESSAGE = "foo bar test log message";
     LoggerContext lc = null;
 
     @Before
@@ -44,7 +45,7 @@ public class GelfLogbackAppenderHostnameTest {
 
         Logger logger = lc.getLogger(getClass());
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
@@ -58,7 +59,7 @@ public class GelfLogbackAppenderHostnameTest {
 
         Logger logger = lc.getLogger(getClass());
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);

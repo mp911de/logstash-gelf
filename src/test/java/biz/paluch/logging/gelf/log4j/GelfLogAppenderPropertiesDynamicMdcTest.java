@@ -20,8 +20,9 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 27.09.13 07:47
  */
-public class GelfLogAppenderPropertiesDynamicMdcTest
-{
+public class GelfLogAppenderPropertiesDynamicMdcTest {
+
+    public static final String LOG_MESSAGE = "foo bar test log message";
 
     @Before
     public void before() throws Exception {
@@ -44,7 +45,7 @@ public class GelfLogAppenderPropertiesDynamicMdcTest
 
         Logger logger = Logger.getLogger(getClass());
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
@@ -61,7 +62,7 @@ public class GelfLogAppenderPropertiesDynamicMdcTest
         MDC.put("myMdc-with-suffix1", "value1");
         MDC.put("myMdc-with-suffix2", "value2");
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
@@ -79,7 +80,7 @@ public class GelfLogAppenderPropertiesDynamicMdcTest
         MDC.put("someField", "included");
         MDC.put("someOtherField", "excluded");
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);

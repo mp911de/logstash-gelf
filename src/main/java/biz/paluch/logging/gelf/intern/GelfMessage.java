@@ -21,6 +21,12 @@ public class GelfMessage {
     private static final String GELF_VERSION = "1.0";
     private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
     private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
+    public static final String FIELD_HOST = "host";
+    public static final String FIELD_SHORT_MESSAGE = "short_message";
+    public static final String FIELD_FULL_MESSAGE = "full_message";
+    public static final String FIELD_TIMESTAMP = "timestamp";
+    public static final String FIELD_LEVEL = "level";
+    public static final String FIELD_FACILITY = "facility";
 
     private String version = GELF_VERSION;
     private String host;
@@ -48,24 +54,21 @@ public class GelfMessage {
         Map<String, Object> map = new HashMap<String, Object>();
 
         // map.put("version", getVersion());
-        map.put("host", getHost());
-        map.put("short_message", getShortMessage());
-        map.put("full_message", getFullMessage());
-        map.put("timestamp", getTimestamp());
+        map.put(FIELD_HOST, getHost());
+        map.put(FIELD_SHORT_MESSAGE, getShortMessage());
+        map.put(FIELD_FULL_MESSAGE, getFullMessage());
+        map.put(FIELD_TIMESTAMP, getTimestamp());
 
-        map.put("level", getLevel());
-        map.put("facility", getFacility());
+        map.put(FIELD_LEVEL, getLevel());
+        map.put(FIELD_FACILITY, getFacility());
 
         for (Map.Entry<String, String> additionalField : additonalFields.entrySet()) {
             if (!ID_NAME.equals(additionalField.getKey())) {
                 // try adding the value as a double
                 Object value;
-                try
-                {
+                try {
                     value = Double.parseDouble(additionalField.getValue());
-                }
-                catch (NumberFormatException ex)
-                {
+                } catch (NumberFormatException ex) {
                     // fallback on the string value
                     value = additionalField.getValue();
                 }

@@ -21,6 +21,9 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  */
 public class JBoss7GelfLogHandlerTest {
 
+    public static final String LOG_MESSAGE = "foo bar test log message";
+    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+
     @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
@@ -38,14 +41,14 @@ public class JBoss7GelfLogHandlerTest {
         Logger logger = Logger.getLogger(getClass().getName());
         logger.addHandler(handler);
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("Blubb Test", gelfMessage.getFullMessage());
+        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
+        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
         assertEquals("6", gelfMessage.getLevel());
-        assertEquals("Blubb Test", gelfMessage.getShortMessage());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 
     }
@@ -58,14 +61,16 @@ public class JBoss7GelfLogHandlerTest {
         Logger logger = Logger.getLogger(getClass().getName());
         logger.addHandler(handler);
 
-        logger.log(Level.INFO, "Blubb Test {0}", new String[] { "aaa" });
+        String logMessage = "foo bar test log message {0}";
+        String expectedMessage = "foo bar test log message aaa";
+        logger.log(Level.INFO, logMessage, new String[] { "aaa" });
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("Blubb Test aaa", gelfMessage.getFullMessage());
+        assertEquals(expectedMessage, gelfMessage.getFullMessage());
+        assertEquals(expectedMessage, gelfMessage.getShortMessage());
         assertEquals("6", gelfMessage.getLevel());
-        assertEquals("Blubb Test aaa", gelfMessage.getShortMessage());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 
     }
@@ -78,15 +83,16 @@ public class JBoss7GelfLogHandlerTest {
         Logger logger = Logger.getLogger(getClass().getName());
         logger.addHandler(handler);
 
-        logger.log(Level.INFO, "Blubb Test %s", new String[] { "aaa" });
+        String logMessage = "foo bar test log message %s";
+        String expectedMessage = "foo bar test log message aaa";
+
+        logger.log(Level.INFO, logMessage, new String[] { "aaa" });
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("Blubb Test aaa", gelfMessage.getFullMessage());
-        assertEquals("6", gelfMessage.getLevel());
-        assertEquals("Blubb Test aaa", gelfMessage.getShortMessage());
-        assertEquals(8192, gelfMessage.getMaximumMessageSize());
+        assertEquals(expectedMessage, gelfMessage.getFullMessage());
+        assertEquals(expectedMessage, gelfMessage.getShortMessage());
 
     }
 
@@ -100,7 +106,7 @@ public class JBoss7GelfLogHandlerTest {
 
         MDC.put("mdcField1", "a value");
 
-        logger.info("Blubb Test");
+        logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
@@ -111,6 +117,5 @@ public class JBoss7GelfLogHandlerTest {
         assertNull(gelfMessage.getField("mdcField2"));
 
     }
-
 
 }
