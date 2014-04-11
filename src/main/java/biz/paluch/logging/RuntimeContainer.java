@@ -14,13 +14,6 @@ import java.util.Enumeration;
  */
 public class RuntimeContainer {
 
-    public static final String PROPERTY_LOGSTASH_GELF_HOSTNAME = "logstash-gelf.hostname";
-    public static final String PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME = "logstash-gelf.fqdn.hostname";
-    public static final String PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION = "logstash-gelf.skipHostnameResolution";
-    public static final String PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER = "logstash-gelf.resolutionOrder";
-    public static final String RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK = "localhost,network";
-    public static final String RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK = "network,localhost";
-
     /**
      * Current Hostname.
      */
@@ -52,23 +45,24 @@ public class RuntimeContainer {
 
         FIRST_ACCESS = System.currentTimeMillis();
 
-        String myHostName = System.getProperty(PROPERTY_LOGSTASH_GELF_HOSTNAME, "unknown");
-        String myFQDNHostName = System.getProperty(PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME, "unknown");
+        String myHostName = System.getProperty(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME, "unknown");
+        String myFQDNHostName = System.getProperty(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME, "unknown");
         String myAddress = "";
 
-        if (!Boolean.getBoolean(PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION)) {
+        if (!Boolean.getBoolean(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION)) {
 
             try {
 
-                String resolutionOrder = System.getProperty(PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER,
-                        RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK);
+                String resolutionOrder = System.getProperty(
+                        RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER,
+                        RuntimeContainerProperties.RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK);
 
                 InetAddress inetAddress = null;
-                if (resolutionOrder.equals(RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK)) {
+                if (resolutionOrder.equals(RuntimeContainerProperties.RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK)) {
                     inetAddress = getInetAddressWithHostname();
                 }
 
-                if (resolutionOrder.equals(RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK)) {
+                if (resolutionOrder.equals(RuntimeContainerProperties.RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK)) {
                     if (isQualified(InetAddress.getLocalHost())) {
                         inetAddress = InetAddress.getLocalHost();
                     } else {
