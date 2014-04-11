@@ -17,6 +17,9 @@ public class RuntimeContainer {
     public static final String PROPERTY_LOGSTASH_GELF_HOSTNAME = "logstash-gelf.hostname";
     public static final String PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME = "logstash-gelf.fqdn.hostname";
     public static final String PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION = "logstash-gelf.skipHostnameResolution";
+    public static final String PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER = "logstash-gelf.resolutionOrder";
+    public static final String RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK = "localhost,network";
+    public static final String RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK = "network,localhost";
 
     /**
      * Current Hostname.
@@ -57,7 +60,21 @@ public class RuntimeContainer {
 
             try {
 
-                InetAddress inetAddress = getInetAddressWithHostname();
+                String resolutionOrder = System.getProperty(PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER,
+                        RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK);
+
+                InetAddress inetAddress = null;
+                if (resolutionOrder.equals(RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK)) {
+                    inetAddress = getInetAddressWithHostname();
+                }
+
+                if (resolutionOrder.equals(RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK)) {
+                    if (isQualified(InetAddress.getLocalHost())) {
+                        inetAddress = InetAddress.getLocalHost();
+                    } else {
+                        inetAddress = getInetAddressWithHostname();
+                    }
+                }
 
                 if (inetAddress == null) {
                     inetAddress = InetAddress.getLocalHost();
@@ -97,11 +114,7 @@ public class RuntimeContainer {
             while (ias.hasMoreElements()) {
                 InetAddress inetAddress = ias.nextElement();
 
-                if (inetAddress.isLoopbackAddress()) {
-                    continue;
-                }
-
-                if (inetAddress.getHostAddress().equals(inetAddress.getCanonicalHostName())) {
+                if (!isQualified(inetAddress)) {
                     continue;
                 }
 
@@ -110,5 +123,13 @@ public class RuntimeContainer {
         }
 
         return null;
+    }
+
+    private static boolean isQualified(InetAddress inetAddress) {
+        return !inetAddress.isLoopbackAddress() && !inetAddress.getHostAddress().equals(inetAddress.getCanonicalHostName());
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Host-Resolution: " + FQDN_HOSTNAME + "/" + HOSTNAME);
     }
 }
