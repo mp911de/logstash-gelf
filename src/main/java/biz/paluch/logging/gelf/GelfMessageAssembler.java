@@ -29,6 +29,7 @@ public class GelfMessageAssembler {
     private String facility;
     private boolean extractStackTrace;
     private boolean filterStackTrace;
+    private boolean stripLeadingUnderscore;
     private int maximumMessageSize = 8192;
 
     private List<MessageField> fields = new ArrayList<MessageField>();
@@ -58,6 +59,7 @@ public class GelfMessageAssembler {
         originHost = propertyProvider.getProperty(PropertyProvider.PROPERTY_ORIGIN_HOST);
         extractStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_EXTRACT_STACKTRACE));
         filterStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE));
+        stripLeadingUnderscore = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_STRIP_LEADING_UNDERSCORE));
 
         setupStaticFields(propertyProvider);
         facility = propertyProvider.getProperty(PropertyProvider.PROPERTY_FACILITY);
@@ -115,6 +117,8 @@ public class GelfMessageAssembler {
         }
 
         gelfMessage.setHost(getOriginHost());
+
+        gelfMessage.setStripLeadingUnderscore(getStripLeadingUnderscore());
 
         if (null != facility) {
             gelfMessage.setFacility(facility);
@@ -253,5 +257,13 @@ public class GelfMessageAssembler {
 
     public void setMaximumMessageSize(int maximumMessageSize) {
         this.maximumMessageSize = maximumMessageSize;
+    }
+
+    public boolean getStripLeadingUnderscore() {
+        return stripLeadingUnderscore;
+    }
+
+    public void setStripLeadingUnderscore(boolean stripLeadingUnderscore) {
+        this.stripLeadingUnderscore = stripLeadingUnderscore;
     }
 }

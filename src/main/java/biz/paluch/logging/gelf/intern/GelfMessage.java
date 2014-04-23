@@ -38,6 +38,7 @@ public class GelfMessage {
     private String facility = "logstash-gelf";
     private Map<String, String> additonalFields = new HashMap<String, String>();
     private int maximumMessageSize = 8192;
+    private boolean stripLeadingUnderscore = false;
 
     public GelfMessage() {
     }
@@ -72,7 +73,11 @@ public class GelfMessage {
                     // fallback on the string value
                     value = additionalField.getValue();
                 }
+                if (!stripLeadingUnderscore) {
                 map.put("_" + additionalField.getKey(), value);
+                } else {
+                    map.put("" + additionalField.getKey(), value);
+                }
             }
         }
 
@@ -284,5 +289,13 @@ public class GelfMessage {
 
     public String getField(String fieldName) {
         return getAdditonalFields().get(fieldName);
+    }
+
+    public boolean getStripLeadingUnderscore() {
+        return stripLeadingUnderscore;
+    }
+
+    public void setStripLeadingUnderscore(boolean stripLeadingUnderscore) {
+        this.stripLeadingUnderscore = stripLeadingUnderscore;
     }
 }

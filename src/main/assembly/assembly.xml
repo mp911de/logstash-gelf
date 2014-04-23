@@ -30,6 +30,12 @@
                 <include>com.googlecode.json-simple:json-simple</include>
             </includes>
         </dependencySet>
+        <dependencySet>
+            <outputDirectory>/biz/paluch/logging/main</outputDirectory>
+            <includes>
+                <include>redis.clients:jedis</include>
+            </includes>
+        </dependencySet>
     </dependencySets>
 
     <files>
