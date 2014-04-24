@@ -5,6 +5,7 @@ Following settings can be used:
  * host (since 1.2, Mandatory): Hostname/IP-Address of the Logstash Host
      * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
      * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
+     * redis://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
      * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
  * port (since 1.2, Optional): Port, default 12201
  * graylogHost (until 1.1, Mandatory): Hostname/IP-Address of the Logstash Host

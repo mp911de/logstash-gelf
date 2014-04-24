@@ -230,14 +230,6 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
         }
     }
 
-    public boolean getStripLeadingUnderscore() {
-        return gelfMessageAssembler.getStripLeadingUnderscore();
-    }
-
-    public void setStripLeadingUnderscore(boolean stripLeadingUnderscore) {
-        gelfMessageAssembler.setStripLeadingUnderscore(stripLeadingUnderscore);
-    }
-
     public void setTestSenderClass(String testSender) {
         // This only used for testing
         try {

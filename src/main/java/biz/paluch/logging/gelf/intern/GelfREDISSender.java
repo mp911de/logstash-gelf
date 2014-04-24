@@ -9,7 +9,7 @@ import java.net.Socket;
 import redis.clients.jedis.Jedis;
 
 /**
- * (c) https://github.com/t0xa/gelfj
+ * (c) https://github.com/strima/logstash-gelf.git
  */
 public class GelfREDISSender implements GelfSender {
     private boolean shutdown = false;
@@ -20,7 +20,6 @@ public class GelfREDISSender implements GelfSender {
     public GelfREDISSender(String redisConnStr, ErrorReporter errorReporter) throws IOException {
         this.redisUri = URI.create(redisConnStr);
         this.jedis = new Jedis(redisUri);
-	//System.out.println("GelfREDISSender: New GelfREDISSender created with uri "+redisUri.toString());
         this.errorReporter = errorReporter;
     }
 
@@ -32,14 +31,10 @@ public class GelfREDISSender implements GelfSender {
         try {
             // reconnect if necessary
             if (jedis == null) {
-		//System.out.println("GelfREDISSender.sendMessage: New GelfREDISSender created with uri "+redisUri.toString());
                 jedis = new Jedis(redisUri);
             }
 
-            //socket.getOutputStream().write(message.toTCPBuffer().array());
-	    //System.out.println("GelfREDISSender.sendMessage: before sending Message "+message.toJson());
-            jedis.lpush(redisUri.getFragment(),message.toJson());
-	    //System.out.println("GelfREDISSender.sendMessage: after sending Message "+message.toJson());
+            jedis.lpush(redisUri.getFragment(),message.toJson(""));
 
             return true;
         } catch (Exception e) {

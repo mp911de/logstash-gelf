@@ -182,7 +182,6 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
      * @param filterStackTrace
      * @param mdcProfiling
      * @param maximumMessageSize
-     * @param stripLeadingUnderscore
      * @param testSenderClass
      * @return GelfLogAppender
      */
@@ -194,7 +193,6 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
             @PluginAttribute("facility") String facility, @PluginAttribute("filterStackTrace") String filterStackTrace,
             @PluginAttribute("mdcProfiling") String mdcProfiling,
             @PluginAttribute("maximumMessageSize") String maximumMessageSize,
-            @PluginAttribute("stripLeadingUnderscore") String stripLeadingUnderscore,
             @PluginAttribute("testSenderClass") String testSenderClass) {
 
         MdcGelfMessageAssembler mdcGelfMessageAssembler = new MdcGelfMessageAssembler();
@@ -243,10 +241,6 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
 
         if (maximumMessageSize != null) {
             mdcGelfMessageAssembler.setMaximumMessageSize(Integer.parseInt(maximumMessageSize));
-        }
-
-        if (stripLeadingUnderscore != null) {
-            mdcGelfMessageAssembler.setStripLeadingUnderscore(stripLeadingUnderscore.equals("true"));
         }
 
         configureFields(mdcGelfMessageAssembler, fields, dynamicFieldArray);

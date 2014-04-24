@@ -38,7 +38,6 @@ public class GelfMessage {
     private String facility = "logstash-gelf";
     private Map<String, String> additonalFields = new HashMap<String, String>();
     private int maximumMessageSize = 8192;
-    private boolean stripLeadingUnderscore = false;
 
     public GelfMessage() {
     }
@@ -51,7 +50,7 @@ public class GelfMessage {
         this.level = level;
     }
 
-    public String toJson() {
+    public String toJson(String additionalFieldPrefix) {
         Map<String, Object> map = new HashMap<String, Object>();
 
         // map.put("version", getVersion());
@@ -73,15 +72,15 @@ public class GelfMessage {
                     // fallback on the string value
                     value = additionalField.getValue();
                 }
-                if (!stripLeadingUnderscore) {
-                map.put("_" + additionalField.getKey(), value);
-                } else {
-                    map.put("" + additionalField.getKey(), value);
-                }
+                map.put(additionalFieldPrefix + additionalField.getKey(), value);
             }
         }
 
         return JSONValue.toJSONString(map);
+    }
+    
+    public String toJson() {
+        return toJson("_");
     }
 
     public ByteBuffer[] toUDPBuffers() {
@@ -291,11 +290,4 @@ public class GelfMessage {
         return getAdditonalFields().get(fieldName);
     }
 
-    public boolean getStripLeadingUnderscore() {
-        return stripLeadingUnderscore;
-    }
-
-    public void setStripLeadingUnderscore(boolean stripLeadingUnderscore) {
-        this.stripLeadingUnderscore = stripLeadingUnderscore;
-    }
 }

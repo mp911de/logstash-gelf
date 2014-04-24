@@ -30,7 +30,5 @@ public interface PropertyProvider {
     String PROPERTY_MAX_MESSAGE_SIZE = "maximumMessageSize";
     String PROPERTY_ADDITIONAL_FIELD = "additionalField.";
 
-    String PROPERTY_STRIP_LEADING_UNDERSCORE = "stripLeadingUnderscore";
-    
     String getProperty(String propertyName);
 }
