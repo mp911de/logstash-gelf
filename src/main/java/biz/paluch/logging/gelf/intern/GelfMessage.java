@@ -50,7 +50,7 @@ public class GelfMessage {
         this.level = level;
     }
 
-    public String toJson() {
+    public String toJson(String additionalFieldPrefix) {
         Map<String, Object> map = new HashMap<String, Object>();
 
         // map.put("version", getVersion());
@@ -72,11 +72,15 @@ public class GelfMessage {
                     // fallback on the string value
                     value = additionalField.getValue();
                 }
-                map.put("_" + additionalField.getKey(), value);
+                map.put(additionalFieldPrefix + additionalField.getKey(), value);
             }
         }
 
         return JSONValue.toJSONString(map);
+    }
+    
+    public String toJson() {
+        return toJson("_");
     }
 
     public ByteBuffer[] toUDPBuffers() {
@@ -285,4 +289,5 @@ public class GelfMessage {
     public String getField(String fieldName) {
         return getAdditonalFields().get(fieldName);
     }
+
 }

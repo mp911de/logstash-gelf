@@ -28,6 +28,7 @@
             <outputDirectory>/biz/paluch/logging/main</outputDirectory>
             <includes>
                 <include>com.googlecode.json-simple:json-simple</include>
+                <include>redis.clients:jedis</include>
             </includes>
         </dependencySet>
     </dependencySets>

@@ -38,6 +38,8 @@ public class GelfSenderFactory {
         } else if (graylogHost.startsWith("udp:")) {
             String udpGraylogHost = graylogHost.substring(4, graylogHost.length());
             return new GelfUDPSender(udpGraylogHost, graylogPort, errorReporter);
+        } else if (graylogHost.startsWith("redis:")) {
+            return new GelfREDISSender(graylogHost, errorReporter);
         } else {
             return new GelfUDPSender(graylogHost, graylogPort, errorReporter);
         }

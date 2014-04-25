@@ -46,6 +46,7 @@
         <log4j.version>1.2.14</log4j.version>
         <log4j2.version>2.0-rc1</log4j2.version>
         <junit.version>4.11</junit.version>
+        <jedis.version>2.4.2</jedis.version>
         <org.slf4j.slf4j-api.version>1.7.5</org.slf4j.slf4j-api.version>
         <ch.qos.logback.logback-classic.version>1.0.13</ch.qos.logback.logback-classic.version>
 
@@ -215,6 +216,13 @@
             <artifactId>tempus-fugit</artifactId>
             <version>1.1</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Redis Client -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
         </dependency>
 
     </dependencies>

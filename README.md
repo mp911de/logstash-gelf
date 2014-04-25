@@ -14,11 +14,13 @@ Versions/Dependencies
 --------------
 This project is built against following dependencies/versions:
 
+* json-simple 1.1
 * log4j 1.2.14
 * log4j2 2.0-rc1
 * Java Util Logging JDK Version 1.6
 * logback 1.0.13
 * slf4j-api 1.7.5
+* jedis 2.4.2
 
 Settings
 --------------
@@ -26,9 +28,10 @@ Following settings can be used:
 
 Basic Properties
 ---------------
-* `host` (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash Host
+* `host` (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash or Redis Host
     * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
     * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
+    * [redis](#redis)://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
     * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
 * `port` (since version 1.2.0, Optional): Port, default 12201
 * `graylogHost` (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
@@ -285,6 +288,20 @@ Two values are set by the Log Appender:
 
  * profiling.requestEnd: End-Time of the Request-End in Date.toString-representation
  * profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)
+
+<a name="redis"/>Notes on redis Connection
+--------------
+ * IMPORTANT: for getting your logstash config right it is vital to know that we do LPUSH (list push and not channel method)
+ * IMPORTANT: since the redis input filter from logstash doesn't have an option for stripping leading underscores from fieldnames we do this on our side (GelfREDISSender.java => ... message.toJson("")), well knowing and nevertheless that this breaks graylog format
+ * The redis connection is done through jedis (https://github.com/xetorthio/jedis)
+ * The Url used as connection property is a java.net.URI , therefore it can have all nine components. we use only the following:
+   * scheme    (fixed: redis, directly used to determine the to be used sender class)
+   * user-info (variable: only the password part is used since redis doesnt have users, indirectly used from jedis)
+   * host      (variable: the host your redis db runs on, indirectly used from jedis)
+   * port      (variable: the port your redis db runs on, indirectly used from jedis)
+   * path      (variable: only numbers - your redis db number, indirectly used from jedis)
+   * fragment  (variable: the listname we push the log messages via LPUSH, directly used)
+
 
 License
 -------
