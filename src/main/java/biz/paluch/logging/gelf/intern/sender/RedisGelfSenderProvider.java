@@ -31,7 +31,7 @@ public class RedisGelfSenderProvider implements GelfSenderProvider {
         String graylogHost = configuration.getHost();
 
         URI hostUri = URI.create(graylogHost);
-        JedisPool pool = RedisSenderPoolProvider.INSTANCE.getJedisPool(hostUri);
+        JedisPool pool = RedisSenderPoolProvider.INSTANCE.getJedisPool(hostUri, configuration.getPort());
         return new GelfREDISSender(pool, hostUri.getFragment(), configuration.getErrorReport());
         
     }
@@ -51,7 +51,7 @@ public class RedisGelfSenderProvider implements GelfSenderProvider {
         
         private Map<String, JedisPool> pools = new HashMap<String, JedisPool>();
 
-        public synchronized JedisPool getJedisPool(URI hostURI) {
+        public synchronized JedisPool getJedisPool(URI hostURI, int configuredPort) {
             String lowerCasedHost = hostURI.getHost().toLowerCase();
 
             if (!pools.containsKey(lowerCasedHost)) {
@@ -61,11 +61,11 @@ public class RedisGelfSenderProvider implements GelfSenderProvider {
                 if(hostURI.getPath() != null && hostURI.getPath().length() > 1) {
                     database = Integer.parseInt(hostURI.getPath().split("/", 2)[1]);
                 }
-
+                int port = hostURI.getPort() > 0 ? hostURI.getPort() : configuredPort;
                 JedisPool newPool = new JedisPool(
                         configuration, 
                         hostURI.getHost(), 
-                        hostURI.getPort(),
+                        port,
                         Protocol.DEFAULT_TIMEOUT, 
                         password, 
                         database);
