@@ -12,12 +12,11 @@
     </appender>
 
     <appender name="GELF" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
-        <graylogHost>udp:localhost</graylogHost>
+        <graylogHost>test:localhost</graylogHost>
         <graylogPort>12201</graylogPort>
         <facility>java-test</facility>
         <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
         <additionalFields>crossCheckHostName=${HOSTNAME}</additionalFields>
-        <testSenderClass>biz.paluch.logging.gelf.GelfTestSender</testSenderClass>
         <originHost>${HOSTNAME}</originHost>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
