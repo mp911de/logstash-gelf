@@ -18,8 +18,7 @@ import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
  */
 public final class GelfSenderFactory {
 
-    public static GelfSender createSender(final GelfMessageAssembler gelfMessageAssembler,
-            final ErrorReporter errorReporter) {
+    public static GelfSender createSender(final GelfMessageAssembler gelfMessageAssembler, final ErrorReporter errorReporter) {
         if (gelfMessageAssembler.getHost() == null) {
             errorReporter.reportError("Graylog2 hostname is empty!", null);
         } else {
@@ -47,8 +46,7 @@ public final class GelfSenderFactory {
                         return provider.create(senderConfiguration);
                     }
                 }
-                senderConfiguration.getErrorReport().reportError(
-                        "No sender found for host " + senderConfiguration.getHost(), null);
+                senderConfiguration.getErrorReport().reportError("No sender found for host " + senderConfiguration.getHost(), null);
                 return null;
             } catch (UnknownHostException e) {
                 errorReporter.reportError("Unknown Graylog2 hostname:" + gelfMessageAssembler.getHost(), e);
@@ -62,15 +60,9 @@ public final class GelfSenderFactory {
         return null;
     }
 
-    public static GelfSender createSender(GelfSenderConfiguration senderConfiguration) throws IOException {
-
-        return null;
-    }
-
     // For thread safe lazy intialization of provider list
     private static class SenderProviderHolder {
-        private static ServiceLoader<GelfSenderProvider> gelfSenderProvider = ServiceLoader
-                .load(GelfSenderProvider.class);
+        private static ServiceLoader<GelfSenderProvider> gelfSenderProvider = ServiceLoader.load(GelfSenderProvider.class);
         private static List<GelfSenderProvider> providerList = new ArrayList<GelfSenderProvider>();
         static {
             Iterator<GelfSenderProvider> iter = gelfSenderProvider.iterator();
