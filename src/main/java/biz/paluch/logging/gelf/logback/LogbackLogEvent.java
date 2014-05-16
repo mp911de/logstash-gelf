@@ -30,7 +30,7 @@ class LogbackLogEvent implements LogEvent {
 
     @Override
     public String getMessage() {
-        return loggingEvent.getMessage();
+        return loggingEvent.getFormattedMessage();
     }
 
     @Override
