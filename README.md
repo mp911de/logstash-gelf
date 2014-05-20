@@ -1,4 +1,4 @@
-logstash-gelf [![Build Status](https://snap-ci.com/POmpG5OoXqifv_rjGSisv-wer9OYazjEtkuDT_7rrPA/build_image)](https://snap-ci.com/projects/mp911de/logstash-gelf/build_history)
+logstash-gelf [![Build Status](https://snap-ci.com/mp911de/logstash-gelf/branch/master/build_image)](https://snap-ci.com/mp911de/logstash-gelf/branch/master)
 =========================
 Provides logging to logstash using the Graylog Extended Logging Format (GELF). This implementation comes with support for three areas:
 
