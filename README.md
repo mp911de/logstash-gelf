@@ -228,7 +228,6 @@ standalone.xml
     <custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler" module="biz.paluch.logging">
         <level name="INFO" />
         <properties>
-            <property name="threshold" value="INFO" />
             <property name="host" value="udp:localhost" />
             <property name="port" value="12201" />
             <property name="facility" value="java-test" />
