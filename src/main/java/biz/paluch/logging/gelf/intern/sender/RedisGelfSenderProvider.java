@@ -52,9 +52,10 @@ public class RedisGelfSenderProvider implements GelfSenderProvider {
         private Map<String, JedisPool> pools = new HashMap<String, JedisPool>();
 
         public synchronized JedisPool getJedisPool(URI hostURI, int configuredPort) {
-            String lowerCasedHost = hostURI.getHost().toLowerCase();
-
-            if (!pools.containsKey(lowerCasedHost)) {
+            String lowerCasedConnectionString = hostURI.toString().toLowerCase();
+            String cleanConnectionString = lowerCasedConnectionString.substring(0,lowerCasedConnectionString.length() - hostURI.getFragment().length());
+            
+            if (!pools.containsKey(cleanConnectionString)) {
 
                 String password = (hostURI.getUserInfo() != null) ? hostURI.getUserInfo().split(":", 2)[1] : null;
                 int database = Protocol.DEFAULT_DATABASE;
@@ -70,9 +71,9 @@ public class RedisGelfSenderProvider implements GelfSenderProvider {
                         password, 
                         database);
                 
-                pools.put(lowerCasedHost, newPool);
+                pools.put(cleanConnectionString, newPool);
             }
-            return pools.get(lowerCasedHost);
+            return pools.get(cleanConnectionString);
         }
     }
 
