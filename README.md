@@ -71,7 +71,7 @@ Maven:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </dependency>
 
 JBoss Module Download:
@@ -79,11 +79,11 @@ JBoss Module Download:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
         <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.4.0/logstash-gelf-1.4.0-logging-module.zip
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.4.1/logstash-gelf-1.4.1-logging-module.zip
 
 
 <a name="jul"/>Java Util Logging configuration
@@ -306,5 +306,10 @@ License
 -------
 * [The MIT License (MIT)] (http://opensource.org/licenses/MIT)
 * Contains also code from https://github.com/t0xa/gelfj
+
+Contributing
+-------
+Github is for social coding: if you want to write code, I encourage contributions through pull requests from forks of this repository. 
+Create Github tickets for bugs and new features and comment on the ones that you are interested in.
 
 
