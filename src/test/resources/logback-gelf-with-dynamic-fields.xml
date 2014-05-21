@@ -6,7 +6,7 @@
     <jmxConfigurator/>
 
     <appender name="GELF" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
-        <graylogHost>udp:localhost</graylogHost>
+        <graylogHost>test:localhost</graylogHost>
         <graylogPort>12201</graylogPort>
         <facility>java-test</facility>
         <extractStackTrace>true</extractStackTrace>

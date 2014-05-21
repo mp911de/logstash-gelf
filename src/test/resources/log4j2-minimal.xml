@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
 	<Appenders>
-		<Gelf name="gelf" graylogHost="udp:localhost" graylogPort="12201" extractStackTrace="true"
-			  filterStackTrace="true" mdcProfiling="true" maximumMessageSize="8192"
-			  testSenderClass="biz.paluch.logging.gelf.GelfTestSender">
+		<Gelf name="gelf" graylogHost="test:localhost" graylogPort="12201" extractStackTrace="true"
+			  filterStackTrace="true" mdcProfiling="true" maximumMessageSize="8192">
 		</Gelf>
 	</Appenders>
 	<Loggers>

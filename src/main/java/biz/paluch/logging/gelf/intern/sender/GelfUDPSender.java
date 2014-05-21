@@ -1,4 +1,4 @@
-package biz.paluch.logging.gelf.intern;
+package biz.paluch.logging.gelf.intern.sender;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -6,6 +6,10 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+
+import biz.paluch.logging.gelf.intern.ErrorReporter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
 
 /**
  * (c) https://github.com/t0xa/gelfj

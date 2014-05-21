@@ -3,21 +3,51 @@ package biz.paluch.logging.gelf.intern;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceLoader;
 
 import biz.paluch.logging.gelf.GelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.sender.DefaultGelfSenderProvider;
+import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 15:12
  */
-public class GelfSenderFactory {
+public final class GelfSenderFactory {
 
-    public static GelfSender createSender(GelfMessageAssembler gelfMessageAssembler, ErrorReporter errorReporter) {
+    public static GelfSender createSender(final GelfMessageAssembler gelfMessageAssembler, final ErrorReporter errorReporter) {
         if (gelfMessageAssembler.getHost() == null) {
             errorReporter.reportError("Graylog2 hostname is empty!", null);
         } else {
             try {
-                return createSender(gelfMessageAssembler.getHost(), gelfMessageAssembler.getPort(), errorReporter);
+                GelfSenderConfiguration senderConfiguration = new GelfSenderConfiguration() {
+
+                    @Override
+                    public int getPort() {
+                        return gelfMessageAssembler.getPort();
+                    }
+
+                    @Override
+                    public String getHost() {
+                        return gelfMessageAssembler.getHost();
+                    }
+
+                    @Override
+                    public ErrorReporter getErrorReport() {
+                        return errorReporter;
+                    }
+                };
+
+                for (GelfSenderProvider provider : SenderProviderHolder.getSenderProvider()) {
+                    if (provider.supports(senderConfiguration.getHost())) {
+                        return provider.create(senderConfiguration);
+                    }
+                }
+                senderConfiguration.getErrorReport().reportError("No sender found for host " + senderConfiguration.getHost(), null);
+                return null;
             } catch (UnknownHostException e) {
                 errorReporter.reportError("Unknown Graylog2 hostname:" + gelfMessageAssembler.getHost(), e);
             } catch (SocketException e) {
@@ -30,19 +60,22 @@ public class GelfSenderFactory {
         return null;
     }
 
-    public static GelfSender createSender(String graylogHost, int graylogPort, ErrorReporter errorReporter) throws IOException {
-
-        if (graylogHost.startsWith("tcp:")) {
-            String tcpGraylogHost = graylogHost.substring(4, graylogHost.length());
-            return new GelfTCPSender(tcpGraylogHost, graylogPort, errorReporter);
-        } else if (graylogHost.startsWith("udp:")) {
-            String udpGraylogHost = graylogHost.substring(4, graylogHost.length());
-            return new GelfUDPSender(udpGraylogHost, graylogPort, errorReporter);
-        } else if (graylogHost.startsWith("redis:")) {
-            return new GelfREDISSender(graylogHost, errorReporter);
-        } else {
-            return new GelfUDPSender(graylogHost, graylogPort, errorReporter);
+    // For thread safe lazy intialization of provider list
+    private static class SenderProviderHolder {
+        private static ServiceLoader<GelfSenderProvider> gelfSenderProvider = ServiceLoader.load(GelfSenderProvider.class);
+        private static List<GelfSenderProvider> providerList = new ArrayList<GelfSenderProvider>();
+        static {
+            Iterator<GelfSenderProvider> iter = gelfSenderProvider.iterator();
+            while (iter.hasNext()) {
+                providerList.add(iter.next());
+            }
+            providerList.add(new RedisGelfSenderProvider());
+            providerList.add(new DefaultGelfSenderProvider());
         }
 
+        public static List<GelfSenderProvider> getSenderProvider() {
+            return providerList;
+        }
     }
+
 }

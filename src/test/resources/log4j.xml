@@ -10,7 +10,7 @@
     </appender>
 
     <appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
-        <param name="GraylogHost" value="udp:localhost" />
+        <param name="GraylogHost" value="test:localhost" />
         <param name="GraylogPort" value="12201" />
         <param name="Facility" value="java-test" />
         <param name="ExtractStackTrace" value="true" />
@@ -20,7 +20,6 @@
         <param name="MaximumMessageSize" value="8192" />
         <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
         <param name="MdcFields" value="mdcField1,mdcField2" />
-        <param name="TestSenderClass" value="biz.paluch.logging.gelf.GelfTestSender" />
         <param name="Threshold" value="INFO" />
     </appender>
 
