@@ -1,0 +1,52 @@
+Download logstash-gelf
+======================
+
+ logstash-gelf is distributed under the
+ [The MIT License (MIT)] (http://opensource.org/licenses/MIT).
+
+  The link in the Mirrors column should display a list of available mirrors with a
+  default selection based on your inferred location.  If you do not see that page,
+  try a different browser.  The checksum and signature are links to
+  the originals on the main distribution server.
+
+
+|                   | Download      | Checksum      | Signature     |
+| ----------------- |:-------------:|:-------------:|:-------------:|
+| logstash-gelf (jar) |[logstash-gelf-${project.version}.jar] (http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}.jar)|[logstash-gelf-${project.version}.jar.md5](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}.jar.md5)|[logstash-gelf-${project.version}.jar.asc](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}.jar.asc)|
+| logstash-gelf (logging-module.zip) |[logstash-gelf-${project.version}-logging-module.zip] (http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}.jar)|[logstash-gelf-${project.version}-logging-module.zip.md5](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}-logging-module.zip.md5)|[logstash-gelf-${project.version}-logging-module.zip.asc](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}-logging-module.zip.asc)|
+
+It is essential that you verify the integrity of the downloaded files using the PGP or MD5 signatures.
+
+The PGP signatures can be verified using PGP or GPG. First download the
+[KEYS](http://logging.paluch.biz/KEYS) as well as the asc signature file for the relevant distribution.
+Make sure you get these files from Maven Central rather
+than from a mirror. Then verify the signatures using
+
+
+    % gpg --import KEYS
+    % gpg --verify logstash-gelf-${project.version}.jar.asc
+
+
+Alternatively, you can verify the MD5 signature on the files. A unix program called md5 or md5sum is included
+in many unix distributions.
+
+
+
+Previous Releases
+-----------------
+
+  All previous releases of logstash-gelf can be found in 
+  [Maven Central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22biz.paluch.logging%22%20AND%20a%3A%22logstash-gelf%22).
+
+
+Using logstasg-gelf on your classpath
+-----------------
+
+  To use logstasg-gelf in your application make sure that the jars are in the application's classpath. Add
+  the dependencies listed below to your classpath.
+
+    logstash-gelf-${project.version}.jar
+    json-simple-1.1.jar
+    jedis-2.4.2.jar
+
+You can do this from the command line or a manifest file.

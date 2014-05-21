@@ -1,4 +1,4 @@
-Introduction [![Build Status](https://snap-ci.com/POmpG5OoXqifv_rjGSisv-wer9OYazjEtkuDT_7rrPA/build_image)](https://snap-ci.com/projects/mp911de/logstash-gelf/build_history)
+Introduction [![Build Status](https://snap-ci.com/mp911de/logstash-gelf/branch/master/build_image)](https://snap-ci.com/mp911de/logstash-gelf/branch/master)
 =============
 
 ${project.name} (${project.artifactId})
@@ -11,11 +11,6 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF). T
 * JBoss 7 (mix of Java Util Logging with log4j MDC)
 * [Logback](examples/logback.html)
 
-
-
- [Download ZIP File](https://github.com/mp911de/configurator-maven-plugin/zipball/master)
- [Download TAR Ball](https://github.com/mp911de/configurator-maven-plugin/tarball/master)
- 
 How to get
 -------------
 
