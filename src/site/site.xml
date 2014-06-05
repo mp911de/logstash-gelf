@@ -16,8 +16,12 @@
 			<item name="log4j v1.2.x" href="examples/log4j-1.2.x.html"/>
 			<item name="log4j v2.x" href="examples/log4j-2.x.html"/>
             <item name="Logback" href="examples/logback.html"/>
+        </menu>
+
+        <menu name="Documentation">
             <item name="MDC Profiling" href="mdcprofiling.html"/>
             <item name="Hostname Lookup" href="hostname-lookup.html"/>
+            <item name="Default Fields" href="default-fields.html"/>
         </menu>
 
         <menu name="Project Documentation">

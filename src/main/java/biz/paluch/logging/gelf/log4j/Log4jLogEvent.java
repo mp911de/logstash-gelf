@@ -1,13 +1,5 @@
 package biz.paluch.logging.gelf.log4j;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.MDC;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.log4j.spi.ThrowableInformation;
-
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogEvent;
@@ -15,6 +7,13 @@ import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
 import biz.paluch.logging.gelf.Values;
+import org.apache.log4j.Level;
+import org.apache.log4j.MDC;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.spi.ThrowableInformation;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -106,6 +105,8 @@ class Log4jLogEvent implements LogEvent {
                 return loggingEvent.getLocationInformation().getMethodName();
             case SourceSimpleClassName:
                 return GelfUtil.getSimpleClassName(loggingEvent.getLocationInformation().getClassName());
+            case LoggerName:
+                return loggingEvent.getLoggerName();
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);

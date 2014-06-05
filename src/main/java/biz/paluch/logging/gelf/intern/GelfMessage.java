@@ -1,5 +1,7 @@
 package biz.paluch.logging.gelf.intern;
 
+import org.json.simple.JSONValue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -9,8 +11,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
-
-import org.json.simple.JSONValue;
 
 /**
  * (c) https://github.com/t0xa/gelfj
@@ -53,7 +53,6 @@ public class GelfMessage {
     public String toJson(String additionalFieldPrefix) {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        // map.put("version", getVersion());
         map.put(FIELD_HOST, getHost());
         map.put(FIELD_SHORT_MESSAGE, getShortMessage());
         map.put(FIELD_FULL_MESSAGE, getFullMessage());

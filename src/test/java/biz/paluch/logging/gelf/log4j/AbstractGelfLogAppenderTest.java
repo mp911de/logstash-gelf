@@ -51,6 +51,10 @@ public abstract class AbstractGelfLogAppenderTest {
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 
+
+        // this is because of default-logstash-fields.properties
+        assertEquals("INFO", gelfMessage.getAdditonalFields().get("MySeverity"));
+
     }
 
     @Test

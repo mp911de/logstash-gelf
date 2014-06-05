@@ -1,9 +1,5 @@
 package biz.paluch.logging.gelf.logback;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogEvent;
@@ -15,6 +11,10 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.ThrowableProxy;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:tobiassebastian.kaefer@1und1.de">Tobias Kaefer</a>
@@ -134,6 +134,8 @@ class LogbackLogEvent implements LogEvent {
                 return getSourceMethodName();
             case SourceSimpleClassName:
                 return GelfUtil.getSimpleClassName(getSourceClassName());
+            case LoggerName:
+                return loggingEvent.getLoggerName();
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);
