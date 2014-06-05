@@ -229,16 +229,4 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
             gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
         }
     }
-
-    public void setTestSenderClass(String testSender) {
-        // This only used for testing
-        try {
-            if (null != testSender) {
-                final Class clazz = Class.forName(testSender);
-                gelfSender = (GelfSender) clazz.newInstance();
-            }
-        } catch (final Exception e) {
-            // ignore
-        }
-    }
 }
