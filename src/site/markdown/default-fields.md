@@ -39,7 +39,7 @@ The format for the properties file is:
     targetFieldName=sourceFieldName
 
 ## Field names
-You can use following field names (case insensitive, see also (biz.paluch.logging.gelf.LogMessageField.NamedLogField)[apidocs/biz/paluch/logging/gelf/LogMessageField.NamedLogField.html] ) for your mapping:
+You can use following field names (case insensitive, see also [biz.paluch.logging.gelf.LogMessageField.NamedLogField](apidocs/biz/paluch/logging/gelf/LogMessageField.NamedLogField.html) ) for your mapping:
 
 * Time
 * Severity
