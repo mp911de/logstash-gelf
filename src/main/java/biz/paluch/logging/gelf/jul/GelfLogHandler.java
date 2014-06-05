@@ -209,16 +209,4 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
     public void setMaximumMessageSize(int maximumMessageSize) {
         gelfMessageAssembler.setMaximumMessageSize(maximumMessageSize);
     }
-
-    public void setTestSenderClass(String testSender) {
-        // This only used for testing
-        try {
-            if (null != testSender) {
-                final Class clazz = Class.forName(testSender);
-                gelfSender = (GelfSender) clazz.newInstance();
-            }
-        } catch (final Exception e) {
-            // ignore
-        }
-    }
 }
