@@ -19,7 +19,7 @@ Maven:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>${project.artifactId}</artifactId>
-        <version>${project.version}</version>
+        <version>${logstash-gelf.last.release}</version>
     </dependency>
 
 JBoss Module Download:
@@ -27,9 +27,10 @@ JBoss Module Download:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>${project.artifactId}</artifactId>
-        <version>${project.version}</version>
+        <version>${logstash-gelf.last.release}</version>
         <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${project.version}/${project.artifactId}-${project.version}-logging-module.zip
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${logstash-gelf.last.release}/${project.artifactId}-${logstash-gelf.last.release}-logging-module.zip
+
 
