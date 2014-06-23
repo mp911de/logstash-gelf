@@ -12,8 +12,8 @@ Download logstash-gelf
 
 |                   | Download      | Checksum      | Signature     |
 | ----------------- |:-------------:|:-------------:|:-------------:|
-| logstash-gelf (jar) |[logstash-gelf-${project.version}.jar] (http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}.jar)|[logstash-gelf-${project.version}.jar.md5](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}.jar.md5)|[logstash-gelf-${project.version}.jar.asc](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}.jar.asc)|
-| logstash-gelf (logging-module.zip) |[logstash-gelf-${project.version}-logging-module.zip] (http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}.jar)|[logstash-gelf-${project.version}-logging-module.zip.md5](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}-logging-module.zip.md5)|[logstash-gelf-${project.version}-logging-module.zip.asc](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${project.version}/logstash-gelf-${project.version}-logging-module.zip.asc)|
+| logstash-gelf (jar) |[logstash-gelf-${logstash-gelf-release-version}.jar] (http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}.jar)|[logstash-gelf-${logstash-gelf-release-version}.jar.md5](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}.jar.md5)|[logstash-gelf-${logstash-gelf-release-version}.jar.asc](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}.jar.asc)|
+| logstash-gelf (logging-module.zip) |[logstash-gelf-${logstash-gelf-release-version}-logging-module.zip] (http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}.jar)|[logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.md5](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.md5)|[logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.asc](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.asc)|
 
 It is essential that you verify the integrity of the downloaded files using the PGP or MD5 signatures.
 
@@ -24,7 +24,7 @@ than from a mirror. Then verify the signatures using
 
 
     % gpg --import KEYS
-    % gpg --verify logstash-gelf-${project.version}.jar.asc
+    % gpg --verify logstash-gelf-${logstash-gelf-release-version}.jar.asc
 
 
 Alternatively, you can verify the MD5 signature on the files. A unix program called md5 or md5sum is included
@@ -39,13 +39,13 @@ Previous Releases
   [Maven Central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22biz.paluch.logging%22%20AND%20a%3A%22logstash-gelf%22).
 
 
-Using logstasg-gelf on your classpath
+Using logstash-gelf on your classpath
 -----------------
 
   To use logstasg-gelf in your application make sure that the jars are in the application's classpath. Add
   the dependencies listed below to your classpath.
 
-    logstash-gelf-${project.version}.jar
+    logstash-gelf-${logstash-gelf-release-version}.jar
     json-simple-1.1.jar
     jedis-2.4.2.jar
 
