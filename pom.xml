@@ -50,7 +50,8 @@
         <log4j.version>1.2.14</log4j.version>
         <log4j2.version>2.0-rc1</log4j2.version>
         <junit.version>4.11</junit.version>
-        <jedis.version>2.4.2</jedis.version>
+        <jedis.version>2.5.1</jedis.version>
+        <jedis-commons-pool2.version>2.0</jedis-commons-pool2.version>
         <org.slf4j.slf4j-api.version>1.7.5</org.slf4j.slf4j-api.version>
         <ch.qos.logback.logback-classic.version>1.0.13</ch.qos.logback.logback-classic.version>
 
@@ -161,6 +162,8 @@
                 <configuration>
                     <message>Creating site for ${project.version}</message>
                     <skip>${github.site.upload.skip}</skip>
+                    <repositoryName>logging.paluch.biz</repositoryName>
+                    <repositoryOwner>mp911de</repositoryOwner>
                 </configuration>
                 <executions>
                     <execution>
@@ -248,6 +251,12 @@
             <artifactId>jedis</artifactId>
             <version>${jedis.version}</version>
         </dependency>
+
+        <dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<version>${jedis-commons-pool2.version}</version>
+		</dependency>
 
     </dependencies>
 
