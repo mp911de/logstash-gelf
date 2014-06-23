@@ -82,9 +82,13 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         if (!isLoggable(record)) {
             return;
         }
-
-        if (null == gelfSender) {
-            gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
+        try {
+            if (null == gelfSender) {
+                gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
+            }
+        } catch (Exception e) {
+            reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.OPEN_FAILURE);
+            return;
         }
 
         try {
