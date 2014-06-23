@@ -11,7 +11,6 @@ By default, following fields are used in the gelf message:
 * level (syslog severity)
 * facility
 
-
 **Additional Fields (prefixes with underscore within the protocol message)**
 
 * Time (configurable timestamp)
