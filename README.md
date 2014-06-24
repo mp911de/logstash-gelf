@@ -20,7 +20,7 @@ This project is built against following dependencies/versions:
 * Java Util Logging JDK Version 1.6
 * logback 1.0.13
 * slf4j-api 1.7.5
-* jedis 2.4.2
+* jedis 2.5.1 (includes commons-pool2 2.0)
 
 Settings
 --------------
@@ -71,7 +71,7 @@ Maven:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.2</version>
     </dependency>
 
 JBoss Module Download:
@@ -79,11 +79,11 @@ JBoss Module Download:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.2</version>
         <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.4.1/logstash-gelf-1.4.1-logging-module.zip
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.4.2/logstash-gelf-1.4.2-logging-module.zip
 
 
 <a name="jul"/>Java Util Logging configuration
