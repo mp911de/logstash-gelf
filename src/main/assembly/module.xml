@@ -11,5 +11,6 @@
     <dependencies>
         <module name="org.apache.log4j" />
         <module name="org.slf4j" />
+        <module name="javax.api" />
     </dependencies>
 </module>

@@ -69,8 +69,8 @@ public final class GelfSenderFactory {
             while (iter.hasNext()) {
                 providerList.add(iter.next());
             }
-            providerList.add(new DefaultGelfSenderProvider());
             providerList.add(new RedisGelfSenderProvider());
+            providerList.add(new DefaultGelfSenderProvider());
         }
 
         public static List<GelfSenderProvider> getSenderProvider() {

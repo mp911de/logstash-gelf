@@ -1,7 +1,25 @@
 package biz.paluch.logging.gelf.intern;
 
+/**
+ * Configuration for a Gelf Sender.
+ */
 public interface GelfSenderConfiguration {
-	public String getHost();
-	public int getPort();
-	public ErrorReporter getErrorReport();
+
+    /**
+     * 
+     * @return the host part (can be any arbitrary string which is supported by the GelfSender)
+     */
+    String getHost();
+
+    /**
+     * 
+     * @return port number (optional, 0 if not provided)
+     */
+    int getPort();
+
+    /**
+     * 
+     * @return the ErrorReporter to report any errors
+     */
+    ErrorReporter getErrorReport();
 }

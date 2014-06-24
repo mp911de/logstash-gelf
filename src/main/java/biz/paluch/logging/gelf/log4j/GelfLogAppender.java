@@ -75,11 +75,11 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
             return;
         }
 
-        if (null == gelfSender) {
-            gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
-        }
-
         try {
+            if (null == gelfSender) {
+                gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
+            }
+
             GelfMessage message = createGelfMessage(event);
             if (!message.isValid()) {
                 reportError("GELF Message is invalid: " + message.toJson(), null);

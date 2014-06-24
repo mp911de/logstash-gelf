@@ -17,16 +17,18 @@ import java.util.zip.GZIPOutputStream;
  */
 public class GelfMessage {
 
-    private static final String ID_NAME = "id";
-    private static final String GELF_VERSION = "1.0";
-    private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
-    private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
     public static final String FIELD_HOST = "host";
     public static final String FIELD_SHORT_MESSAGE = "short_message";
     public static final String FIELD_FULL_MESSAGE = "full_message";
     public static final String FIELD_TIMESTAMP = "timestamp";
     public static final String FIELD_LEVEL = "level";
     public static final String FIELD_FACILITY = "facility";
+
+    private static final String ID_NAME = "id";
+    private static final String GELF_VERSION = "1.0";
+    private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
+
+    private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
 
     private String version = GELF_VERSION;
     private String host;
