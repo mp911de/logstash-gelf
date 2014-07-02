@@ -25,7 +25,7 @@ public class GelfMessageAssembler {
 
     private String host;
     private String originHost;
-    private int port = 12201;
+    private int port;
     private String facility;
     private boolean extractStackTrace;
     private boolean filterStackTrace;

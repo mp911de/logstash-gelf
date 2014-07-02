@@ -182,7 +182,6 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
      * @param filterStackTrace
      * @param mdcProfiling
      * @param maximumMessageSize
-     * @param testSenderClass
      * @return GelfLogAppender
      */
     @PluginFactory
@@ -192,8 +191,7 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
             @PluginAttribute("port") String port, @PluginAttribute("extractStackTrace") String extractStackTrace,
             @PluginAttribute("facility") String facility, @PluginAttribute("filterStackTrace") String filterStackTrace,
             @PluginAttribute("mdcProfiling") String mdcProfiling,
-            @PluginAttribute("maximumMessageSize") String maximumMessageSize,
-            @PluginAttribute("testSenderClass") String testSenderClass) {
+            @PluginAttribute("maximumMessageSize") String maximumMessageSize) {
 
         MdcGelfMessageAssembler mdcGelfMessageAssembler = new MdcGelfMessageAssembler();
 
@@ -247,9 +245,6 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
 
         GelfLogAppender result = new GelfLogAppender(name, filter, mdcGelfMessageAssembler);
 
-        if (testSenderClass != null) {
-            result.setTestSenderClass(testSenderClass);
-        }
 
         return result;
 
@@ -336,17 +331,5 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
             gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
         }
         super.start();
-    }
-
-    public void setTestSenderClass(String testSender) {
-        // This only used for testing
-        try {
-            if (null != testSender) {
-                final Class clazz = Class.forName(testSender);
-                gelfSender = (GelfSender) clazz.newInstance();
-            }
-        } catch (final Exception e) {
-            // ignore
-        }
     }
 }

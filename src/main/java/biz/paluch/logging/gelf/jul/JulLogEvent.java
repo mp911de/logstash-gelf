@@ -154,7 +154,8 @@ public class JulLogEvent implements LogEvent {
                 return logRecord.getSourceMethodName();
             case SourceSimpleClassName:
                 return GelfUtil.getSimpleClassName(logRecord.getSourceClassName());
-
+            case LoggerName:
+                return logRecord.getLoggerName();
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);

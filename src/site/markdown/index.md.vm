@@ -1,4 +1,4 @@
-Introduction [![Build Status](https://snap-ci.com/POmpG5OoXqifv_rjGSisv-wer9OYazjEtkuDT_7rrPA/build_image)](https://snap-ci.com/projects/mp911de/logstash-gelf/build_history)
+Introduction [![Build Status](https://snap-ci.com/mp911de/logstash-gelf/branch/master/build_image)](https://snap-ci.com/mp911de/logstash-gelf/branch/master)
 =============
 
 ${project.name} (${project.artifactId})
@@ -11,11 +11,6 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF). T
 * JBoss 7 (mix of Java Util Logging with log4j MDC)
 * [Logback](examples/logback.html)
 
-
-
- [Download ZIP File](https://github.com/mp911de/configurator-maven-plugin/zipball/master)
- [Download TAR Ball](https://github.com/mp911de/configurator-maven-plugin/tarball/master)
- 
 How to get
 -------------
 
@@ -24,17 +19,20 @@ Maven:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>${project.artifactId}</artifactId>
-        <version>${project.version}</version>
+        <version>${logstash-gelf-release-version}</version>
     </dependency>
+
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${logstash-gelf-release-version}/${project.artifactId}-${logstash-gelf-release-version}.jar
 
 JBoss Module Download:
 
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>${project.artifactId}</artifactId>
-        <version>${project.version}</version>
+        <version>${logstash-gelf-release-version}</version>
         <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${project.version}/${project.artifactId}-${project.version}-logging-module.zip
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${logstash-gelf-release-version}/${project.artifactId}-${logstash-gelf-release-version}-logging-module.zip
+
 

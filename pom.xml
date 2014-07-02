@@ -9,7 +9,7 @@
     </parent>
 
     <groupId>biz.paluch.logging</groupId>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.4.3-SNAPSHOT</version>
     <artifactId>logstash-gelf</artifactId>
 
     <name>logstash logging connectors</name>
@@ -20,8 +20,8 @@
         <connection>scm:git://github.com/mp911de/logstash-gelf.git</connection>
         <developerConnection>scm:git:git@github.com:mp911de/logstash-gelf.git</developerConnection>
         <url>http://github.com/mp911de/logstash-gelf/</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <issueManagement>
         <system>GitHub</system>
@@ -36,17 +36,28 @@
         </license>
     </licenses>
 
+    <distributionManagement>
+        <site>
+            <id>site</id>
+            <url>scm:git:git@github.com:mp911de/logging.paluch.biz.git</url>
+        </site>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>1.6</maven.compiler.target>
         <maven.compiler.source>1.6</maven.compiler.source>
+        <logstash-gelf-release-version>1.4.1</logstash-gelf-release-version>
+
+        <github.site.upload.skip>true</github.site.upload.skip>
 
         <!-- Versions -->
         <com.googlecode.json-simple.version>1.1</com.googlecode.json-simple.version>
         <log4j.version>1.2.14</log4j.version>
         <log4j2.version>2.0-rc1</log4j2.version>
         <junit.version>4.11</junit.version>
-        <jedis.version>2.4.2</jedis.version>
+        <jedis.version>2.5.1</jedis.version>
+        <jedis-commons-pool2.version>2.0</jedis-commons-pool2.version>
         <org.slf4j.slf4j-api.version>1.7.5</org.slf4j.slf4j-api.version>
         <ch.qos.logback.logback-classic.version>1.0.13</ch.qos.logback.logback-classic.version>
 
@@ -56,7 +67,7 @@
         <version.org.apache.maven.doxia.doxia-module-markdown>1.3</version.org.apache.maven.doxia.doxia-module-markdown>
         <version.org.apache.maven.plugins.maven-project-info-reports-plugin>2.7
         </version.org.apache.maven.plugins.maven-project-info-reports-plugin>
-
+        <version.org.codehaus.mojo.exec-maven-plugin>1.3</version.org.codehaus.mojo.exec-maven-plugin>
     </properties>
 
     <developers>
@@ -124,13 +135,18 @@
                         <artifactId>doxia-module-markdown</artifactId>
                         <version>${version.org.apache.maven.doxia.doxia-module-markdown}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>1.9</version>
+                    </dependency>
                 </dependencies>
             </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>${version.org.codehaus.mojo.exec-maven-plugin}</version>
                 <executions>
                     <execution>
                         <phase>process-classes</phase>
@@ -148,6 +164,27 @@
                     </arguments>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-publish-plugin</artifactId>
+                <version>1.1</version>
+                <configuration>
+                    <scmBranch>gh-pages</scmBranch>
+                    <content>${project.build.directory}/site</content>
+                    <skipCheckin>${github.site.upload.skip}</skipCheckin>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>publish-scm</id>
+                        <goals>
+                            <goal>publish-scm</goal>
+                        </goals>
+                        <phase>post-site</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -224,6 +261,12 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>${jedis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>${jedis-commons-pool2.version}</version>
         </dependency>
 
     </dependencies>

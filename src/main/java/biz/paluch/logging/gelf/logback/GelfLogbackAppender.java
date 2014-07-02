@@ -76,11 +76,12 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
             return;
         }
 
-        if (null == gelfSender) {
-            gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
-        }
-
         try {
+
+            if (null == gelfSender) {
+                gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
+            }
+
             GelfMessage message = createGelfMessage(event);
             if (!message.isValid()) {
                 reportError("GELF Message is invalid: " + message.toJson(), null);
@@ -215,18 +216,6 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
 
         for (String field : fields) {
             gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
-        }
-    }
-
-    public void setTestSenderClass(String testSender) {
-        // This only used for testing
-        try {
-            if (null != testSender) {
-                final Class clazz = Class.forName(testSender);
-                gelfSender = (GelfSender) clazz.newInstance();
-            }
-        } catch (final Exception e) {
-            reportError("Could not instantiate the testSenderClass", e);
         }
     }
 }

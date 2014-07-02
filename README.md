@@ -1,4 +1,4 @@
-logstash-gelf [![Build Status](https://snap-ci.com/POmpG5OoXqifv_rjGSisv-wer9OYazjEtkuDT_7rrPA/build_image)](https://snap-ci.com/projects/mp911de/logstash-gelf/build_history)
+logstash-gelf [![Build Status](https://snap-ci.com/mp911de/logstash-gelf/branch/master/build_image)](https://snap-ci.com/mp911de/logstash-gelf/branch/master)
 =========================
 Provides logging to logstash using the Graylog Extended Logging Format (GELF). This implementation comes with support for three areas:
 
@@ -20,7 +20,7 @@ This project is built against following dependencies/versions:
 * Java Util Logging JDK Version 1.6
 * logback 1.0.13
 * slf4j-api 1.7.5
-* jedis 2.4.2
+* jedis 2.5.1 (includes commons-pool2 2.0)
 
 Settings
 --------------
@@ -71,7 +71,7 @@ Maven:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.2</version>
     </dependency>
 
 JBoss Module Download:
@@ -79,11 +79,11 @@ JBoss Module Download:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.2</version>
         <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.4.0/logstash-gelf-1.4.0-logging-module.zip
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.4.2/logstash-gelf-1.4.2-logging-module.zip
 
 
 <a name="jul"/>Java Util Logging configuration
@@ -228,7 +228,6 @@ standalone.xml
     <custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler" module="biz.paluch.logging">
         <level name="INFO" />
         <properties>
-            <property name="threshold" value="INFO" />
             <property name="host" value="udp:localhost" />
             <property name="port" value="12201" />
             <property name="facility" value="java-test" />
@@ -307,5 +306,10 @@ License
 -------
 * [The MIT License (MIT)] (http://opensource.org/licenses/MIT)
 * Contains also code from https://github.com/t0xa/gelfj
+
+Contributing
+-------
+Github is for social coding: if you want to write code, I encourage contributions through pull requests from forks of this repository. 
+Create Github tickets for bugs and new features and comment on the ones that you are interested in.
 
 

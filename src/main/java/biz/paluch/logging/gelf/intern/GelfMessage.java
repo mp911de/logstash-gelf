@@ -1,5 +1,7 @@
 package biz.paluch.logging.gelf.intern;
 
+import org.json.simple.JSONValue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -10,23 +12,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
-import org.json.simple.JSONValue;
-
 /**
  * (c) https://github.com/t0xa/gelfj
  */
 public class GelfMessage {
 
-    private static final String ID_NAME = "id";
-    private static final String GELF_VERSION = "1.0";
-    private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
-    private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
     public static final String FIELD_HOST = "host";
     public static final String FIELD_SHORT_MESSAGE = "short_message";
     public static final String FIELD_FULL_MESSAGE = "full_message";
     public static final String FIELD_TIMESTAMP = "timestamp";
     public static final String FIELD_LEVEL = "level";
     public static final String FIELD_FACILITY = "facility";
+
+    private static final String ID_NAME = "id";
+    private static final String GELF_VERSION = "1.0";
+    private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
+
+    private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
 
     private String version = GELF_VERSION;
     private String host;
@@ -53,7 +55,6 @@ public class GelfMessage {
     public String toJson(String additionalFieldPrefix) {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        // map.put("version", getVersion());
         map.put(FIELD_HOST, getHost());
         map.put(FIELD_SHORT_MESSAGE, getShortMessage());
         map.put(FIELD_FULL_MESSAGE, getFullMessage());

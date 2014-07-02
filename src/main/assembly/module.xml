@@ -5,10 +5,12 @@
         <resource-root path="${project.artifactId}-${project.version}.jar" />
         <resource-root path="json-simple-${com.googlecode.json-simple.version}.jar" />
         <resource-root path="jedis-${jedis.version}.jar" />
+        <resource-root path="commons-pool2-${jedis-commons-pool2.version}.jar" />
     </resources>
 
     <dependencies>
         <module name="org.apache.log4j" />
         <module name="org.slf4j" />
+        <module name="javax.api" />
     </dependencies>
 </module>

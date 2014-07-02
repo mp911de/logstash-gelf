@@ -16,7 +16,6 @@
         <maximumMessageSize>8192</maximumMessageSize>
         <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2,myOriginHost=${HOSTNAME}</additionalFields>
         <mdcFields>mdcField1,mdcField2</mdcFields>
-        <testSenderClass>biz.paluch.logging.gelf.GelfTestSender</testSenderClass>
         <originHost>1.2.3.4</originHost>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
