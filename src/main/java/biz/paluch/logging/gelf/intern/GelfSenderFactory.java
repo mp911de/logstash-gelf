@@ -18,6 +18,8 @@ import java.util.ServiceLoader;
  */
 public final class GelfSenderFactory {
 
+    
+    
     public static GelfSender createSender(final GelfMessageAssembler gelfMessageAssembler, final ErrorReporter errorReporter) {
         if (gelfMessageAssembler.getHost() == null) {
             errorReporter.reportError("Graylog2 hostname is empty!", null);
@@ -59,11 +61,16 @@ public final class GelfSenderFactory {
 
         return null;
     }
+    
+    public static void addGelfSenderProvider(GelfSenderProvider provider) {
+       SenderProviderHolder.addSenderProvider(provider);
+    }
 
     // For thread safe lazy intialization of provider list
     private static class SenderProviderHolder {
         private static ServiceLoader<GelfSenderProvider> gelfSenderProvider = ServiceLoader.load(GelfSenderProvider.class);
         private static List<GelfSenderProvider> providerList = new ArrayList<GelfSenderProvider>();
+        
         static {
             Iterator<GelfSenderProvider> iter = gelfSenderProvider.iterator();
             while (iter.hasNext()) {
@@ -73,8 +80,16 @@ public final class GelfSenderFactory {
             providerList.add(new DefaultGelfSenderProvider());
         }
 
-        public static List<GelfSenderProvider> getSenderProvider() {
+        static List<GelfSenderProvider> getSenderProvider() {
             return providerList;
+        }
+        
+        static void addSenderProvider(GelfSenderProvider provider) {
+            synchronized (providerList) {
+                if(!providerList.contains(provider)) {
+                    providerList.add(0, provider); // To take precedence over built-in providers
+                }
+            }
         }
     }
 
