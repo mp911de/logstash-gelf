@@ -1,5 +1,5 @@
 language: java
-script: mvn clean verify
+script: mvn clean cobertura:cobertura coveralls:cobertura
 jdk:
   - oraclejdk8
   - oraclejdk7
