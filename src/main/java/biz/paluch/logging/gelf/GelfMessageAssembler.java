@@ -1,5 +1,9 @@
 package biz.paluch.logging.gelf;
 
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.StackTraceFilter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -7,10 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.StackTraceFilter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -91,11 +91,9 @@ public class GelfMessageAssembler {
                 continue;
             }
 
-            for (String entryName : values.getEntryNames())
-            {
+            for (String entryName : values.getEntryNames()) {
                 String value = values.getValue(entryName);
-                if(value == null)
-                {
+                if (value == null) {
                     continue;
 
                 }
@@ -127,14 +125,14 @@ public class GelfMessageAssembler {
     private Values getValues(LogEvent logEvent, MessageField field) {
 
         if (field instanceof StaticMessageField) {
-            return new Values(field.getName(),getValue((StaticMessageField) field));
+            return new Values(field.getName(), getValue((StaticMessageField) field));
         }
 
         if (field instanceof LogMessageField) {
             LogMessageField logMessageField = (LogMessageField) field;
             if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Time) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(timestampPattern);
-                return new Values(field.getName(),dateFormat.format(new Date(logEvent.getLogTimestamp())));
+                return new Values(field.getName(), dateFormat.format(new Date(logEvent.getLogTimestamp())));
             }
 
             if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Server) {
@@ -254,4 +252,5 @@ public class GelfMessageAssembler {
     public void setMaximumMessageSize(int maximumMessageSize) {
         this.maximumMessageSize = maximumMessageSize;
     }
+
 }

@@ -15,6 +15,7 @@ Following settings can be used:
  * filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
  * mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false. See [MDC Profiling](../mdcprofiling.html) for details.
  * facility (Optional): Name of the Facility, default logstash-gelf
+ * includeFullMdc (Optional): Include all fields from the MDC, default false
 
 ### Fields
 
@@ -66,7 +67,7 @@ XML:
     <Configuration>
         <Appenders>
             <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="12201" extractStackTrace="true"
-                  filterStackTrace="true" mdcProfiling="true" maximumMessageSize="8192">
+                  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192">
                 <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
                 <Field name="level" pattern="%level" />
                 <Field name="simpleClassName" pattern="%C{1}" />

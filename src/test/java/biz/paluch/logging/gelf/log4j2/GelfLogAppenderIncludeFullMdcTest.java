@@ -16,22 +16,18 @@ import org.junit.Test;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
-public class GelfLogAppenderDynamicMdcTest {
+public class GelfLogAppenderIncludeFullMdcTest {
     public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String MDC_MY_MDC = "myMdc";
-    public static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
-    public static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
-    public static final String VALUE_1 = "value";
-    public static final String VALUE_2 = "value1";
-    public static final String VALUE_3 = "value2";
-    public static final String SOME_FIELD = "someField";
-    public static final String SOME_OTHER_FIELD = "someOtherField";
+    public static final String MDC_MY_MDC1 = "aMdcValue";
+    public static final String MDC_MY_MDC2 = "differentMdc";
+    public static final String VALUE_1 = "value1";
+    public static final String VALUE_2 = "value2";
 
     private static LoggerContext loggerContext;
 
     @BeforeClass
     public static void setupClass() {
-        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2-dynamic-mdc.xml");
+        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2-include-full-mdc.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
     }
@@ -58,42 +54,25 @@ public class GelfLogAppenderDynamicMdcTest {
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        String myMdc = gelfMessage.getField(MDC_MY_MDC);
-        assertNull(myMdc);
+        assertNull(gelfMessage.getField(MDC_MY_MDC1));
+        assertNull(gelfMessage.getField(MDC_MY_MDC2));
     }
 
     @Test
-    public void testWithMdcPrefix() throws Exception {
+    public void testWithMdc() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
-        ThreadContext.put(MDC_MY_MDC, VALUE_1);
-        ThreadContext.put(MY_MDC_WITH_SUFFIX1, VALUE_2);
-        ThreadContext.put(MY_MDC_WITH_SUFFIX2, VALUE_3);
+        ThreadContext.put(MDC_MY_MDC1, VALUE_1);
+        ThreadContext.put(MDC_MY_MDC2, VALUE_2);
 
         logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(VALUE_1, gelfMessage.getField(MDC_MY_MDC));
-        assertEquals(VALUE_2, gelfMessage.getField(MY_MDC_WITH_SUFFIX1));
-        assertEquals(VALUE_3, gelfMessage.getField(MY_MDC_WITH_SUFFIX2));
+        assertEquals(VALUE_1, gelfMessage.getField(MDC_MY_MDC1));
+        assertEquals(VALUE_2, gelfMessage.getField(MDC_MY_MDC2));
 
     }
 
-    @Test
-    public void testWithMdcRegex() throws Exception {
-
-        Logger logger = loggerContext.getLogger(getClass().getName());
-        ThreadContext.put(SOME_FIELD, "included");
-        ThreadContext.put(SOME_OTHER_FIELD, "excluded");
-
-        logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
-
-        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-
-        assertEquals("included", gelfMessage.getField(SOME_FIELD));
-        assertNull(gelfMessage.getField(SOME_OTHER_FIELD));
-    }
 }

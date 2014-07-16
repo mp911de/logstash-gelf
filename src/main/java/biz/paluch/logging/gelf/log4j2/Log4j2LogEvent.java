@@ -124,4 +124,9 @@ class Log4j2LogEvent implements LogEvent {
 
         return null;
     }
+
+    @Override
+    public Set<String> getMdcNames() {
+        return getAllMdcNames();
+    }
 }

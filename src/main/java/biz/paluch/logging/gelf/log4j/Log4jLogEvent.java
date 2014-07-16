@@ -161,4 +161,9 @@ class Log4jLogEvent implements LogEvent {
         }
         return matchingMdcNames;
     }
+
+    @Override
+    public Set<String> getMdcNames() {
+        return getAllMdcNames();
+    }
 }

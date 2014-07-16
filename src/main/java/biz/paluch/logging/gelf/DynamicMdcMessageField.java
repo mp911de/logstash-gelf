@@ -19,8 +19,7 @@ public class DynamicMdcMessageField implements MessageField {
         return regex;
     }
 
-    public Pattern getPattern()
-    {
+    public Pattern getPattern() {
         return pattern;
     }
 
@@ -34,8 +33,35 @@ public class DynamicMdcMessageField implements MessageField {
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DynamicMdcMessageField)) {
+            return false;
+        }
+
+        DynamicMdcMessageField that = (DynamicMdcMessageField) o;
+
+        if (pattern != null ? !pattern.equals(that.pattern) : that.pattern != null) {
+            return false;
+        }
+        if (regex != null ? !regex.equals(that.regex) : that.regex != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = regex != null ? regex.hashCode() : 0;
+        result = 31 * result + (pattern != null ? pattern.hashCode() : 0);
+        return result;
     }
 }

@@ -190,7 +190,8 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
             @PluginElement("DynamicMdcFields") final GelfDynamicMdcLogFields[] dynamicFieldArray,
             @PluginAttribute("graylogHost") String graylogHost, @PluginAttribute("host") String host,
             @PluginAttribute("graylogPort") String graylogPort, @PluginAttribute("port") String port,
-            @PluginAttribute("extractStackTrace") String extractStackTrace, @PluginAttribute("facility") String facility,
+            @PluginAttribute("extractStackTrace") String extractStackTrace,
+            @PluginAttribute("includeFullMdc") String includeFullMdc, @PluginAttribute("facility") String facility,
             @PluginAttribute("filterStackTrace") String filterStackTrace, @PluginAttribute("mdcProfiling") String mdcProfiling,
             @PluginAttribute("maximumMessageSize") String maximumMessageSize) {
 
@@ -236,6 +237,10 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
 
         if (mdcProfiling != null) {
             mdcGelfMessageAssembler.setMdcProfiling(mdcProfiling.equals("true"));
+        }
+
+        if (includeFullMdc != null) {
+            mdcGelfMessageAssembler.setIncludeFullMdc(includeFullMdc.equals("true"));
         }
 
         if (maximumMessageSize != null) {

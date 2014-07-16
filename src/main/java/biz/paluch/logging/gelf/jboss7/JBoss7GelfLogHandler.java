@@ -1,13 +1,13 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import java.util.logging.LogRecord;
-
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
+
+import java.util.logging.LogRecord;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -35,7 +35,9 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * .JBoss7GelfLogHandler.mdcFields=Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
- * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name. .JBoss7GelfLogHandler.dynamicMdcFields=mdc.*,[mdc|MDC]fields</li>
+ * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
+ * .JBoss7GelfLogHandler.dynamicMdcFields=mdc.*,[mdc|MDC]fields</li>
+ * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
  * <p/>
  * <a name="mdcProfiling"></a>
@@ -106,7 +108,16 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
         getGelfMessageAssembler().setMdcProfiling(mdcProfiling);
     }
 
+    public boolean isIncludeFullMdc() {
+        return getGelfMessageAssembler().isIncludeFullMdc();
+    }
+
+    public void setIncludeFullMdc(boolean includeFullMdc) {
+        getGelfMessageAssembler().setIncludeFullMdc(includeFullMdc);
+    }
+
     private MdcGelfMessageAssembler getGelfMessageAssembler() {
         return (MdcGelfMessageAssembler) gelfMessageAssembler;
     }
+
 }

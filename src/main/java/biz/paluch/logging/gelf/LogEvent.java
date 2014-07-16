@@ -1,5 +1,7 @@
 package biz.paluch.logging.gelf;
 
+import java.util.Set;
+
 /**
  * 
  * Generic Log Event.
@@ -47,10 +49,15 @@ public interface LogEvent {
     Values getValues(MessageField field);
 
     /**
-     *
+     * 
      * @param mdcName Name of the MDC entry.
      * @return one MDC value (or null)
      */
     String getMdcValue(String mdcName);
 
+    /**
+     * 
+     * @return list of MDC entry names.
+     */
+    Set<String> getMdcNames();
 }

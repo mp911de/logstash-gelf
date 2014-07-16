@@ -38,6 +38,7 @@ import ch.qos.logback.core.AppenderBase;
  * mdcFields=Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
  * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.</li>
+ * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
  * <p/>
  * <a name="mdcProfiling"></a>
@@ -217,5 +218,13 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
         for (String field : fields) {
             gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
         }
+    }
+
+    public boolean isIncludeFullMdc() {
+        return gelfMessageAssembler.isIncludeFullMdc();
+    }
+
+    public void setIncludeFullMdc(boolean includeFullMdc) {
+        gelfMessageAssembler.setIncludeFullMdc(includeFullMdc);
     }
 }

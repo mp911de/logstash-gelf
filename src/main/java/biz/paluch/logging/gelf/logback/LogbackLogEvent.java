@@ -178,4 +178,9 @@ class LogbackLogEvent implements LogEvent {
 
         return null;
     }
+
+    @Override
+    public Set<String> getMdcNames() {
+        return getAllMdcNames();
+    }
 }

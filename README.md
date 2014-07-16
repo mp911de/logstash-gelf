@@ -52,6 +52,7 @@ Advanced Properties
 * `additionalFields` (Optional): Post additional fields. Example: .GelfLogHandler.additionalFields=fieldName=Value
 * `mdcFields` (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
 * `dynamicMdcFields` (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
+* `includeFullMdc` (Optional): Include all fields from the MDC, default false
 
 MDC Profiling
 --------------
@@ -127,6 +128,7 @@ Properties:
     log4j.appender.gelf.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
     log4j.appender.gelf.MdcFields=mdcField1,mdcField2
     log4j.appender.gelf.DynamicMdcFields=mdc.*,(mdc|MDC)fields
+    log4j.appender.gelf.IncludeFullMdc=true
 
 
 XML:
@@ -144,6 +146,7 @@ XML:
         <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
         <param name="MdcFields" value="mdcField1,mdcField2" />
         <param name="DynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
+        <param name="IncludeFullMdc" value="true" />
     </appender>
     
 <a name="log4j2"/>
@@ -200,7 +203,7 @@ XML:
     <Configuration>
         <Appenders>
             <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="12201" extractStackTrace="true"
-                  filterStackTrace="true" mdcProfiling="true" maximumMessageSize="8192">
+                  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192">
                 <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
                 <Field name="level" pattern="%level" />
                 <Field name="simpleClassName" pattern="%C{1}" />
@@ -222,7 +225,7 @@ XML:
     
 
 <a name="jbossas7"/>
-JBoss 7 configuration
+JBoss AS7/Wildfly (JBoss AS8) configuration
 --------------
 You need to include the library as module (see download above), then add following lines to your configuration:
 
@@ -242,6 +245,7 @@ standalone.xml
             <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
             <property name="mdcFields" value="mdcField1,mdcField2" />
             <property name="dynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
+            <property name="includeFullMdc" value="true" />
         </properties>
     </custom-handler>
 
@@ -269,6 +273,7 @@ logback.xml Example:
             <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
             <mdcFields>mdcField1,mdcField2</mdcFields>
             <dynamicMdcFields>mdc.*,(mdc|MDC)fields</dynamicMdcFields>
+            <includeFullMdc>true</includeFullMdc>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>INFO</level>
             </filter>
