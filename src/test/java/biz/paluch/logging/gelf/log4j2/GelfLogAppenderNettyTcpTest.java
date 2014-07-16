@@ -111,32 +111,4 @@ public class GelfLogAppenderNettyTcpTest {
         }, Timeout.timeout(Duration.seconds(2)));
     }
 
-    @Test
-    public void testVeryLargeMessage() throws Exception {
-
-        Logger logger = loggerContext.getLogger(getClass().getName());
-
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 20000; i++) {
-            int charId = (int) (Math.random() * Character.MAX_CODE_POINT);
-            builder.append(charId);
-        }
-        logger.info(builder.toString());
-        waitForGelf();
-
-        List jsonValues = server.getJsonValues();
-        assertEquals(1, jsonValues.size());
-
-        JSONObject jsonValue = (JSONObject) jsonValues.get(0);
-
-        assertEquals(RuntimeContainer.ADDRESS, jsonValue.get("_server.addr"));
-
-        assertEquals(getClass().getSimpleName(), jsonValue.get("_simpleClassName"));
-
-        String shortMessage = builder.substring(0, 249);
-        assertEquals(builder.toString(), jsonValue.get("full_message"));
-        assertEquals(shortMessage, jsonValue.get("short_message"));
-
-    }
-
 }
