@@ -1,14 +1,16 @@
 package biz.paluch.logging.gelf.log4j2;
 
+import static org.apache.logging.log4j.core.layout.PatternLayout.newBuilder;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginConfiguration;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
-import org.apache.logging.log4j.core.helpers.Strings;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.status.StatusLogger;
+import org.apache.logging.log4j.util.Strings;
 
 /**
  * Configuration for a log field.
@@ -66,7 +68,13 @@ public class GelfLogField {
         }
 
         if (isPattern) {
-            return new GelfLogField(name, null, null, PatternLayout.createLayout(pattern, config, null, null, "false", "false"));
+
+            PatternLayout patternLayout = newBuilder().withPattern(pattern).withConfiguration(config)
+                    .withNoConsoleNoAnsi(false).withAlwaysWriteExceptions(false)
+
+                    .build();
+
+            return new GelfLogField(name, null, null, patternLayout);
         }
 
         return new GelfLogField(name, literalValue, mdc, null);

@@ -39,7 +39,7 @@ public class GelfLogAppenderMinimalTest {
     @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
-        ThreadContext.clear();
+        ThreadContext.clearAll();
     }
 
     @Test

@@ -1,17 +1,16 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.logging.log4j.Level;
-
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogEvent;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
 import biz.paluch.logging.gelf.Values;
+import org.apache.logging.log4j.Level;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  */
@@ -40,7 +39,7 @@ class Log4j2LogEvent implements LogEvent {
 
     @Override
     public long getLogTimestamp() {
-        return logEvent.getMillis();
+        return logEvent.getTimeMillis();
     }
 
     @Override

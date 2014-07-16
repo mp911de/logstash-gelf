@@ -1,10 +1,14 @@
 package biz.paluch.logging.gelf.log4j2;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-import java.util.concurrent.TimeoutException;
-
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.NettyLocalServer;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import com.google.code.tempusfugit.temporal.Condition;
+import com.google.code.tempusfugit.temporal.Duration;
+import com.google.code.tempusfugit.temporal.Timeout;
+import com.google.code.tempusfugit.temporal.WaitFor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
@@ -16,15 +20,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.NettyLocalServer;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-
-import com.google.code.tempusfugit.temporal.Condition;
-import com.google.code.tempusfugit.temporal.Duration;
-import com.google.code.tempusfugit.temporal.Timeout;
-import com.google.code.tempusfugit.temporal.WaitFor;
+import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 /**
  */
@@ -53,7 +50,7 @@ public class GelfLogAppenderNettyTest {
     @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
-        ThreadContext.clear();
+        ThreadContext.clearAll();
         server.clear();
 
     }
