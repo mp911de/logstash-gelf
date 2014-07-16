@@ -2,6 +2,7 @@ package biz.paluch.logging.gelf.jul;
 
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.PropertyProvider;
 import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -51,14 +52,19 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         JulPropertyProvider propertyProvider = new JulPropertyProvider(GelfLogHandler.class);
         gelfMessageAssembler.initialize(propertyProvider);
 
-        final String level = propertyProvider.getProperty("level");
+        final String level = propertyProvider.getProperty(PropertyProvider.PROPERTY_LEVEL);
         if (null != level) {
             setLevel(Level.parse(level.trim()));
         } else {
             setLevel(Level.INFO);
         }
 
-        final String filter = propertyProvider.getProperty("filter");
+        final String additionalFields = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELDS);
+        if (null != level) {
+            setAdditionalFields(additionalFields);
+        }
+
+        final String filter = propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER);
         try {
             if (null != filter) {
                 final Class clazz = ClassLoader.getSystemClassLoader().loadClass(filter);

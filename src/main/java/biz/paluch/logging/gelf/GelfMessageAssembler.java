@@ -176,6 +176,7 @@ public class GelfMessageAssembler {
 
             fieldNumber++;
         }
+
     }
 
     public void addField(MessageField field) {

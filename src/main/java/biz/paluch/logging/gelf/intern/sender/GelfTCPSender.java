@@ -1,12 +1,12 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
 
 /**
  * (c) https://github.com/t0xa/gelfj
@@ -21,7 +21,6 @@ public class GelfTCPSender implements GelfSender {
     public GelfTCPSender(String host, int port, ErrorReporter errorReporter) throws IOException {
         this.host = InetAddress.getByName(host);
         this.port = port;
-        this.socket = new Socket(host, port);
         this.errorReporter = errorReporter;
     }
 

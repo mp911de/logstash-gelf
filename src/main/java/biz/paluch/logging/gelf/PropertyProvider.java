@@ -29,6 +29,10 @@ public interface PropertyProvider {
     String PROPERTY_FACILITY = "facility";
     String PROPERTY_MAX_MESSAGE_SIZE = "maximumMessageSize";
     String PROPERTY_ADDITIONAL_FIELD = "additionalField.";
+    String PROPERTY_ADDITIONAL_FIELDS = "additionalFields";
+
+    String PROPERTY_FILTER = "filter";
+    String PROPERTY_LEVEL = "level";
 
     String getProperty(String propertyName);
 }

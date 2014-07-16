@@ -9,6 +9,7 @@ import com.google.code.tempusfugit.temporal.Condition;
 import com.google.code.tempusfugit.temporal.Duration;
 import com.google.code.tempusfugit.temporal.Timeout;
 import com.google.code.tempusfugit.temporal.WaitFor;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
@@ -25,16 +26,16 @@ import java.util.concurrent.TimeoutException;
 
 /**
  */
-public class GelfLogAppenderNettyTest {
+public class GelfLogAppenderNettyTcpTest {
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     private static LoggerContext loggerContext;
-    private static NettyLocalServer server = new NettyLocalServer();
+    private static NettyLocalServer server = new NettyLocalServer(NioServerSocketChannel.class);
 
     @BeforeClass
     public static void setupClass() throws Exception {
-        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2-netty.xml");
+        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2-netty-tcp.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
         server.run();
@@ -87,6 +88,17 @@ public class GelfLogAppenderNettyTest {
         assertEquals("logstash-gelf", jsonValue.get(GelfMessage.FIELD_FACILITY));
         assertEquals("fieldValue1", jsonValue.get("_fieldName1"));
         assertEquals("fieldValue2", jsonValue.get("_fieldName2"));
+
+    }
+
+    @Test(expected = TimeoutException.class)
+    public void testEmptyMessage() throws Exception {
+
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.info("");
+
+        waitForGelf();
 
     }
 
