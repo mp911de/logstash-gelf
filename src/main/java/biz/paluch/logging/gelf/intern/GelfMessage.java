@@ -41,9 +41,6 @@ public class GelfMessage {
     private Map<String, String> additonalFields = new HashMap<String, String>();
     private int maximumMessageSize = 8192;
 
-    public GelfMessage() {
-    }
-
     public GelfMessage(String shortMessage, String fullMessage, long timestamp, String level) {
 
         this.shortMessage = shortMessage;
@@ -79,7 +76,7 @@ public class GelfMessage {
 
         return JSONValue.toJSONString(map);
     }
-    
+
     public String toJson() {
         return toJson("_");
     }
@@ -116,14 +113,6 @@ public class GelfMessage {
             throw new RuntimeException("No UTF-8 support available.", e);
         }
 
-        ByteBuffer buffer = ByteBuffer.allocate(messageBytes.length);
-        buffer.put(messageBytes);
-        buffer.flip();
-        return buffer;
-    }
-
-    public ByteBuffer toAMQPBuffer() {
-        byte[] messageBytes = gzipMessage(toJson());
         ByteBuffer buffer = ByteBuffer.allocate(messageBytes.length);
         buffer.put(messageBytes);
         buffer.flip();

@@ -22,7 +22,7 @@ public final class GelfSenderFactory {
     
     public static GelfSender createSender(final GelfMessageAssembler gelfMessageAssembler, final ErrorReporter errorReporter) {
         if (gelfMessageAssembler.getHost() == null) {
-            errorReporter.reportError("Graylog2 hostname is empty!", null);
+            errorReporter.reportError("GELF server hostname is empty!", null);
         } else {
             try {
                 GelfSenderConfiguration senderConfiguration = new GelfSenderConfiguration() {
@@ -51,7 +51,7 @@ public final class GelfSenderFactory {
                 senderConfiguration.getErrorReport().reportError("No sender found for host " + senderConfiguration.getHost(), null);
                 return null;
             } catch (UnknownHostException e) {
-                errorReporter.reportError("Unknown Graylog2 hostname:" + gelfMessageAssembler.getHost(), e);
+                errorReporter.reportError("Unknown GELF server hostname:" + gelfMessageAssembler.getHost(), e);
             } catch (SocketException e) {
                 errorReporter.reportError("Socket exception: " + e.getMessage(), e);
             } catch (IOException e) {
