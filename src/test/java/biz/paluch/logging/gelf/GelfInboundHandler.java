@@ -93,7 +93,7 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
                         intermediate = new ByteArrayOutputStream();
                         intermediate.write(bytes, 0, bytes.length);
                         return;
-                    } else {
+                    } else if (intermediate != null) {
                         intermediate.write(bytes, 0, bytes.length);
                         bytes = intermediate.toByteArray();
                         intermediate = null;

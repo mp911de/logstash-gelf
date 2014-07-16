@@ -75,10 +75,9 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
     }
 
     @Test
-    public void testEmtyMessage() throws Exception {
+    public void testEmptyMessage() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
-        logger.info("");
         logger.info("");
         assertEquals(1, GelfTestSender.getMessages().size());
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
