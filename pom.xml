@@ -47,17 +47,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>1.6</maven.compiler.target>
         <maven.compiler.source>1.6</maven.compiler.source>
-        <logstash-gelf-release-version>1.4.1</logstash-gelf-release-version>
+        <logstash-gelf-release-version>1.4.5</logstash-gelf-release-version>
 
         <github.site.upload.skip>true</github.site.upload.skip>
 
         <!-- Versions -->
-        <com.googlecode.json-simple.version>1.1</com.googlecode.json-simple.version>
+        <com.googlecode.json-simple.version>1.1.1</com.googlecode.json-simple.version>
         <log4j.version>1.2.14</log4j.version>
-        <log4j2.version>2.0-rc1</log4j2.version>
+        <log4j2.version>2.0</log4j2.version>
         <junit.version>4.11</junit.version>
         <jedis.version>2.5.1</jedis.version>
-        <jedis-commons-pool2.version>2.0</jedis-commons-pool2.version>
+        <jedis-commons-pool2.version>2.2</jedis-commons-pool2.version>
         <slf4j-api.version>1.7.5</slf4j-api.version>
         <logback-classic.version>1.0.13</logback-classic.version>
 
