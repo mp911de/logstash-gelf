@@ -70,9 +70,7 @@ public class GelfLogField {
         if (isPattern) {
 
             PatternLayout patternLayout = newBuilder().withPattern(pattern).withConfiguration(config)
-                    .withNoConsoleNoAnsi(false).withAlwaysWriteExceptions(false)
-
-                    .build();
+                    .withNoConsoleNoAnsi(false).withAlwaysWriteExceptions(false).build();
 
             return new GelfLogField(name, null, null, patternLayout);
         }
