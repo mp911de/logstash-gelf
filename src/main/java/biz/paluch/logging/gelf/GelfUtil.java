@@ -1,10 +1,10 @@
 package biz.paluch.logging.gelf;
 
+import biz.paluch.logging.gelf.intern.GelfMessage;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -64,6 +64,11 @@ public class GelfUtil {
     }
 
     public static String getSimpleClassName(String className) {
+
+        if (className == null) {
+            return null;
+        }
+
         int index = className.lastIndexOf('.');
         if (index != -1) {
             return className.substring(index + 1);

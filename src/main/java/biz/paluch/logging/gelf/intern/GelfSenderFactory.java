@@ -69,10 +69,15 @@ public final class GelfSenderFactory {
         SenderProviderHolder.removeSenderProvider(provider);
     }
 
+    public static void removeAllAddedSenderProviders() {
+        SenderProviderHolder.removeAllAddedSenderProviders();
+    }
+
     // For thread safe lazy intialization of provider list
     private static class SenderProviderHolder {
         private static ServiceLoader<GelfSenderProvider> gelfSenderProvider = ServiceLoader.load(GelfSenderProvider.class);
         private static List<GelfSenderProvider> providerList = new ArrayList<GelfSenderProvider>();
+        private static List<GelfSenderProvider> addedProviders = new ArrayList<GelfSenderProvider>();
 
         static {
             Iterator<GelfSenderProvider> iter = gelfSenderProvider.iterator();
@@ -89,14 +94,23 @@ public final class GelfSenderFactory {
 
         static void addSenderProvider(GelfSenderProvider provider) {
             synchronized (providerList) {
+                addedProviders.add(provider);
                 if (!providerList.contains(provider)) {
                     providerList.add(0, provider); // To take precedence over built-in providers
                 }
             }
         }
 
+        static void removeAllAddedSenderProviders() {
+            synchronized (providerList) {
+                providerList.removeAll(addedProviders);
+                addedProviders.clear();
+            }
+        }
+
         static void removeSenderProvider(GelfSenderProvider provider) {
             synchronized (providerList) {
+                addedProviders.remove(provider);
                 providerList.remove(provider);
             }
         }

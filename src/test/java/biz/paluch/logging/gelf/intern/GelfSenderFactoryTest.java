@@ -7,6 +7,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,9 +43,10 @@ public class GelfSenderFactoryTest {
         when(assembler.getHost()).thenReturn(THE_HOST);
     }
 
-    @Before
+    @After
     public void after() throws Exception {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
+        GelfSenderFactory.removeAllAddedSenderProviders();
     }
 
     @Test

@@ -11,6 +11,7 @@ import biz.paluch.logging.gelf.intern.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.ErrorHandler;
 import org.apache.log4j.spi.LoggingEvent;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,9 +50,10 @@ public class GelfLogAppenderErrorsTest {
 
     }
 
-    @Before
+    @After
     public void after() throws Exception {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
+        GelfSenderFactory.removeAllAddedSenderProviders();
     }
 
     @Test

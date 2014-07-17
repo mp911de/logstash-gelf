@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.*;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,9 +47,10 @@ public class GelfLogHandlerErrorsTest {
 
     }
 
-    @Before
+    @After
     public void after() throws Exception {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
+        GelfSenderFactory.removeAllAddedSenderProviders();
     }
 
     @Test
