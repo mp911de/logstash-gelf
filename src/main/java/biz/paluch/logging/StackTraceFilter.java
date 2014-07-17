@@ -60,8 +60,8 @@ import java.util.*;
  */
 public class StackTraceFilter {
 
+    public static final String FILTER_SETTINGS = "/" + StackTraceFilter.class.getSimpleName() + ".packages";
     private static final String INDENT = "\t";
-    private static final String FILTER_SETTINGS = "/" + StackTraceFilter.class.getSimpleName() + ".packages";
 
     /**
      * List of Surpressed Packages.
@@ -69,12 +69,15 @@ public class StackTraceFilter {
     private static Set<String> suppressedPackages;
 
     static {
+        loadSetttings(FILTER_SETTINGS);
+    }
 
+    public static void loadSetttings(String resourceName) {
         InputStream is = null;
         try {
-            is = getStream();
+            is = getStream(resourceName);
             if (is == null) {
-                System.out.println("No " + FILTER_SETTINGS + " resource present, using defaults");
+                System.out.println("No " + resourceName + " resource present, using defaults");
                 suppressedPackages = new HashSet<String>(getDefaults());
             } else {
                 Properties p = new Properties();
@@ -83,7 +86,7 @@ public class StackTraceFilter {
             }
 
         } catch (IOException e) {
-            System.out.println("Could not parse " + FILTER_SETTINGS + " resource, using defaults");
+            System.out.println("Could not parse " + resourceName + " resource, using defaults");
             suppressedPackages = new HashSet<String>(getDefaults());
         } finally {
             try {
@@ -94,15 +97,14 @@ public class StackTraceFilter {
                 // ignore
             }
         }
-
     }
 
-    private static InputStream getStream() {
+    private static InputStream getStream(String resourceName) {
 
         Thread thread = Thread.currentThread();
-        InputStream is = StackTraceFilter.class.getResourceAsStream(FILTER_SETTINGS);
+        InputStream is = StackTraceFilter.class.getResourceAsStream(resourceName);
         if (is == null && thread.getContextClassLoader() != null) {
-            is = thread.getContextClassLoader().getResourceAsStream(FILTER_SETTINGS);
+            is = thread.getContextClassLoader().getResourceAsStream(resourceName);
         }
         return is;
     }
