@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf.log4j;
 
+import biz.paluch.logging.gelf.intern.*;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.spi.LoggingEvent;
 
@@ -8,10 +9,6 @@ import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -106,7 +103,7 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
     @Override
     public void close() {
         if (null != gelfSender) {
-            gelfSender.close();
+            Closer.close(gelfSender);
             gelfSender = null;
         }
     }

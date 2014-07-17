@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf.intern.sender;
 
+import biz.paluch.logging.gelf.intern.Closer;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
@@ -48,12 +49,6 @@ public class GelfTCPSender implements GelfSender {
 
     public void close() {
         shutdown = true;
-        try {
-            if (socket != null) {
-                socket.close();
-            }
-        } catch (IOException e) {
-            errorReporter.reportError(e.getMessage(), e);
-        }
+        Closer.close(socket);
     }
 }

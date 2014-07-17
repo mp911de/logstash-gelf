@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf.log4j2;
 
+import biz.paluch.logging.gelf.intern.*;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
@@ -16,10 +17,6 @@ import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -322,7 +319,7 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
     @Override
     public void stop() {
         if (null != gelfSender) {
-            gelfSender.close();
+            Closer.close(gelfSender);
             gelfSender = null;
         }
         super.stop();

@@ -1,9 +1,11 @@
 package biz.paluch.logging.gelf.intern;
 
+import java.io.Closeable;
+
 /**
  * (c) https://github.com/t0xa/gelfj
  */
-public interface GelfSender {
+public interface GelfSender extends Closeable {
 
     /**
      * Send the Gelf message.

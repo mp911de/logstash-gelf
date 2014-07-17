@@ -1,5 +1,7 @@
 package biz.paluch.logging.gelf;
 
+import biz.paluch.logging.gelf.intern.Closer;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -81,13 +83,7 @@ public class LogMessageField implements MessageField {
         } catch (IOException e) {
             System.out.println("Could not parse " + DEFAULT_MAPPING + " resource, using defaults");
         } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                // ignore
-            }
+            Closer.close(is);
         }
 
         if (result.isEmpty()) {

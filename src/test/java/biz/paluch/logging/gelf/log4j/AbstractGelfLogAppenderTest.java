@@ -162,4 +162,36 @@ public abstract class AbstractGelfLogAppenderTest {
         assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
 
     }
+
+    @Test
+    public void testLongProfiling() throws Exception {
+
+        Logger logger = Logger.getLogger(getClass());
+        MDC.put(GelfUtil.MDC_REQUEST_START_MS, "" + (System.currentTimeMillis() - 2000));
+
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION));
+        assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
+
+    }
+
+    @Test
+    public void testProfilingWrongStart() throws Exception {
+
+        Logger logger = Logger.getLogger(getClass());
+        MDC.put(GelfUtil.MDC_REQUEST_START_MS, "");
+
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION));
+        assertNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
+
+    }
 }

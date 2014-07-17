@@ -149,9 +149,9 @@ public class GelfMessage {
 
             stream.write(bytes);
             stream.finish();
-            stream.close();
+            Closer.close(stream);
             byte[] zipped = bos.toByteArray();
-            bos.close();
+            Closer.close(bos);
             return zipped;
         } catch (IOException e) {
             return null;

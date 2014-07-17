@@ -4,10 +4,7 @@ import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.PropertyProvider;
 import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import biz.paluch.logging.gelf.intern.*;
 
 import java.util.logging.*;
 
@@ -115,7 +112,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
     @Override
     public void close() {
         if (null != gelfSender) {
-            gelfSender.close();
+            Closer.close(gelfSender);
             gelfSender = null;
         }
     }

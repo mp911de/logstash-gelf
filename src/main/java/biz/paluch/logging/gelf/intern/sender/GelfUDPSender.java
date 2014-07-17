@@ -1,15 +1,16 @@
 package biz.paluch.logging.gelf.intern.sender;
 
+import biz.paluch.logging.gelf.intern.Closer;
+import biz.paluch.logging.gelf.intern.ErrorReporter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
 
 /**
  * (c) https://github.com/t0xa/gelfj
@@ -60,10 +61,6 @@ public class GelfUDPSender implements GelfSender {
     }
 
     public void close() {
-        try {
-            channel.close();
-        } catch (IOException e) {
-            errorReporter.reportError(e.getMessage(), e);
-        }
+        Closer.close(channel);
     }
 }

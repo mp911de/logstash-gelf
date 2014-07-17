@@ -1,5 +1,7 @@
 package biz.paluch.logging;
 
+import biz.paluch.logging.gelf.intern.Closer;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -89,13 +91,7 @@ public class StackTraceFilter {
             System.out.println("Could not parse " + resourceName + " resource, using defaults");
             suppressedPackages = new HashSet<String>(getDefaults());
         } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                // ignore
-            }
+            Closer.close(is);
         }
     }
 
