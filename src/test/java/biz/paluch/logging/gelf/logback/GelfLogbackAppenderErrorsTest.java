@@ -1,29 +1,33 @@
-package biz.paluch.logging.gelf.jul;
+package biz.paluch.logging.gelf.logback;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import biz.paluch.logging.gelf.GelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.logging.ErrorManager;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
+import biz.paluch.logging.gelf.GelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.*;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.core.Context;
+import ch.qos.logback.core.status.Status;
+import ch.qos.logback.core.status.StatusManager;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GelfLogHandlerErrorsTest {
+public class GelfLogbackAppenderErrorsTest {
+
     public static final String THE_HOST = "the host";
-    public static final LogRecord MESSAGE = new LogRecord(Level.INFO, "message");
-    @Mock
-    private ErrorManager errorManager;
+
+    public static final LoggingEvent LOGGING_EVENT = new LoggingEvent("my.class", new LoggerContext().getLogger("my.class"),
+            Level.INFO, "message", null, null);
 
     @Mock
     private GelfSender sender;
@@ -34,7 +38,13 @@ public class GelfLogHandlerErrorsTest {
     @Mock
     private GelfMessageAssembler assembler;
 
-    private GelfLogHandler sut = new GelfLogHandler();
+    @Mock
+    private Context context;
+
+    @Mock
+    private StatusManager statusManager;
+
+    private GelfLogbackAppender sut = new GelfLogbackAppender();
 
     @Before
     public void before() throws Exception {
@@ -42,7 +52,10 @@ public class GelfLogHandlerErrorsTest {
 
         when(assembler.getHost()).thenReturn(THE_HOST);
         when(senderProvider.supports(anyString())).thenReturn(true);
-        sut.setErrorManager(errorManager);
+        sut.setContext(context);
+        when(context.getStatusManager()).thenReturn(statusManager);
+
+        LOGGING_EVENT.setCallerData(new StackTraceElement[] { new StackTraceElement("a", "b", "c", 1) });
 
     }
 
@@ -57,9 +70,9 @@ public class GelfLogHandlerErrorsTest {
         when(assembler.getHost()).thenReturn(THE_HOST);
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new IllegalStateException());
 
-        sut.publish(MESSAGE);
+        sut.append(LOGGING_EVENT);
 
-        verify(errorManager, times(1)).error(anyString(), any(IllegalStateException.class), anyInt());
+        verify(statusManager, times(1)).add(any(Status.class));
     }
 
     @Test
@@ -68,9 +81,9 @@ public class GelfLogHandlerErrorsTest {
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenReturn(sender);
         when(sender.sendMessage(any(GelfMessage.class))).thenReturn(false);
 
-        sut.publish(MESSAGE);
+        sut.append(LOGGING_EVENT);
 
-        verify(errorManager, times(2)).error(anyString(), any(IllegalStateException.class), anyInt());
+        verify(statusManager, times(2)).add(any(Status.class));
     }
 
     @Test
@@ -79,8 +92,8 @@ public class GelfLogHandlerErrorsTest {
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenReturn(sender);
         when(sender.sendMessage(any(GelfMessage.class))).thenThrow(new IllegalStateException());
 
-        sut.publish(MESSAGE);
+        sut.append(LOGGING_EVENT);
 
-        verify(errorManager, times(2)).error(anyString(), any(IllegalStateException.class), anyInt());
+        verify(statusManager, times(2)).add(any(Status.class));
     }
 }
