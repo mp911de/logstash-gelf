@@ -99,4 +99,41 @@ public class GelfLogHandlerTest {
         assertExpectedMessage(expectedMessage);
 
     }
+
+    @Test
+    public void testSimpleNull() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName());
+
+        String expectedMessage = null;
+        logger.info(expectedMessage);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("", gelfMessage.getFullMessage());
+        assertEquals("<empty>", gelfMessage.getShortMessage());
+    }
+
+    @Test
+    public void testSimpleWarning() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName());
+
+        String expectedMessage = "foo bar test log message";
+        logger.warning(expectedMessage);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("4", gelfMessage.getLevel());
+
+    }
+
+    @Test
+    public void testSimpleSevere() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName());
+
+        String expectedMessage = "foo bar test log message";
+        logger.severe(expectedMessage);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("3", gelfMessage.getLevel());
+
+    }
 }

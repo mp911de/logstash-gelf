@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.junit.Test;
@@ -26,17 +27,6 @@ public abstract class AbstractGelfLogAppenderTest {
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     @Test
-    public void testSimpleDebug() throws Exception {
-
-        Logger logger = Logger.getLogger(getClass());
-
-        assertEquals(0, GelfTestSender.getMessages().size());
-        logger.debug(LOG_MESSAGE);
-        assertEquals(0, GelfTestSender.getMessages().size());
-
-    }
-
-    @Test
     public void testSimpleInfo() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
@@ -51,10 +41,67 @@ public abstract class AbstractGelfLogAppenderTest {
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 
-
         // this is because of default-logstash-fields.properties
         assertEquals("INFO", gelfMessage.getAdditonalFields().get("MySeverity"));
 
+    }
+
+    @Test
+    public void testSimpleWarn() throws Exception {
+        Logger logger = Logger.getLogger(getClass());
+
+        String expectedMessage = "foo bar test log message";
+        logger.warn(expectedMessage);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("4", gelfMessage.getLevel());
+
+    }
+
+    @Test
+    public void testSimpleError() throws Exception {
+        Logger logger = Logger.getLogger(getClass());
+
+        String expectedMessage = "foo bar test log message";
+        logger.error(expectedMessage);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("3", gelfMessage.getLevel());
+    }
+
+    @Test
+    public void testSimpleFatal() throws Exception {
+        Logger logger = Logger.getLogger(getClass());
+
+        String expectedMessage = "foo bar test log message";
+        logger.fatal(expectedMessage);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("2", gelfMessage.getLevel());
+    }
+
+    @Test
+    public void testSimpleDebug() throws Exception {
+        Logger logger = Logger.getLogger(getClass());
+        logger.setLevel(Level.ALL);
+
+        String expectedMessage = "foo bar test log message";
+        logger.debug(expectedMessage);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("7", gelfMessage.getLevel());
+    }
+
+    @Test
+    public void testSimpleTrace() throws Exception {
+        Logger logger = Logger.getLogger(getClass());
+        logger.setLevel(Level.ALL);
+
+        String expectedMessage = "foo bar test log message";
+        logger.trace(expectedMessage);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("7", gelfMessage.getLevel());
     }
 
     @Test

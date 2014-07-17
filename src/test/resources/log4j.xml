@@ -20,7 +20,7 @@
         <param name="MaximumMessageSize" value="8192" />
         <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
         <param name="MdcFields" value="mdcField1,mdcField2" />
-        <param name="Threshold" value="INFO" />
+        <param name="Threshold" value="ALL" />
     </appender>
 
     <root>
