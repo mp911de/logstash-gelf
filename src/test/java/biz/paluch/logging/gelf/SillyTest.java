@@ -59,6 +59,8 @@ public class SillyTest {
         sut.setGraylogPort(GRAYLOG_PORT);
         sut.setMaximumMessageSize(MAXIMUM_MESSAGE_SIZE);
 
+        sut.flush();
+
         assertEquals(FACILITY, sut.getFacility());
         assertEquals(HOST, sut.getGraylogHost());
         assertEquals(HOST, sut.getHost());

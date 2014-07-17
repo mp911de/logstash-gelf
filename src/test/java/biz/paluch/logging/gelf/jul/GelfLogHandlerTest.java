@@ -1,17 +1,15 @@
 package biz.paluch.logging.gelf.jul;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.MDC;
 import org.junit.Before;
 import org.junit.Test;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.intern.GelfMessage;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -55,6 +53,28 @@ public class GelfLogHandlerTest {
 
         Object[] params = new Object[] { "a", "b", "c" };
         logger.log(Level.INFO, "message.format.curly.brackets", params);
+
+        assertExpectedMessage(expectedMessage);
+    }
+
+    @Test
+    public void testWithResourceBundleFormattingMalformed1() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName(), "messages");
+        String expectedMessage = "message.format.fail1";
+
+        Object[] params = new Object[] { "a", "b", "c" };
+        logger.log(Level.INFO, "message.format.fail1", params);
+
+        assertExpectedMessage(expectedMessage);
+    }
+
+    @Test
+    public void testWithResourceBundleFormattingMalformed2() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName(), "messages");
+        String expectedMessage = "message.format.fail2";
+
+        Object[] params = new Object[] { "a", "b", "c" };
+        logger.log(Level.INFO, "message.format.fail2", params);
 
         assertExpectedMessage(expectedMessage);
     }
