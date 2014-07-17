@@ -4,11 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Filtering Facility for Stack-Traces. This is to shorten very long Traces. It leads to a very short Trace containing only the
@@ -146,15 +142,10 @@ public class StackTraceFilter {
      */
     public static String getFilteredStackTrace(Throwable t, boolean shouldFilter) {
 
-        try {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            writeCleanStackTrace(t, pw, shouldFilter);
-            return sw.getBuffer().toString();
-        } catch (Exception e) {
-            System.out.println("Error filtering StackTrace: " + e.getMessage());
-            return e.toString();
-        }
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        writeCleanStackTrace(t, pw, shouldFilter);
+        return sw.getBuffer().toString();
     }
 
     private static void writeCleanStackTrace(Throwable t, PrintWriter s, boolean wantsFilter) {

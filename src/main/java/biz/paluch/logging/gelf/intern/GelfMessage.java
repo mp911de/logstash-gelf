@@ -4,7 +4,6 @@ import org.json.simple.JSONValue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -102,16 +101,12 @@ public class GelfMessage {
 
     public ByteBuffer toTCPBuffer() {
         byte[] messageBytes;
-        try {
-            // Do not use GZIP, as the headers will contain \0 bytes
-            // graylog2-server uses \0 as a delimiter for TCP frames
-            // see: https://github.com/Graylog2/graylog2-server/issues/127
-            String json = toJson();
-            json += '\0';
-            messageBytes = json.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("No UTF-8 support available.", e);
-        }
+        // Do not use GZIP, as the headers will contain \0 bytes
+        // graylog2-server uses \0 as a delimiter for TCP frames
+        // see: https://github.com/Graylog2/graylog2-server/issues/127
+        String json = toJson();
+        json += '\0';
+        messageBytes = Charsets.utf8(json);
 
         ByteBuffer buffer = ByteBuffer.allocate(messageBytes.length);
         buffer.put(messageBytes);
@@ -150,12 +145,8 @@ public class GelfMessage {
 
         try {
             GZIPOutputStream stream = new GZIPOutputStream(bos);
-            byte[] bytes;
-            try {
-                bytes = message.getBytes("UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException("No UTF-8 support available.", e);
-            }
+            byte[] bytes = Charsets.utf8(message);
+
             stream.write(bytes);
             stream.finish();
             stream.close();
@@ -169,11 +160,7 @@ public class GelfMessage {
 
     private byte[] lastFourAsciiBytes(String host) {
         final String shortHost = host.length() >= 4 ? host.substring(host.length() - 4) : host;
-        try {
-            return shortHost.getBytes("ASCII");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("JVM without ascii support?", e);
-        }
+        return Charsets.ascii(shortHost);
     }
 
     public String getVersion() {
@@ -244,10 +231,6 @@ public class GelfMessage {
 
     public Map<String, String> getAdditonalFields() {
         return additonalFields;
-    }
-
-    public void setAdditonalFields(Map<String, String> additonalFields) {
-        this.additonalFields = additonalFields;
     }
 
     public boolean isValid() {

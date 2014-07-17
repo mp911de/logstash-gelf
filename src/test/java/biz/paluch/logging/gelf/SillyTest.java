@@ -1,8 +1,15 @@
 package biz.paluch.logging.gelf;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler;
+import biz.paluch.logging.gelf.jul.GelfLogHandler;
+import biz.paluch.logging.gelf.log4j.GelfLogAppender;
+import biz.paluch.logging.gelf.logback.GelfLogbackAppender;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -11,6 +18,11 @@ import org.junit.Test;
 public class SillyTest {
 
     public static final String NAME = "name";
+    public static final String FACILITY = "facility";
+    public static final String HOST = "host";
+    public static final int GRAYLOG_PORT = 0;
+    public static final int MAXIMUM_MESSAGE_SIZE = 1234;
+    public static final String TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss,SSSS";
 
     @Test
     public void testMdcMessageField() throws Exception {
@@ -34,5 +46,103 @@ public class SillyTest {
     public void testDynamicMdcMessageField() throws Exception {
         DynamicMdcMessageField field = new DynamicMdcMessageField(".*");
         assertEquals(DynamicMdcMessageField.class.getSimpleName() + " [regex='.*']", field.toString());
+    }
+
+    @Test
+    public void testSameFieldsGelfLogHandler() {
+        GelfLogHandler sut = new GelfLogHandler();
+        sut.setAdditionalFields("");
+        sut.setExtractStackTrace(true);
+        sut.setFacility(FACILITY);
+        sut.setFilterStackTrace(true);
+        sut.setGraylogHost(HOST);
+        sut.setGraylogPort(GRAYLOG_PORT);
+        sut.setMaximumMessageSize(MAXIMUM_MESSAGE_SIZE);
+
+        assertEquals(FACILITY, sut.getFacility());
+        assertEquals(HOST, sut.getGraylogHost());
+        assertEquals(HOST, sut.getHost());
+        assertEquals(GRAYLOG_PORT, sut.getPort());
+        assertEquals(GRAYLOG_PORT, sut.getGraylogPort());
+        assertEquals(MAXIMUM_MESSAGE_SIZE, sut.getMaximumMessageSize());
+        assertEquals(TIMESTAMP_PATTERN, sut.getTimestampPattern());
+        assertEquals(RuntimeContainer.FQDN_HOSTNAME, sut.getOriginHost());
+
+        assertTrue(sut.isExtractStackTrace());
+        assertTrue(sut.isFilterStackTrace());
+    }
+
+    @Test
+    public void testSameFieldsJBoss7GelfLogHandler() {
+        JBoss7GelfLogHandler sut = new JBoss7GelfLogHandler();
+
+        sut.setDynamicMdcFields(".*");
+        sut.setIncludeFullMdc(true);
+        sut.setMdcFields("");
+        sut.setMdcProfiling(true);
+
+        assertTrue(sut.isIncludeFullMdc());
+        assertTrue(sut.isMdcProfiling());
+    }
+
+    @Test
+    public void testSameFieldsGelfLogAppender12x() {
+        GelfLogAppender sut = new GelfLogAppender();
+        sut.setAdditionalFields("");
+        sut.setExtractStackTrace(true);
+        sut.setFacility(FACILITY);
+        sut.setFilterStackTrace(true);
+        sut.setGraylogHost(HOST);
+        sut.setGraylogPort(GRAYLOG_PORT);
+        sut.setMaximumMessageSize(MAXIMUM_MESSAGE_SIZE);
+        sut.setDynamicMdcFields(".*");
+        sut.setIncludeFullMdc(true);
+        sut.setMdcFields("");
+        sut.setMdcProfiling(true);
+
+        assertEquals(FACILITY, sut.getFacility());
+        assertEquals(HOST, sut.getGraylogHost());
+        assertEquals(HOST, sut.getHost());
+        assertEquals(GRAYLOG_PORT, sut.getPort());
+        assertEquals(GRAYLOG_PORT, sut.getGraylogPort());
+        assertEquals(MAXIMUM_MESSAGE_SIZE, sut.getMaximumMessageSize());
+        assertEquals(TIMESTAMP_PATTERN, sut.getTimestampPattern());
+        assertEquals(RuntimeContainer.FQDN_HOSTNAME, sut.getOriginHost());
+
+        assertTrue(sut.isExtractStackTrace());
+        assertTrue(sut.isFilterStackTrace());
+        assertTrue(sut.isIncludeFullMdc());
+        assertTrue(sut.isMdcProfiling());
+    }
+
+    @Test
+    public void testSameFieldsGelfLogbackAppender() {
+        GelfLogbackAppender sut = new GelfLogbackAppender();
+
+        sut.setAdditionalFields("");
+        sut.setExtractStackTrace(true);
+        sut.setFacility(FACILITY);
+        sut.setFilterStackTrace(true);
+        sut.setGraylogHost(HOST);
+        sut.setGraylogPort(GRAYLOG_PORT);
+        sut.setMaximumMessageSize(MAXIMUM_MESSAGE_SIZE);
+        sut.setDynamicMdcFields(".*");
+        sut.setIncludeFullMdc(true);
+        sut.setMdcFields("");
+        sut.setMdcProfiling(true);
+
+        assertEquals(FACILITY, sut.getFacility());
+        assertEquals(HOST, sut.getGraylogHost());
+        assertEquals(HOST, sut.getHost());
+        assertEquals(GRAYLOG_PORT, sut.getPort());
+        assertEquals(GRAYLOG_PORT, sut.getGraylogPort());
+        assertEquals(MAXIMUM_MESSAGE_SIZE, sut.getMaximumMessageSize());
+        assertEquals(TIMESTAMP_PATTERN, sut.getTimestampPattern());
+        assertEquals(RuntimeContainer.FQDN_HOSTNAME, sut.getOriginHost());
+
+        assertTrue(sut.isExtractStackTrace());
+        assertTrue(sut.isFilterStackTrace());
+        assertTrue(sut.isIncludeFullMdc());
+        assertTrue(sut.isMdcProfiling());
     }
 }
