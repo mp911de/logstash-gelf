@@ -3,7 +3,7 @@ package biz.paluch.logging.gelf.jul;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
@@ -61,7 +61,7 @@ public class GelfLogHandlerErrorsTest {
 
         sut.publish(MESSAGE);
 
-        verify(errorManager, times(1)).error(anyString(), any(IllegalStateException.class), anyInt());
+        verify(errorManager, atLeast(1)).error(anyString(), any(IllegalStateException.class), anyInt());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class GelfLogHandlerErrorsTest {
 
         sut.publish(MESSAGE);
 
-        verify(errorManager, times(2)).error(anyString(), any(IllegalStateException.class), anyInt());
+        verify(errorManager, atLeast(1)).error(anyString(), any(IllegalStateException.class), anyInt());
     }
 
     @Test
@@ -83,6 +83,6 @@ public class GelfLogHandlerErrorsTest {
 
         sut.publish(MESSAGE);
 
-        verify(errorManager, times(2)).error(anyString(), any(IllegalStateException.class), anyInt());
+        verify(errorManager, atLeast(1)).error(anyString(), any(IllegalStateException.class), anyInt());
     }
 }

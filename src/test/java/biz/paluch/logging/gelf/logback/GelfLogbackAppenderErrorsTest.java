@@ -2,17 +2,9 @@ package biz.paluch.logging.gelf.logback;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.*;
 import ch.qos.logback.classic.Level;
@@ -21,6 +13,12 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Context;
 import ch.qos.logback.core.status.Status;
 import ch.qos.logback.core.status.StatusManager;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GelfLogbackAppenderErrorsTest {
@@ -74,7 +72,7 @@ public class GelfLogbackAppenderErrorsTest {
 
         sut.append(LOGGING_EVENT);
 
-        verify(statusManager, times(1)).add(any(Status.class));
+        verify(statusManager, atLeast(1)).add(any(Status.class));
     }
 
     @Test
@@ -85,7 +83,7 @@ public class GelfLogbackAppenderErrorsTest {
 
         sut.append(LOGGING_EVENT);
 
-        verify(statusManager, times(2)).add(any(Status.class));
+        verify(statusManager, atLeast(1)).add(any(Status.class));
     }
 
     @Test
@@ -96,6 +94,6 @@ public class GelfLogbackAppenderErrorsTest {
 
         sut.append(LOGGING_EVENT);
 
-        verify(statusManager, times(2)).add(any(Status.class));
+        verify(statusManager, atLeast(1)).add(any(Status.class));
     }
 }
