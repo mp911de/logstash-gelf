@@ -10,7 +10,7 @@
         <graylogPort>12201</graylogPort>
         <facility>java-test</facility>
         <extractStackTrace>true</extractStackTrace>
-        <filterStackTrace>true</filterStackTrace>
+        <filterStackTrace>false</filterStackTrace>
         <mdcProfiling>true</mdcProfiling>
         <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
         <maximumMessageSize>8192</maximumMessageSize>
