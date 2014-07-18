@@ -59,6 +59,15 @@ public class GelfMessageTest {
     }
 
     @Test
+    public void testGelfMessageEmptyField() throws Exception {
+        GelfMessage gelfMessage = new GelfMessage();
+        gelfMessage.addField("something", null);
+
+        assertFalse(gelfMessage.toJson().contains("something"));
+
+    }
+
+    @Test
     public void testGelfMessageEquality() throws Exception {
         GelfMessage created = createGelfMessage();
         GelfMessage build = buildGelfMessage();

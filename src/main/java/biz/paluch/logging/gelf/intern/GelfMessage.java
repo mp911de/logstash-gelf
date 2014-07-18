@@ -79,7 +79,7 @@ public class GelfMessage {
         }
 
         for (Map.Entry<String, String> additionalField : additonalFields.entrySet()) {
-            if (!ID_NAME.equals(additionalField.getKey())) {
+            if (!ID_NAME.equals(additionalField.getKey()) && additionalField.getValue() != null) {
                 // try adding the value as a double
                 Object value;
                 try {

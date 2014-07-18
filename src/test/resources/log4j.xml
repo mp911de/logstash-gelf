@@ -14,7 +14,7 @@
         <param name="GraylogPort" value="12201" />
         <param name="Facility" value="java-test" />
         <param name="ExtractStackTrace" value="true" />
-        <param name="FilterStackTrace" value="true" />
+        <param name="FilterStackTrace" value="false" />
         <param name="MdcProfiling" value="true" />
         <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
         <param name="MaximumMessageSize" value="8192" />
