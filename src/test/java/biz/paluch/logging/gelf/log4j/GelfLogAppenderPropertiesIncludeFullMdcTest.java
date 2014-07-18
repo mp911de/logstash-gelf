@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.log4j;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -79,9 +78,7 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
 
         Logger logger = Logger.getLogger(getClass());
         logger.info("");
-        assertEquals(1, GelfTestSender.getMessages().size());
-        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-        assertFalse(gelfMessage.isValid());
+        assertEquals(0, GelfTestSender.getMessages().size());
 
     }
 

@@ -1,13 +1,13 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-import java.io.IOException;
-import java.net.URI;
-
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Protocol;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Protocol;
+
+import java.io.IOException;
+import java.net.URI;
 
 /**
  * 
@@ -36,7 +36,7 @@ public class RedisGelfSenderProvider implements GelfSenderProvider {
         }
 
         JedisPool pool = RedisSenderPoolProvider.INSTANCE.getJedisPool(hostUri, port);
-        return new GelfREDISSender(pool, hostUri.getFragment(), configuration.getErrorReport());
+        return new GelfREDISSender(pool, hostUri.getFragment(), configuration.getErrorReporter());
 
     }
 }

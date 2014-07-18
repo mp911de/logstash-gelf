@@ -22,11 +22,13 @@ public class GelfMessage {
     public static final String FIELD_TIMESTAMP = "timestamp";
     public static final String FIELD_LEVEL = "level";
     public static final String FIELD_FACILITY = "facility";
+    public static final String ID_NAME = "id";
 
-    private static final String ID_NAME = "id";
-    private static final String GELF_VERSION = "1.0";
+    public static final String GELF_VERSION = "1.0";
+    public static final String DEFAULT_FACILITY = "logstash-gelf";
+    public static final int DEFAULT_MESSAGE_SIZE = 8192;
+
     private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
-
     private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
 
     private String version = GELF_VERSION;
@@ -36,9 +38,12 @@ public class GelfMessage {
     private String fullMessage;
     private long javaTimestamp;
     private String level;
-    private String facility = "logstash-gelf";
+    private String facility = DEFAULT_FACILITY;
     private Map<String, String> additonalFields = new HashMap<String, String>();
-    private int maximumMessageSize = 8192;
+    private int maximumMessageSize = DEFAULT_MESSAGE_SIZE;
+
+    public GelfMessage() {
+    }
 
     public GelfMessage(String shortMessage, String fullMessage, long timestamp, String level) {
 
@@ -51,13 +56,27 @@ public class GelfMessage {
     public String toJson(String additionalFieldPrefix) {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        map.put(FIELD_HOST, getHost());
-        map.put(FIELD_SHORT_MESSAGE, getShortMessage());
-        map.put(FIELD_FULL_MESSAGE, getFullMessage());
+        if (!isEmpty(getHost())) {
+            map.put(FIELD_HOST, getHost());
+        }
+
+        if (!isEmpty(shortMessage)) {
+            map.put(FIELD_SHORT_MESSAGE, getShortMessage());
+        }
+
+        if (!isEmpty(getFullMessage())) {
+            map.put(FIELD_FULL_MESSAGE, getFullMessage());
+        }
+
         map.put(FIELD_TIMESTAMP, getTimestamp());
 
-        map.put(FIELD_LEVEL, getLevel());
-        map.put(FIELD_FACILITY, getFacility());
+        if (!isEmpty(getLevel())) {
+            map.put(FIELD_LEVEL, getLevel());
+        }
+
+        if (!isEmpty(getFacility())) {
+            map.put(FIELD_FACILITY, getFacility());
+        }
 
         for (Map.Entry<String, String> additionalField : additonalFields.entrySet()) {
             if (!ID_NAME.equals(additionalField.getKey())) {
@@ -177,7 +196,9 @@ public class GelfMessage {
 
     public void setHost(String host) {
         this.host = host;
-        this.hostBytes = lastFourAsciiBytes(host);
+        if (host != null) {
+            this.hostBytes = lastFourAsciiBytes(host);
+        }
     }
 
     public String getShortMessage() {
@@ -224,6 +245,28 @@ public class GelfMessage {
         this.facility = facility;
     }
 
+    /**
+     * Add multiple fields (key/value pairs)
+     * 
+     * @param fields
+     * @return the current GelfMessage.
+     */
+    public GelfMessage addFields(Map<String, String> fields) {
+
+        if (fields == null) {
+            throw new IllegalArgumentException("fields is null");
+        }
+        getAdditonalFields().putAll(fields);
+        return this;
+    }
+
+    /**
+     * Add a particular field.
+     * 
+     * @param key
+     * @param value
+     * @return the current GelfMessage.
+     */
     public GelfMessage addField(String key, String value) {
         getAdditonalFields().put(key, value);
         return this;
@@ -261,6 +304,66 @@ public class GelfMessage {
 
     public String getField(String fieldName) {
         return getAdditonalFields().get(fieldName);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof GelfMessage)) {
+            return false;
+        }
+
+        GelfMessage that = (GelfMessage) o;
+
+        if (javaTimestamp != that.javaTimestamp) {
+            return false;
+        }
+        if (maximumMessageSize != that.maximumMessageSize) {
+            return false;
+        }
+        if (additonalFields != null ? !additonalFields.equals(that.additonalFields) : that.additonalFields != null) {
+            return false;
+        }
+        if (facility != null ? !facility.equals(that.facility) : that.facility != null) {
+            return false;
+        }
+        if (fullMessage != null ? !fullMessage.equals(that.fullMessage) : that.fullMessage != null) {
+            return false;
+        }
+        if (host != null ? !host.equals(that.host) : that.host != null) {
+            return false;
+        }
+        if (!Arrays.equals(hostBytes, that.hostBytes)) {
+            return false;
+        }
+        if (level != null ? !level.equals(that.level) : that.level != null) {
+            return false;
+        }
+        if (shortMessage != null ? !shortMessage.equals(that.shortMessage) : that.shortMessage != null) {
+            return false;
+        }
+        if (version != null ? !version.equals(that.version) : that.version != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = version != null ? version.hashCode() : 0;
+        result = 31 * result + (host != null ? host.hashCode() : 0);
+        result = 31 * result + (hostBytes != null ? Arrays.hashCode(hostBytes) : 0);
+        result = 31 * result + (shortMessage != null ? shortMessage.hashCode() : 0);
+        result = 31 * result + (fullMessage != null ? fullMessage.hashCode() : 0);
+        result = 31 * result + (int) (javaTimestamp ^ (javaTimestamp >>> 32));
+        result = 31 * result + (level != null ? level.hashCode() : 0);
+        result = 31 * result + (facility != null ? facility.hashCode() : 0);
+        result = 31 * result + (additonalFields != null ? additonalFields.hashCode() : 0);
+        result = 31 * result + maximumMessageSize;
+        return result;
     }
 
 }

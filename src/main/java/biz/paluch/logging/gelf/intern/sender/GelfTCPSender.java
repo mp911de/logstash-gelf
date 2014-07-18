@@ -26,7 +26,7 @@ public class GelfTCPSender implements GelfSender {
     }
 
     public boolean sendMessage(GelfMessage message) {
-        if (shutdown || !message.isValid()) {
+        if (shutdown) {
             return false;
         }
 

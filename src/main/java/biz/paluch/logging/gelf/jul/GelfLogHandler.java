@@ -94,6 +94,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
             GelfMessage message = createGelfMessage(record);
             if (!message.isValid()) {
                 reportError("GELF Message is invalid: " + message.toJson(), null, ErrorManager.WRITE_FAILURE);
+                return;
             }
 
             if (null == gelfSender || !gelfSender.sendMessage(message)) {

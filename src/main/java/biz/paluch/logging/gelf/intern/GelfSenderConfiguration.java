@@ -21,5 +21,5 @@ public interface GelfSenderConfiguration {
      * 
      * @return the ErrorReporter to report any errors
      */
-    ErrorReporter getErrorReport();
+    ErrorReporter getErrorReporter();
 }

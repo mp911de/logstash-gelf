@@ -3,6 +3,7 @@ package biz.paluch.logging.gelf;
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.StackTraceFilter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.HostAndPortProvider;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 15:05
  */
-public class GelfMessageAssembler {
+public class GelfMessageAssembler implements HostAndPortProvider {
 
     private static final int MAX_SHORT_MESSAGE_LENGTH = 250;
 
@@ -75,6 +76,8 @@ public class GelfMessageAssembler {
      * @return GelfMessage
      */
     public GelfMessage createGelfMessage(LogEvent logEvent) {
+
+        GelfMessageBuilder builder = new GelfMessageBuilder();
         String message = logEvent.getMessage();
 
         String shortMessage = message;
@@ -82,8 +85,8 @@ public class GelfMessageAssembler {
             shortMessage = message.substring(0, MAX_SHORT_MESSAGE_LENGTH - 1);
         }
 
-        final GelfMessage gelfMessage = new GelfMessage(shortMessage, message, logEvent.getLogTimestamp(),
-                logEvent.getSyslogLevel());
+        builder.withShortMessage(shortMessage).withFullMessage(message).withJavaTimestamp(logEvent.getLogTimestamp());
+        builder.withLevel(logEvent.getSyslogLevel());
 
         for (MessageField field : fields) {
             Values values = getValues(logEvent, field);
@@ -97,29 +100,29 @@ public class GelfMessageAssembler {
                     continue;
 
                 }
-                gelfMessage.addField(entryName, value);
+                builder.withAdditionalField(entryName, value);
             }
         }
 
         if (extractStackTrace) {
-            addStackTrace(logEvent, gelfMessage);
+            addStackTrace(logEvent, builder);
         }
 
         if (logEvent.getParameters() != null) {
             for (int i = 0; i < logEvent.getParameters().length; i++) {
                 Object param = logEvent.getParameters()[i];
-                gelfMessage.addField(FIELD_MESSAGE_PARAM + i, "" + param);
+                builder.withAdditionalField(FIELD_MESSAGE_PARAM + i, "" + param);
             }
         }
 
-        gelfMessage.setHost(getOriginHost());
+        builder.withHost(getOriginHost());
 
         if (null != facility) {
-            gelfMessage.setFacility(facility);
+            builder.withFacility(facility);
         }
 
-        gelfMessage.setMaximumMessageSize(maximumMessageSize);
-        return gelfMessage;
+        builder.withMaximumMessageSize(maximumMessageSize);
+        return builder.build();
     }
 
     private Values getValues(LogEvent logEvent, MessageField field) {
@@ -147,15 +150,15 @@ public class GelfMessageAssembler {
         return field.getValue();
     }
 
-    private void addStackTrace(LogEvent logEvent, GelfMessage gelfMessage) {
+    private void addStackTrace(LogEvent logEvent, GelfMessageBuilder builder) {
         final Throwable thrown = logEvent.getThrowable();
         if (null != thrown) {
             if (filterStackTrace) {
-                gelfMessage.addField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
+                builder.withAdditionalField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
             } else {
                 final StringWriter sw = new StringWriter();
                 thrown.printStackTrace(new PrintWriter(sw));
-                gelfMessage.addField(FIELD_STACK_TRACE, sw.toString());
+                builder.withAdditionalField(FIELD_STACK_TRACE, sw.toString());
             }
         }
     }

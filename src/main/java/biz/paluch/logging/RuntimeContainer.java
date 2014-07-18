@@ -1,5 +1,12 @@
 package biz.paluch.logging;
 
+import static biz.paluch.logging.RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME;
+import static biz.paluch.logging.RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME;
+import static biz.paluch.logging.RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER;
+import static biz.paluch.logging.RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION;
+import static biz.paluch.logging.RuntimeContainerProperties.RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK;
+import static biz.paluch.logging.RuntimeContainerProperties.RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -17,17 +24,17 @@ public class RuntimeContainer {
     /**
      * Current Hostname.
      */
-    public static final String HOSTNAME;
+    public static String HOSTNAME;
 
     /**
      * Current FQDN Hostname.
      */
-    public static final String FQDN_HOSTNAME;
+    public static String FQDN_HOSTNAME;
 
     /**
      * Current Address.
      */
-    public static final String ADDRESS;
+    public static String ADDRESS;
 
     /**
      * Load-Time of this class.
@@ -42,27 +49,31 @@ public class RuntimeContainer {
     }
 
     static {
-
         FIRST_ACCESS = System.currentTimeMillis();
+        lookupHostname();
+    }
 
-        String myHostName = System.getProperty(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME, "unknown");
-        String myFQDNHostName = System.getProperty(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME, "unknown");
+    /**
+     * Triggers the hostname lookup.
+     */
+    public static void lookupHostname() {
+        String myHostName = getProperty(PROPERTY_LOGSTASH_GELF_HOSTNAME, "unknown");
+        String myFQDNHostName = getProperty(PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME, "unknown");
         String myAddress = "";
 
-        if (!Boolean.getBoolean(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION)) {
+        if (!Boolean.parseBoolean(getProperty(PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION, "false"))) {
 
             try {
 
-                String resolutionOrder = System.getProperty(
-                        RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER,
-                        RuntimeContainerProperties.RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK);
+                String resolutionOrder = getProperty(PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER,
+                        RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK);
 
                 InetAddress inetAddress = null;
-                if (resolutionOrder.equals(RuntimeContainerProperties.RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK)) {
+                if (resolutionOrder.equals(RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK)) {
                     inetAddress = getInetAddressWithHostname();
                 }
 
-                if (resolutionOrder.equals(RuntimeContainerProperties.RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK)) {
+                if (resolutionOrder.equals(RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK)) {
                     if (isQualified(InetAddress.getLocalHost())) {
                         inetAddress = InetAddress.getLocalHost();
                     } else {
@@ -86,6 +97,14 @@ public class RuntimeContainer {
         FQDN_HOSTNAME = myFQDNHostName;
         HOSTNAME = myHostName;
         ADDRESS = myAddress;
+    }
+
+    private static String getProperty(String key, String defaultValue) {
+        String env = System.getenv(key);
+        if (env != null && !"".equals(env)) {
+            return env;
+        }
+        return System.getProperty(key, defaultValue);
     }
 
     private static String getHostname(InetAddress inetAddress, boolean fqdn) throws IOException {

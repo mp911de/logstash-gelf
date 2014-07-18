@@ -1,6 +1,5 @@
 package biz.paluch.logging.gelf.intern;
 
-import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.sender.DefaultGelfSenderProvider;
 import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
 
@@ -18,39 +17,45 @@ import java.util.ServiceLoader;
  */
 public final class GelfSenderFactory {
 
-    public static GelfSender createSender(final GelfMessageAssembler gelfMessageAssembler, final ErrorReporter errorReporter) {
-        if (gelfMessageAssembler.getHost() == null) {
-            errorReporter.reportError("GELF server hostname is empty!", null);
+    public static GelfSender createSender(final HostAndPortProvider hostAndPortProvider, final ErrorReporter errorReporter) {
+        GelfSenderConfiguration senderConfiguration = new GelfSenderConfiguration() {
+
+            @Override
+            public int getPort() {
+                return hostAndPortProvider.getPort();
+            }
+
+            @Override
+            public String getHost() {
+                return hostAndPortProvider.getHost();
+            }
+
+            @Override
+            public ErrorReporter getErrorReporter() {
+                return errorReporter;
+            }
+        };
+
+        return createSender(senderConfiguration);
+    }
+
+    public static GelfSender createSender(GelfSenderConfiguration senderConfiguration) {
+        ErrorReporter errorReporter = senderConfiguration.getErrorReporter();
+        if (senderConfiguration.getHost() == null) {
+            senderConfiguration.getErrorReporter().reportError("GELF server hostname is empty!", null);
         } else {
             try {
-                GelfSenderConfiguration senderConfiguration = new GelfSenderConfiguration() {
-
-                    @Override
-                    public int getPort() {
-                        return gelfMessageAssembler.getPort();
-                    }
-
-                    @Override
-                    public String getHost() {
-                        return gelfMessageAssembler.getHost();
-                    }
-
-                    @Override
-                    public ErrorReporter getErrorReport() {
-                        return errorReporter;
-                    }
-                };
 
                 for (GelfSenderProvider provider : SenderProviderHolder.getSenderProvider()) {
                     if (provider.supports(senderConfiguration.getHost())) {
                         return provider.create(senderConfiguration);
                     }
                 }
-                senderConfiguration.getErrorReport().reportError("No sender found for host " + senderConfiguration.getHost(),
+                senderConfiguration.getErrorReporter().reportError("No sender found for host " + senderConfiguration.getHost(),
                         null);
                 return null;
             } catch (UnknownHostException e) {
-                errorReporter.reportError("Unknown GELF server hostname:" + gelfMessageAssembler.getHost(), e);
+                errorReporter.reportError("Unknown GELF server hostname:" + senderConfiguration.getHost(), e);
             } catch (SocketException e) {
                 errorReporter.reportError("Socket exception: " + e.getMessage(), e);
             } catch (IOException e) {

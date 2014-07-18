@@ -86,6 +86,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
             GelfMessage message = createGelfMessage(event);
             if (!message.isValid()) {
                 reportError("GELF Message is invalid: " + message.toJson(), null);
+                return;
             }
 
             if (null == gelfSender || !gelfSender.sendMessage(message)) {

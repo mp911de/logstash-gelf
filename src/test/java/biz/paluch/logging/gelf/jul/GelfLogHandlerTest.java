@@ -107,10 +107,7 @@ public class GelfLogHandlerTest {
         String expectedMessage = null;
         logger.info(expectedMessage);
 
-        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-
-        assertEquals("", gelfMessage.getFullMessage());
-        assertEquals("<empty>", gelfMessage.getShortMessage());
+        assertEquals(0, GelfTestSender.getMessages().size());
     }
 
     @Test
