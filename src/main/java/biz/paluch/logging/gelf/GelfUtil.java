@@ -48,19 +48,21 @@ public class GelfUtil {
             return;
         }
 
-        long now = System.currentTimeMillis();
-        long duration = now - timestamp;
+        if (timestamp > 0) {
+            long now = System.currentTimeMillis();
+            long duration = now - timestamp;
 
-        String durationText;
+            String durationText;
 
-        if (duration > 10000) {
-            duration = duration / 1000;
-            durationText = duration + "sec";
-        } else {
-            durationText = duration + "ms";
+            if (duration > 10000) {
+                duration = duration / 1000;
+                durationText = duration + "sec";
+            } else {
+                durationText = duration + "ms";
+            }
+            gelfMessage.addField(MDC_REQUEST_DURATION, durationText);
+            gelfMessage.addField(MDC_REQUEST_END, new Date(now).toString());
         }
-        gelfMessage.addField(MDC_REQUEST_DURATION, durationText);
-        gelfMessage.addField(MDC_REQUEST_END, new Date(now).toString());
     }
 
     public static String getSimpleClassName(String className) {
