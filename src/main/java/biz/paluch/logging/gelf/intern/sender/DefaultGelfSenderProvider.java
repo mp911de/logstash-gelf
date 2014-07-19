@@ -5,6 +5,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 
@@ -30,8 +31,10 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
         }
 
         if (graylogHost.startsWith("tcp:")) {
+
+            int timeoutMs = (int) TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS);
             String tcpGraylogHost = graylogHost.substring(4, graylogHost.length());
-            return new GelfTCPSender(tcpGraylogHost, port, configuration.getErrorReporter());
+            return new GelfTCPSender(tcpGraylogHost, port, timeoutMs, timeoutMs, configuration.getErrorReporter());
         } else if (graylogHost.startsWith("udp:")) {
             String udpGraylogHost = graylogHost.substring(4, graylogHost.length());
             return new GelfUDPSender(udpGraylogHost, port, configuration.getErrorReporter());

@@ -7,6 +7,7 @@ import biz.paluch.logging.gelf.intern.GelfSender;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -16,13 +17,18 @@ public class GelfTCPSender implements GelfSender {
     private boolean shutdown = false;
     private InetAddress host;
     private int port;
+    private int connectTimeoutMs;
+    private int readTimeoutMs;
     private Socket socket;
     private ErrorReporter errorReporter;
 
-    public GelfTCPSender(String host, int port, ErrorReporter errorReporter) throws IOException {
+    public GelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, ErrorReporter errorReporter)
+            throws IOException {
         this.host = InetAddress.getByName(host);
         this.port = port;
         this.errorReporter = errorReporter;
+        this.connectTimeoutMs = connectTimeoutMs;
+        this.readTimeoutMs = readTimeoutMs;
     }
 
     public boolean sendMessage(GelfMessage message) {
@@ -33,7 +39,7 @@ public class GelfTCPSender implements GelfSender {
         try {
             // reconnect if necessary
             if (socket == null) {
-                socket = new Socket(host, port);
+                socket = createSocket();
             }
 
             socket.getOutputStream().write(message.toTCPBuffer().array());
@@ -45,6 +51,13 @@ public class GelfTCPSender implements GelfSender {
             socket = null;
             return false;
         }
+    }
+
+    protected Socket createSocket() throws IOException {
+        Socket socket = new Socket();
+        socket.setSoTimeout(readTimeoutMs);
+        socket.connect(new InetSocketAddress(host, port), connectTimeoutMs);
+        return socket;
     }
 
     public void close() {

@@ -20,6 +20,10 @@ enum RedisSenderPoolProvider {
     private Map<String, JedisPool> pools = new HashMap<String, JedisPool>();
 
     public synchronized JedisPool getJedisPool(URI hostURI, int configuredPort) {
+        return getJedisPool(hostURI, configuredPort, Protocol.DEFAULT_TIMEOUT);
+    }
+
+    public synchronized JedisPool getJedisPool(URI hostURI, int configuredPort, int timeoutMs) {
         String lowerCasedConnectionString = hostURI.toString().toLowerCase();
         String cleanConnectionString = lowerCasedConnectionString.substring(0, lowerCasedConnectionString.length()
                 - hostURI.getFragment().length());
@@ -32,8 +36,7 @@ enum RedisSenderPoolProvider {
                 database = Integer.parseInt(hostURI.getPath().split("/", 2)[1]);
             }
             int port = hostURI.getPort() > 0 ? hostURI.getPort() : configuredPort;
-            JedisPool newPool = new JedisPool(new JedisPoolConfig(), hostURI.getHost(), port, Protocol.DEFAULT_TIMEOUT,
-                    password, database);
+            JedisPool newPool = new JedisPool(new JedisPoolConfig(), hostURI.getHost(), port, timeoutMs,                 password, database);
 
             pools.put(cleanConnectionString, newPool);
         }

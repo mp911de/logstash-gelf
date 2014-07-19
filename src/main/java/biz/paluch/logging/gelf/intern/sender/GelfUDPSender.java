@@ -36,7 +36,6 @@ public class GelfUDPSender implements GelfSender {
         } catch (SocketException e) {
             errorReporter.reportError(e.getMessage(), e);
         }
-
         resultingChannel.connect(new InetSocketAddress(this.host, this.port));
         resultingChannel.configureBlocking(false);
 
