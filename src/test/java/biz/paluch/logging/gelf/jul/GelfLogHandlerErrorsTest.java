@@ -23,6 +23,7 @@ import java.util.logging.LogRecord;
 public class GelfLogHandlerErrorsTest {
     public static final String THE_HOST = "the host";
     public static final LogRecord MESSAGE = new LogRecord(Level.INFO, "message");
+
     @Mock
     private ErrorManager errorManager;
 
@@ -39,6 +40,7 @@ public class GelfLogHandlerErrorsTest {
 
     @Before
     public void before() throws Exception {
+        GelfSenderFactory.removeAllAddedSenderProviders();
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
 
         when(assembler.getHost()).thenReturn(THE_HOST);
