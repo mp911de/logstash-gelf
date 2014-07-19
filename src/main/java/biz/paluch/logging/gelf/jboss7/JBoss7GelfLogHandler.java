@@ -1,7 +1,15 @@
 package biz.paluch.logging.gelf.jboss7;
 
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.NDC;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
+import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
@@ -60,6 +68,11 @@ import java.util.logging.LogRecord;
 public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHandler {
 
     public JBoss7GelfLogHandler() {
+    }
+
+    protected void initializeDefaultFields() {
+        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Severity, ThreadName, SourceClassName,
+                SourceMethodName, SourceSimpleClassName, LoggerName, NDC));
     }
 
     @Override

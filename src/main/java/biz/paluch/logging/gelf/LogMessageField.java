@@ -5,6 +5,7 @@ import biz.paluch.logging.gelf.intern.Closer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -21,7 +22,8 @@ public class LogMessageField implements MessageField {
      */
     public static enum NamedLogField {
         Time("Time"), Severity("Severity"), ThreadName("Thread"), SourceClassName("SourceClassName"), SourceSimpleClassName(
-                "SourceSimpleClassName"), SourceMethodName("SourceMethodName"), Server("Server"), LoggerName("LoggerName");
+                "SourceSimpleClassName"), SourceMethodName("SourceMethodName"), Server("Server"), LoggerName("LoggerName"), Marker(
+                "Marker"), NDC("NDC");
 
         private final String fieldName;
 
@@ -61,9 +63,10 @@ public class LogMessageField implements MessageField {
         return name;
     }
 
-    public static List<LogMessageField> getDefaultMapping() {
+    public static List<LogMessageField> getDefaultMapping(NamedLogField... supportedFields) {
 
         List<LogMessageField> result = new ArrayList<LogMessageField>();
+        List<NamedLogField> supportedLogFields = Arrays.asList(supportedFields);
         InputStream is = null;
         try {
             is = getStream();
@@ -75,7 +78,7 @@ public class LogMessageField implements MessageField {
                 p.load(is);
 
                 if (!p.isEmpty()) {
-                    loadFields(p, result);
+                    loadFields(p, result, supportedLogFields);
                 }
 
             }
@@ -89,21 +92,23 @@ public class LogMessageField implements MessageField {
         if (result.isEmpty()) {
 
             for (NamedLogField namedLogField : NamedLogField.values()) {
-                result.add(new LogMessageField(namedLogField.fieldName, namedLogField));
+                if (supportedLogFields.contains(namedLogField)) {
+                    result.add(new LogMessageField(namedLogField.fieldName, namedLogField));
+                }
             }
         }
 
         return result;
     }
 
-    private static void loadFields(Properties p, List<LogMessageField> result) {
+    private static void loadFields(Properties p, List<LogMessageField> result, List<NamedLogField> supportedLogFields) {
         for (Map.Entry<Object, Object> entry : p.entrySet()) {
 
             String targetName = entry.getKey().toString();
             String sourceFieldName = entry.getValue().toString();
 
             NamedLogField namedLogField = NamedLogField.byName(sourceFieldName);
-            if (namedLogField != null) {
+            if (namedLogField != null && supportedLogFields.contains(namedLogField)) {
                 result.add(new LogMessageField(targetName, namedLogField));
             }
         }

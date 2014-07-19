@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
@@ -57,12 +58,13 @@ public class GelfLogAppenderMinimalTest {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
-        logger.info(LOG_MESSAGE);
+        logger.info(new MarkerManager.Log4jMarker("test"), LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
+        assertEquals("test", gelfMessage.getAdditonalFields().get("Marker"));
         assertEquals("6", gelfMessage.getLevel());
 
     }

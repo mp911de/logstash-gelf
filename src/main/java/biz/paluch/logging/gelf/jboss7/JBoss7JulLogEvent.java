@@ -2,11 +2,13 @@ package biz.paluch.logging.gelf.jboss7;
 
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
 import biz.paluch.logging.gelf.Values;
 import biz.paluch.logging.gelf.jul.JulLogEvent;
 import org.apache.log4j.MDC;
+import org.apache.log4j.NDC;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,6 +35,15 @@ public class JBoss7JulLogEvent extends JulLogEvent {
         }
 
         return super.getValues(field);
+    }
+
+    @Override
+    public String getValue(LogMessageField field) {
+        switch (field.getNamedLogField()) {
+            case NDC:
+                return NDC.get();
+        }
+        return super.getValue(field);
     }
 
     private Values getMdcValues(DynamicMdcMessageField field) {

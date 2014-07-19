@@ -107,6 +107,8 @@ class Log4jLogEvent implements LogEvent {
                 return GelfUtil.getSimpleClassName(loggingEvent.getLocationInformation().getClassName());
             case LoggerName:
                 return loggingEvent.getLoggerName();
+            case NDC:
+                return loggingEvent.getNDC();
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);

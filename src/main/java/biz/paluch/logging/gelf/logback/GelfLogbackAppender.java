@@ -1,5 +1,12 @@
 package biz.paluch.logging.gelf.logback;
 
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
@@ -68,7 +75,8 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
 
     public GelfLogbackAppender() {
         gelfMessageAssembler = new MdcGelfMessageAssembler();
-        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping());
+        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Severity, ThreadName, SourceClassName,
+                SourceMethodName, SourceSimpleClassName, LoggerName, Marker));
     }
 
     @Override
@@ -78,7 +86,6 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
         }
 
         try {
-
             if (null == gelfSender) {
                 gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
             }

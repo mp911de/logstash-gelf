@@ -17,7 +17,6 @@ start: cleanup
 
 cleanup: stop
 	- mkdir -p work
-	rm -f work/redis-cluster-node*.conf 2>/dev/null
 	rm -f work/dump.rdb work/appendonly.aof work/*.conf work/*.log 2>/dev/null
 
 stop:

@@ -9,6 +9,7 @@ import static org.junit.Assert.assertNull;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.apache.log4j.NDC;
 import org.junit.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
@@ -31,13 +32,17 @@ public abstract class AbstractGelfLogAppenderTest {
 
         Logger logger = Logger.getLogger(getClass());
 
+        NDC.clear();
+        NDC.push("ndc message");
         logger.info(LOG_MESSAGE);
+        NDC.clear();
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
+        assertEquals("ndc message", gelfMessage.getField("NDC"));
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 

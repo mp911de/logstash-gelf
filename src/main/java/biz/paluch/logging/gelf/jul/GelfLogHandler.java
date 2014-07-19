@@ -1,12 +1,26 @@
 package biz.paluch.logging.gelf.jul;
 
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.PropertyProvider;
 import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.*;
+import biz.paluch.logging.gelf.intern.Closer;
+import biz.paluch.logging.gelf.intern.ErrorReporter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 
-import java.util.logging.*;
+import java.util.logging.ErrorManager;
+import java.util.logging.Filter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -40,7 +54,8 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
 
     public GelfLogHandler() {
         gelfMessageAssembler = createGelfMessageAssembler();
-        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping());
+
+        initializeDefaultFields();
 
         JulPropertyProvider propertyProvider = new JulPropertyProvider(GelfLogHandler.class);
         gelfMessageAssembler.initialize(propertyProvider);
@@ -66,6 +81,11 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         } catch (final Exception e) {
             // ignore
         }
+    }
+
+    protected void initializeDefaultFields() {
+        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Severity, ThreadName, SourceClassName,
+                SourceMethodName, SourceSimpleClassName, LoggerName));
     }
 
     protected GelfMessageAssembler createGelfMessageAssembler() {

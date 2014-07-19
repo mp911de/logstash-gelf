@@ -136,6 +136,11 @@ class LogbackLogEvent implements LogEvent {
                 return GelfUtil.getSimpleClassName(getSourceClassName());
             case LoggerName:
                 return loggingEvent.getLoggerName();
+            case Marker:
+                if (loggingEvent.getMarker() != null) {
+                    return loggingEvent.getMarker().getName();
+                }
+                return null;
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);

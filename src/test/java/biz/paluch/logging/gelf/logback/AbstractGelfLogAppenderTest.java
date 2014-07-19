@@ -4,16 +4,15 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
-import org.junit.Test;
-import org.slf4j.MDC;
-
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import org.junit.Test;
+import org.slf4j.MDC;
+import org.slf4j.MarkerFactory;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -50,6 +49,24 @@ public abstract class AbstractGelfLogAppenderTest {
 
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
+        assertEquals("6", gelfMessage.getLevel());
+        assertEquals(8192, gelfMessage.getMaximumMessageSize());
+
+    }
+
+    @Test
+    public void testMarker() throws Exception {
+
+        Logger logger = lc.getLogger(getClass());
+
+        logger.info(MarkerFactory.getMarker("basic"), LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
+        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
+        assertEquals("basic", gelfMessage.getAdditonalFields().get("Marker"));
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 

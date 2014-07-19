@@ -3,6 +3,7 @@ package biz.paluch.logging.gelf.log4j2;
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogEvent;
+import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
 import biz.paluch.logging.gelf.Values;
@@ -76,8 +77,36 @@ class Log4j2LogEvent implements LogEvent {
             return new Values(field.getName(), getValue((PatternLogMessageField) field));
         }
 
+        if (field instanceof LogMessageField) {
+            return new Values(field.getName(), getValues((LogMessageField) field));
+        }
+
         if (field instanceof DynamicMdcMessageField) {
             return getMdcValues((DynamicMdcMessageField) field);
+        }
+
+        throw new UnsupportedOperationException("Cannot provide value for " + field);
+    }
+
+    public String getValues(LogMessageField field) {
+        switch (field.getNamedLogField()) {
+            case Severity:
+                return logEvent.getLevel().toString();
+            case ThreadName:
+                return logEvent.getThreadName();
+            case SourceClassName:
+                return logEvent.getSource().getClassName();
+            case SourceMethodName:
+                return logEvent.getSource().getMethodName();
+            case SourceSimpleClassName:
+                return GelfUtil.getSimpleClassName(logEvent.getSource().getClassName());
+            case LoggerName:
+                return logEvent.getLoggerName();
+            case Marker:
+                if (logEvent.getMarker() != null) {
+                    return logEvent.getMarker().getName();
+                }
+                return null;
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);
