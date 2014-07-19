@@ -3,68 +3,15 @@ logstash-gelf
 
 [![Build Status](https://api.travis-ci.org/mp911de/logstash-gelf.svg)](https://travis-ci.org/mp911de/logstash-gelf) [![Coverage Status](https://img.shields.io/coveralls/mp911de/logstash-gelf.svg)](https://coveralls.io/r/mp911de/logstash-gelf)
 
-Provides logging to logstash using the Graylog Extended Logging Format (GELF). This implementation comes with support for three areas:
+Provides logging to logstash using the Graylog Extended Logging Format (GELF) for using with:
 
 * [Java Util Logging](#jul)
 * [log4j 1.2.x](#log4j)
 * [log4j 2.x](#log4j2)
-* [JBoss 7 (mix of Java Util Logging with log4j MDC)](#jbossas7)
+* [JBoss AS7/Wildfly (JBoss AS8) (mix of Java Util Logging with log4j MDC)](#jbossas7)
 * [Logback](#logback)
 
 See also http://logging.paluch.biz/ for further documentation.
-
-Versions/Dependencies
---------------
-This project is built against following dependencies/versions:
-
-* json-simple 1.1
-* log4j 1.2.14
-* log4j2 2.0-rc1
-* Java Util Logging JDK Version 1.6
-* logback 1.0.13
-* slf4j-api 1.7.5
-* jedis 2.5.1 (includes commons-pool2 2.0)
-
-Settings
---------------
-Following settings can be used:
-
-Basic Properties
----------------
-* `host` (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash or Redis Host
-    * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
-    * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
-    * [redis](#redis)://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
-    * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
-* `port` (since version 1.2.0, Optional): Port, default 12201
-* `graylogHost` (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
-* `graylogPort` (until version 1.1.0, Optional): Port, default 12201
-* `originHost` (Optional): Originating Hostname, default FQDN Hostname
-* `extractStackTrace` (Optional): Post Stack-Trace to StackTrace field, default false
-* `filterStackTrace` (Optional): Perform Stack-Trace filtering (true/false), default false
-* `facility` (Optional): Name of the Facility, default logstash-gelf
-* `threshold`/`level` (Optional): Log-Level, default INFO
-
-Advanced Properties
----------------
-* `filter` (Optional): Class-Name of a Log-Filter, default none
-* `mdcProfiling` (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false
-* `additionalFields` (Optional): Post additional fields. Example: .GelfLogHandler.additionalFields=fieldName=Value
-* `mdcFields` (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
-* `dynamicMdcFields` (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
-* `includeFullMdc` (Optional): Include all fields from the MDC, default false
-
-MDC Profiling
---------------
-MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. Only available in log4j environments.
-You must set one value in the MDC:
-
-
-profiling.requestStart.millis: Time Millis of the Request-Start (Long or String)
-Two values are set by the Log Appender:
-
-profiling.requestEnd: End-Time of the Request-End in Date.toString-representation
-profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)
 
 
 Including it in your project
@@ -90,7 +37,7 @@ JBoss Module Download:
 or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.4.2/logstash-gelf-1.4.2-logging-module.zip
 
 
-<a name="jul"/>Java Util Logging configuration
+<a name="jul"/>Java Util Logging GELF configuration
 --------------
 Properties:
 
@@ -111,7 +58,7 @@ Properties:
 
 
 <a name="log4j"/>
-log4j configuration
+log4j GELF configuration
 --------------
 Properties:
 
@@ -150,7 +97,7 @@ XML:
     </appender>
     
 <a name="log4j2"/>
-log4j2 configuration
+log4j2 GELF configuration
 --------------
 
 ### Fields
@@ -225,7 +172,7 @@ XML:
     
 
 <a name="jbossas7"/>
-JBoss AS7/Wildfly (JBoss AS8) configuration
+JBoss AS7 GELF/Wildfly GELF (JBoss AS8) configuration
 --------------
 You need to include the library as module (see download above), then add following lines to your configuration:
 
@@ -250,7 +197,7 @@ standalone.xml
     </custom-handler>
 
 <a name="logback"/>
-Logback configuration
+Logback GELF configuration
 --------------
 logback.xml Example:
 
@@ -284,6 +231,46 @@ logback.xml Example:
         </root>
     </configuration>
 
+Versions/Dependencies
+--------------
+This project is built against following dependencies/versions:
+
+* json-simple 1.1 .1
+* log4j 1.2.14
+* log4j2 2.0
+* Java Util Logging JDK Version 1.6
+* logback 1.0.13
+* slf4j-api 1.7.5
+* jedis 2.5.1 (includes commons-pool2 2.2)
+
+Settings
+--------------
+Following settings can be used:
+
+Basic Properties
+---------------
+* `host` (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash or Redis Host
+    * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
+    * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
+    * [redis](#redis)://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
+    * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
+* `port` (since version 1.2.0, Optional): Port, default 12201
+* `graylogHost` (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
+* `graylogPort` (until version 1.1.0, Optional): Port, default 12201
+* `originHost` (Optional): Originating Hostname, default FQDN Hostname
+* `extractStackTrace` (Optional): Post Stack-Trace to StackTrace field, default false
+* `filterStackTrace` (Optional): Perform Stack-Trace filtering (true/false), default false
+* `facility` (Optional): Name of the Facility, default logstash-gelf
+* `threshold`/`level` (Optional): Log-Level, default INFO
+
+Advanced Properties
+---------------
+* `filter` (Optional): Class-Name of a Log-Filter, default none
+* `mdcProfiling` (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false
+* `additionalFields` (Optional): Post additional fields. Example: .GelfLogHandler.additionalFields=fieldName=Value
+* `mdcFields` (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
+* `dynamicMdcFields` (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
+* `includeFullMdc` (Optional): Include all fields from the MDC, default false
 
 MDC Profiling
 --------------
@@ -299,7 +286,6 @@ Two values are set by the Log Appender:
 <a name="redis"/>Notes on redis Connection
 --------------
  * IMPORTANT: for getting your logstash config right it is vital to know that we do LPUSH (list push and not channel method)
- * IMPORTANT: since the redis input filter from logstash doesn't have an option for stripping leading underscores from fieldnames we do this on our side (GelfREDISSender.java => ... message.toJson("")), well knowing and nevertheless that this breaks graylog format
  * The redis connection is done through jedis (https://github.com/xetorthio/jedis)
  * The Url used as connection property is a java.net.URI , therefore it can have all nine components. we use only the following:
    * scheme    (fixed: redis, directly used to determine the to be used sender class)
@@ -308,7 +294,6 @@ Two values are set by the Log Appender:
    * port      (variable: the port your redis db runs on, indirectly used from jedis)
    * path      (variable: only numbers - your redis db number, indirectly used from jedis)
    * fragment  (variable: the listname we push the log messages via LPUSH, directly used)
-
 
 License
 -------
