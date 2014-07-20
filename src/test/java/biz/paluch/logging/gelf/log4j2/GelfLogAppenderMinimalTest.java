@@ -65,7 +65,7 @@ public class GelfLogAppenderMinimalTest {
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
-        assertNotNull(gelfMessage.getField("Time"));
+        assertNotNull(gelfMessage.getField("MyTime"));
         assertEquals("test", gelfMessage.getAdditonalFields().get("Marker"));
         assertEquals("6", gelfMessage.getLevel());
 

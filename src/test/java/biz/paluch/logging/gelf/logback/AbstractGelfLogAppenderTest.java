@@ -50,7 +50,7 @@ public abstract class AbstractGelfLogAppenderTest {
 
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
-        assertNotNull(gelfMessage.getField("Time"));
+        assertNotNull(gelfMessage.getField("MyTime"));
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 

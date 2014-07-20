@@ -30,7 +30,7 @@ public class GelfLogHandlerTest {
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertNotNull(gelfMessage.getField("Time"));
+        assertNotNull(gelfMessage.getField("MyTime"));
         assertEquals(expectedMessage, gelfMessage.getFullMessage());
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(expectedMessage, gelfMessage.getShortMessage());
