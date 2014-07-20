@@ -1,7 +1,8 @@
 logstash-gelf
 =========================
 
-[![Build Status](https://api.travis-ci.org/mp911de/logstash-gelf.svg)](https://travis-ci.org/mp911de/logstash-gelf) [![Coverage Status](https://img.shields.io/coveralls/mp911de/logstash-gelf.svg)](https://coveralls.io/r/mp911de/logstash-gelf)
+[![Build Status](https://api.travis-ci.org/mp911de/logstash-gelf.svg)](https://travis-ci.org/mp911de/logstash-gelf) [![Coverage Status](https://img.shields.io/coveralls/mp911de/logstash-gelf.svg)](https://coveralls.io/r/mp911de/logstash-gelf) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/biz.paluch.logging/logstash-gelf/badge.svg)](https://maven-badges.herokuapp.com/maven-central/biz.paluch.logging/logstash-gelf)
+
 
 Provides logging to logstash using the Graylog Extended Logging Format (GELF) for using with:
 
