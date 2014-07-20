@@ -137,7 +137,7 @@ class LogbackLogEvent implements LogEvent {
             case LoggerName:
                 return loggingEvent.getLoggerName();
             case Marker:
-                if (loggingEvent.getMarker() != null) {
+                if (loggingEvent.getMarker() != null && !"".equals(loggingEvent.getMarker().toString())) {
                     return loggingEvent.getMarker().toString();
                 }
                 return null;

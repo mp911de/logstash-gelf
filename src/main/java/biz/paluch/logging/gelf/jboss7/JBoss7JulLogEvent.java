@@ -41,7 +41,11 @@ public class JBoss7JulLogEvent extends JulLogEvent {
     public String getValue(LogMessageField field) {
         switch (field.getNamedLogField()) {
             case NDC:
-                return NDC.get();
+                String ndc = NDC.get();
+                if (ndc != null && !"".equals(ndc)) {
+                    return ndc;
+                }
+                return null;
         }
         return super.getValue(field);
     }

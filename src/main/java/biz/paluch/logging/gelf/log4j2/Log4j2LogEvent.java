@@ -103,7 +103,7 @@ class Log4j2LogEvent implements LogEvent {
             case LoggerName:
                 return logEvent.getLoggerName();
             case Marker:
-                if (logEvent.getMarker() != null) {
+                if (logEvent.getMarker() != null && !"".equals(logEvent.getMarker().toString())) {
                     return logEvent.getMarker().toString();
                 }
                 return null;
