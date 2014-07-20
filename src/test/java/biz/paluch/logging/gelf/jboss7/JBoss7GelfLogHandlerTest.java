@@ -2,6 +2,7 @@ package biz.paluch.logging.gelf.jboss7;
 
 import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.getJBoss7GelfLogHandler;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -52,6 +53,7 @@ public class JBoss7GelfLogHandlerTest {
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
         assertEquals("ndc message", gelfMessage.getField("NDC"));
+        assertNotNull(gelfMessage.getField("Time"));
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 

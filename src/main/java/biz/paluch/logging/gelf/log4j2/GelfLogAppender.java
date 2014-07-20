@@ -7,18 +7,7 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassN
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.Filter;
-import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.appender.AbstractAppender;
-import org.apache.logging.log4j.core.config.plugins.Plugin;
-import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
-import org.apache.logging.log4j.core.config.plugins.PluginElement;
-import org.apache.logging.log4j.core.config.plugins.PluginFactory;
-import org.apache.logging.log4j.status.StatusLogger;
-import org.apache.logging.log4j.util.Strings;
-
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
@@ -29,6 +18,16 @@ import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.plugins.Plugin;
+import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
+import org.apache.logging.log4j.core.config.plugins.PluginElement;
+import org.apache.logging.log4j.core.config.plugins.PluginFactory;
+import org.apache.logging.log4j.status.StatusLogger;
+import org.apache.logging.log4j.util.Strings;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -274,7 +273,7 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
     private static void configureFields(MdcGelfMessageAssembler mdcGelfMessageAssembler, GelfLogField[] fields,
             GelfDynamicMdcLogFields[] dynamicFieldArray) {
         if (fields == null || fields.length == 0) {
-            mdcGelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Severity, ThreadName, SourceClassName,
+            mdcGelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
                     SourceMethodName, SourceSimpleClassName, LoggerName, Marker));
             return;
         }

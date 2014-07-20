@@ -3,6 +3,7 @@ package biz.paluch.logging.gelf.logback;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.LogMessageField;
@@ -49,6 +50,7 @@ public abstract class AbstractGelfLogAppenderTest {
 
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
+        assertNotNull(gelfMessage.getField("Time"));
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 

@@ -1,6 +1,7 @@
 package biz.paluch.logging.gelf.log4j2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,6 +65,7 @@ public class GelfLogAppenderMinimalTest {
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
+        assertNotNull(gelfMessage.getField("Time"));
         assertEquals("test", gelfMessage.getAdditonalFields().get("Marker"));
         assertEquals("6", gelfMessage.getLevel());
 
