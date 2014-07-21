@@ -1,15 +1,13 @@
 package biz.paluch.logging.gelf.standalone;
 
+import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 import static org.junit.Assert.assertEquals;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import biz.paluch.logging.gelf.GelfMessageBuilder;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import org.junit.Before;
+import org.junit.Test;
 
 public class StandaloneGelfSenderTest {
 
@@ -27,7 +25,7 @@ public class StandaloneGelfSenderTest {
 
         GelfSender sender = GelfSenderFactory.createSender(configuration);
 
-        sender.sendMessage(new GelfMessageBuilder().withFullMessage("message").withFacility(null).build());
+        sender.sendMessage(newInstance().withFullMessage("message").withFacility(null).build());
 
         assertEquals(1, GelfTestSender.getMessages().size());
 
