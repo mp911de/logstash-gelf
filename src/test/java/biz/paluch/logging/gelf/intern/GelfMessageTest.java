@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf.intern;
 
+import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -84,7 +85,7 @@ public class GelfMessageTest {
     @Test
     public void testGelfMessageDefaults() throws Exception {
         GelfMessage created = new GelfMessage();
-        GelfMessage build = new GelfMessageBuilder().build();
+        GelfMessage build = newInstance().build();
 
         assertTrue(created.equals(build));
         assertEquals(created.hashCode(), build.hashCode());
@@ -106,7 +107,7 @@ public class GelfMessageTest {
     }
 
     private GelfMessage buildGelfMessage() {
-        GelfMessageBuilder builder = new GelfMessageBuilder();
+        GelfMessageBuilder builder = newInstance();
         builder.withFacility(FACILITY);
         builder.withVersion(VERSION);
         builder.withFullMessage(FULL_MESSAGE);

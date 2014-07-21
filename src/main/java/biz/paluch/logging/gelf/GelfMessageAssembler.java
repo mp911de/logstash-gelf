@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf;
 
+import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.StackTraceFilter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -77,7 +78,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
      */
     public GelfMessage createGelfMessage(LogEvent logEvent) {
 
-        GelfMessageBuilder builder = new GelfMessageBuilder();
+        GelfMessageBuilder builder = newInstance();
         String message = logEvent.getMessage();
 
         String shortMessage = message;
