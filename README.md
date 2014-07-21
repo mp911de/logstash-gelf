@@ -1,7 +1,8 @@
 logstash-gelf
 =========================
 
-[![Build Status](https://api.travis-ci.org/mp911de/logstash-gelf.svg)](https://travis-ci.org/mp911de/logstash-gelf) [![Coverage Status](https://img.shields.io/coveralls/mp911de/logstash-gelf.svg)](https://coveralls.io/r/mp911de/logstash-gelf)
+[![Build Status](https://api.travis-ci.org/mp911de/logstash-gelf.svg)](https://travis-ci.org/mp911de/logstash-gelf) [![Coverage Status](https://img.shields.io/coveralls/mp911de/logstash-gelf.svg)](https://coveralls.io/r/mp911de/logstash-gelf) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/biz.paluch.logging/logstash-gelf/badge.svg)](https://maven-badges.herokuapp.com/maven-central/biz.paluch.logging/logstash-gelf)
+
 
 Provides logging to logstash using the Graylog Extended Logging Format (GELF) for using with:
 
@@ -22,7 +23,7 @@ Maven:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.4.2</version>
+        <version>1.5.0</version>
     </dependency>
 
 JBoss Module Download:
@@ -30,11 +31,11 @@ JBoss Module Download:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.4.2</version>
+        <version>1.5.0</version>
         <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.4.2/logstash-gelf-1.4.2-logging-module.zip
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.5.0/logstash-gelf-1.5.0-logging-module.zip
 
 
 <a name="jul"/>Java Util Logging GELF configuration
