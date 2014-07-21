@@ -68,7 +68,9 @@ public class GelfMessage {
             map.put(FIELD_FULL_MESSAGE, getFullMessage());
         }
 
-        map.put(FIELD_TIMESTAMP, getTimestamp());
+        if (getJavaTimestamp() != 0) {
+            map.put(FIELD_TIMESTAMP, getTimestamp());
+        }
 
         if (!isEmpty(getLevel())) {
             map.put(FIELD_LEVEL, getLevel());

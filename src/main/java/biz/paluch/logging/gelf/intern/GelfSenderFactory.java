@@ -17,6 +17,12 @@ import java.util.ServiceLoader;
  */
 public final class GelfSenderFactory {
 
+    /**
+     * Create a GelfSender based on the configuration.
+     * 
+     * @param hostAndPortProvider
+     * @return GelfSender.
+     */
     public static GelfSender createSender(final HostAndPortProvider hostAndPortProvider, final ErrorReporter errorReporter) {
         GelfSenderConfiguration senderConfiguration = new GelfSenderConfiguration() {
 
@@ -39,6 +45,12 @@ public final class GelfSenderFactory {
         return createSender(senderConfiguration);
     }
 
+    /**
+     * Create a GelfSender based on the configuration.
+     * 
+     * @param senderConfiguration
+     * @return GelfSender.
+     */
     public static GelfSender createSender(GelfSenderConfiguration senderConfiguration) {
         ErrorReporter errorReporter = senderConfiguration.getErrorReporter();
         if (senderConfiguration.getHost() == null) {

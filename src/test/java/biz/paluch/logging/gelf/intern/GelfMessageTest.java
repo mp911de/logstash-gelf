@@ -115,7 +115,7 @@ public class GelfMessageTest {
         builder.withJavaTimestamp(TIMESTAMP);
         builder.withLevel(LEVEL);
         builder.withMaximumMessageSize(MESSAGE_SIZE);
-        builder.withAdditionalFields(ADDITIONAL_FIELDS);
+        builder.withFields(ADDITIONAL_FIELDS);
 
         return builder.build();
     }

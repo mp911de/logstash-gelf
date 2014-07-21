@@ -23,56 +23,135 @@ public class GelfMessageBuilder {
     private Map<String, String> additonalFields = new HashMap<String, String>();
     private int maximumMessageSize = GelfMessage.DEFAULT_MESSAGE_SIZE;
 
+    private GelfMessageBuilder() {
+
+    }
+
+    /**
+     * Creates a new instance of the GelfMessageBuilder.
+     * 
+     * @return GelfMessageBuilder
+     */
+    public static GelfMessageBuilder newInstance() {
+        return new GelfMessageBuilder();
+    }
+
+    /**
+     * Set the version.
+     * 
+     * @param version
+     * @return GelfMessageBuilder
+     */
     public GelfMessageBuilder withVersion(String version) {
         this.version = version;
         return this;
     }
 
+    /**
+     * Set the host.
+     * 
+     * @param host
+     * @return GelfMessageBuilder
+     */
     public GelfMessageBuilder withHost(String host) {
         this.host = host;
         return this;
     }
 
+    /**
+     * Set the short_message.
+     * 
+     * @param shortMessage
+     * @return GelfMessageBuilder
+     */
     public GelfMessageBuilder withShortMessage(String shortMessage) {
         this.shortMessage = shortMessage;
         return this;
     }
 
+    /**
+     * Set the full_message.
+     * 
+     * @param fullMessage
+     * @return GelfMessageBuilder
+     */
     public GelfMessageBuilder withFullMessage(String fullMessage) {
         this.fullMessage = fullMessage;
         return this;
     }
 
+    /**
+     * Set the level (severity).
+     * 
+     * @param level
+     * @return GelfMessageBuilder
+     */
     public GelfMessageBuilder withLevel(String level) {
         this.level = level;
         return this;
     }
 
+    /**
+     * Set the facility.
+     * 
+     * @param facility
+     * @return GelfMessageBuilder
+     */
     public GelfMessageBuilder withFacility(String facility) {
         this.facility = facility;
         return this;
     }
 
+    /**
+     * Set the max message size.
+     * 
+     * @param maximumMessageSize
+     * @return
+     */
     public GelfMessageBuilder withMaximumMessageSize(int maximumMessageSize) {
         this.maximumMessageSize = maximumMessageSize;
         return this;
     }
 
+    /**
+     * Set the java timestamp (millis).
+     * 
+     * @param javaTimestamp
+     * @return GelfMessageBuilder
+     */
     public GelfMessageBuilder withJavaTimestamp(long javaTimestamp) {
         this.javaTimestamp = javaTimestamp;
         return this;
     }
 
-    public GelfMessageBuilder withAdditionalFields(Map<String, String> additonalFields) {
+    /**
+     * Add additional fields.
+     * 
+     * @param additonalFields
+     * @return GelfMessageBuilder
+     */
+    public GelfMessageBuilder withFields(Map<String, String> additonalFields) {
         this.additonalFields.putAll(additonalFields);
         return this;
     }
 
-    public GelfMessageBuilder withAdditionalField(String key, String value) {
+    /**
+     * Add an additional field.
+     * 
+     * @param key
+     * @param value
+     * @return GelfMessageBuilder
+     */
+    public GelfMessageBuilder withField(String key, String value) {
         this.additonalFields.put(key, value);
         return this;
     }
 
+    /**
+     * Build a new Gelf message based on the builder settings.
+     * 
+     * @return GelfMessage
+     */
     public GelfMessage build() {
 
         GelfMessage gelfMessage = new GelfMessage(shortMessage, fullMessage, javaTimestamp, level);

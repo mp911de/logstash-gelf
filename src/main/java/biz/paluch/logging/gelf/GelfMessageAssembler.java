@@ -100,7 +100,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
                     continue;
 
                 }
-                builder.withAdditionalField(entryName, value);
+                builder.withField(entryName, value);
             }
         }
 
@@ -111,7 +111,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         if (logEvent.getParameters() != null) {
             for (int i = 0; i < logEvent.getParameters().length; i++) {
                 Object param = logEvent.getParameters()[i];
-                builder.withAdditionalField(FIELD_MESSAGE_PARAM + i, "" + param);
+                builder.withField(FIELD_MESSAGE_PARAM + i, "" + param);
             }
         }
 
@@ -154,11 +154,11 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         final Throwable thrown = logEvent.getThrowable();
         if (null != thrown) {
             if (filterStackTrace) {
-                builder.withAdditionalField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
+                builder.withField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
             } else {
                 final StringWriter sw = new StringWriter();
                 thrown.printStackTrace(new PrintWriter(sw));
-                builder.withAdditionalField(FIELD_STACK_TRACE, sw.toString());
+                builder.withField(FIELD_STACK_TRACE, sw.toString());
             }
         }
     }
