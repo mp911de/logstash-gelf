@@ -15,6 +15,7 @@
 			<item name="Java Util Logging" href="examples/jul.html"/>
 			<item name="log4j v1.2.x" href="examples/log4j-1.2.x.html"/>
 			<item name="log4j v2.x" href="examples/log4j-2.x.html"/>
+            <item name="JBoss AS7/Wildfly" href="examples/jbossas7.html" />
             <item name="Logback" href="examples/logback.html"/>
         </menu>
 
