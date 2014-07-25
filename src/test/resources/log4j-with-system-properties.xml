@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="sysout" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] %c: %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
+        <param name="GraylogHost" value="test:localhost" />
+        <param name="GraylogPort" value="12201" />
+        <param name="AdditionalFields"
+               value="propertyField1=${user.language},propertyField2=${myproperty},propertyField3=${otherproperty:fallback},propertyField4=embedded${myproperty}property" />
+        <param name="Threshold" value="ALL" />
+    </appender>
+
+    <root>
+        <priority value="DEBUG" />
+        <appender-ref ref="sysout" />
+        <appender-ref ref="gelf" />
+    </root>
+
+</log4j:configuration>
