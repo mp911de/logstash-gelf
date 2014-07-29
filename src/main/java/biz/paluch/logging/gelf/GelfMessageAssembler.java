@@ -1,5 +1,11 @@
 package biz.paluch.logging.gelf;
 
+import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.StackTraceFilter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.HostAndPortProvider;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -8,15 +14,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.StackTraceFilter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 15:05
  */
-public class GelfMessageAssembler {
+public class GelfMessageAssembler implements HostAndPortProvider {
 
     private static final int MAX_SHORT_MESSAGE_LENGTH = 250;
 
@@ -75,6 +77,8 @@ public class GelfMessageAssembler {
      * @return GelfMessage
      */
     public GelfMessage createGelfMessage(LogEvent logEvent) {
+
+        GelfMessageBuilder builder = newInstance();
         String message = logEvent.getMessage();
 
         String shortMessage = message;
@@ -82,8 +86,8 @@ public class GelfMessageAssembler {
             shortMessage = message.substring(0, MAX_SHORT_MESSAGE_LENGTH - 1);
         }
 
-        final GelfMessage gelfMessage = new GelfMessage(shortMessage, message, logEvent.getLogTimestamp(),
-                logEvent.getSyslogLevel());
+        builder.withShortMessage(shortMessage).withFullMessage(message).withJavaTimestamp(logEvent.getLogTimestamp());
+        builder.withLevel(logEvent.getSyslogLevel());
 
         for (MessageField field : fields) {
             Values values = getValues(logEvent, field);
@@ -91,50 +95,48 @@ public class GelfMessageAssembler {
                 continue;
             }
 
-            for (String entryName : values.getEntryNames())
-            {
+            for (String entryName : values.getEntryNames()) {
                 String value = values.getValue(entryName);
-                if(value == null)
-                {
+                if (value == null) {
                     continue;
 
                 }
-                gelfMessage.addField(entryName, value);
+                builder.withField(entryName, value);
             }
         }
 
         if (extractStackTrace) {
-            addStackTrace(logEvent, gelfMessage);
+            addStackTrace(logEvent, builder);
         }
 
         if (logEvent.getParameters() != null) {
             for (int i = 0; i < logEvent.getParameters().length; i++) {
                 Object param = logEvent.getParameters()[i];
-                gelfMessage.addField(FIELD_MESSAGE_PARAM + i, "" + param);
+                builder.withField(FIELD_MESSAGE_PARAM + i, "" + param);
             }
         }
 
-        gelfMessage.setHost(getOriginHost());
+        builder.withHost(getOriginHost());
 
         if (null != facility) {
-            gelfMessage.setFacility(facility);
+            builder.withFacility(facility);
         }
 
-        gelfMessage.setMaximumMessageSize(maximumMessageSize);
-        return gelfMessage;
+        builder.withMaximumMessageSize(maximumMessageSize);
+        return builder.build();
     }
 
     private Values getValues(LogEvent logEvent, MessageField field) {
 
         if (field instanceof StaticMessageField) {
-            return new Values(field.getName(),getValue((StaticMessageField) field));
+            return new Values(field.getName(), getValue((StaticMessageField) field));
         }
 
         if (field instanceof LogMessageField) {
             LogMessageField logMessageField = (LogMessageField) field;
             if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Time) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(timestampPattern);
-                return new Values(field.getName(),dateFormat.format(new Date(logEvent.getLogTimestamp())));
+                return new Values(field.getName(), dateFormat.format(new Date(logEvent.getLogTimestamp())));
             }
 
             if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Server) {
@@ -149,15 +151,15 @@ public class GelfMessageAssembler {
         return field.getValue();
     }
 
-    private void addStackTrace(LogEvent logEvent, GelfMessage gelfMessage) {
+    private void addStackTrace(LogEvent logEvent, GelfMessageBuilder builder) {
         final Throwable thrown = logEvent.getThrowable();
         if (null != thrown) {
             if (filterStackTrace) {
-                gelfMessage.addField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
+                builder.withField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
             } else {
                 final StringWriter sw = new StringWriter();
                 thrown.printStackTrace(new PrintWriter(sw));
-                gelfMessage.addField(FIELD_STACK_TRACE, sw.toString());
+                builder.withField(FIELD_STACK_TRACE, sw.toString());
             }
         }
     }
@@ -178,6 +180,7 @@ public class GelfMessageAssembler {
 
             fieldNumber++;
         }
+
     }
 
     public void addField(MessageField field) {
@@ -254,4 +257,5 @@ public class GelfMessageAssembler {
     public void setMaximumMessageSize(int maximumMessageSize) {
         this.maximumMessageSize = maximumMessageSize;
     }
+
 }

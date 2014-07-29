@@ -2,6 +2,7 @@ package biz.paluch.logging.gelf.log4j2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +43,7 @@ public class GelfLogAppenderTest {
     @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
-        ThreadContext.clear();
+        ThreadContext.clearAll();
     }
 
     @Test
@@ -95,6 +96,30 @@ public class GelfLogAppenderTest {
 
         assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION));
         assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
+
+    }
+
+    @Test
+    public void testFactory() throws Exception {
+        GelfLogAppender result = GelfLogAppender.createAppender(null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null);
+
+        assertNull(result);
+
+        result = GelfLogAppender.createAppender("name", null, null, null, null, null, null, null, null, null, null, null, null,
+                null);
+
+        assertNull(result);
+
+        result = GelfLogAppender.createAppender("name", null, null, null, null, "host", null, null, null, null, null, null,
+                null, null);
+
+        assertNotNull(result);
+
+        result = GelfLogAppender.createAppender("name", null, null, null, null, "host", null, null, null, null, "facility",
+                null, null, null);
+
+        assertNotNull(result);
 
     }
 }

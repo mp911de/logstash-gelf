@@ -1,10 +1,15 @@
 package biz.paluch.logging.gelf.log4j2;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-import java.util.concurrent.TimeoutException;
-
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.NettyLocalServer;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import com.google.code.tempusfugit.temporal.Condition;
+import com.google.code.tempusfugit.temporal.Duration;
+import com.google.code.tempusfugit.temporal.Timeout;
+import com.google.code.tempusfugit.temporal.WaitFor;
+import io.netty.channel.socket.nio.NioDatagramChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
@@ -16,24 +21,17 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.NettyLocalServer;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-
-import com.google.code.tempusfugit.temporal.Condition;
-import com.google.code.tempusfugit.temporal.Duration;
-import com.google.code.tempusfugit.temporal.Timeout;
-import com.google.code.tempusfugit.temporal.WaitFor;
+import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 /**
  */
-public class GelfLogAppenderNettyTest {
+public class GelfLogAppenderNettyUdpTest {
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     private static LoggerContext loggerContext;
-    private static NettyLocalServer server = new NettyLocalServer();
+    private static NettyLocalServer server = new NettyLocalServer(NioDatagramChannel.class);
 
     @BeforeClass
     public static void setupClass() throws Exception {
@@ -53,7 +51,7 @@ public class GelfLogAppenderNettyTest {
     @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
-        ThreadContext.clear();
+        ThreadContext.clearAll();
         server.clear();
 
     }
@@ -90,6 +88,17 @@ public class GelfLogAppenderNettyTest {
         assertEquals("logstash-gelf", jsonValue.get(GelfMessage.FIELD_FACILITY));
         assertEquals("fieldValue1", jsonValue.get("_fieldName1"));
         assertEquals("fieldValue2", jsonValue.get("_fieldName2"));
+
+    }
+
+    @Test(expected = TimeoutException.class)
+    public void testEmptyMessage() throws Exception {
+
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.info("");
+
+        waitForGelf();
 
     }
 

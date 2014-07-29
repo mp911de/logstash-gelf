@@ -1,17 +1,18 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.LogRecord;
-
-import org.apache.log4j.MDC;
-
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
 import biz.paluch.logging.gelf.Values;
 import biz.paluch.logging.gelf.jul.JulLogEvent;
+import org.apache.log4j.MDC;
+import org.apache.log4j.NDC;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.LogRecord;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -34,6 +35,19 @@ public class JBoss7JulLogEvent extends JulLogEvent {
         }
 
         return super.getValues(field);
+    }
+
+    @Override
+    public String getValue(LogMessageField field) {
+        switch (field.getNamedLogField()) {
+            case NDC:
+                String ndc = NDC.get();
+                if (ndc != null && !"".equals(ndc)) {
+                    return ndc;
+                }
+                return null;
+        }
+        return super.getValue(field);
     }
 
     private Values getMdcValues(DynamicMdcMessageField field) {
@@ -79,5 +93,10 @@ public class JBoss7JulLogEvent extends JulLogEvent {
         }
         String slf4jValue = org.slf4j.MDC.get(mdcName);
         return slf4jValue;
+    }
+
+    @Override
+    public Set<String> getMdcNames() {
+        return getAllMdcNames();
     }
 }

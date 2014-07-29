@@ -1,17 +1,16 @@
 package biz.paluch.logging.gelf.jul;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
+import static org.junit.Assert.assertNotNull;
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.MDC;
 import org.junit.Before;
 import org.junit.Test;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.intern.GelfMessage;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -31,6 +30,7 @@ public class GelfLogHandlerTest {
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
+        assertNotNull(gelfMessage.getField("MyTime"));
         assertEquals(expectedMessage, gelfMessage.getFullMessage());
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(expectedMessage, gelfMessage.getShortMessage());
@@ -60,6 +60,28 @@ public class GelfLogHandlerTest {
     }
 
     @Test
+    public void testWithResourceBundleFormattingMalformed1() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName(), "messages");
+        String expectedMessage = "message.format.fail1";
+
+        Object[] params = new Object[] { "a", "b", "c" };
+        logger.log(Level.INFO, "message.format.fail1", params);
+
+        assertExpectedMessage(expectedMessage);
+    }
+
+    @Test
+    public void testWithResourceBundleFormattingMalformed2() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName(), "messages");
+        String expectedMessage = "message.format.fail2";
+
+        Object[] params = new Object[] { "a", "b", "c" };
+        logger.log(Level.INFO, "message.format.fail2", params);
+
+        assertExpectedMessage(expectedMessage);
+    }
+
+    @Test
     public void testWithResourceBundleFormattingWithPercentages() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName(), "messages");
         String expectedMessage = "params a and 1";
@@ -77,6 +99,40 @@ public class GelfLogHandlerTest {
         String expectedMessage = "foo bar test log message";
         logger.info(expectedMessage);
         assertExpectedMessage(expectedMessage);
+
+    }
+
+    @Test
+    public void testSimpleNull() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName());
+
+        String expectedMessage = null;
+        logger.info(expectedMessage);
+
+        assertEquals(0, GelfTestSender.getMessages().size());
+    }
+
+    @Test
+    public void testSimpleWarning() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName());
+
+        String expectedMessage = "foo bar test log message";
+        logger.warning(expectedMessage);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("4", gelfMessage.getLevel());
+
+    }
+
+    @Test
+    public void testSimpleSevere() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName());
+
+        String expectedMessage = "foo bar test log message";
+        logger.severe(expectedMessage);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("3", gelfMessage.getLevel());
 
     }
 }

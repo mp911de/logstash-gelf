@@ -20,6 +20,7 @@ Following settings can be used:
  * additionalFields (Optional): Post additional fields. Eg. .GelfLogHandler.additionalFields=fieldName=Value
  * mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
  * dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
+ * includeFullMdc (Optional): Include all fields from the MDC, default false
 
 log4j configuration
 --------------
@@ -39,6 +40,7 @@ Properties:
     log4j.appender.gelf.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
     log4j.appender.gelf.MdcFields=mdcField1,mdcField2
     log4j.appender.gelf.DynamicMdcFields=mdc.*,(mdc|MDC)fields
+    log4j.appender.gelf.IncludeFullMdc=true
 
 
 XML:
@@ -56,5 +58,6 @@ XML:
         <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
         <param name="MdcFields" value="mdcField1,mdcField2" />
         <param name="DynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
+        <param name="IncludeFullMdc" value="true" />
     </appender>
     

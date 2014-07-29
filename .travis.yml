@@ -1,5 +1,6 @@
 language: java
-script: mvn clean verify
+install: make travis-install
+script: make test-coveralls
 jdk:
   - oraclejdk8
   - oraclejdk7

@@ -2,6 +2,8 @@ package biz.paluch.logging.gelf;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
+import java.util.Set;
+
 /**
  * Message-Assembler using MDC.
  * 
@@ -11,18 +13,18 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 public class MdcGelfMessageAssembler extends GelfMessageAssembler {
 
     public static final String PROPERTY_MDC_PROFILING = "mdcProfiling";
+    public static final String PROPERTY_INCLUDE_FULL_MDC = "includeFullMdc";
     public static final String PROPERTY_MDC_FIELD = "mdcField.";
     public static final String PROPERTY_DYNAMIC_MDC_FIELD = "dynamicMdcFields.";
 
     private boolean mdcProfiling;
+    private boolean includeFullMdc;
 
     public void initialize(PropertyProvider propertyProvider) {
 
         super.initialize(propertyProvider);
         mdcProfiling = "true".equalsIgnoreCase(propertyProvider.getProperty(PROPERTY_MDC_PROFILING));
-
-        setupMdcFields(propertyProvider);
-        setupDynamicMdcFields(propertyProvider);
+        includeFullMdc = "true".equalsIgnoreCase(propertyProvider.getProperty(PROPERTY_INCLUDE_FULL_MDC));
 
     }
 
@@ -33,35 +35,23 @@ public class MdcGelfMessageAssembler extends GelfMessageAssembler {
             GelfUtil.addMdcProfiling(logEvent, gelfMessage);
         }
 
+        if (includeFullMdc) {
+            Set<String> mdcNames = logEvent.getMdcNames();
+            for (String mdcName : mdcNames) {
+
+                if (mdcName == null) {
+                    continue;
+
+                }
+
+                String mdcValue = logEvent.getMdcValue(mdcName);
+                if (mdcValue != null) {
+                    gelfMessage.addField(mdcName, mdcValue);
+                }
+            }
+        }
+
         return gelfMessage;
-    }
-
-    private void setupMdcFields(PropertyProvider propertyProvider) {
-        int fieldNumber = 0;
-        while (true) {
-            final String property = propertyProvider.getProperty(PROPERTY_MDC_FIELD + fieldNumber);
-            if (null == property) {
-                break;
-            }
-
-            MdcMessageField field = new MdcMessageField(property, property);
-            addField(field);
-            fieldNumber++;
-        }
-    }
-
-    private void setupDynamicMdcFields(PropertyProvider propertyProvider) {
-        int fieldNumber = 0;
-        while (true) {
-            final String property = propertyProvider.getProperty(PROPERTY_DYNAMIC_MDC_FIELD + fieldNumber);
-            if (null == property) {
-                break;
-            }
-
-            DynamicMdcMessageField field = new DynamicMdcMessageField(property);
-            addField(field);
-            fieldNumber++;
-        }
     }
 
     public boolean isMdcProfiling() {
@@ -72,4 +62,11 @@ public class MdcGelfMessageAssembler extends GelfMessageAssembler {
         this.mdcProfiling = mdcProfiling;
     }
 
+    public boolean isIncludeFullMdc() {
+        return includeFullMdc;
+    }
+
+    public void setIncludeFullMdc(boolean includeFullMdc) {
+        this.includeFullMdc = includeFullMdc;
+    }
 }

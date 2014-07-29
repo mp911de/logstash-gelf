@@ -1,6 +1,5 @@
 package biz.paluch.logging.gelf.intern;
 
-import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.sender.DefaultGelfSenderProvider;
 import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
 
@@ -18,40 +17,57 @@ import java.util.ServiceLoader;
  */
 public final class GelfSenderFactory {
 
-    
-    
-    public static GelfSender createSender(final GelfMessageAssembler gelfMessageAssembler, final ErrorReporter errorReporter) {
-        if (gelfMessageAssembler.getHost() == null) {
-            errorReporter.reportError("Graylog2 hostname is empty!", null);
+    /**
+     * Create a GelfSender based on the configuration.
+     * 
+     * @param hostAndPortProvider
+     * @return GelfSender.
+     */
+    public static GelfSender createSender(final HostAndPortProvider hostAndPortProvider, final ErrorReporter errorReporter) {
+        GelfSenderConfiguration senderConfiguration = new GelfSenderConfiguration() {
+
+            @Override
+            public int getPort() {
+                return hostAndPortProvider.getPort();
+            }
+
+            @Override
+            public String getHost() {
+                return hostAndPortProvider.getHost();
+            }
+
+            @Override
+            public ErrorReporter getErrorReporter() {
+                return errorReporter;
+            }
+        };
+
+        return createSender(senderConfiguration);
+    }
+
+    /**
+     * Create a GelfSender based on the configuration.
+     * 
+     * @param senderConfiguration
+     * @return GelfSender.
+     */
+    public static GelfSender createSender(GelfSenderConfiguration senderConfiguration) {
+        ErrorReporter errorReporter = senderConfiguration.getErrorReporter();
+        if (senderConfiguration.getHost() == null) {
+            senderConfiguration.getErrorReporter().reportError("GELF server hostname is empty!", null);
         } else {
             try {
-                GelfSenderConfiguration senderConfiguration = new GelfSenderConfiguration() {
-
-                    @Override
-                    public int getPort() {
-                        return gelfMessageAssembler.getPort();
-                    }
-
-                    @Override
-                    public String getHost() {
-                        return gelfMessageAssembler.getHost();
-                    }
-
-                    @Override
-                    public ErrorReporter getErrorReport() {
-                        return errorReporter;
-                    }
-                };
 
                 for (GelfSenderProvider provider : SenderProviderHolder.getSenderProvider()) {
                     if (provider.supports(senderConfiguration.getHost())) {
                         return provider.create(senderConfiguration);
                     }
                 }
-                senderConfiguration.getErrorReport().reportError("No sender found for host " + senderConfiguration.getHost(), null);
+                senderConfiguration.getErrorReporter().reportError("No sender found for host " + senderConfiguration.getHost(),
+                        null);
                 return null;
             } catch (UnknownHostException e) {
-                errorReporter.reportError("Unknown Graylog2 hostname:" + gelfMessageAssembler.getHost(), e);
+                errorReporter.reportError("Unknown GELF server hostname:" + senderConfiguration.getHost(), e);
             } catch (SocketException e) {
                 errorReporter.reportError("Socket exception: " + e.getMessage(), e);
             } catch (IOException e) {
@@ -61,16 +77,25 @@ public final class GelfSenderFactory {
 
         return null;
     }
-    
+
     public static void addGelfSenderProvider(GelfSenderProvider provider) {
-       SenderProviderHolder.addSenderProvider(provider);
+        SenderProviderHolder.addSenderProvider(provider);
+    }
+
+    public static void removeGelfSenderProvider(GelfSenderProvider provider) {
+        SenderProviderHolder.removeSenderProvider(provider);
+    }
+
+    public static void removeAllAddedSenderProviders() {
+        SenderProviderHolder.removeAllAddedSenderProviders();
     }
 
     // For thread safe lazy intialization of provider list
     private static class SenderProviderHolder {
         private static ServiceLoader<GelfSenderProvider> gelfSenderProvider = ServiceLoader.load(GelfSenderProvider.class);
         private static List<GelfSenderProvider> providerList = new ArrayList<GelfSenderProvider>();
-        
+        private static List<GelfSenderProvider> addedProviders = new ArrayList<GelfSenderProvider>();
+
         static {
             Iterator<GelfSenderProvider> iter = gelfSenderProvider.iterator();
             while (iter.hasNext()) {
@@ -83,12 +108,27 @@ public final class GelfSenderFactory {
         static List<GelfSenderProvider> getSenderProvider() {
             return providerList;
         }
-        
+
         static void addSenderProvider(GelfSenderProvider provider) {
             synchronized (providerList) {
-                if(!providerList.contains(provider)) {
+                addedProviders.add(provider);
+                if (!providerList.contains(provider)) {
                     providerList.add(0, provider); // To take precedence over built-in providers
                 }
+            }
+        }
+
+        static void removeAllAddedSenderProviders() {
+            synchronized (providerList) {
+                providerList.removeAll(addedProviders);
+                addedProviders.clear();
+            }
+        }
+
+        static void removeSenderProvider(GelfSenderProvider provider) {
+            synchronized (providerList) {
+                addedProviders.remove(provider);
+                providerList.remove(provider);
             }
         }
     }

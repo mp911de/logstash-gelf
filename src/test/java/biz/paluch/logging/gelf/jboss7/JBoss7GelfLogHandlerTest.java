@@ -2,18 +2,19 @@ package biz.paluch.logging.gelf.jboss7;
 
 import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.getJBoss7GelfLogHandler;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.MDC;
+import org.apache.log4j.NDC;
 import org.junit.Before;
 import org.junit.Test;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.intern.GelfMessage;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -38,18 +39,36 @@ public class JBoss7GelfLogHandlerTest {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
+        NDC.clear();
         Logger logger = Logger.getLogger(getClass().getName());
         logger.addHandler(handler);
 
+        NDC.push("ndc message");
         logger.info(LOG_MESSAGE);
+        NDC.clear();
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
+        assertEquals("ndc message", gelfMessage.getField("NDC"));
+        assertNotNull(gelfMessage.getField("MyTime"));
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
+
+    }
+
+    @Test
+    public void testEmptyMessage() throws Exception {
+
+        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        logger.info("");
+        assertEquals(0, GelfTestSender.getMessages().size());
 
     }
 
@@ -118,4 +137,13 @@ public class JBoss7GelfLogHandlerTest {
 
     }
 
+    @Test
+    public void testWrongConfig() throws Exception {
+        JBoss7GelfLogHandler handler = new JBoss7GelfLogHandler();
+
+        handler.setGraylogHost(null);
+        handler.setGraylogPort(0);
+        handler.createGelfMessage(new LogRecord(Level.ALL, LOG_MESSAGE));
+
+    }
 }

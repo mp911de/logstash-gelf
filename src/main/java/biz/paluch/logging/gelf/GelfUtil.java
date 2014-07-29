@@ -1,10 +1,10 @@
 package biz.paluch.logging.gelf;
 
+import biz.paluch.logging.gelf.intern.GelfMessage;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -48,22 +48,29 @@ public class GelfUtil {
             return;
         }
 
-        long now = System.currentTimeMillis();
-        long duration = now - timestamp;
+        if (timestamp > 0) {
+            long now = System.currentTimeMillis();
+            long duration = now - timestamp;
 
-        String durationText;
+            String durationText;
 
-        if (duration > 10000) {
-            duration = duration / 1000;
-            durationText = duration + "sec";
-        } else {
-            durationText = duration + "ms";
+            if (duration > 10000) {
+                duration = duration / 1000;
+                durationText = duration + "sec";
+            } else {
+                durationText = duration + "ms";
+            }
+            gelfMessage.addField(MDC_REQUEST_DURATION, durationText);
+            gelfMessage.addField(MDC_REQUEST_END, new Date(now).toString());
         }
-        gelfMessage.addField(MDC_REQUEST_DURATION, durationText);
-        gelfMessage.addField(MDC_REQUEST_END, new Date(now).toString());
     }
 
     public static String getSimpleClassName(String className) {
+
+        if (className == null) {
+            return null;
+        }
+
         int index = className.lastIndexOf('.');
         if (index != -1) {
             return className.substring(index + 1);

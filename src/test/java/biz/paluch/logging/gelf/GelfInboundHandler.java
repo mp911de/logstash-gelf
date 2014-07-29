@@ -1,5 +1,12 @@
 package biz.paluch.logging.gelf;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.socket.DatagramPacket;
+import io.netty.util.ReferenceCountUtil;
+import org.json.simple.JSONValue;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,14 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import org.json.simple.JSONValue;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.socket.DatagramPacket;
-import io.netty.util.ReferenceCountUtil;
-
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 10.11.13 10:35
@@ -31,12 +30,22 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
 
     private Map<ChunkId, List<Chunk>> chunks = new HashMap<ChunkId, List<Chunk>>();
     private List<Object> values = new ArrayList<Object>();
+    private ByteArrayOutputStream intermediate;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
-            DatagramPacket packet = (DatagramPacket) msg;
-            ByteBuf buffer = packet.content();
+
+            boolean requireNullEnd = false;
+            ByteBuf buffer = null;
+
+            if (msg instanceof DatagramPacket) {
+                DatagramPacket packet = (DatagramPacket) msg;
+                buffer = packet.content();
+            } else if (msg instanceof ByteBuf) {
+                buffer = (ByteBuf) msg;
+                requireNullEnd = true;
+            }
 
             ByteArrayOutputStream temporaryBuffer = new ByteArrayOutputStream();
             while (buffer.readableBytes() != 0) {
@@ -77,7 +86,18 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
                             return;
                         }
                     }
+                }
 
+                if (requireNullEnd) {
+                    if (bytes[bytes.length - 1] != 0) {
+                        intermediate = new ByteArrayOutputStream();
+                        intermediate.write(bytes, 0, bytes.length);
+                        return;
+                    } else if (intermediate != null) {
+                        intermediate.write(bytes, 0, bytes.length);
+                        bytes = intermediate.toByteArray();
+                        intermediate = null;
+                    }
                 }
 
                 InputStream is = null;
@@ -85,7 +105,11 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
                 if (startsWith(bytes, GZIP_ID)) {
                     is = new GZIPInputStream(new ByteArrayInputStream(bytes));
                 } else {
-                    is = new ByteArrayInputStream(bytes);
+                    if (bytes[bytes.length - 1] == 0) {
+                        is = new ByteArrayInputStream(bytes, 0, bytes.length - 1);
+                    } else {
+                        is = new ByteArrayInputStream(bytes);
+                    }
                 }
 
                 Object parse = JSONValue.parse(new InputStreamReader(is, "UTF-8"));

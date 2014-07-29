@@ -9,6 +9,7 @@ import biz.paluch.logging.gelf.MessageField;
 import biz.paluch.logging.gelf.Values;
 import org.apache.log4j.Level;
 import org.apache.log4j.MDC;
+import org.apache.log4j.NDC;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 
@@ -107,6 +108,12 @@ class Log4jLogEvent implements LogEvent {
                 return GelfUtil.getSimpleClassName(loggingEvent.getLocationInformation().getClassName());
             case LoggerName:
                 return loggingEvent.getLoggerName();
+            case NDC:
+                String ndc = NDC.get();
+                if (ndc != null && !"".equals(ndc)) {
+                    return ndc;
+                }
+                return null;
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);
@@ -160,5 +167,10 @@ class Log4jLogEvent implements LogEvent {
             }
         }
         return matchingMdcNames;
+    }
+
+    @Override
+    public Set<String> getMdcNames() {
+        return getAllMdcNames();
     }
 }

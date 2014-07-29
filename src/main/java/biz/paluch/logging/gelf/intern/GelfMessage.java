@@ -4,7 +4,6 @@ import org.json.simple.JSONValue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -23,11 +22,13 @@ public class GelfMessage {
     public static final String FIELD_TIMESTAMP = "timestamp";
     public static final String FIELD_LEVEL = "level";
     public static final String FIELD_FACILITY = "facility";
+    public static final String ID_NAME = "id";
 
-    private static final String ID_NAME = "id";
-    private static final String GELF_VERSION = "1.0";
+    public static final String GELF_VERSION = "1.0";
+    public static final String DEFAULT_FACILITY = "logstash-gelf";
+    public static final int DEFAULT_MESSAGE_SIZE = 8192;
+
     private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
-
     private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
 
     private String version = GELF_VERSION;
@@ -37,9 +38,9 @@ public class GelfMessage {
     private String fullMessage;
     private long javaTimestamp;
     private String level;
-    private String facility = "logstash-gelf";
+    private String facility = DEFAULT_FACILITY;
     private Map<String, String> additonalFields = new HashMap<String, String>();
-    private int maximumMessageSize = 8192;
+    private int maximumMessageSize = DEFAULT_MESSAGE_SIZE;
 
     public GelfMessage() {
     }
@@ -55,16 +56,32 @@ public class GelfMessage {
     public String toJson(String additionalFieldPrefix) {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        map.put(FIELD_HOST, getHost());
-        map.put(FIELD_SHORT_MESSAGE, getShortMessage());
-        map.put(FIELD_FULL_MESSAGE, getFullMessage());
-        map.put(FIELD_TIMESTAMP, getTimestamp());
+        if (!isEmpty(getHost())) {
+            map.put(FIELD_HOST, getHost());
+        }
 
-        map.put(FIELD_LEVEL, getLevel());
-        map.put(FIELD_FACILITY, getFacility());
+        if (!isEmpty(shortMessage)) {
+            map.put(FIELD_SHORT_MESSAGE, getShortMessage());
+        }
+
+        if (!isEmpty(getFullMessage())) {
+            map.put(FIELD_FULL_MESSAGE, getFullMessage());
+        }
+
+        if (getJavaTimestamp() != 0) {
+            map.put(FIELD_TIMESTAMP, getTimestamp());
+        }
+
+        if (!isEmpty(getLevel())) {
+            map.put(FIELD_LEVEL, getLevel());
+        }
+
+        if (!isEmpty(getFacility())) {
+            map.put(FIELD_FACILITY, getFacility());
+        }
 
         for (Map.Entry<String, String> additionalField : additonalFields.entrySet()) {
-            if (!ID_NAME.equals(additionalField.getKey())) {
+            if (!ID_NAME.equals(additionalField.getKey()) && additionalField.getValue() != null) {
                 // try adding the value as a double
                 Object value;
                 try {
@@ -79,7 +96,7 @@ public class GelfMessage {
 
         return JSONValue.toJSONString(map);
     }
-    
+
     public String toJson() {
         return toJson("_");
     }
@@ -105,25 +122,13 @@ public class GelfMessage {
 
     public ByteBuffer toTCPBuffer() {
         byte[] messageBytes;
-        try {
-            // Do not use GZIP, as the headers will contain \0 bytes
-            // graylog2-server uses \0 as a delimiter for TCP frames
-            // see: https://github.com/Graylog2/graylog2-server/issues/127
-            String json = toJson();
-            json += '\0';
-            messageBytes = json.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("No UTF-8 support available.", e);
-        }
+        // Do not use GZIP, as the headers will contain \0 bytes
+        // graylog2-server uses \0 as a delimiter for TCP frames
+        // see: https://github.com/Graylog2/graylog2-server/issues/127
+        String json = toJson();
+        json += '\0';
+        messageBytes = Charsets.utf8(json);
 
-        ByteBuffer buffer = ByteBuffer.allocate(messageBytes.length);
-        buffer.put(messageBytes);
-        buffer.flip();
-        return buffer;
-    }
-
-    public ByteBuffer toAMQPBuffer() {
-        byte[] messageBytes = gzipMessage(toJson());
         ByteBuffer buffer = ByteBuffer.allocate(messageBytes.length);
         buffer.put(messageBytes);
         buffer.flip();
@@ -161,17 +166,13 @@ public class GelfMessage {
 
         try {
             GZIPOutputStream stream = new GZIPOutputStream(bos);
-            byte[] bytes;
-            try {
-                bytes = message.getBytes("UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException("No UTF-8 support available.", e);
-            }
+            byte[] bytes = Charsets.utf8(message);
+
             stream.write(bytes);
             stream.finish();
-            stream.close();
+            Closer.close(stream);
             byte[] zipped = bos.toByteArray();
-            bos.close();
+            Closer.close(bos);
             return zipped;
         } catch (IOException e) {
             return null;
@@ -180,11 +181,7 @@ public class GelfMessage {
 
     private byte[] lastFourAsciiBytes(String host) {
         final String shortHost = host.length() >= 4 ? host.substring(host.length() - 4) : host;
-        try {
-            return shortHost.getBytes("ASCII");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("JVM without ascii support?", e);
-        }
+        return Charsets.ascii(shortHost);
     }
 
     public String getVersion() {
@@ -201,7 +198,9 @@ public class GelfMessage {
 
     public void setHost(String host) {
         this.host = host;
-        this.hostBytes = lastFourAsciiBytes(host);
+        if (host != null) {
+            this.hostBytes = lastFourAsciiBytes(host);
+        }
     }
 
     public String getShortMessage() {
@@ -248,6 +247,28 @@ public class GelfMessage {
         this.facility = facility;
     }
 
+    /**
+     * Add multiple fields (key/value pairs)
+     * 
+     * @param fields
+     * @return the current GelfMessage.
+     */
+    public GelfMessage addFields(Map<String, String> fields) {
+
+        if (fields == null) {
+            throw new IllegalArgumentException("fields is null");
+        }
+        getAdditonalFields().putAll(fields);
+        return this;
+    }
+
+    /**
+     * Add a particular field.
+     * 
+     * @param key
+     * @param value
+     * @return the current GelfMessage.
+     */
     public GelfMessage addField(String key, String value) {
         getAdditonalFields().put(key, value);
         return this;
@@ -255,10 +276,6 @@ public class GelfMessage {
 
     public Map<String, String> getAdditonalFields() {
         return additonalFields;
-    }
-
-    public void setAdditonalFields(Map<String, String> additonalFields) {
-        this.additonalFields = additonalFields;
     }
 
     public boolean isValid() {
@@ -289,6 +306,66 @@ public class GelfMessage {
 
     public String getField(String fieldName) {
         return getAdditonalFields().get(fieldName);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof GelfMessage)) {
+            return false;
+        }
+
+        GelfMessage that = (GelfMessage) o;
+
+        if (javaTimestamp != that.javaTimestamp) {
+            return false;
+        }
+        if (maximumMessageSize != that.maximumMessageSize) {
+            return false;
+        }
+        if (additonalFields != null ? !additonalFields.equals(that.additonalFields) : that.additonalFields != null) {
+            return false;
+        }
+        if (facility != null ? !facility.equals(that.facility) : that.facility != null) {
+            return false;
+        }
+        if (fullMessage != null ? !fullMessage.equals(that.fullMessage) : that.fullMessage != null) {
+            return false;
+        }
+        if (host != null ? !host.equals(that.host) : that.host != null) {
+            return false;
+        }
+        if (!Arrays.equals(hostBytes, that.hostBytes)) {
+            return false;
+        }
+        if (level != null ? !level.equals(that.level) : that.level != null) {
+            return false;
+        }
+        if (shortMessage != null ? !shortMessage.equals(that.shortMessage) : that.shortMessage != null) {
+            return false;
+        }
+        if (version != null ? !version.equals(that.version) : that.version != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = version != null ? version.hashCode() : 0;
+        result = 31 * result + (host != null ? host.hashCode() : 0);
+        result = 31 * result + (hostBytes != null ? Arrays.hashCode(hostBytes) : 0);
+        result = 31 * result + (shortMessage != null ? shortMessage.hashCode() : 0);
+        result = 31 * result + (fullMessage != null ? fullMessage.hashCode() : 0);
+        result = 31 * result + (int) (javaTimestamp ^ (javaTimestamp >>> 32));
+        result = 31 * result + (level != null ? level.hashCode() : 0);
+        result = 31 * result + (facility != null ? facility.hashCode() : 0);
+        result = 31 * result + (additonalFields != null ? additonalFields.hashCode() : 0);
+        result = 31 * result + maximumMessageSize;
+        return result;
     }
 
 }

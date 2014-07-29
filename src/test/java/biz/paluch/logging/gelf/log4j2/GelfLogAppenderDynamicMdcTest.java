@@ -16,8 +16,6 @@ import org.junit.Test;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
-/**
- */
 public class GelfLogAppenderDynamicMdcTest {
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String MDC_MY_MDC = "myMdc";
@@ -47,7 +45,7 @@ public class GelfLogAppenderDynamicMdcTest {
     @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
-        ThreadContext.clear();
+        ThreadContext.clearAll();
     }
 
     @Test

@@ -1,13 +1,22 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import java.util.logging.LogRecord;
-
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.NDC;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
+import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
+
+import java.util.logging.LogRecord;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -35,7 +44,9 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * .JBoss7GelfLogHandler.mdcFields=Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
- * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name. .JBoss7GelfLogHandler.dynamicMdcFields=mdc.*,[mdc|MDC]fields</li>
+ * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
+ * .JBoss7GelfLogHandler.dynamicMdcFields=mdc.*,[mdc|MDC]fields</li>
+ * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
  * <p/>
  * <a name="mdcProfiling"></a>
@@ -58,6 +69,11 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHandler {
 
     public JBoss7GelfLogHandler() {
+    }
+
+    protected void initializeDefaultFields() {
+        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
+                SourceMethodName, SourceSimpleClassName, LoggerName, NDC));
     }
 
     @Override
@@ -106,7 +122,16 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
         getGelfMessageAssembler().setMdcProfiling(mdcProfiling);
     }
 
+    public boolean isIncludeFullMdc() {
+        return getGelfMessageAssembler().isIncludeFullMdc();
+    }
+
+    public void setIncludeFullMdc(boolean includeFullMdc) {
+        getGelfMessageAssembler().setIncludeFullMdc(includeFullMdc);
+    }
+
     private MdcGelfMessageAssembler getGelfMessageAssembler() {
         return (MdcGelfMessageAssembler) gelfMessageAssembler;
     }
+
 }

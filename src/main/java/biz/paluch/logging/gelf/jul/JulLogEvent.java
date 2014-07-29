@@ -10,8 +10,10 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.IllegalFormatException;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -164,5 +166,10 @@ public class JulLogEvent implements LogEvent {
     @Override
     public String getMdcValue(String mdcName) {
         return null;
+    }
+
+    @Override
+    public Set<String> getMdcNames() {
+        return Collections.EMPTY_SET;
     }
 }

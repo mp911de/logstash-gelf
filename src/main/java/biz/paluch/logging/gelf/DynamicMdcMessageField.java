@@ -19,8 +19,7 @@ public class DynamicMdcMessageField implements MessageField {
         return regex;
     }
 
-    public Pattern getPattern()
-    {
+    public Pattern getPattern() {
         return pattern;
     }
 
@@ -34,8 +33,7 @@ public class DynamicMdcMessageField implements MessageField {
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return null;
     }
 }

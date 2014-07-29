@@ -1,14 +1,12 @@
 package biz.paluch.logging;
 
+import biz.paluch.logging.gelf.intern.Closer;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Filtering Facility for Stack-Traces. This is to shorten very long Traces. It leads to a very short Trace containing only the
@@ -64,8 +62,8 @@ import java.util.Set;
  */
 public class StackTraceFilter {
 
+    public static final String FILTER_SETTINGS = "/" + StackTraceFilter.class.getSimpleName() + ".packages";
     private static final String INDENT = "\t";
-    private static final String FILTER_SETTINGS = "/" + StackTraceFilter.class.getSimpleName() + ".packages";
 
     /**
      * List of Surpressed Packages.
@@ -73,12 +71,15 @@ public class StackTraceFilter {
     private static Set<String> suppressedPackages;
 
     static {
+        loadSetttings(FILTER_SETTINGS);
+    }
 
+    public static void loadSetttings(String resourceName) {
         InputStream is = null;
         try {
-            is = getStream();
+            is = getStream(resourceName);
             if (is == null) {
-                System.out.println("No " + FILTER_SETTINGS + " resource present, using defaults");
+                System.out.println("No " + resourceName + " resource present, using defaults");
                 suppressedPackages = new HashSet<String>(getDefaults());
             } else {
                 Properties p = new Properties();
@@ -87,26 +88,19 @@ public class StackTraceFilter {
             }
 
         } catch (IOException e) {
-            System.out.println("Could not parse " + FILTER_SETTINGS + " resource, using defaults");
+            System.out.println("Could not parse " + resourceName + " resource, using defaults");
             suppressedPackages = new HashSet<String>(getDefaults());
         } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                // ignore
-            }
+            Closer.close(is);
         }
-
     }
 
-    private static InputStream getStream() {
+    private static InputStream getStream(String resourceName) {
 
         Thread thread = Thread.currentThread();
-        InputStream is = StackTraceFilter.class.getResourceAsStream(FILTER_SETTINGS);
+        InputStream is = StackTraceFilter.class.getResourceAsStream(resourceName);
         if (is == null && thread.getContextClassLoader() != null) {
-            is = thread.getContextClassLoader().getResourceAsStream(FILTER_SETTINGS);
+            is = thread.getContextClassLoader().getResourceAsStream(resourceName);
         }
         return is;
     }
@@ -146,15 +140,10 @@ public class StackTraceFilter {
      */
     public static String getFilteredStackTrace(Throwable t, boolean shouldFilter) {
 
-        try {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            writeCleanStackTrace(t, pw, shouldFilter);
-            return sw.getBuffer().toString();
-        } catch (Exception e) {
-            System.out.println("Error filtering StackTrace: " + e.getMessage());
-            return e.toString();
-        }
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        writeCleanStackTrace(t, pw, shouldFilter);
+        return sw.getBuffer().toString();
     }
 
     private static void writeCleanStackTrace(Throwable t, PrintWriter s, boolean wantsFilter) {

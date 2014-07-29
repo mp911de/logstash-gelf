@@ -1,9 +1,11 @@
 package biz.paluch.logging.gelf.log4j2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
@@ -39,7 +41,7 @@ public class GelfLogAppenderMinimalTest {
     @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
-        ThreadContext.clear();
+        ThreadContext.clearAll();
     }
 
     @Test
@@ -57,12 +59,14 @@ public class GelfLogAppenderMinimalTest {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
-        logger.info(LOG_MESSAGE);
+        logger.info(new MarkerManager.Log4jMarker("test"), LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
+        assertNotNull(gelfMessage.getField("MyTime"));
+        assertEquals("test", gelfMessage.getAdditonalFields().get("Marker"));
         assertEquals("6", gelfMessage.getLevel());
 
     }

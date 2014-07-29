@@ -1,5 +1,13 @@
 package biz.paluch.logging.gelf.logback;
 
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
@@ -38,6 +46,7 @@ import ch.qos.logback.core.AppenderBase;
  * mdcFields=Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
  * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.</li>
+ * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
  * <p/>
  * <a name="mdcProfiling"></a>
@@ -67,7 +76,8 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
 
     public GelfLogbackAppender() {
         gelfMessageAssembler = new MdcGelfMessageAssembler();
-        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping());
+        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
+                SourceMethodName, SourceSimpleClassName, LoggerName, Marker));
     }
 
     @Override
@@ -77,7 +87,6 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
         }
 
         try {
-
             if (null == gelfSender) {
                 gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
             }
@@ -85,6 +94,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
             GelfMessage message = createGelfMessage(event);
             if (!message.isValid()) {
                 reportError("GELF Message is invalid: " + message.toJson(), null);
+                return;
             }
 
             if (null == gelfSender || !gelfSender.sendMessage(message)) {
@@ -217,5 +227,13 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
         for (String field : fields) {
             gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
         }
+    }
+
+    public boolean isIncludeFullMdc() {
+        return gelfMessageAssembler.isIncludeFullMdc();
+    }
+
+    public void setIncludeFullMdc(boolean includeFullMdc) {
+        gelfMessageAssembler.setIncludeFullMdc(includeFullMdc);
     }
 }

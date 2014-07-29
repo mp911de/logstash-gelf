@@ -1,4 +1,5 @@
 /**
- * Base utilities for GELF (Graylog Extended Logging Format).
+ * Field models and interfaces for logstash-gelf.
  */
 package biz.paluch.logging.gelf;
+

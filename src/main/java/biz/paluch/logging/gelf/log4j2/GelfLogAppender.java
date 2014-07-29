@@ -1,5 +1,23 @@
 package biz.paluch.logging.gelf.log4j2;
 
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.MdcMessageField;
+import biz.paluch.logging.gelf.StaticMessageField;
+import biz.paluch.logging.gelf.intern.Closer;
+import biz.paluch.logging.gelf.intern.ErrorReporter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
@@ -8,18 +26,8 @@ import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
-import org.apache.logging.log4j.core.helpers.Strings;
 import org.apache.logging.log4j.status.StatusLogger;
-
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import org.apache.logging.log4j.util.Strings;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -80,7 +88,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
  * <h3>MDC Fields</h3> <code>
     &lt;Field name="fieldName1" mdc="name of the MDC entry" /&gt;
  * </code>
- *
+ * 
  * <h3>Dynamic MDC Fields</h3> <code>
      &lt;DynamicMdcFields regex="mdc.*"  /&gt;
  * </code>
@@ -186,11 +194,13 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
      */
     @PluginFactory
     public static GelfLogAppender createAppender(@PluginAttribute("name") String name, @PluginElement("Filter") Filter filter,
-            @PluginElement("Field") final GelfLogField[] fields,@PluginElement("DynamicMdcFields") final GelfDynamicMdcLogFields[] dynamicFieldArray, @PluginAttribute("graylogHost") String graylogHost,
-            @PluginAttribute("host") String host, @PluginAttribute("graylogPort") String graylogPort,
-            @PluginAttribute("port") String port, @PluginAttribute("extractStackTrace") String extractStackTrace,
-            @PluginAttribute("facility") String facility, @PluginAttribute("filterStackTrace") String filterStackTrace,
-            @PluginAttribute("mdcProfiling") String mdcProfiling,
+            @PluginElement("Field") final GelfLogField[] fields,
+            @PluginElement("DynamicMdcFields") final GelfDynamicMdcLogFields[] dynamicFieldArray,
+            @PluginAttribute("graylogHost") String graylogHost, @PluginAttribute("host") String host,
+            @PluginAttribute("graylogPort") String graylogPort, @PluginAttribute("port") String port,
+            @PluginAttribute("extractStackTrace") String extractStackTrace,
+            @PluginAttribute("includeFullMdc") String includeFullMdc, @PluginAttribute("facility") String facility,
+            @PluginAttribute("filterStackTrace") String filterStackTrace, @PluginAttribute("mdcProfiling") String mdcProfiling,
             @PluginAttribute("maximumMessageSize") String maximumMessageSize) {
 
         MdcGelfMessageAssembler mdcGelfMessageAssembler = new MdcGelfMessageAssembler();
@@ -237,6 +247,10 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
             mdcGelfMessageAssembler.setMdcProfiling(mdcProfiling.equals("true"));
         }
 
+        if (includeFullMdc != null) {
+            mdcGelfMessageAssembler.setIncludeFullMdc(includeFullMdc.equals("true"));
+        }
+
         if (maximumMessageSize != null) {
             mdcGelfMessageAssembler.setMaximumMessageSize(Integer.parseInt(maximumMessageSize));
         }
@@ -245,22 +259,22 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
 
         GelfLogAppender result = new GelfLogAppender(name, filter, mdcGelfMessageAssembler);
 
-
         return result;
 
     }
 
     /**
      * Configure fields (literals, MDC, layout).
-     *
+     * 
      * @param mdcGelfMessageAssembler
      * @param fields
      * @param dynamicFieldArray
      */
     private static void configureFields(MdcGelfMessageAssembler mdcGelfMessageAssembler, GelfLogField[] fields,
-                                        GelfDynamicMdcLogFields[] dynamicFieldArray) {
-        if (fields == null) {
-            mdcGelfMessageAssembler.addFields(LogMessageField.getDefaultMapping());
+            GelfDynamicMdcLogFields[] dynamicFieldArray) {
+        if (fields == null || fields.length == 0) {
+            mdcGelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
+                    SourceMethodName, SourceSimpleClassName, LoggerName, Marker));
             return;
         }
 
@@ -279,10 +293,8 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
             }
         }
 
-        if(dynamicFieldArray != null)
-        {
-            for (GelfDynamicMdcLogFields gelfDynamicMdcLogFields : dynamicFieldArray)
-            {
+        if (dynamicFieldArray != null) {
+            for (GelfDynamicMdcLogFields gelfDynamicMdcLogFields : dynamicFieldArray) {
                 mdcGelfMessageAssembler.addField(new DynamicMdcMessageField(gelfDynamicMdcLogFields.getRegex()));
             }
         }
@@ -298,6 +310,7 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
             GelfMessage message = createGelfMessage(event);
             if (!message.isValid()) {
                 reportError("GELF Message is invalid: " + message.toJson(), null);
+                return;
             }
 
             if (null == gelfSender || !gelfSender.sendMessage(message)) {
@@ -319,7 +332,7 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
     @Override
     public void stop() {
         if (null != gelfSender) {
-            gelfSender.close();
+            Closer.close(gelfSender);
             gelfSender = null;
         }
         super.stop();

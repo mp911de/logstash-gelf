@@ -1,17 +1,25 @@
 package biz.paluch.logging.gelf.log4j;
 
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.spi.LoggingEvent;
-
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.NDC;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
+import biz.paluch.logging.gelf.intern.Closer;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -40,6 +48,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
  * mdcFields=Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
  * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.</li>
+ * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
  * <p/>
  * <a name="mdcProfiling"></a>
@@ -66,7 +75,8 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
 
     public GelfLogAppender() {
         gelfMessageAssembler = new MdcGelfMessageAssembler();
-        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping());
+        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
+                SourceMethodName, SourceSimpleClassName, LoggerName, NDC));
     }
 
     @Override
@@ -83,6 +93,7 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
             GelfMessage message = createGelfMessage(event);
             if (!message.isValid()) {
                 reportError("GELF Message is invalid: " + message.toJson(), null);
+                return;
             }
 
             if (null == gelfSender || !gelfSender.sendMessage(message)) {
@@ -105,7 +116,7 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
     @Override
     public void close() {
         if (null != gelfSender) {
-            gelfSender.close();
+            Closer.close(gelfSender);
             gelfSender = null;
         }
     }
@@ -228,5 +239,13 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
         for (String field : fields) {
             gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
         }
+    }
+
+    public boolean isIncludeFullMdc() {
+        return gelfMessageAssembler.isIncludeFullMdc();
+    }
+
+    public void setIncludeFullMdc(boolean includeFullMdc) {
+        gelfMessageAssembler.setIncludeFullMdc(includeFullMdc);
     }
 }

@@ -21,6 +21,8 @@ By default, following fields are used in the gelf message:
 * SourceMethodName
 * Server
 * LoggerName (Name of the logger/category)
+* Marker (logback/log4j2)
+* NDC (JBossAS7/log4j 1.2.x)
 
 ## Override
 
@@ -48,6 +50,8 @@ You can use following field names (case insensitive, see also [biz.paluch.loggin
 * SourceMethodName
 * Server
 * LoggerName
+* Marker
+* NDC
 
 
 **Example**

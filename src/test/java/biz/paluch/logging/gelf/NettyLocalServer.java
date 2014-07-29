@@ -1,13 +1,16 @@
 package biz.paluch.logging.gelf;
 
-import java.util.List;
-
 import io.netty.bootstrap.Bootstrap;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.AdaptiveRecvByteBufAllocator;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.ServerChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioDatagramChannel;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -18,19 +21,33 @@ public class NettyLocalServer {
     private int port = 19392;
     private EventLoopGroup group = new NioEventLoopGroup();
     private GelfInboundHandler handler = new GelfInboundHandler();
+    private Class<? extends Channel> channelClass;
 
     private ChannelFuture f;
 
-    public NettyLocalServer() {
+    public NettyLocalServer(Class<? extends Channel> channelClass) {
+        this.channelClass = channelClass;
     }
 
     public void run() throws Exception {
-        Bootstrap b = new Bootstrap();
-        b.group(group);
-        b.channel(NioDatagramChannel.class).handler(handler).option(ChannelOption.SO_BROADCAST, true);
+        if (ServerChannel.class.isAssignableFrom(channelClass)) {
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(group);
+            b.channel((Class) channelClass)
+                    .childHandler(handler)
+                    .childOption(ChannelOption.RCVBUF_ALLOCATOR,
+                            new AdaptiveRecvByteBufAllocator(8192, 8192, Integer.MAX_VALUE));
 
-        // Bind and start to accept incoming connections.
-        f = b.bind(port).sync();
+            // Bind and start to accept incoming connections.
+            f = b.bind(port).sync();
+        } else {
+            Bootstrap b = new Bootstrap();
+            b.group(group);
+            b.channel((Class) channelClass).handler(handler);
+
+            // Bind and start to accept incoming connections.
+            f = b.bind(port).sync();
+        }
 
     }
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+
+<configuration debug="true">
+    <contextName>test</contextName>
+    <jmxConfigurator />
+
+    <appender name="GELF" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
+        <graylogHost>test:localhost</graylogHost>
+        <graylogPort>12201</graylogPort>
+        <additionalFields>
+            propertyField1=${user.language},propertyField2=${myproperty},propertyField3=${otherproperty:fallback},propertyField4=embedded${myproperty}property
+        </additionalFields>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="GELF" />
+    </root>
+</configuration>
