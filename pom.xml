@@ -62,6 +62,7 @@
         <jedis-commons-pool2.version>2.2</jedis-commons-pool2.version>
         <slf4j-api.version>1.7.5</slf4j-api.version>
         <logback-classic.version>1.0.13</logback-classic.version>
+        <org.jboss.logmanager.version>1.5.2.Final</org.jboss.logmanager.version>
 
         <site-plugin.version>3.3</site-plugin.version>
         <maven-javadoc-plugin.version>2.7</maven-javadoc-plugin.version>
@@ -289,6 +290,13 @@
             <version>${jedis-commons-pool2.version}</version>
         </dependency>
 
+		<!--JBoss Logging -->
+		<dependency>
+			<groupId>org.jboss.logmanager</groupId>
+			<artifactId>jboss-logmanager</artifactId>
+			<version>${org.jboss.logmanager.version}</version>
+			<scope>provided</scope>
+		</dependency>
     </dependencies>
 
     <reporting>

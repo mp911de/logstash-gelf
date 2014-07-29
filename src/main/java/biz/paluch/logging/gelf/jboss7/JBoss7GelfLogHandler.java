@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf.jboss7;
 
+
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.NDC;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
@@ -8,6 +9,10 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethod
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+
+import java.util.logging.LogRecord;
+import org.jboss.logmanager.ExtLogRecord;
+
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.LogMessageField;
@@ -15,8 +20,6 @@ import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
-
-import java.util.logging.LogRecord;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -77,12 +80,17 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
     }
 
     @Override
+    public void publish(LogRecord record) {
+        super.publish(ExtLogRecord.wrap(record));
+    }
+
+    @Override
     protected GelfMessageAssembler createGelfMessageAssembler() {
         return new MdcGelfMessageAssembler();
     }
 
     protected GelfMessage createGelfMessage(final LogRecord record) {
-        return getGelfMessageAssembler().createGelfMessage(new JBoss7JulLogEvent(record));
+        return getGelfMessageAssembler().createGelfMessage(new JBoss7JulLogEvent((ExtLogRecord)record));
     }
 
     public void setAdditionalFields(String fieldSpec) {
