@@ -4,17 +4,20 @@ import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.getJBoss7GelfLogH
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import org.apache.log4j.MDC;
-import org.apache.log4j.NDC;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
+import org.jboss.logmanager.ExtLogRecord;
+import org.jboss.logmanager.MDC;
+import org.jboss.logmanager.NDC;
+import org.junit.Before;
+import org.junit.Test;
+
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -28,9 +31,7 @@ public class JBoss7GelfLogHandlerTest {
     @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
-
         LogManager.getLogManager().reset();
-
         MDC.remove("mdcField1");
     }
 
@@ -143,7 +144,7 @@ public class JBoss7GelfLogHandlerTest {
 
         handler.setGraylogHost(null);
         handler.setGraylogPort(0);
-        handler.createGelfMessage(new LogRecord(Level.ALL, LOG_MESSAGE));
+        handler.createGelfMessage(ExtLogRecord.wrap(new LogRecord(Level.ALL, LOG_MESSAGE)));
 
     }
 }

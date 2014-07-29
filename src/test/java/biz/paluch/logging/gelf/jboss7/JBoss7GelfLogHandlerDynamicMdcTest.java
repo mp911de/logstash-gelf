@@ -4,12 +4,10 @@ import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.getJBoss7GelfLogH
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import org.apache.log4j.MDC;
+import org.jboss.logmanager.MDC;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,19 +33,8 @@ public class JBoss7GelfLogHandlerDynamicMdcTest
     @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
-
-        JBoss7GelfLogHandler handler = getLogHandler();
         LogManager.getLogManager().reset();
-
-        if (MDC.getContext() != null && MDC.getContext().keySet() != null) {
-
-            Set<String> keys = new HashSet<String>(MDC.getContext().keySet());
-
-            for (String key : keys) {
-                MDC.remove(key);
-            }
-        }
-        org.slf4j.MDC.clear();
+        MDC.clear();
     }
 
     @Test
@@ -117,9 +104,9 @@ public class JBoss7GelfLogHandlerDynamicMdcTest
         Logger logger = Logger.getLogger(getClass().getName());
         logger.addHandler(handler);
 
-        org.apache.log4j.MDC.put(MDC_MY_MDC, VALUE_1);
-        org.slf4j.MDC.put(MY_MDC_WITH_SUFFIX1, VALUE_2);
-        org.slf4j.MDC.put(MY_MDC_WITH_SUFFIX2, VALUE_3);
+        MDC.put(MDC_MY_MDC, VALUE_1);
+        MDC.put(MY_MDC_WITH_SUFFIX1, VALUE_2);
+        MDC.put(MY_MDC_WITH_SUFFIX2, VALUE_3);
 
         logger.info(LOG_MESSAGE);
         assertEquals(1, GelfTestSender.getMessages().size());
