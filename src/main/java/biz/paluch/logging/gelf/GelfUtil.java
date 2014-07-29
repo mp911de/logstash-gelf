@@ -26,6 +26,8 @@ public class GelfUtil {
      */
     public static final String MDC_REQUEST_DURATION = "profiling.requestDuration";
 
+    public static final String MDC_REQUEST_DURATION_MILLIS = "profiling.requestDuration.millis";
+
     private GelfUtil() {
 
     }
@@ -50,17 +52,18 @@ public class GelfUtil {
 
         if (timestamp > 0) {
             long now = System.currentTimeMillis();
-            long duration = now - timestamp;
+            long durationMs = now - timestamp;
 
             String durationText;
 
-            if (duration > 10000) {
-                duration = duration / 1000;
-                durationText = duration + "sec";
+            if (durationMs > 10000) {
+                long durationSec = durationMs / 1000;
+                durationText = durationSec + "sec";
             } else {
-                durationText = duration + "ms";
+                durationText = durationMs + "ms";
             }
             gelfMessage.addField(MDC_REQUEST_DURATION, durationText);
+            gelfMessage.addField(MDC_REQUEST_DURATION_MILLIS, "" + durationMs);
             gelfMessage.addField(MDC_REQUEST_END, new Date(now).toString());
         }
     }
