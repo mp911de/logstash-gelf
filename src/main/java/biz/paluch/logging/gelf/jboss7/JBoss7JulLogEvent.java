@@ -1,5 +1,10 @@
 package biz.paluch.logging.gelf.jboss7;
 
+
+import java.util.Set;
+
+import org.jboss.logmanager.ExtLogRecord;
+
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogMessageField;
@@ -7,12 +12,6 @@ import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.MessageField;
 import biz.paluch.logging.gelf.Values;
 import biz.paluch.logging.gelf.jul.JulLogEvent;
-import org.apache.log4j.MDC;
-import org.apache.log4j.NDC;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.LogRecord;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -20,14 +19,18 @@ import java.util.logging.LogRecord;
  */
 public class JBoss7JulLogEvent extends JulLogEvent {
 
-    public JBoss7JulLogEvent(LogRecord logRecord) {
+    private ExtLogRecord extLogRecord;
+    
+    public JBoss7JulLogEvent(ExtLogRecord logRecord) {
         super(logRecord);
+        this.extLogRecord = logRecord;
     }
-
+    
+    
     @Override
     public Values getValues(MessageField field) {
         if (field instanceof MdcMessageField) {
-            return new Values(field.getName(), getValue((MdcMessageField) field));
+            return new Values(field.getName(), getMdcValue(((MdcMessageField) field).getMdcName()));
         }
 
         if (field instanceof DynamicMdcMessageField) {
@@ -41,7 +44,7 @@ public class JBoss7JulLogEvent extends JulLogEvent {
     public String getValue(LogMessageField field) {
         switch (field.getNamedLogField()) {
             case NDC:
-                String ndc = NDC.get();
+                String ndc = this.extLogRecord.getNdc();
                 if (ndc != null && !"".equals(ndc)) {
                     return ndc;
                 }
@@ -68,31 +71,12 @@ public class JBoss7JulLogEvent extends JulLogEvent {
     }
 
     private Set<String> getAllMdcNames() {
-        Set<String> mdcNames = new HashSet<String>();
-
-        if (MDC.getContext() != null) {
-            mdcNames.addAll(MDC.getContext().keySet());
-        }
-
-        if (org.slf4j.MDC.getCopyOfContextMap() != null) {
-            mdcNames.addAll(org.slf4j.MDC.getCopyOfContextMap().keySet());
-        }
-        return mdcNames;
-    }
-
-    private String getValue(MdcMessageField field) {
-
-        return getMdcValue(field.getMdcName());
+        return extLogRecord.getMdcCopy().keySet();
     }
 
     @Override
     public String getMdcValue(String mdcName) {
-        Object value = MDC.get(mdcName);
-        if (value != null) {
-            return value.toString();
-        }
-        String slf4jValue = org.slf4j.MDC.get(mdcName);
-        return slf4jValue;
+        return extLogRecord.getMdc(mdcName);
     }
 
     @Override
