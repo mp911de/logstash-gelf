@@ -4,32 +4,31 @@
         <href>http://logging.paluch.biz/</href>
     </bannerLeft>
 
-
     <body>
         <menu name="Overview">
-            <item name="Introduction" href="index.html"/>
-            <item name="Download" href="download.html"/>
+            <item name="Introduction" href="index.html" />
+            <item name="Download" href="download.html" />
         </menu>
 
         <menu name="Examples">
-			<item name="Java Util Logging" href="examples/jul.html"/>
-			<item name="log4j v1.2.x" href="examples/log4j-1.2.x.html"/>
-			<item name="log4j v2.x" href="examples/log4j-2.x.html"/>
+            <item name="Java Util Logging" href="examples/jul.html" />
+            <item name="log4j v1.2.x" href="examples/log4j-1.2.x.html" />
+            <item name="log4j v2.x" href="examples/log4j-2.x.html" />
             <item name="JBoss AS7/Wildfly" href="examples/jbossas7.html" />
-            <item name="Logback" href="examples/logback.html"/>
+            <item name="Logback" href="examples/logback.html" />
         </menu>
 
         <menu name="Documentation">
-            <item name="MDC Profiling" href="mdcprofiling.html"/>
-            <item name="Hostname Lookup" href="hostname-lookup.html"/>
-            <item name="Default Fields" href="default-fields.html"/>
+            <item name="MDC Profiling" href="mdcprofiling.html" />
+            <item name="Hostname Lookup" href="hostname-lookup.html" />
+            <item name="Default Fields" href="default-fields.html" />
         </menu>
 
         <menu name="Project Documentation">
-            <item name="JavaDoc" href="apidocs/index.html"/>
+            <item name="JavaDoc" href="apidocs/index.html" />
         </menu>
 
-        <menu ref="reports"/>
+        <menu ref="reports" />
     </body>
 
 
