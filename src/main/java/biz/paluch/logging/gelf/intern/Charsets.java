@@ -3,7 +3,7 @@ package biz.paluch.logging.gelf.intern;
 import java.nio.charset.Charset;
 
 /**
- * @author <a href="mailto:mark.paluch@1und1.de">Mark Paluch</a>
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 17.07.14 10:45
  */
 class Charsets {

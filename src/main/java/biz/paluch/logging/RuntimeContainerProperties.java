@@ -3,7 +3,7 @@ package biz.paluch.logging;
 /**
  * Collection of property names in order to control host name/host name resolution.
  * 
- * @author <a href="mailto:mark.paluch@1und1.de">Mark Paluch</a>
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 11.04.14 12:30
  */
 public class RuntimeContainerProperties {

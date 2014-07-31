@@ -4,7 +4,7 @@ import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 
 /**
- * @author <a href="mailto:mark.paluch@1und1.de">Mark Paluch</a>
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 17.07.14 12:12
  */
 public class DummyFilter implements Filter {
