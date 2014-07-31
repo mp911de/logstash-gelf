@@ -36,5 +36,10 @@ public class DatenpumpeImplTest {
 
         assertEquals(3, gelfMessage.getAdditonalFields().size());
 
+        datenpumpe.close();
+
+        // additional check for NPE
+        datenpumpe.close();
+
     }
 }

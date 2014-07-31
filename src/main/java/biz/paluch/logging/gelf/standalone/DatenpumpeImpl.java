@@ -65,4 +65,10 @@ public class DatenpumpeImpl implements Datenpumpe {
 
         submit(fields);
     }
+
+    public void close() {
+        if (gelfSender != null) {
+            gelfSender.close();
+        }
+    }
 }
