@@ -42,4 +42,26 @@ public class DatenpumpeImplTest {
         datenpumpe.close();
 
     }
+
+    @Test
+    public void testShoppingCart() throws Exception {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setCartId("the cart id");
+        shoppingCart.setAmount(9.27);
+        shoppingCart.setCustomerId("the customer id");
+
+        DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
+        configuration.setHost("test:static");
+
+        DatenpumpeImpl datenpumpe = new DatenpumpeImpl(configuration);
+
+        datenpumpe.submit(shoppingCart);
+
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        System.out.println(gelfMessage.toJson());
+
+    }
 }

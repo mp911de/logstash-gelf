@@ -4,11 +4,7 @@ import biz.paluch.logging.gelf.intern.Closer;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Field with reference to the log event.
@@ -64,29 +60,35 @@ public class LogMessageField implements MessageField {
     }
 
     public static List<LogMessageField> getDefaultMapping(NamedLogField... supportedFields) {
+        return getDefaultMapping(true, supportedFields);
+    }
+
+    public static List<LogMessageField> getDefaultMapping(boolean readFromDefaultsFile, NamedLogField... supportedFields) {
 
         List<LogMessageField> result = new ArrayList<LogMessageField>();
         List<NamedLogField> supportedLogFields = Arrays.asList(supportedFields);
-        InputStream is = null;
-        try {
-            is = getStream();
 
-            if (is == null) {
-                System.out.println("No " + DEFAULT_MAPPING + " resource present, using defaults");
-            } else {
-                Properties p = new Properties();
-                p.load(is);
+        if (readFromDefaultsFile) {
+            InputStream is = null;
 
-                if (!p.isEmpty()) {
-                    loadFields(p, result, supportedLogFields);
+            try {
+                is = getStream();
+
+                if (is == null) {
+                    System.out.println("No " + DEFAULT_MAPPING + " resource present, using defaults");
+                } else {
+                    Properties p = new Properties();
+                    p.load(is);
+
+                    if (!p.isEmpty()) {
+                        loadFields(p, result, supportedLogFields);
+                    }
                 }
-
+            } catch (IOException e) {
+                System.out.println("Could not parse " + DEFAULT_MAPPING + " resource, using defaults");
+            } finally {
+                Closer.close(is);
             }
-
-        } catch (IOException e) {
-            System.out.println("Could not parse " + DEFAULT_MAPPING + " resource, using defaults");
-        } finally {
-            Closer.close(is);
         }
 
         if (result.isEmpty()) {

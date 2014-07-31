@@ -57,6 +57,30 @@ public abstract class AbstractGelfLogAppenderTest {
     }
 
     @Test
+    public void testSimpleWarn() throws Exception {
+
+        Logger logger = lc.getLogger(getClass());
+
+        logger.warn(LOG_MESSAGE);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("4", gelfMessage.getLevel());
+    }
+
+    @Test
+    public void testSimpleError() throws Exception {
+
+        Logger logger = lc.getLogger(getClass());
+
+        logger.error(LOG_MESSAGE);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("3", gelfMessage.getLevel());
+    }
+
+    @Test
     public void testMarker() throws Exception {
 
         Logger logger = lc.getLogger(getClass());

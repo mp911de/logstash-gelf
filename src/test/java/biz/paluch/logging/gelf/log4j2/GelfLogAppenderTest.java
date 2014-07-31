@@ -80,6 +80,42 @@ public class GelfLogAppenderTest {
     }
 
     @Test
+    public void testSimpleWarn() throws Exception {
+
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.warn(LOG_MESSAGE);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("4", gelfMessage.getLevel());
+
+    }
+
+    @Test
+    public void testSimpleError() throws Exception {
+
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.error(LOG_MESSAGE);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("3", gelfMessage.getLevel());
+
+    }
+
+    @Test
+    public void testSimpleFatal() throws Exception {
+
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.fatal(LOG_MESSAGE);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("2", gelfMessage.getLevel());
+
+    }
+
+    @Test
     public void testMDC() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());

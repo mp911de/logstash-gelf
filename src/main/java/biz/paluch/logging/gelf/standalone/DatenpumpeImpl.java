@@ -37,7 +37,8 @@ public class DatenpumpeImpl implements Datenpumpe {
             fields.put(entry.getKey(), entry.getValue().toString());
         }
 
-        GelfMessage gelfMessage = GelfMessageBuilder.newInstance().withFields(fields).build();
+        GelfMessage gelfMessage = GelfMessageBuilder.newInstance().withJavaTimestamp(System.currentTimeMillis())
+                .withFields(fields).build();
         submit(gelfMessage);
     }
 
