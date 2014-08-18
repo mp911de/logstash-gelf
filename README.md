@@ -55,6 +55,8 @@ biz.paluch.logging.gelf.jul.GelfLogHandler.extractStackTrace=true
 biz.paluch.logging.gelf.jul.GelfLogHandler.filterStackTrace=true
 biz.paluch.logging.gelf.jul.GelfLogHandler.timestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
 biz.paluch.logging.gelf.jul.GelfLogHandler.maximumMessageSize=8192
+
+# This are static fields
 biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
 biz.paluch.logging.gelf.jul.GelfLogHandler.level=INFO
 ```
@@ -76,7 +78,11 @@ log4j.appender.gelf.FilterStackTrace=true
 log4j.appender.gelf.MdcProfiling=true
 log4j.appender.gelf.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
 log4j.appender.gelf.MaximumMessageSize=8192
+
+# This are static fields
 log4j.appender.gelf.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
+
+# This are fields using MDC
 log4j.appender.gelf.MdcFields=mdcField1,mdcField2
 log4j.appender.gelf.DynamicMdcFields=mdc.*,(mdc|MDC)fields
 log4j.appender.gelf.IncludeFullMdc=true
@@ -95,7 +101,11 @@ XML:
     <param name="MdcProfiling" value="true" />
     <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
     <param name="MaximumMessageSize" value="8192" />
+    
+    <!-- This are static fields -->
     <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
+    
+    <!-- This are fields using MDC -->
     <param name="MdcFields" value="mdcField1,mdcField2" />
     <param name="DynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
     <param name="IncludeFullMdc" value="true" />
@@ -207,7 +217,7 @@ standalone.xml
         <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
         <property name="maximumMessageSize" value="8192" />
         
-        <!-- This is are static fields -->
+        <!-- This are static fields -->
         <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
         
         <!-- This are fields using MDC -->
@@ -240,7 +250,7 @@ logback.xml Example:
         <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
         <maximumMessageSize>8192</maximumMessageSize>
         
-        <!-- This is are static fields -->
+        <!-- This are static fields -->
         <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
         
         <!-- This are fields using MDC -->
@@ -303,12 +313,12 @@ MDC Profiling
 --------------
 MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must set one value in the MDC:
 
-`profiling.requestStart.millis`: Time Millis of the Request-Start (Long or String)
+`profiling.requestStart.millis` Time Millis of the Request-Start (Long or String)
 
 Two values are set by the Log Appender:
 
- * `profiling.requestEnd`: End-Time of the Request-End in Date.toString-representation
- * `profiling.requestDuration`: Duration of the request (e.g. 205ms, 16sec)
+ * `profiling.requestEnd` End-Time of the Request-End in Date.toString-representation
+ * `profiling.requestDuration` Duration of the request (e.g. 205ms, 16sec)
 
 <a name="redis"/>Notes on redis Connection
 --------------
