@@ -1,33 +1,21 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.Closer;
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
+import static org.apache.logging.log4j.core.layout.PatternLayout.*;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
-import org.apache.logging.log4j.core.config.plugins.Plugin;
-import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
-import org.apache.logging.log4j.core.config.plugins.PluginElement;
-import org.apache.logging.log4j.core.config.plugins.PluginFactory;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.plugins.*;
+import org.apache.logging.log4j.core.impl.Log4jLogEvent;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.apache.logging.log4j.util.Strings;
+
+import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.intern.*;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -42,6 +30,7 @@ import org.apache.logging.log4j.util.Strings;
  * </ul>
  * </li>
  * <li>port (Optional): Port, default 12201</li>
+ * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
@@ -178,27 +167,16 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
 
     /**
      * 
-     * @param name
-     * @param filter
-     * @param fields
-     * @param graylogHost
-     * @param host
-     * @param graylogPort
-     * @param port
-     * @param extractStackTrace
-     * @param facility
-     * @param filterStackTrace
-     * @param mdcProfiling
-     * @param maximumMessageSize
      * @return GelfLogAppender
      */
     @PluginFactory
-    public static GelfLogAppender createAppender(@PluginAttribute("name") String name, @PluginElement("Filter") Filter filter,
+    public static GelfLogAppender createAppender(@PluginConfiguration final Configuration config,
+            @PluginAttribute("name") String name, @PluginElement("Filter") Filter filter,
             @PluginElement("Field") final GelfLogField[] fields,
             @PluginElement("DynamicMdcFields") final GelfDynamicMdcLogFields[] dynamicFieldArray,
             @PluginAttribute("graylogHost") String graylogHost, @PluginAttribute("host") String host,
             @PluginAttribute("graylogPort") String graylogPort, @PluginAttribute("port") String port,
-            @PluginAttribute("extractStackTrace") String extractStackTrace,
+            @PluginAttribute("extractStackTrace") String extractStackTrace, @PluginAttribute("originHost") String originHost,
             @PluginAttribute("includeFullMdc") String includeFullMdc, @PluginAttribute("facility") String facility,
             @PluginAttribute("filterStackTrace") String filterStackTrace, @PluginAttribute("mdcProfiling") String mdcProfiling,
             @PluginAttribute("maximumMessageSize") String maximumMessageSize) {
@@ -229,6 +207,13 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
 
         if (Strings.isNotEmpty(graylogPort)) {
             mdcGelfMessageAssembler.setPort(Integer.parseInt(graylogPort));
+        }
+
+        if (Strings.isNotEmpty(originHost)) {
+            PatternLayout patternLayout = newBuilder().withPattern(originHost).withConfiguration(config)
+                    .withNoConsoleNoAnsi(false).withAlwaysWriteExceptions(false).build();
+
+            mdcGelfMessageAssembler.setOriginHost(patternLayout.toSerializable(new Log4jLogEvent()));
         }
 
         if (facility != null) {

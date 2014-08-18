@@ -1,8 +1,6 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +9,6 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import biz.paluch.logging.RuntimeContainer;
@@ -24,12 +21,12 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 public class GelfLogAppenderTest {
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+    public static final String CONFIG_XML = "log4j2.xml";
 
     private static LoggerContext loggerContext;
 
-    @BeforeClass
-    public static void setupClass() {
-        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2.xml");
+    protected static void reconfigure(String configXml) {
+        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, configXml);
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
     }
@@ -42,6 +39,7 @@ public class GelfLogAppenderTest {
 
     @Before
     public void before() throws Exception {
+        reconfigure(CONFIG_XML);
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
     }
@@ -77,6 +75,45 @@ public class GelfLogAppenderTest {
 
         assertEquals(GelfLogAppenderTest.class.getSimpleName(), gelfMessage.getField("simpleClassName"));
 
+    }
+
+    @Test
+    public void testFqdnHost() throws Exception {
+
+        reconfigure("log4j2-origin-host-fqdn.xml");
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals(RuntimeContainer.FQDN_HOSTNAME, gelfMessage.getHost());
+    }
+
+    @Test
+    public void testSimpleHost() throws Exception {
+
+        reconfigure("log4j2-origin-host-simple.xml");
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals(RuntimeContainer.HOSTNAME, gelfMessage.getHost());
+    }
+
+    @Test
+    public void testCustomHost() throws Exception {
+
+        reconfigure("log4j2-origin-host-custom.xml");
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("my.custom.host", gelfMessage.getHost());
     }
 
     @Test
@@ -138,22 +175,22 @@ public class GelfLogAppenderTest {
     @Test
     public void testFactory() throws Exception {
         GelfLogAppender result = GelfLogAppender.createAppender(null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null);
+
+        assertNull(result);
+
+        result = GelfLogAppender.createAppender(null, "name", null, null, null, null, null, null, null, null, null, null, null,
+                null, null, null);
+
+        assertNull(result);
+
+        result = GelfLogAppender.createAppender(null, "name", null, null, null, null, "host", null, null, null, null, null,
                 null, null, null, null);
-
-        assertNull(result);
-
-        result = GelfLogAppender.createAppender("name", null, null, null, null, null, null, null, null, null, null, null, null,
-                null);
-
-        assertNull(result);
-
-        result = GelfLogAppender.createAppender("name", null, null, null, null, "host", null, null, null, null, null, null,
-                null, null);
 
         assertNotNull(result);
 
-        result = GelfLogAppender.createAppender("name", null, null, null, null, "host", null, null, null, null, "facility",
-                null, null, null);
+        result = GelfLogAppender.createAppender(null, "name", null, null, null, null, "host", null, null, null, null, null,
+                "facility", null, null, null);
 
         assertNotNull(result);
 

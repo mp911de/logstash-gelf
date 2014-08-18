@@ -10,7 +10,7 @@ Following settings can be used:
  * port (since 1.2, Optional): Port, default 12201
  * graylogHost (until 1.1, Mandatory): Hostname/IP-Address of the Logstash Host
  * graylogPort (until 1.1, Optional): Port, default 12201
- * originHost (Optional): Originating Hostname, default FQDN Hostname
+ * originHost (Optional): Originating Hostname, default FQDN Hostname (Patterns can be used)
  * extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false
  * filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
  * mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false. See [MDC Profiling](../mdcprofiling.html) for details.
@@ -67,7 +67,8 @@ XML:
     <Configuration>
         <Appenders>
             <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="12201" extractStackTrace="true"
-                  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192">
+                  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
+                  originHost="my.host.name">
                 <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
                 <Field name="level" pattern="%level" />
                 <Field name="simpleClassName" pattern="%C{1}" />
