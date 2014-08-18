@@ -170,8 +170,12 @@ XML:
             <Field name="className" pattern="%C" />
             <Field name="server" pattern="%host" />
             <Field name="server.fqdn" pattern="%host{fqdn}" />
-            <Field name="fieldName2" literal="fieldValue2" /> <!-- This is a static field -->
-            <Field name="mdcField2" mdc="mdcField2" /> <!-- This is a field using MDC -->
+            
+            <!-- This is a static field -->
+            <Field name="fieldName2" literal="fieldValue2" />
+             
+            <!-- This is a field using MDC -->
+            <Field name="mdcField2" mdc="mdcField2" /> 
             <DynamicMdcFields regex="mdc.*" />
             <DynamicMdcFields regex="(mdc|MDC)fields" />
         </Gelf>
@@ -202,7 +206,11 @@ standalone.xml
         <property name="mdcProfiling" value="true" />
         <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
         <property name="maximumMessageSize" value="8192" />
+        
+        <!-- This is are static fields -->
         <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
+        
+        <!-- This are fields using MDC -->
         <property name="mdcFields" value="mdcField1,mdcField2" />
         <property name="dynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
         <property name="includeFullMdc" value="true" />
@@ -231,7 +239,11 @@ logback.xml Example:
         <mdcProfiling>true</mdcProfiling>
         <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
         <maximumMessageSize>8192</maximumMessageSize>
+        
+        <!-- This is are static fields -->
         <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
+        
+        <!-- This are fields using MDC -->
         <mdcFields>mdcField1,mdcField2</mdcFields>
         <dynamicMdcFields>mdc.*,(mdc|MDC)fields</dynamicMdcFields>
         <includeFullMdc>true</includeFullMdc>
@@ -262,8 +274,8 @@ Settings
 --------------
 Following settings can be used:
 
-Basic Properties
----------------
+### Basic Properties
+
 * `host` (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash or Redis Host
     * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
     * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
@@ -278,8 +290,8 @@ Basic Properties
 * `facility` (Optional): Name of the Facility, default logstash-gelf
 * `threshold`/`level` (Optional): Log-Level, default INFO
 
-Advanced Properties
----------------
+### Advanced Properties
+
 * `filter` (Optional): Class-Name of a Log-Filter, default none
 * `mdcProfiling` (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false
 * `additionalFields` (Optional): Post additional fields. Example: .GelfLogHandler.additionalFields=fieldName=Value
@@ -291,12 +303,12 @@ MDC Profiling
 --------------
 MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must set one value in the MDC:
 
-profiling.requestStart.millis: Time Millis of the Request-Start (Long or String)
+`profiling.requestStart.millis`: Time Millis of the Request-Start (Long or String)
 
 Two values are set by the Log Appender:
 
- * profiling.requestEnd: End-Time of the Request-End in Date.toString-representation
- * profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)
+ * `profiling.requestEnd`: End-Time of the Request-End in Date.toString-representation
+ * `profiling.requestDuration`: Duration of the request (e.g. 205ms, 16sec)
 
 <a name="redis"/>Notes on redis Connection
 --------------
