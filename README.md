@@ -42,20 +42,22 @@ or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-ge
 --------------
 Properties:
 
-    handlers = biz.paluch.logging.gelf.jul.GelfLogHandler, java.util.logging.ConsoleHandler
+```properties
+handlers = biz.paluch.logging.gelf.jul.GelfLogHandler, java.util.logging.ConsoleHandler
 
-    .handlers = biz.paluch.logging.gelf.jul.GelfLogHandler, java.util.logging.ConsoleHandler
-    .level = INFO
+.handlers = biz.paluch.logging.gelf.jul.GelfLogHandler, java.util.logging.ConsoleHandler
+.level = INFO
 
-    biz.paluch.logging.gelf.jul.GelfLogHandler.host=udp:localhost
-    biz.paluch.logging.gelf.jul.GelfLogHandler.port=12201
-    biz.paluch.logging.gelf.jul.GelfLogHandler.facility=java-test
-    biz.paluch.logging.gelf.jul.GelfLogHandler.extractStackTrace=true
-    biz.paluch.logging.gelf.jul.GelfLogHandler.filterStackTrace=true
-    biz.paluch.logging.gelf.jul.GelfLogHandler.timestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
-    biz.paluch.logging.gelf.jul.GelfLogHandler.maximumMessageSize=8192
-    biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
-    biz.paluch.logging.gelf.jul.GelfLogHandler.level=INFO
+biz.paluch.logging.gelf.jul.GelfLogHandler.host=udp:localhost
+biz.paluch.logging.gelf.jul.GelfLogHandler.port=12201
+biz.paluch.logging.gelf.jul.GelfLogHandler.facility=java-test
+biz.paluch.logging.gelf.jul.GelfLogHandler.extractStackTrace=true
+biz.paluch.logging.gelf.jul.GelfLogHandler.filterStackTrace=true
+biz.paluch.logging.gelf.jul.GelfLogHandler.timestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
+biz.paluch.logging.gelf.jul.GelfLogHandler.maximumMessageSize=8192
+biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
+biz.paluch.logging.gelf.jul.GelfLogHandler.level=INFO
+```
 
 
 <a name="log4j"/>
@@ -63,39 +65,42 @@ log4j GELF configuration
 --------------
 Properties:
 
-    log4j.appender.gelf=biz.paluch.logging.gelf.log4j.GelfLogAppender
-    log4j.appender.gelf.Threshold=INFO
-    log4j.appender.gelf.Host=udp:localhost
-    log4j.appender.gelf.Port=12201
-    log4j.appender.gelf.Facility=java-test
-    log4j.appender.gelf.ExtractStackTrace=true
-    log4j.appender.gelf.FilterStackTrace=true
-    log4j.appender.gelf.MdcProfiling=true
-    log4j.appender.gelf.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
-    log4j.appender.gelf.MaximumMessageSize=8192
-    log4j.appender.gelf.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
-    log4j.appender.gelf.MdcFields=mdcField1,mdcField2
-    log4j.appender.gelf.DynamicMdcFields=mdc.*,(mdc|MDC)fields
-    log4j.appender.gelf.IncludeFullMdc=true
+```properties
+log4j.appender.gelf=biz.paluch.logging.gelf.log4j.GelfLogAppender
+log4j.appender.gelf.Threshold=INFO
+log4j.appender.gelf.Host=udp:localhost
+log4j.appender.gelf.Port=12201
+log4j.appender.gelf.Facility=java-test
+log4j.appender.gelf.ExtractStackTrace=true
+log4j.appender.gelf.FilterStackTrace=true
+log4j.appender.gelf.MdcProfiling=true
+log4j.appender.gelf.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
+log4j.appender.gelf.MaximumMessageSize=8192
+log4j.appender.gelf.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
+log4j.appender.gelf.MdcFields=mdcField1,mdcField2
+log4j.appender.gelf.DynamicMdcFields=mdc.*,(mdc|MDC)fields
+log4j.appender.gelf.IncludeFullMdc=true
+```
 
 
 XML:
-
-    <appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
-        <param name="Threshold" value="INFO" />
-        <param name="Host" value="udp:localhost" />
-        <param name="Port" value="12201" />
-        <param name="Facility" value="java-test" />
-        <param name="ExtractStackTrace" value="true" />
-        <param name="FilterStackTrace" value="true" />
-        <param name="MdcProfiling" value="true" />
-        <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
-        <param name="MaximumMessageSize" value="8192" />
-        <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
-        <param name="MdcFields" value="mdcField1,mdcField2" />
-        <param name="DynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
-        <param name="IncludeFullMdc" value="true" />
-    </appender>
+```xml
+<appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
+    <param name="Threshold" value="INFO" />
+    <param name="Host" value="udp:localhost" />
+    <param name="Port" value="12201" />
+    <param name="Facility" value="java-test" />
+    <param name="ExtractStackTrace" value="true" />
+    <param name="FilterStackTrace" value="true" />
+    <param name="MdcProfiling" value="true" />
+    <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+    <param name="MaximumMessageSize" value="8192" />
+    <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
+    <param name="MdcFields" value="mdcField1,mdcField2" />
+    <param name="DynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
+    <param name="IncludeFullMdc" value="true" />
+</appender>
+```
     
 <a name="log4j2"/>
 log4j2 GELF configuration
@@ -122,15 +127,21 @@ In order to do so, use nested Field elements below the Appender element.
 
 ### Static Literals
 
-    <Field name="fieldName1" literal="your literal value" />
+```xml
+<Field name="fieldName1" literal="your literal value" />
+```
     
 ### MDC Fields
 
-    <Field name="fieldName1" mdc="name of the MDC entry" />
+```xml
+<Field name="fieldName1" mdc="name of the MDC entry" />
+```
 
 ### Dynamic MDC Fields
 
-    <DynamicMdcFields regex="mdc.*" />
+```xml
+<DynamicMdcFields regex="mdc.*" />
+```
 
 In contrast to the configuration of other log frameworks log4j2 config uses one `DynamicMdcFields` element per regex (not separated by comma).
 
@@ -147,31 +158,31 @@ Option | Description
 host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, the simple hostname or the local address. You can follow the throwable conversion word with an option in the form %host{option}. <br/> %host{fqdn} default setting, outputs the FQDN hostname, e.g. www.you.host.name.com. <br/>%host{simple} outputs simple hostname, e.g. www. <br/>%host{address} outputs the local IP address of the found hostname, e.g. 1.2.3.4 or affe:affe:affe::1. 
 
 XML:
-    
-    <Configuration>
-        <Appenders>
-            <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="12201" extractStackTrace="true"
-                  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192"
-                  originHost="%host{fqdn}">
-                <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
-                <Field name="level" pattern="%level" />
-                <Field name="simpleClassName" pattern="%C{1}" />
-                <Field name="className" pattern="%C" />
-                <Field name="server" pattern="%host" />
-                <Field name="server.fqdn" pattern="%host{fqdn}" />
-                <Field name="fieldName2" literal="fieldValue2" /> <!-- This is a static field -->
-                <Field name="mdcField2" mdc="mdcField2" /> <!-- This is a field using MDC -->
-                <DynamicMdcFields regex="mdc.*" />
-                <DynamicMdcFields regex="(mdc|MDC)fields" />
-            </Gelf>
-        </Appenders>
-        <Loggers>
-            <Root level="INFO">
-                <AppenderRef ref="gelf" />
-            </Root>
-        </Loggers>
-    </Configuration>    
-    
+```xml    
+<Configuration>
+    <Appenders>
+        <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="12201" extractStackTrace="true"
+              filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192"
+              originHost="%host{fqdn}">
+            <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
+            <Field name="level" pattern="%level" />
+            <Field name="simpleClassName" pattern="%C{1}" />
+            <Field name="className" pattern="%C" />
+            <Field name="server" pattern="%host" />
+            <Field name="server.fqdn" pattern="%host{fqdn}" />
+            <Field name="fieldName2" literal="fieldValue2" /> <!-- This is a static field -->
+            <Field name="mdcField2" mdc="mdcField2" /> <!-- This is a field using MDC -->
+            <DynamicMdcFields regex="mdc.*" />
+            <DynamicMdcFields regex="(mdc|MDC)fields" />
+        </Gelf>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="gelf" />
+        </Root>
+    </Loggers>
+</Configuration>    
+``    
 
 <a name="jbossas7"/>
 JBoss AS7 GELF/Wildfly GELF (JBoss AS8) configuration
@@ -179,59 +190,61 @@ JBoss AS7 GELF/Wildfly GELF (JBoss AS8) configuration
 You need to include the library as module (see download above), then add following lines to your configuration:
 
 standalone.xml
-
-    <custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler" module="biz.paluch.logging">
-        <level name="INFO" />
-        <properties>
-            <property name="host" value="udp:localhost" />
-            <property name="port" value="12201" />
-            <property name="facility" value="java-test" />
-            <property name="extractStackTrace" value="true" />
-            <property name="filterStackTrace" value="true" />
-            <property name="mdcProfiling" value="true" />
-            <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
-            <property name="maximumMessageSize" value="8192" />
-            <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
-            <property name="mdcFields" value="mdcField1,mdcField2" />
-            <property name="dynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
-            <property name="includeFullMdc" value="true" />
-        </properties>
-    </custom-handler>
+```xml
+<custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler" module="biz.paluch.logging">
+    <level name="INFO" />
+    <properties>
+        <property name="host" value="udp:localhost" />
+        <property name="port" value="12201" />
+        <property name="facility" value="java-test" />
+        <property name="extractStackTrace" value="true" />
+        <property name="filterStackTrace" value="true" />
+        <property name="mdcProfiling" value="true" />
+        <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+        <property name="maximumMessageSize" value="8192" />
+        <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
+        <property name="mdcFields" value="mdcField1,mdcField2" />
+        <property name="dynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
+        <property name="includeFullMdc" value="true" />
+    </properties>
+</custom-handler>
+``
 
 <a name="logback"/>
 Logback GELF configuration
 --------------
 logback.xml Example:
 
-    <?xml version="1.0" encoding="UTF-8" ?>
-    <!DOCTYPE configuration>
+```xml
+<!DOCTYPE configuration>
 
-    <configuration>
-        <contextName>test</contextName>
-        <jmxConfigurator/>
+<configuration>
+    <contextName>test</contextName>
+    <jmxConfigurator/>
 
-        <appender name="gelf" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
-            <host>udp:localhost</host>
-            <port>12201</port>
-            <facility>java-test</facility>
-            <extractStackTrace>true</extractStackTrace>
-            <filterStackTrace>true</filterStackTrace>
-            <mdcProfiling>true</mdcProfiling>
-            <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
-            <maximumMessageSize>8192</maximumMessageSize>
-            <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
-            <mdcFields>mdcField1,mdcField2</mdcFields>
-            <dynamicMdcFields>mdc.*,(mdc|MDC)fields</dynamicMdcFields>
-            <includeFullMdc>true</includeFullMdc>
-            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-                <level>INFO</level>
-            </filter>
-        </appender>
+    <appender name="gelf" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
+        <host>udp:localhost</host>
+        <port>12201</port>
+        <facility>java-test</facility>
+        <extractStackTrace>true</extractStackTrace>
+        <filterStackTrace>true</filterStackTrace>
+        <mdcProfiling>true</mdcProfiling>
+        <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
+        <maximumMessageSize>8192</maximumMessageSize>
+        <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
+        <mdcFields>mdcField1,mdcField2</mdcFields>
+        <dynamicMdcFields>mdc.*,(mdc|MDC)fields</dynamicMdcFields>
+        <includeFullMdc>true</includeFullMdc>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
 
-        <root level="DEBUG">
-            <appender-ref ref="gelf" />
-        </root>
-    </configuration>
+    <root level="DEBUG">
+        <appender-ref ref="gelf" />
+    </root>
+</configuration>
+```
 
 Versions/Dependencies
 --------------
