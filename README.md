@@ -151,7 +151,8 @@ XML:
     <Configuration>
         <Appenders>
             <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="12201" extractStackTrace="true"
-                  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192">
+                  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192"
+                  originHost="%host{fqdn}">
                 <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
                 <Field name="level" pattern="%level" />
                 <Field name="simpleClassName" pattern="%C{1}" />
