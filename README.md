@@ -182,7 +182,7 @@ XML:
         </Root>
     </Loggers>
 </Configuration>    
-``    
+```    
 
 <a name="jbossas7"/>
 JBoss AS7 GELF/Wildfly GELF (JBoss AS8) configuration
@@ -208,7 +208,7 @@ standalone.xml
         <property name="includeFullMdc" value="true" />
     </properties>
 </custom-handler>
-``
+```
 
 <a name="logback"/>
 Logback GELF configuration
