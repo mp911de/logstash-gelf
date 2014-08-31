@@ -1,6 +1,6 @@
 # Default Fields
 
-By default, following fields are used in the gelf message:
+This are the fields used in GELF messages:
 
 **Default Fields**
 
@@ -26,21 +26,23 @@ By default, following fields are used in the gelf message:
 
 ## Override
 
-Currently only log4j2 provides a full configuration for every individual field. Other implementations can specify only
-additional static/MDC fields. Therefore you can provide a property-file which specifies a mapping for the additional 
-fields listed above.
+log4j2 currently only provides a full configuration for every individual field. Other implementations can specify only
+additional static/MDC fields since they follow in general a formatter/pattern concept. GELF messages contain a set of fields.
+Users of log4j/JUL/logback can take control over default fields providing the default-logstash-fields.properties` configuration.
 
-The file must be named **default-logstash-fields.properties** and must be available on the class path. If the file is
-not found, the default mapping (see above) is used. Typos/wrong field names are discarded quietly. Fields, that are not
-listed in your mapping are not sent via gelf.
+## default-logstash-fields.properties configuration
+
+The file must be named `default-logstash-fields.properties` and must be available on the class path within the default
+package. If no `default-logstash-fields.properties` is found, then the default mapping (see above) are used. 
+Typos/wrong field names are discarded quietly. Fields, that are not listed in your mapping are not sent via GELF.
 
 ## Format
-The format for the properties file is:
+The format follows the Java Properties format:
 
     targetFieldName=sourceFieldName
 
 ## Field names
-You can use following field names (case insensitive, see also [biz.paluch.logging.gelf.LogMessageField.NamedLogField](apidocs/biz/paluch/logging/gelf/LogMessageField.NamedLogField.html) ) for your mapping:
+Available field names are (case insensitive, see also [biz.paluch.logging.gelf.LogMessageField.NamedLogField](apidocs/biz/paluch/logging/gelf/LogMessageField.NamedLogField.html) ):
 
 * Time
 * Severity
@@ -53,14 +55,37 @@ You can use following field names (case insensitive, see also [biz.paluch.loggin
 * Marker
 * NDC
 
+## Example
 
-**Example**
 
-    # slightly different field names
-    MyTime=Time
-    MySeverity=Severity
-    Thread=ThreadName
-    SourceClassName=SourceClassName
-    SourceMethodName=SourceMethodName
-    Server=Server
-    LoggerName=LoggerName
+```
+# slightly different field names
+MyTime=Time
+MySeverity=Severity
+Thread=ThreadName
+SourceClassName=SourceClassName
+SourceMethodName=SourceMethodName
+Server=Server
+LoggerName=LoggerName
+```
+
+## Default settings
+
+```
+Time=Time
+Severity=Severity
+ThreadName=ThreadName
+SourceClassName=SourceClassName
+SourceSimpleClassName=SourceSimpleClassName
+SourceMethodName=SourceMethodName
+Server=Server
+LoggerName=LoggerName
+Marker=Marker
+NDC=NDC
+```
+
+## Verbose logging
+
+You can turn on verbose logging to inspect the discovery of `default-logstash-fields.properties` by 
+setting the system property `logstash-gelf.LogMessageField.verbose` to `true`.
+ 

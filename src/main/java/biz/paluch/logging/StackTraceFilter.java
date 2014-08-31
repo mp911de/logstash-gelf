@@ -13,8 +13,8 @@ import biz.paluch.logging.gelf.intern.Closer;
 
 /**
  * Filtering Facility for Stack-Traces. This is to shorten very long Traces. It leads to a very short Trace containing only the
- * interesting parts. Please provide an own Resource /StackTraceFilter.packages with the packages you want to have filtered out
- * (one package per line)
+ * interesting parts. Please provide an own Resource /StackTraceFilter.packages with the packages if you want to use a custom
+ * filter (one package per line)
  * 
  * <code>
  # Packages to filter
