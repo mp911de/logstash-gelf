@@ -17,12 +17,12 @@ public class RuntimeContainerTest {
 
         System.setProperty(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER,
                 RuntimeContainerProperties.RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK);
-        RuntimeContainer.lookupHostname();
+        RuntimeContainer.lookupHostname(null);
 
         System.setProperty(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER,
                 RuntimeContainerProperties.RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK);
 
-        RuntimeContainer.lookupHostname();
+        RuntimeContainer.lookupHostname(null);
 
         System.clearProperty(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER);
     }
@@ -31,7 +31,7 @@ public class RuntimeContainerTest {
     public void testNoLookup() throws Exception {
 
         System.setProperty(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION, "true");
-        RuntimeContainer.lookupHostname();
+        RuntimeContainer.lookupHostname(null);
 
         assertEquals("", RuntimeContainer.ADDRESS);
         assertEquals("unknown", RuntimeContainer.HOSTNAME);

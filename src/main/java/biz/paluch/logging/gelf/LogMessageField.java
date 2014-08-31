@@ -1,16 +1,20 @@
 package biz.paluch.logging.gelf;
 
-import biz.paluch.logging.gelf.intern.Closer;
+import static biz.paluch.logging.RuntimeContainerProperties.getProperty;
+import static java.lang.Boolean.getBoolean;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+
+import biz.paluch.logging.gelf.intern.Closer;
 
 /**
  * Field with reference to the log event.
  */
 public class LogMessageField implements MessageField {
 
+    public static final String VERBOSE_LOGGING_PROPERTY = "logstash-gelf.LogMessageField.verbose";
     private static final String DEFAULT_MAPPING = "default-logstash-fields.properties";
 
     /**
@@ -75,7 +79,7 @@ public class LogMessageField implements MessageField {
                 is = getStream();
 
                 if (is == null) {
-                    System.out.println("No " + DEFAULT_MAPPING + " resource present, using defaults");
+                    verboseLog("No " + DEFAULT_MAPPING + " resource present, using defaults");
                 } else {
                     Properties p = new Properties();
                     p.load(is);
@@ -85,7 +89,7 @@ public class LogMessageField implements MessageField {
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Could not parse " + DEFAULT_MAPPING + " resource, using defaults");
+                verboseLog("Could not parse " + DEFAULT_MAPPING + " resource, using defaults: " + e.getMessage());
             } finally {
                 Closer.close(is);
             }
@@ -93,6 +97,7 @@ public class LogMessageField implements MessageField {
 
         if (result.isEmpty()) {
 
+            verboseLog("Default mapping is empty. Using " + NamedLogField.class.getName() + " fields");
             for (NamedLogField namedLogField : NamedLogField.values()) {
                 if (supportedLogFields.contains(namedLogField)) {
                     result.add(new LogMessageField(namedLogField.fieldName, namedLogField));
@@ -100,7 +105,15 @@ public class LogMessageField implements MessageField {
             }
         }
 
+        verboseLog("Default field mapping: " + result);
+
         return result;
+    }
+
+    private static void verboseLog(String message) {
+        if (getBoolean(getProperty(VERBOSE_LOGGING_PROPERTY, "false"))) {
+            System.out.println(message);
+        }
     }
 
     private static void loadFields(Properties p, List<LogMessageField> result, List<NamedLogField> supportedLogFields) {

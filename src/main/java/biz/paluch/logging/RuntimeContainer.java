@@ -1,17 +1,14 @@
 package biz.paluch.logging;
 
-import static biz.paluch.logging.RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME;
-import static biz.paluch.logging.RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME;
-import static biz.paluch.logging.RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER;
-import static biz.paluch.logging.RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION;
-import static biz.paluch.logging.RuntimeContainerProperties.RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK;
-import static biz.paluch.logging.RuntimeContainerProperties.RESOLUTION_ORDER_NETWORK_LOCALHOST_FALLBACK;
+import static biz.paluch.logging.RuntimeContainerProperties.*;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+
+import biz.paluch.logging.gelf.intern.ErrorReporter;
 
 /**
  * Static Details about the runtime container: Hostname (simple/fqdn), Address and timestamp of the first access (time when the
@@ -41,6 +38,8 @@ public class RuntimeContainer {
      */
     public static final long FIRST_ACCESS;
 
+    private static boolean initialized;
+
     /**
      * Utility Constructor.
      */
@@ -50,13 +49,23 @@ public class RuntimeContainer {
 
     static {
         FIRST_ACCESS = System.currentTimeMillis();
-        lookupHostname();
+    }
+
+    /**
+     * Initialize only once.
+     */
+    public static void initialize(ErrorReporter errorReporter) {
+
+        if (!initialized) {
+            lookupHostname(errorReporter);
+            initialized = true;
+        }
     }
 
     /**
      * Triggers the hostname lookup.
      */
-    public static void lookupHostname() {
+    public static void lookupHostname(ErrorReporter errorReporter) {
         String myHostName = getProperty(PROPERTY_LOGSTASH_GELF_HOSTNAME, "unknown");
         String myFQDNHostName = getProperty(PROPERTY_LOGSTASH_GELF_FQDN_HOSTNAME, "unknown");
         String myAddress = "";
@@ -89,22 +98,13 @@ public class RuntimeContainer {
                 myFQDNHostName = getHostname(inetAddress, true);
                 myAddress = inetAddress.getHostAddress();
             } catch (IOException e) {
-                System.err.print("Cannot resolve hostname");
-                e.printStackTrace(System.err);
+                errorReporter.reportError("Cannot resolve hostname", e);
             }
         }
 
         FQDN_HOSTNAME = myFQDNHostName;
         HOSTNAME = myHostName;
         ADDRESS = myAddress;
-    }
-
-    private static String getProperty(String key, String defaultValue) {
-        String env = System.getenv(key);
-        if (env != null && !"".equals(env)) {
-            return env;
-        }
-        return System.getProperty(key, defaultValue);
     }
 
     private static String getHostname(InetAddress inetAddress, boolean fqdn) throws IOException {
@@ -122,7 +122,6 @@ public class RuntimeContainer {
 
         while (netInterfaces.hasMoreElements()) {
             NetworkInterface ni = netInterfaces.nextElement();
-
             Enumeration<InetAddress> ias = ni.getInetAddresses();
             while (ias.hasMoreElements()) {
                 InetAddress inetAddress = ias.nextElement();
@@ -130,7 +129,6 @@ public class RuntimeContainer {
                 if (!isQualified(inetAddress)) {
                     continue;
                 }
-
                 return inetAddress;
             }
         }
