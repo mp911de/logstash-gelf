@@ -1,18 +1,9 @@
 package biz.paluch.logging.gelf.logback;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.StaticMessageField;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
+
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
@@ -75,6 +66,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
     protected MdcGelfMessageAssembler gelfMessageAssembler;
 
     public GelfLogbackAppender() {
+        super();
         gelfMessageAssembler = new MdcGelfMessageAssembler();
         gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
                 SourceMethodName, SourceSimpleClassName, LoggerName, Marker));
@@ -82,12 +74,15 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
 
     @Override
     protected void append(ILoggingEvent event) {
+
+
         if (event == null) {
             return;
         }
 
         try {
             if (null == gelfSender) {
+                RuntimeContainer.initialize(this);
                 gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
             }
 

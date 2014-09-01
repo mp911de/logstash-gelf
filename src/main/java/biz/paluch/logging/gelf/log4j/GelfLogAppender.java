@@ -8,6 +8,8 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethod
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+
+import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
@@ -74,6 +76,9 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
     protected MdcGelfMessageAssembler gelfMessageAssembler;
 
     public GelfLogAppender() {
+        super();
+
+        RuntimeContainer.initialize(this);
         gelfMessageAssembler = new MdcGelfMessageAssembler();
         gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
                 SourceMethodName, SourceSimpleClassName, LoggerName, NDC));

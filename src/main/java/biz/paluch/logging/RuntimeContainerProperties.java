@@ -43,4 +43,19 @@ public class RuntimeContainerProperties {
     private RuntimeContainerProperties() {
 
     }
+
+    /**
+     * Lookup property from ({@link System#getenv(String)} and {@link System#getProperty(String)} as fallback.
+     * 
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public static String getProperty(String key, String defaultValue) {
+        String env = System.getenv(key);
+        if (env != null && !"".equals(env)) {
+            return env;
+        }
+        return System.getProperty(key, defaultValue);
+    }
 }

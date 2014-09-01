@@ -1,6 +1,7 @@
 package biz.paluch.logging;
 
-import biz.paluch.logging.gelf.intern.Closer;
+import static biz.paluch.logging.RuntimeContainerProperties.*;
+import static java.lang.Boolean.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,10 +9,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
+import biz.paluch.logging.gelf.intern.Closer;
+
 /**
  * Filtering Facility for Stack-Traces. This is to shorten very long Traces. It leads to a very short Trace containing only the
- * interesting parts. Please provide an own Resource /StackTraceFilter.packages with the packages you want to have filtered out
- * (one package per line)
+ * interesting parts. Please provide an own Resource /StackTraceFilter.packages with the packages if you want to use a custom
+ * filter (one package per line)
  * 
  * <code>
  # Packages to filter
@@ -62,6 +65,8 @@ import java.util.*;
  */
 public class StackTraceFilter {
 
+    public static final String VERBOSE_LOGGING_PROPERTY = "logstash-gelf.StackTraceFilter.verbose";
+
     public static final String FILTER_SETTINGS = "/" + StackTraceFilter.class.getSimpleName() + ".packages";
     private static final String INDENT = "\t";
 
@@ -79,7 +84,7 @@ public class StackTraceFilter {
         try {
             is = getStream(resourceName);
             if (is == null) {
-                System.out.println("No " + resourceName + " resource present, using defaults");
+                verboseLog("No " + resourceName + " resource present, using defaults");
                 suppressedPackages = new HashSet<String>(getDefaults());
             } else {
                 Properties p = new Properties();
@@ -88,7 +93,7 @@ public class StackTraceFilter {
             }
 
         } catch (IOException e) {
-            System.out.println("Could not parse " + resourceName + " resource, using defaults");
+            verboseLog("Could not parse " + resourceName + " resource, using defaults");
             suppressedPackages = new HashSet<String>(getDefaults());
         } finally {
             Closer.close(is);
@@ -231,4 +236,11 @@ public class StackTraceFilter {
         }
         return null;
     }
+
+    private static void verboseLog(String message) {
+        if (getBoolean(getProperty(VERBOSE_LOGGING_PROPERTY, "false"))) {
+            System.out.println(message);
+        }
+    }
+
 }

@@ -3,6 +3,9 @@ package biz.paluch.logging.gelf.log4j2;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 import static org.apache.logging.log4j.core.layout.PatternLayout.*;
 
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.intern.*;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
@@ -13,9 +16,6 @@ import org.apache.logging.log4j.core.impl.Log4jLogEvent;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.apache.logging.log4j.util.Strings;
-
-import biz.paluch.logging.gelf.*;
-import biz.paluch.logging.gelf.intern.*;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -154,8 +154,14 @@ import biz.paluch.logging.gelf.intern.*;
  * </p>
  */
 @Plugin(name = "Gelf", category = "Core", elementType = "appender", printObject = true)
-public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
+public class GelfLogAppender extends AbstractAppender {
     private static final Logger LOGGER = StatusLogger.getLogger();
+    private static final ErrorReporter ERROR_REPORTER = new ErrorReporter() {
+        @Override
+        public void reportError(String message, Exception e) {
+            LOGGER.error(message, e, 0);
+        }
+    };
 
     protected GelfSender gelfSender;
     private MdcGelfMessageAssembler gelfMessageAssembler;
@@ -180,6 +186,8 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
             @PluginAttribute("includeFullMdc") String includeFullMdc, @PluginAttribute("facility") String facility,
             @PluginAttribute("filterStackTrace") String filterStackTrace, @PluginAttribute("mdcProfiling") String mdcProfiling,
             @PluginAttribute("maximumMessageSize") String maximumMessageSize) {
+
+        RuntimeContainer.initialize(ERROR_REPORTER);
 
         MdcGelfMessageAssembler mdcGelfMessageAssembler = new MdcGelfMessageAssembler();
 
@@ -242,9 +250,9 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
 
         configureFields(mdcGelfMessageAssembler, fields, dynamicFieldArray);
 
-        GelfLogAppender result = new GelfLogAppender(name, filter, mdcGelfMessageAssembler);
+        GelfLogAppender appender = new GelfLogAppender(name, filter, mdcGelfMessageAssembler);
 
-        return result;
+        return appender;
 
     }
 
@@ -326,7 +334,7 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
     @Override
     public void start() {
         if (null == gelfSender) {
-            gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
+            gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, ERROR_REPORTER);
         }
         super.start();
     }

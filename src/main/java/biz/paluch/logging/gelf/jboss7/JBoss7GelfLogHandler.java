@@ -1,6 +1,5 @@
 package biz.paluch.logging.gelf.jboss7;
 
-
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.NDC;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
@@ -72,6 +71,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHandler {
 
     public JBoss7GelfLogHandler() {
+        super();
     }
 
     protected void initializeDefaultFields() {
@@ -90,7 +90,7 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
     }
 
     protected GelfMessage createGelfMessage(final LogRecord record) {
-        return getGelfMessageAssembler().createGelfMessage(new JBoss7JulLogEvent((ExtLogRecord)record));
+        return getGelfMessageAssembler().createGelfMessage(new JBoss7JulLogEvent((ExtLogRecord) record));
     }
 
     public void setAdditionalFields(String fieldSpec) {
