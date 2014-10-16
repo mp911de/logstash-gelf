@@ -8,6 +8,11 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethod
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
@@ -168,6 +173,7 @@ import org.apache.logging.log4j.util.Strings;
 public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
     private static final Logger LOGGER = StatusLogger.getLogger();
 
+    protected Map<String,Object> senderSpecificProperties = new HashMap<String,Object>();
     protected GelfSender gelfSender;
     private MdcGelfMessageAssembler gelfMessageAssembler;
 
@@ -341,8 +347,15 @@ public class GelfLogAppender extends AbstractAppender implements ErrorReporter {
     @Override
     public void start() {
         if (null == gelfSender) {
-            gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
+            gelfSender = createGelfSender();
         }
         super.start();
     }
+
+    protected GelfSender createGelfSender() {
+        return GelfSenderFactory.createSender(gelfMessageAssembler, this, Collections.EMPTY_MAP);
+    }
+
+    
+    
 }

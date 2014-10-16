@@ -8,6 +8,11 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethod
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
@@ -72,6 +77,8 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
 
     protected GelfSender gelfSender;
     protected MdcGelfMessageAssembler gelfMessageAssembler;
+    protected Map<String,Object> senderSpecificProperties = new HashMap<String,Object>();
+
 
     public GelfLogAppender() {
         gelfMessageAssembler = new MdcGelfMessageAssembler();
@@ -87,7 +94,7 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
 
         try {
             if (null == gelfSender) {
-                gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
+                gelfSender = createGelfSender();
             }
 
             GelfMessage message = createGelfMessage(event);
@@ -102,6 +109,10 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
         } catch (Exception e) {
             reportError("Could not send GELF message: " + e.getMessage(), e);
         }
+    }
+
+    protected GelfSender createGelfSender() {
+        return GelfSenderFactory.createSender(gelfMessageAssembler, this, Collections.EMPTY_MAP);
     }
 
     public void reportError(String message, Exception exception) {
@@ -248,4 +259,6 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
     public void setIncludeFullMdc(boolean includeFullMdc) {
         gelfMessageAssembler.setIncludeFullMdc(includeFullMdc);
     }
+
+    
 }
