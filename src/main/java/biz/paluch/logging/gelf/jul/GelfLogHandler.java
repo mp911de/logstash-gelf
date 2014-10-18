@@ -2,6 +2,7 @@ package biz.paluch.logging.gelf.jul;
 
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 
+import java.util.Collections;
 import java.util.logging.*;
 
 import biz.paluch.logging.RuntimeContainer;
@@ -95,7 +96,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         }
         try {
             if (null == gelfSender) {
-                gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
+                gelfSender = createGelfSender();
             }
         } catch (Exception e) {
             reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.OPEN_FAILURE);
@@ -115,6 +116,10 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         } catch (Exception e) {
             reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.FORMAT_FAILURE);
         }
+    }
+
+    protected GelfSender createGelfSender() {
+        return GelfSenderFactory.createSender(gelfMessageAssembler, this, Collections.EMPTY_MAP);
     }
 
     @Override

@@ -1,15 +1,16 @@
 package biz.paluch.logging.gelf.intern;
 
-import biz.paluch.logging.gelf.intern.sender.DefaultGelfSenderProvider;
-import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
-
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
+
+import biz.paluch.logging.gelf.intern.sender.DefaultGelfSenderProvider;
+import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -23,7 +24,7 @@ public final class GelfSenderFactory {
      * @param hostAndPortProvider
      * @return GelfSender.
      */
-    public static GelfSender createSender(final HostAndPortProvider hostAndPortProvider, final ErrorReporter errorReporter) {
+    public static GelfSender createSender(final HostAndPortProvider hostAndPortProvider, final ErrorReporter errorReporter, final Map<String,Object> senderSpecificConfigurations) {
         GelfSenderConfiguration senderConfiguration = new GelfSenderConfiguration() {
 
             @Override
@@ -40,6 +41,13 @@ public final class GelfSenderFactory {
             public ErrorReporter getErrorReporter() {
                 return errorReporter;
             }
+
+            @Override
+            public Map<String, Object> getSpecificConfigurations() {
+                return senderSpecificConfigurations;
+            }
+            
+            
         };
 
         return createSender(senderConfiguration);

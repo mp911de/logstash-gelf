@@ -2,6 +2,10 @@ package biz.paluch.logging.gelf.logback;
 
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
@@ -75,7 +79,6 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
     @Override
     protected void append(ILoggingEvent event) {
 
-
         if (event == null) {
             return;
         }
@@ -83,7 +86,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
         try {
             if (null == gelfSender) {
                 RuntimeContainer.initialize(this);
-                gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
+                gelfSender = createGelfSender();
             }
 
             GelfMessage message = createGelfMessage(event);
@@ -98,6 +101,10 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
         } catch (Exception e) {
             reportError("Could not send GELF message: " + e.getMessage(), e);
         }
+    }
+
+    protected GelfSender createGelfSender() {
+        return GelfSenderFactory.createSender(gelfMessageAssembler, this, Collections.EMPTY_MAP);
     }
 
     public void reportError(String message, Exception exception) {
@@ -231,4 +238,5 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
     public void setIncludeFullMdc(boolean includeFullMdc) {
         gelfMessageAssembler.setIncludeFullMdc(includeFullMdc);
     }
+
 }

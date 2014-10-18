@@ -1,27 +1,17 @@
 package biz.paluch.logging.gelf.log4j;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.NDC;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.Closer;
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.spi.LoggingEvent;
+
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.intern.*;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -92,7 +82,7 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
 
         try {
             if (null == gelfSender) {
-                gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, this);
+                gelfSender = createGelfSender();
             }
 
             GelfMessage message = createGelfMessage(event);
@@ -107,6 +97,10 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
         } catch (Exception e) {
             reportError("Could not send GELF message: " + e.getMessage(), e);
         }
+    }
+
+    protected GelfSender createGelfSender() {
+        return GelfSenderFactory.createSender(gelfMessageAssembler, this, Collections.EMPTY_MAP);
     }
 
     public void reportError(String message, Exception exception) {
@@ -253,4 +247,5 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
     public void setIncludeFullMdc(boolean includeFullMdc) {
         gelfMessageAssembler.setIncludeFullMdc(includeFullMdc);
     }
+
 }
