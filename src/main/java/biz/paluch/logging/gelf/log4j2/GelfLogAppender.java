@@ -3,9 +3,10 @@ package biz.paluch.logging.gelf.log4j2;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 import static org.apache.logging.log4j.core.layout.PatternLayout.*;
 
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.gelf.*;
-import biz.paluch.logging.gelf.intern.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
@@ -16,6 +17,10 @@ import org.apache.logging.log4j.core.impl.Log4jLogEvent;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.apache.logging.log4j.util.Strings;
+
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.intern.*;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -334,8 +339,13 @@ public class GelfLogAppender extends AbstractAppender {
     @Override
     public void start() {
         if (null == gelfSender) {
-            gelfSender = GelfSenderFactory.createSender(gelfMessageAssembler, ERROR_REPORTER);
+            gelfSender = createGelfSender();
         }
         super.start();
     }
+
+    protected GelfSender createGelfSender() {
+        return GelfSenderFactory.createSender(gelfMessageAssembler, ERROR_REPORTER, Collections.EMPTY_MAP);
+    }
+
 }
