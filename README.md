@@ -23,7 +23,7 @@ Maven:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.5.3</version>
+        <version>1.5.4</version>
     </dependency>
 
 JBoss Module Download:
@@ -31,11 +31,11 @@ JBoss Module Download:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.5.3</version>
+        <version>1.5.4</version>
         <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.5.3/logstash-gelf-1.5.3-logging-module.zip
+or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.5.4/logstash-gelf-1.5.4-logging-module.zip
 
 
 <a name="jul"/>Java Util Logging GELF configuration
