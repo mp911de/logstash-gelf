@@ -24,7 +24,8 @@ public final class GelfSenderFactory {
      * @param hostAndPortProvider
      * @return GelfSender.
      */
-    public static GelfSender createSender(final HostAndPortProvider hostAndPortProvider, final ErrorReporter errorReporter, final Map<String,Object> senderSpecificConfigurations) {
+    public static GelfSender createSender(final HostAndPortProvider hostAndPortProvider, final ErrorReporter errorReporter,
+            final Map<String, Object> senderSpecificConfigurations) {
         GelfSenderConfiguration senderConfiguration = new GelfSenderConfiguration() {
 
             @Override
@@ -46,8 +47,7 @@ public final class GelfSenderFactory {
             public Map<String, Object> getSpecificConfigurations() {
                 return senderSpecificConfigurations;
             }
-            
-            
+
         };
 
         return createSender(senderConfiguration);
@@ -140,5 +140,4 @@ public final class GelfSenderFactory {
             }
         }
     }
-
 }
