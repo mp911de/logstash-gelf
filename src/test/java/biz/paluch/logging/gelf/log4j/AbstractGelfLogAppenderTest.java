@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.log4j;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -46,6 +46,7 @@ public abstract class AbstractGelfLogAppenderTest {
         assertNotNull(gelfMessage.getField("MyTime"));
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
+        assertEquals(GelfMessage.GELF_VERSION_1_1, gelfMessage.getVersion());
 
         // this is because of default-logstash-fields.properties
         assertEquals("INFO", gelfMessage.getAdditonalFields().get("MySeverity"));

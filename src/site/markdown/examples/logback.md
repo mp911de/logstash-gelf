@@ -8,6 +8,7 @@ Following settings can be used:
     * redis://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
     * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
  * port (since version 1.2.0, Optional): Port, default 12201
+ * version (Optional): GELF Version 1.0 or 1.1, default 1.0
  * graylogHost (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
  * graylogPort (until version 1.1.0, Optional): Port, default 12201
  * originHost (Optional): Originating Hostname, default FQDN Hostname
@@ -38,6 +39,7 @@ logback.xml Example:
         <appender name="gelf" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
             <host>udp:localhost</host>
             <port>12201</port>
+            <version>1.0</version>
             <facility>java-test</facility>
             <extractStackTrace>true</extractStackTrace>
             <filterStackTrace>true</filterStackTrace>

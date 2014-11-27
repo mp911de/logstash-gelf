@@ -1,20 +1,15 @@
 package biz.paluch.logging.gelf.logback;
 
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.LogEvent;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.MessageField;
-import biz.paluch.logging.gelf.Values;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.ThrowableProxy;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author <a href="mailto:tobiassebastian.kaefer@1und1.de">Tobias Kaefer</a>
@@ -89,7 +84,7 @@ class LogbackLogEvent implements LogEvent {
     }
 
     private String levelToSyslogLevel(final Level level) {
-        String result = "7";
+        String result = ""+ GelfMessage.DEFAUL_LEVEL;
 
         int intLevel = level.toInt();
         if (intLevel > Level.ERROR_INT) {

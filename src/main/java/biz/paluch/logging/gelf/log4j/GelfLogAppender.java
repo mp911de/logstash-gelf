@@ -3,15 +3,12 @@ package biz.paluch.logging.gelf.log4j;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.spi.LoggingEvent;
 
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.*;
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -26,6 +23,7 @@ import biz.paluch.logging.gelf.intern.*;
  * </ul>
  * </li>
  * <li>port (Optional): Port, default 12201</li>
+ * <li>version (Optional): GELF Version 1.0 or 1.1, default 1.0</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
@@ -246,6 +244,14 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
 
     public void setIncludeFullMdc(boolean includeFullMdc) {
         gelfMessageAssembler.setIncludeFullMdc(includeFullMdc);
+    }
+
+    public String getVersion() {
+        return gelfMessageAssembler.getVersion();
+    }
+
+    public void setVersion(String version) {
+        gelfMessageAssembler.setVersion(version);
     }
 
 }

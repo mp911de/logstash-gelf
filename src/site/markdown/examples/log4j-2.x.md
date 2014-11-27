@@ -8,6 +8,7 @@ Following settings can be used:
      * redis://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
      * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
  * port (since 1.2, Optional): Port, default 12201
+ * version (Optional): GELF Version 1.0 or 1.1, default 1.0
  * graylogHost (until 1.1, Mandatory): Hostname/IP-Address of the Logstash Host
  * graylogPort (until 1.1, Optional): Port, default 12201
  * originHost (Optional): Originating Hostname, default FQDN Hostname (Patterns can be used)
@@ -66,7 +67,7 @@ XML:
     
     <Configuration>
         <Appenders>
-            <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="12201" extractStackTrace="true"
+            <Gelf name="gelf" host="udp:localhost" port="12201" version="1.0" extractStackTrace="true"
                   filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
                   originHost="my.host.name">
                 <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />

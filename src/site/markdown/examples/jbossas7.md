@@ -8,6 +8,7 @@ Following settings can be used:
     * redis://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
     * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
  * port (since version 1.2.0, Optional): Port, default 12201
+ * version (Optional): GELF Version 1.0 or 1.1, default 1.0
  * graylogHost (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
  * graylogPort (until version 1.1.0, Optional): Port, default 12201
  * originHost (Optional): Originating Hostname, default FQDN Hostname
@@ -32,6 +33,7 @@ XML Configuration:
         <properties>
             <property name="host" value="udp:localhost" />
             <property name="port" value="12201" />
+            <property name="version" value="1.0" />
             <property name="facility" value="java-test" />
             <property name="extractStackTrace" value="true" />
             <property name="filterStackTrace" value="true" />
@@ -45,11 +47,24 @@ XML Configuration:
         </properties>
     </custom-handler>
 
+    ...
+
+    <root-logger>
+        <level name="INFO"/>
+        <handlers>
+            <handler name="FILE"/>
+            <handler name="CONSOLE"/>
+            <handler name="GelfLogger"/>
+        </handlers>
+    </root-logger>
+
+
 CLI Configuration:
 
     /subsystem=logging/custom-handler=GelfLogger/:add(module=biz.paluch.logging,class=biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler,properties={ \
            host="udp:localhost", \
            port="udp:12201", \
+           version="1.0", \
 		   facility="java-test", \
 		   extractStackTrace=true, \
 		   filterStackTrace=true, \
@@ -61,4 +76,6 @@ CLI Configuration:
 		   dynamicMdcFields="mdc.*,(mdc|MDC)fields" \
 		   includeFullMdc=true \
     })
+
+    /subsystem=logging/root-logger=ROOT/:write-attribute(name=handlers,value=["FILE","CONSOLE","GelfLogger"])
     

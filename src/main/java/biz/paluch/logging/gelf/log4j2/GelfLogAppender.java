@@ -4,8 +4,6 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 import static org.apache.logging.log4j.core.layout.PatternLayout.*;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
@@ -35,6 +33,7 @@ import biz.paluch.logging.gelf.intern.*;
  * </ul>
  * </li>
  * <li>port (Optional): Port, default 12201</li>
+ * <li>version (Optional): GELF Version 1.0 or 1.1, default 1.0</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
@@ -187,9 +186,10 @@ public class GelfLogAppender extends AbstractAppender {
             @PluginElement("DynamicMdcFields") final GelfDynamicMdcLogFields[] dynamicFieldArray,
             @PluginAttribute("graylogHost") String graylogHost, @PluginAttribute("host") String host,
             @PluginAttribute("graylogPort") String graylogPort, @PluginAttribute("port") String port,
-            @PluginAttribute("extractStackTrace") String extractStackTrace, @PluginAttribute("originHost") String originHost,
-            @PluginAttribute("includeFullMdc") String includeFullMdc, @PluginAttribute("facility") String facility,
-            @PluginAttribute("filterStackTrace") String filterStackTrace, @PluginAttribute("mdcProfiling") String mdcProfiling,
+            @PluginAttribute("version") String version, @PluginAttribute("extractStackTrace") String extractStackTrace,
+            @PluginAttribute("originHost") String originHost, @PluginAttribute("includeFullMdc") String includeFullMdc,
+            @PluginAttribute("facility") String facility, @PluginAttribute("filterStackTrace") String filterStackTrace,
+            @PluginAttribute("mdcProfiling") String mdcProfiling,
             @PluginAttribute("maximumMessageSize") String maximumMessageSize) {
 
         RuntimeContainer.initialize(ERROR_REPORTER);
@@ -220,6 +220,10 @@ public class GelfLogAppender extends AbstractAppender {
 
         if (Strings.isNotEmpty(graylogPort)) {
             mdcGelfMessageAssembler.setPort(Integer.parseInt(graylogPort));
+        }
+
+        if (Strings.isNotEmpty(version)) {
+            mdcGelfMessageAssembler.setVersion(version);
         }
 
         if (Strings.isNotEmpty(originHost)) {

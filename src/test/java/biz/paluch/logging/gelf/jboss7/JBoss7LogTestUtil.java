@@ -2,6 +2,8 @@ package biz.paluch.logging.gelf.jboss7;
 
 import java.util.logging.Level;
 
+import biz.paluch.logging.gelf.intern.GelfMessage;
+
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 28.02.14 11:29
@@ -15,6 +17,7 @@ public class JBoss7LogTestUtil {
 
         handler.setHost("test:localhost");
         handler.setPort(12201);
+        handler.setVersion(GelfMessage.GELF_VERSION_1_1);
 
         handler.setFacility("java-test");
         handler.setExtractStackTrace(true);

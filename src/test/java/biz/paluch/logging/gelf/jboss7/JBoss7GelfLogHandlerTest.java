@@ -1,23 +1,18 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.getJBoss7GelfLogHandler;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.*;
+import static org.junit.Assert.*;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.jboss.logmanager.ExtLogRecord;
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.jboss.logmanager.MDC;
 import org.jboss.logmanager.NDC;
 import org.junit.Before;
 import org.junit.Test;
-
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -51,6 +46,7 @@ public class JBoss7GelfLogHandlerTest {
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
+        assertEquals(GelfMessage.GELF_VERSION_1_1, gelfMessage.getVersion());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
         assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
         assertEquals("ndc message", gelfMessage.getField("NDC"));
@@ -138,13 +134,12 @@ public class JBoss7GelfLogHandlerTest {
 
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testWrongConfig() throws Exception {
         JBoss7GelfLogHandler handler = new JBoss7GelfLogHandler();
 
         handler.setGraylogHost(null);
         handler.setGraylogPort(0);
-        handler.createGelfMessage(ExtLogRecord.wrap(new LogRecord(Level.ALL, LOG_MESSAGE)));
 
     }
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.Level;
 import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
@@ -67,7 +68,7 @@ class Log4jLogEvent implements LogEvent {
             case Level.INFO_INT:
                 return 6;
             default:
-                return 7;
+                return GelfMessage.DEFAUL_LEVEL;
 
         }
     }

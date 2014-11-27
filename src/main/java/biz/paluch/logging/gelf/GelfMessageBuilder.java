@@ -1,9 +1,9 @@
 package biz.paluch.logging.gelf;
 
-import biz.paluch.logging.gelf.intern.GelfMessage;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * Builder to create a GelfMessage.
@@ -160,6 +160,7 @@ public class GelfMessageBuilder {
         gelfMessage.setVersion(version);
         gelfMessage.setHost(host);
         gelfMessage.setJavaTimestamp(javaTimestamp);
+        gelfMessage.setFacility(facility);
         gelfMessage.setFacility(facility);
 
         return gelfMessage;

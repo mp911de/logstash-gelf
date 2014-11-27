@@ -1,7 +1,5 @@
 package biz.paluch.logging.gelf.intern;
 
-import org.json.simple.JSONValue;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -10,6 +8,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
+
+import org.json.simple.JSONValue;
 
 /**
  * (c) https://github.com/t0xa/gelfj
@@ -24,9 +24,14 @@ public class GelfMessage {
     public static final String FIELD_FACILITY = "facility";
     public static final String ID_NAME = "id";
 
-    public static final String GELF_VERSION = "1.0";
+    public static final String GELF_VERSION_1_0 = "1.0";
+    public static final String GELF_VERSION_1_1 = "1.1";
+
+    public static final String GELF_VERSION = GELF_VERSION_1_0;
+
     public static final String DEFAULT_FACILITY = "logstash-gelf";
     public static final int DEFAULT_MESSAGE_SIZE = 8192;
+    public static final int DEFAUL_LEVEL = 7;
 
     private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
     private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
@@ -69,11 +74,26 @@ public class GelfMessage {
         }
 
         if (getJavaTimestamp() != 0) {
-            map.put(FIELD_TIMESTAMP, getTimestamp());
+            if (GELF_VERSION_1_1.equals(version)) {
+                map.put(FIELD_TIMESTAMP, getTimestampAsBigDecimal().doubleValue());
+            } else {
+                map.put(FIELD_TIMESTAMP, getTimestamp());
+            }
         }
 
         if (!isEmpty(getLevel())) {
-            map.put(FIELD_LEVEL, getLevel());
+            if (GELF_VERSION_1_1.equals(version)) {
+                 int level;
+                try {
+                    level = Integer.parseInt(getLevel());
+                } catch (NumberFormatException ex) {
+                    // fallback on the default value
+                    level = DEFAUL_LEVEL;
+                }
+                map.put(FIELD_LEVEL, level);
+            } else {
+                 map.put(FIELD_LEVEL, getLevel());
+            }
         }
 
         if (!isEmpty(getFacility())) {
@@ -219,8 +239,12 @@ public class GelfMessage {
         this.fullMessage = fullMessage;
     }
 
+    public BigDecimal getTimestampAsBigDecimal() {
+        return new BigDecimal(javaTimestamp).divide(TIME_DIVISOR);
+    }
+
     public String getTimestamp() {
-        return new BigDecimal(javaTimestamp).divide(TIME_DIVISOR).toPlainString();
+        return getTimestampAsBigDecimal().toPlainString();
     }
 
     public Long getJavaTimestamp() {

@@ -1,11 +1,5 @@
 package biz.paluch.logging.gelf.jul;
 
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.LogEvent;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MessageField;
-import biz.paluch.logging.gelf.Values;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -17,6 +11,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+
+import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -130,7 +127,7 @@ public class JulLogEvent implements LogEvent {
         } else if (level == Level.INFO) {
             syslogLevel = 6;
         } else {
-            syslogLevel = 7;
+            syslogLevel = GelfMessage.DEFAUL_LEVEL;
         }
         return syslogLevel;
     }

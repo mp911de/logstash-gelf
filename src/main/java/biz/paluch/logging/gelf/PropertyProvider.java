@@ -33,6 +33,7 @@ public interface PropertyProvider {
 
     String PROPERTY_FILTER = "filter";
     String PROPERTY_LEVEL = "level";
+    String PROPERTY_VERSION = "version";
 
     String getProperty(String propertyName);
 }

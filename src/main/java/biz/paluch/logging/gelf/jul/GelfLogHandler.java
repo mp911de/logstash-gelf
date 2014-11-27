@@ -25,6 +25,7 @@ import biz.paluch.logging.gelf.intern.*;
  * </ul>
  * </li>
  * <li>port (Optional): Port, default 12201</li>
+ * <li>version (Optional): GELF Version 1.0 or 1.1, default 1.0</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
@@ -229,5 +230,13 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
 
     public void setMaximumMessageSize(int maximumMessageSize) {
         gelfMessageAssembler.setMaximumMessageSize(maximumMessageSize);
+    }
+
+    public String getVersion() {
+        return gelfMessageAssembler.getVersion();
+    }
+
+    public void setVersion(String version) {
+        gelfMessageAssembler.setVersion(version);
     }
 }

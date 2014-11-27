@@ -12,6 +12,7 @@
     <appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
         <param name="GraylogHost" value="test:localhost" />
         <param name="GraylogPort" value="12201" />
+        <param name="Version" value="1.1" />
         <param name="Facility" value="java-test" />
         <param name="ExtractStackTrace" value="true" />
         <param name="FilterStackTrace" value="true" />

@@ -8,6 +8,7 @@ Following settings can be used:
     * redis://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
     * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
  * port (since version 1.2.0, Optional): Port, default 12201
+ * version (Optional): GELF Version 1.0 or 1.1, default 1.0
  * graylogHost (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
  * graylogPort (until version 1.1.0, Optional): Port, default 12201
  * originHost (Optional): Originating Hostname, default FQDN Hostname
@@ -45,6 +46,7 @@ Extended Properties:
 
     biz.paluch.logging.gelf.jul.GelfLogHandler.host=udp:localhost
     biz.paluch.logging.gelf.jul.GelfLogHandler.port=12201
+    biz.paluch.logging.gelf.jul.GelfLogHandler.version=1.0
     biz.paluch.logging.gelf.jul.GelfLogHandler.facility=java-test
     biz.paluch.logging.gelf.jul.GelfLogHandler.extractStackTrace=true
     biz.paluch.logging.gelf.jul.GelfLogHandler.filterStackTrace=true

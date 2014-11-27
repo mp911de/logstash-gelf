@@ -1,15 +1,16 @@
 package biz.paluch.logging.gelf.intern;
 
-import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import biz.paluch.logging.gelf.GelfMessageBuilder;
-import org.junit.Test;
+import static biz.paluch.logging.gelf.GelfMessageBuilder.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.Test;
+
+import biz.paluch.logging.gelf.GelfMessageBuilder;
 
 public class GelfMessageTest {
 
@@ -65,6 +66,33 @@ public class GelfMessageTest {
         gelfMessage.addField("something", null);
 
         assertFalse(gelfMessage.toJson().contains("something"));
+
+    }
+
+    @Test
+    public void testGelf_v1_0() throws Exception {
+
+        GelfMessage gelfMessage = new GelfMessage();
+        gelfMessage.setLevel("6");
+        gelfMessage.setJavaTimestamp(123456L);
+
+        assertEquals(GelfMessage.GELF_VERSION_1_0, gelfMessage.getVersion());
+        assertThat(gelfMessage.toJson(), containsString("\"level\":\"6\""));
+        assertThat(gelfMessage.toJson(), containsString("\"timestamp\":\"123.456"));
+
+    }
+
+    @Test
+    public void testGelf_v1_1() throws Exception {
+
+        GelfMessage gelfMessage = new GelfMessage();
+        gelfMessage.setLevel("6");
+        gelfMessage.setJavaTimestamp(123456L);
+        gelfMessage.setVersion(GelfMessage.GELF_VERSION_1_1);
+
+        assertEquals(GelfMessage.GELF_VERSION_1_1, gelfMessage.getVersion());
+        assertThat(gelfMessage.toJson(), containsString("\"level\":6"));
+        assertThat(gelfMessage.toJson(), containsString("\"timestamp\":123.456"));
 
     }
 

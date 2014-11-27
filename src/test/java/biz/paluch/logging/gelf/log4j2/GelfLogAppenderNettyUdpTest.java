@@ -1,6 +1,10 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+
+import java.util.List;
+import java.util.concurrent.TimeoutException;
+
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.NettyLocalServer;
@@ -20,9 +24,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 /**
  */

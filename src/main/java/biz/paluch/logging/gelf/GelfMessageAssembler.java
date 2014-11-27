@@ -1,10 +1,6 @@
 package biz.paluch.logging.gelf;
 
-import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.StackTraceFilter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.HostAndPortProvider;
+import static biz.paluch.logging.gelf.GelfMessageBuilder.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -14,6 +10,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.StackTraceFilter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.HostAndPortProvider;
+
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 15:05
@@ -21,11 +22,14 @@ import java.util.List;
 public class GelfMessageAssembler implements HostAndPortProvider {
 
     private static final int MAX_SHORT_MESSAGE_LENGTH = 250;
+    private static final int MAX_PORT_NUMBER = 65535;
+    private static final int MAX_MESSAGE_SIZE = Integer.MAX_VALUE;
 
     public static final String FIELD_MESSAGE_PARAM = "MessageParam";
     public static final String FIELD_STACK_TRACE = "StackTrace";
 
     private String host;
+    private String version = GelfMessage.GELF_VERSION;
     private String originHost;
     private int port;
     private String facility;
@@ -53,7 +57,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
             port = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_PORT);
         }
 
-        if (port != null) {
+        if (port != null && !"".equals(port)) {
             this.port = Integer.parseInt(port);
         }
 
@@ -63,6 +67,11 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
         setupStaticFields(propertyProvider);
         facility = propertyProvider.getProperty(PropertyProvider.PROPERTY_FACILITY);
+        String version = propertyProvider.getProperty(PropertyProvider.PROPERTY_VERSION);
+
+        if (version != null && !"".equals(version)) {
+            this.version = version;
+        }
 
         String messageSize = propertyProvider.getProperty(PropertyProvider.PROPERTY_MAX_MESSAGE_SIZE);
         if (messageSize != null) {
@@ -88,6 +97,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
         builder.withShortMessage(shortMessage).withFullMessage(message).withJavaTimestamp(logEvent.getLogTimestamp());
         builder.withLevel(logEvent.getSyslogLevel());
+        builder.withVersion(getVersion());
 
         for (MessageField field : fields) {
             Values values = getValues(logEvent, field);
@@ -215,6 +225,9 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     }
 
     public void setPort(int port) {
+        if (port > MAX_PORT_NUMBER || port < 1) {
+            throw new IllegalArgumentException("Invalid port number: " + port + ", supported range: 1-" + MAX_PORT_NUMBER);
+        }
         this.port = port;
     }
 
@@ -255,7 +268,26 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     }
 
     public void setMaximumMessageSize(int maximumMessageSize) {
+
+        if (maximumMessageSize > MAX_MESSAGE_SIZE || maximumMessageSize < 1) {
+            throw new IllegalArgumentException("Invalid maximum message size: " + maximumMessageSize + ", supported range: 1-"
+                    + MAX_MESSAGE_SIZE);
+        }
+
         this.maximumMessageSize = maximumMessageSize;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+
+        if (!GelfMessage.GELF_VERSION_1_0.equals(version) && !GelfMessage.GELF_VERSION_1_1.equals(version)) {
+            throw new IllegalArgumentException("Invalid GELF version: " + version + ", supported range: "
+                    + GelfMessage.GELF_VERSION_1_0 + ", " + GelfMessage.GELF_VERSION_1_1);
+        }
+
+        this.version = version;
+    }
 }

@@ -1,17 +1,12 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.LogEvent;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.MessageField;
-import biz.paluch.logging.gelf.Values;
-import org.apache.logging.log4j.Level;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import org.apache.logging.log4j.Level;
 
 /**
  */
@@ -61,7 +56,7 @@ class Log4j2LogEvent implements LogEvent {
             case INFO:
                 return 6;
             default:
-                return 7;
+                return GelfMessage.DEFAUL_LEVEL;
 
         }
     }

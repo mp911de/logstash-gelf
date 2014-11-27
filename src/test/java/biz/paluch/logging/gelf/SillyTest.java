@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -20,7 +19,7 @@ public class SillyTest {
     public static final String NAME = "name";
     public static final String FACILITY = "facility";
     public static final String HOST = "host";
-    public static final int GRAYLOG_PORT = 0;
+    public static final int GRAYLOG_PORT = 1;
     public static final int MAXIMUM_MESSAGE_SIZE = 1234;
     public static final String TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss,SSSS";
 
@@ -146,5 +145,26 @@ public class SillyTest {
         assertTrue(sut.isFilterStackTrace());
         assertTrue(sut.isIncludeFullMdc());
         assertTrue(sut.isMdcProfiling());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidPort() throws Exception {
+
+        GelfLogbackAppender sut = new GelfLogbackAppender();
+        sut.setPort(-1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidMaximumMessageSize() throws Exception {
+
+        GelfLogbackAppender sut = new GelfLogbackAppender();
+        sut.setMaximumMessageSize(-1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidVersion() throws Exception {
+
+        GelfLogbackAppender sut = new GelfLogbackAppender();
+        sut.setVersion("7");
     }
 }

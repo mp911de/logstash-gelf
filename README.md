@@ -4,7 +4,7 @@ logstash-gelf
 [![Build Status](https://api.travis-ci.org/mp911de/logstash-gelf.svg)](https://travis-ci.org/mp911de/logstash-gelf) [![Coverage Status](https://img.shields.io/coveralls/mp911de/logstash-gelf.svg)](https://coveralls.io/r/mp911de/logstash-gelf) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/biz.paluch.logging/logstash-gelf/badge.svg)](https://maven-badges.herokuapp.com/maven-central/biz.paluch.logging/logstash-gelf)
 
 
-Provides logging to logstash using the Graylog Extended Logging Format (GELF) for using with:
+Provides logging to logstash using the Graylog Extended Logging Format ([GELF](http://www.graylog2.org/resources/gelf/specification)) for using with:
 
 * [Java Util Logging](#jul)
 * [log4j 1.2.x](#log4j)
@@ -12,7 +12,7 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF) fo
 * [JBoss AS7/Wildfly (JBoss AS8) (mix of Java Util Logging with log4j MDC)](#jbossas7)
 * [Logback](#logback)
 
-See also http://logging.paluch.biz/ for further documentation.
+See also http://logging.paluch.biz/ or http://www.graylog2.org/resources/gelf/specification for further documentation.
 
 
 Including it in your project
@@ -50,6 +50,7 @@ handlers = biz.paluch.logging.gelf.jul.GelfLogHandler, java.util.logging.Console
 
 biz.paluch.logging.gelf.jul.GelfLogHandler.host=udp:localhost
 biz.paluch.logging.gelf.jul.GelfLogHandler.port=12201
+biz.paluch.logging.gelf.jul.GelfLogHandler.version=1.1
 biz.paluch.logging.gelf.jul.GelfLogHandler.facility=java-test
 biz.paluch.logging.gelf.jul.GelfLogHandler.extractStackTrace=true
 biz.paluch.logging.gelf.jul.GelfLogHandler.filterStackTrace=true
@@ -72,6 +73,7 @@ log4j.appender.gelf=biz.paluch.logging.gelf.log4j.GelfLogAppender
 log4j.appender.gelf.Threshold=INFO
 log4j.appender.gelf.Host=udp:localhost
 log4j.appender.gelf.Port=12201
+log4j.appender.gelf.Version=1.1
 log4j.appender.gelf.Facility=java-test
 log4j.appender.gelf.ExtractStackTrace=true
 log4j.appender.gelf.FilterStackTrace=true
@@ -95,6 +97,7 @@ XML:
     <param name="Threshold" value="INFO" />
     <param name="Host" value="udp:localhost" />
     <param name="Port" value="12201" />
+    <param name="Version" value="1.1" />
     <param name="Facility" value="java-test" />
     <param name="ExtractStackTrace" value="true" />
     <param name="FilterStackTrace" value="true" />
@@ -171,7 +174,7 @@ XML:
 ```xml    
 <Configuration>
     <Appenders>
-        <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="12201" extractStackTrace="true"
+        <Gelf name="gelf" host="udp:localhost" port="12201" version="1.1" extractStackTrace="true"
               filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192"
               originHost="%host{fqdn}">
             <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
@@ -210,6 +213,7 @@ standalone.xml
     <properties>
         <property name="host" value="udp:localhost" />
         <property name="port" value="12201" />
+        <property name="version" value="1.1" />
         <property name="facility" value="java-test" />
         <property name="extractStackTrace" value="true" />
         <property name="filterStackTrace" value="true" />
@@ -226,6 +230,17 @@ standalone.xml
         <property name="includeFullMdc" value="true" />
     </properties>
 </custom-handler>
+
+...
+
+<root-logger>
+    <level name="INFO"/>
+    <handlers>
+        <handler name="FILE"/>
+        <handler name="CONSOLE"/>
+        <handler name="GelfLogger"/>
+    </handlers>
+</root-logger>
 ```
 
 <a name="logback"/>
@@ -243,6 +258,7 @@ logback.xml Example:
     <appender name="gelf" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
         <host>udp:localhost</host>
         <port>12201</port>
+        <version>1.1</version>
         <facility>java-test</facility>
         <extractStackTrace>true</extractStackTrace>
         <filterStackTrace>true</filterStackTrace>
@@ -294,6 +310,7 @@ Following settings can be used:
 * `port` (since version 1.2.0, Optional): Port, default 12201
 * `graylogHost` (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
 * `graylogPort` (until version 1.1.0, Optional): Port, default 12201
+* `version` (Optional): GELF Version 1.0 or 1.1, default 1.0
 * `originHost` (Optional): Originating Hostname, default FQDN Hostname
 * `extractStackTrace` (Optional): Post Stack-Trace to StackTrace field, default false
 * `filterStackTrace` (Optional): Perform Stack-Trace filtering (true/false), default false

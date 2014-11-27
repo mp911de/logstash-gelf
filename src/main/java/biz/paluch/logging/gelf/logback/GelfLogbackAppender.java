@@ -3,8 +3,6 @@ package biz.paluch.logging.gelf.logback;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.gelf.*;
@@ -28,6 +26,7 @@ import ch.qos.logback.core.AppenderBase;
  * </ul>
  * </li>
  * <li>port (Optional): Port, default 12201</li>
+ * <li>version (Optional): GELF Version 1.0 or 1.1, default 1.0</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
@@ -237,6 +236,14 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
 
     public void setIncludeFullMdc(boolean includeFullMdc) {
         gelfMessageAssembler.setIncludeFullMdc(includeFullMdc);
+    }
+
+    public String getVersion() {
+        return gelfMessageAssembler.getVersion();
+    }
+
+    public void setVersion(String version) {
+        gelfMessageAssembler.setVersion(version);
     }
 
 }

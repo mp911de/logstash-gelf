@@ -1,16 +1,16 @@
 package biz.paluch.logging.gelf.jul;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.MDC;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -30,6 +30,7 @@ public class GelfLogHandlerTest {
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
+        assertEquals(GelfMessage.GELF_VERSION_1_1, gelfMessage.getVersion());
         assertNotNull(gelfMessage.getField("MyTime"));
         assertEquals(expectedMessage, gelfMessage.getFullMessage());
         assertEquals("6", gelfMessage.getLevel());
