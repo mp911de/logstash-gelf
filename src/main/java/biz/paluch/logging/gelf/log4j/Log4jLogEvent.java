@@ -1,20 +1,16 @@
 package biz.paluch.logging.gelf.log4j;
 
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.LogEvent;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.MessageField;
-import biz.paluch.logging.gelf.Values;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 
-import java.util.HashSet;
-import java.util.Set;
+import biz.paluch.logging.gelf.*;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -151,8 +147,10 @@ class Log4jLogEvent implements LogEvent {
 
     private Set<String> getAllMdcNames() {
         Set<String> mdcNames = new HashSet<String>();
-
-        mdcNames.addAll(MDC.getContext().keySet());
+        Map context = MDC.getContext();
+        if (context != null) {
+            mdcNames.addAll(context.keySet());
+        }
         return mdcNames;
     }
 
@@ -161,9 +159,7 @@ class Log4jLogEvent implements LogEvent {
 
         for (String mdcName : mdcNames) {
             if (field.getPattern().matcher(mdcName).matches()) {
-
                 matchingMdcNames.add(mdcName);
-
             }
         }
         return matchingMdcNames;
