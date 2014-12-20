@@ -1,16 +1,29 @@
 package biz.paluch.logging.gelf.jul;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
-
-import java.util.Collections;
-import java.util.logging.*;
-
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.PropertyProvider;
 import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.*;
+import biz.paluch.logging.gelf.intern.Closer;
+import biz.paluch.logging.gelf.intern.ErrorReporter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+
+import java.util.Collections;
+import java.util.logging.ErrorManager;
+import java.util.logging.Filter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -62,7 +75,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         }
 
         final String additionalFields = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELDS);
-        if (null != level) {
+        if (null != additionalFields) {
             setAdditionalFields(additionalFields);
         }
 
@@ -142,12 +155,16 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
 
     public void setAdditionalFields(String fieldSpec) {
 
-        String[] properties = fieldSpec.split(",");
+        if (null != fieldSpec) {
+            String[] properties = fieldSpec.split(",");
 
-        for (String field : properties) {
-            final int index = field.indexOf('=');
-            if (-1 != index) {
-                gelfMessageAssembler.addField(new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
+            for (String field : properties) {
+                final int index = field.indexOf('=');
+                if (-1 == index) {
+                    continue;
+                }
+                gelfMessageAssembler.addField(
+                        new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
             }
         }
     }
