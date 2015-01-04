@@ -290,11 +290,11 @@ This project is built against following dependencies/versions:
 
 * json-simple 1.1.1
 * log4j 1.2.14
-* log4j2 2.0
+* log4j2 2.1
 * Java Util Logging JDK Version 1.6
 * logback 1.0.13
-* slf4j-api 1.7.5
-* jedis 2.5.1 (includes commons-pool2 2.2)
+* slf4j-api 1.7.9
+* jedis 2.6.2 (includes commons-pool2 2.2)
 
 Settings
 --------------
