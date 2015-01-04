@@ -24,6 +24,7 @@
             <item name="Default Fields" href="default-fields.html" />
             <item name="Stack Trace Filter" href="stack-trace-filter.html"/>
             <item name="Redis" href="redis.html" />
+            <item name="Datenpumpe" href="datenpumpe.html" />
         </menu>
 
         <menu name="Project Documentation">
