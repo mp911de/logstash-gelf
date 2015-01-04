@@ -23,6 +23,7 @@
             <item name="Hostname Lookup" href="hostname-lookup.html" />
             <item name="Default Fields" href="default-fields.html" />
             <item name="Stack Trace Filter" href="stack-trace-filter.html"/>
+            <item name="Redis" href="redis.html" />
         </menu>
 
         <menu name="Project Documentation">

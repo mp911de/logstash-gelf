@@ -6,6 +6,7 @@ Following settings can be used:
     * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
     * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
     * redis://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
+    * redis-sentinel://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER?masterId=SENTINELMASTERID#REDISDB_LISTNAME , e.g. redis-sentinel://:donttrustme@127.0.0.1:26379?masterId=mymaster/0#myloglist or if no password needed redis-sentinel://127.0.0.1:26379/0?masterId=mymaster#myloglist
     * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
  * port (since version 1.2.0, Optional): Port, default 12201
  * version (Optional): GELF Version 1.0 or 1.1, default 1.0
@@ -14,6 +15,7 @@ Following settings can be used:
  * originHost (Optional): Originating Hostname, default FQDN Hostname
  * extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false
  * filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
+ * mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false. See [MDC Profiling](../mdcprofiling.html) for details.
  * facility (Optional): Name of the Facility, default logstash-gelf
  * threshold/level (Optional): Log-Level, default INFO
  * filter (Optional): Class-Name of a Log-Filter, default none

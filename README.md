@@ -306,6 +306,7 @@ Following settings can be used:
     * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
     * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
     * [redis](#redis)://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
+    * [redis](#redis-sentinel)://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDBMASTER/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis-sentinel://:donttrustme@127.0.0.1:6379/myMaster/0#myloglist or if no password needed redis-sentinel://127.0.0.1:6379/myMaster/0#myloglist
     * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
 * `port` (since version 1.2.0, Optional): Port, default 12201
 * `graylogHost` (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
@@ -340,14 +341,45 @@ Two values are set by the Log Appender:
 <a name="redis"/>Notes on redis Connection
 --------------
  * IMPORTANT: for getting your logstash config right it is vital to know that we do LPUSH (list push and not channel method)
- * The redis connection is done through jedis (https://github.com/xetorthio/jedis)
- * The Url used as connection property is a java.net.URI , therefore it can have all nine components. we use only the following:
+ * The redis connection is done through jedis (https://github.com/xetorthio/jedis) and can operate on standalone or sentinel instances.
+
+### Redis Standalone
+ The Url used as connection property is a java.net.URI , therefore it can have all components.
+
+    redis://[:password@]host[:port]/[databaseNo]#Listname
+
+Example:
+
+    redis://localhost/1#logstash
+    redis://:password@localhost:6379/1#logstash
+
    * scheme    (fixed: redis, directly used to determine the to be used sender class)
-   * user-info (variable: only the password part is used since redis doesnt have users, indirectly used from jedis)
+   * user-info (variable: only the password part is used since redis doesn't have users, indirectly used from jedis)
    * host      (variable: the host your redis db runs on, indirectly used from jedis)
    * port      (variable: the port your redis db runs on, indirectly used from jedis)
-   * path      (variable: only numbers - your redis db number, indirectly used from jedis)
+   * path      (variable: your redis db number for Redis, indirectly used from jedis)
    * fragment  (variable: the listname we push the log messages via LPUSH, directly used)
+   * query string
+      * masterId (variable: the sentinel master Id)
+
+
+### Redis Sentinel
+
+    redis-sentinel://[:password@]host[:port][,host[:port]]/[databaseNo][?masterId=sentinelMasterId]#Listname
+
+Example:
+
+    redis-sentinel://localhost/1#logstash
+    redis-sentinel://:password@localhost:26379,otherhost:26379/1?masterId=mymaster#logstash
+
+   * scheme    (fixed: redis-sentinel, directly used to determine the to be used sender class)
+   * user-info (variable: only the password part is used since redis doesn't have users, indirectly used from jedis)
+   * host      (variable: the host your redis db runs on, indirectly used from jedis)
+   * port      (variable: the port your redis db runs on, indirectly used from jedis)
+   * path      (variable: your redis db number for Redis, indirectly used from jedis)
+   * fragment  (variable: the listname we push the log messages via LPUSH, directly used)
+   * query string
+      * masterId (variable: the sentinel master Id)
 
 License
 -------
