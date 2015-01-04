@@ -21,8 +21,6 @@ Example:
    * port      (variable: the port your redis db runs on, indirectly used from jedis)
    * path      (variable: your redis db number for Redis, indirectly used from jedis)
    * fragment  (variable: the listname we push the log messages via LPUSH, directly used)
-   * query string
-      * masterId (variable: the sentinel master Id)
 
 
 ## Redis Sentinel
