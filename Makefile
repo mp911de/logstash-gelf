@@ -10,10 +10,26 @@ appendonly no
 client-output-buffer-limit pubsub 256k 128k 5
 endef
 
+# SENTINELS
+define REDIS_SENTINEL1
+port 26379
+daemonize yes
+sentinel monitor mymaster 127.0.0.1 6479 1
+sentinel down-after-milliseconds mymaster 2000
+sentinel failover-timeout mymaster 120000
+sentinel parallel-syncs mymaster 1
+pidfile work/sentinel1-26379.pid
+logfile work/sentinel1-26379.log
+endef
+
 export REDIS1_CONF
+export REDIS_SENTINEL1
+
 
 start: cleanup
 	echo "$$REDIS1_CONF" > work/redis1-6479.conf && redis-server work/redis1-6479.conf
+	echo "$$REDIS_SENTINEL1" > work/sentinel1-26379.conf && redis-server work/sentinel1-26379.conf --sentinel
+
 
 cleanup: stop
 	- mkdir -p work

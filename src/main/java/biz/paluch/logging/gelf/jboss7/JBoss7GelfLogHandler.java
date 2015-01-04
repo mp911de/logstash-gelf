@@ -8,10 +8,6 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethod
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
-
-import java.util.logging.LogRecord;
-import org.jboss.logmanager.ExtLogRecord;
-
 import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.LogMessageField;
@@ -19,17 +15,19 @@ import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
+import org.jboss.logmanager.ExtLogRecord;
+
+import java.util.logging.LogRecord;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
  * them using UDP (default) or TCP. Following parameters are supported/needed:
  * <p/>
  * <ul>
- * <li>graylogHost (Mandatory): Hostname/IP-Address of the Logstash Host
+ * <li>host (Mandatory): Hostname/IP-Address of the Logstash Host
  * <ul>
- * <li>tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com</li>
- * <li>udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com</li>
  * <li>(the host) for UDP, e.g. 127.0.0.1 or some.host.com</li>
+ * <li>See docs for more details</li>
  * </ul>
  * </li>
  * <li>port (Optional): Port, default 12201</li>

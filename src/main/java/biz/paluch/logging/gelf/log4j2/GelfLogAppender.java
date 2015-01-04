@@ -1,24 +1,41 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
-import static org.apache.logging.log4j.core.layout.PatternLayout.*;
-
-import java.util.Collections;
-
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+import static org.apache.logging.log4j.core.layout.PatternLayout.newBuilder;
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.MdcMessageField;
+import biz.paluch.logging.gelf.StaticMessageField;
+import biz.paluch.logging.gelf.intern.Closer;
+import biz.paluch.logging.gelf.intern.ErrorReporter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.plugins.*;
+import org.apache.logging.log4j.core.config.plugins.Plugin;
+import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
+import org.apache.logging.log4j.core.config.plugins.PluginConfiguration;
+import org.apache.logging.log4j.core.config.plugins.PluginElement;
+import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.impl.Log4jLogEvent;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.apache.logging.log4j.util.Strings;
 
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.gelf.*;
-import biz.paluch.logging.gelf.intern.*;
+import java.util.Collections;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -27,9 +44,8 @@ import biz.paluch.logging.gelf.intern.*;
  * <ul>
  * <li>host (Mandatory): Hostname/IP-Address of the Logstash Host
  * <ul>
- * <li>tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com</li>
- * <li>udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com</li>
  * <li>(the host) for UDP, e.g. 127.0.0.1 or some.host.com</li>
+ * <li>See docs for more details</li>
  * </ul>
  * </li>
  * <li>port (Optional): Port, default 12201</li>

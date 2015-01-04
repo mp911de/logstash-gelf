@@ -4,19 +4,19 @@ import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import redis.clients.util.Pool;
 
 import java.io.IOException;
 
 /**
  * (c) https://github.com/strima/logstash-gelf.git
  */
-public class GelfREDISSender implements GelfSender {
-    private JedisPool jedisPool;
+public class GelfREDISSender<T> implements GelfSender {
+    private Pool<Jedis> jedisPool;
     private ErrorReporter errorReporter;
     private String redisKey;
 
-    public GelfREDISSender(JedisPool jedisPool, String redisKey, ErrorReporter errorReporter) throws IOException {
+    public GelfREDISSender(Pool<Jedis> jedisPool, String redisKey, ErrorReporter errorReporter) throws IOException {
         this.jedisPool = jedisPool;
         this.errorReporter = errorReporter;
         this.redisKey = redisKey;

@@ -32,9 +32,8 @@ import java.util.logging.LogRecord;
  * <ul>
  * <li>host (Mandatory): Hostname/IP-Address of the Logstash Host
  * <ul>
- * <li>tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com</li>
- * <li>udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com</li>
  * <li>(the host) for UDP, e.g. 127.0.0.1 or some.host.com</li>
+ * <li>See docs for more details</li>
  * </ul>
  * </li>
  * <li>port (Optional): Port, default 12201</li>
@@ -55,6 +54,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
 
     protected GelfSender gelfSender;
     protected GelfMessageAssembler gelfMessageAssembler;
+    protected boolean publishing = false;
 
     public GelfLogHandler() {
         super();
@@ -104,31 +104,45 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
     }
 
     @Override
+    public boolean isLoggable(LogRecord record) {
+        if (publishing) {
+            return false;
+        }
+        return super.isLoggable(record);
+    }
+
+    @Override
     public void publish(final LogRecord record) {
         if (!isLoggable(record)) {
             return;
         }
-        try {
-            if (null == gelfSender) {
-                gelfSender = createGelfSender();
-            }
-        } catch (Exception e) {
-            reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.OPEN_FAILURE);
-            return;
-        }
 
         try {
-            GelfMessage message = createGelfMessage(record);
-            if (!message.isValid()) {
-                reportError("GELF Message is invalid: " + message.toJson(), null, ErrorManager.WRITE_FAILURE);
+            publishing = true;
+            try {
+                if (null == gelfSender) {
+                    gelfSender = createGelfSender();
+                }
+            } catch (Exception e) {
+                reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.OPEN_FAILURE);
                 return;
             }
 
-            if (null == gelfSender || !gelfSender.sendMessage(message)) {
-                reportError("Could not send GELF message", null, ErrorManager.WRITE_FAILURE);
+            try {
+                GelfMessage message = createGelfMessage(record);
+                if (!message.isValid()) {
+                    reportError("GELF Message is invalid: " + message.toJson(), null, ErrorManager.WRITE_FAILURE);
+                    return;
+                }
+
+                if (null == gelfSender || !gelfSender.sendMessage(message)) {
+                    reportError("Could not send GELF message", null, ErrorManager.WRITE_FAILURE);
+                }
+            } catch (Exception e) {
+                reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.FORMAT_FAILURE);
             }
-        } catch (Exception e) {
-            reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.FORMAT_FAILURE);
+        } finally {
+            publishing = false;
         }
     }
 
@@ -163,8 +177,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
                 if (-1 == index) {
                     continue;
                 }
-                gelfMessageAssembler.addField(
-                        new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
+                gelfMessageAssembler.addField(new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
             }
         }
     }
