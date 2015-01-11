@@ -64,5 +64,12 @@ travis-install:
 	make -C work/redis-git clean
 	make -C work/redis-git -j4
 
+release:
+	mvn release:clean
+	mvn release:prepare -Psonatype-oss-release
+	mvn release:perform -Psonatype-oss-release
+	mvn site:site
+	mvn -o scm-publish:publish-scm -Dgithub.site.upload.skip=false
+
 .PHONY: test
 
