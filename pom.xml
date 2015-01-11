@@ -9,7 +9,7 @@
     </parent>
 
     <groupId>biz.paluch.logging</groupId>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.6.0</version>
     <artifactId>logstash-gelf</artifactId>
 
     <name>logstash logging connectors</name>
@@ -20,7 +20,7 @@
         <connection>scm:git://github.com/mp911de/logstash-gelf.git</connection>
         <developerConnection>scm:git:git@github.com:mp911de/logstash-gelf.git</developerConnection>
         <url>http://github.com/mp911de/logstash-gelf/</url>
-        <tag>HEAD</tag>
+        <tag>logstash-gelf-1.6.0</tag>
     </scm>
 
     <issueManagement>
