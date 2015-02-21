@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="sysout" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] %c: %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
+        <param name="GraylogHost" value="udp:8.8.8.8" />
+        <param name="GraylogPort" value="12201" />
+        <param name="Version" value="1.1" />
+        <param name="Facility" value="java-test" />
+        <param name="ExtractStackTrace" value="true" />
+        <param name="FilterStackTrace" value="true" />
+        <param name="MdcProfiling" value="true" />
+        <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+        <param name="MaximumMessageSize" value="8192" />
+        <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
+        <param name="MdcFields" value="mdcField1,mdcField2" />
+        <param name="Threshold" value="ALL" />
+    </appender>
+
+    <root>
+        <priority value="DEBUG" />
+        <appender-ref ref="sysout" />
+        <appender-ref ref="gelf" />
+    </root>
+
+</log4j:configuration>

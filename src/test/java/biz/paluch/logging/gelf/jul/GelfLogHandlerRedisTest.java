@@ -143,4 +143,6 @@ public class GelfLogHandlerRedisTest {
         new RedisGelfSenderProvider().create(configuration);
     }
 
+
+
 }

@@ -6,17 +6,25 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import biz.paluch.logging.gelf.GelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.*;
+
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.ErrorHandler;
 import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import biz.paluch.logging.gelf.GelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GelfLogAppenderErrorsTest {
@@ -87,5 +95,15 @@ public class GelfLogAppenderErrorsTest {
         sut.append(LOGGING_EVENT);
 
         verify(errorHandler, atLeast(1)).error(anyString(), any(IllegalStateException.class), anyInt());
+    }
+
+    @Test(timeout = 500)
+    public void gelfPortNotReachable() throws Exception {
+        LogManager.getLoggerRepository().resetConfiguration();
+        DOMConfigurator.configure(getClass().getResource("/log4j-gelf-not-reachable.xml"));
+
+        Logger logger = Logger.getLogger(getClass());
+
+        logger.info(LOGGING_EVENT);
     }
 }

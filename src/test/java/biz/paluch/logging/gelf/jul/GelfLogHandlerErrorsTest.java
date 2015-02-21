@@ -6,8 +6,13 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import biz.paluch.logging.gelf.GelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.*;
+
+import java.util.logging.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +20,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.logging.ErrorManager;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
+import biz.paluch.logging.gelf.GelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GelfLogHandlerErrorsTest {
@@ -84,5 +92,15 @@ public class GelfLogHandlerErrorsTest {
         sut.publish(MESSAGE);
 
         verify(errorManager, atLeast(1)).error(anyString(), any(IllegalStateException.class), anyInt());
+    }
+
+    @Test(timeout = 5000)
+    public void testRedisNotAvailable() throws Exception {
+        LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/test-redis-not-available.properties"));
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        String expectedMessage = "message1";
+
+        logger.log(Level.INFO, expectedMessage);
     }
 }
