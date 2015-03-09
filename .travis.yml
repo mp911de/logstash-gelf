@@ -1,6 +1,10 @@
 language: java
 install: make travis-install
 script: make test-coveralls
+sudo: false
+cache:
+  directories:
+    - '$HOME/.m2/repository'
 jdk:
   - oraclejdk8
   - oraclejdk7
