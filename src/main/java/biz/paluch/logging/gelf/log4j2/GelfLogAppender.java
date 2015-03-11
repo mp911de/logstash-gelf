@@ -5,6 +5,7 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceLineNumber;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
@@ -292,7 +293,7 @@ public class GelfLogAppender extends AbstractAppender {
             GelfDynamicMdcLogFields[] dynamicFieldArray) {
         if (fields == null || fields.length == 0) {
             mdcGelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
-                    SourceMethodName, SourceSimpleClassName, LoggerName, Marker));
+                    SourceMethodName, SourceLineNumber, SourceSimpleClassName, LoggerName, Marker));
             return;
         }
 

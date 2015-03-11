@@ -1,19 +1,19 @@
 package biz.paluch.logging.gelf.logback;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+import org.slf4j.MDC;
+import org.slf4j.MarkerFactory;
+
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import org.junit.Test;
-import org.slf4j.MDC;
-import org.slf4j.MarkerFactory;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -133,6 +133,11 @@ public abstract class AbstractGelfLogAppenderTest {
         assertEquals("fieldValue2", gelfMessage.getField("fieldName2"));
         assertEquals("a value", gelfMessage.getField("mdcField1"));
         assertNull(gelfMessage.getField("mdcField2"));
+
+        assertNotNull(gelfMessage.getField(LogMessageField.NamedLogField.SourceLineNumber.name()));
+        assertEquals("testFields", gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name()));
+        assertEquals(AbstractGelfLogAppenderTest.class.getName(),
+                gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name()));
 
     }
 }

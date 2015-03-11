@@ -8,6 +8,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.jboss.logmanager.MDC;
 import org.jboss.logmanager.NDC;
@@ -53,6 +54,8 @@ public class JBoss7GelfLogHandlerTest {
         assertNotNull(gelfMessage.getField("MyTime"));
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
+        assertEquals("testSimple", gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name()));
+        assertEquals(getClass().getName(), gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name()));
 
     }
 

@@ -22,8 +22,8 @@ public class LogMessageField implements MessageField {
      */
     public static enum NamedLogField {
         Time("Time"), Severity("Severity"), ThreadName("Thread"), SourceClassName("SourceClassName"), SourceSimpleClassName(
-                "SourceSimpleClassName"), SourceMethodName("SourceMethodName"), Server("Server"), LoggerName("LoggerName"), Marker(
-                "Marker"), NDC("NDC");
+                "SourceSimpleClassName"), SourceMethodName("SourceMethodName"), SourceLineNumber("SourceLineNumber"), Server(
+                "Server"), LoggerName("LoggerName"), Marker("Marker"), NDC("NDC");
 
         private final String fieldName;
 

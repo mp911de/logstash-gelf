@@ -4,9 +4,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.Level;
+
 import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.GelfMessage;
-import org.apache.logging.log4j.Level;
 
 /**
  */
@@ -91,6 +92,8 @@ class Log4j2LogEvent implements LogEvent {
                 return logEvent.getThreadName();
             case SourceClassName:
                 return logEvent.getSource().getClassName();
+            case SourceLineNumber:
+                return "" + logEvent.getSource().getLineNumber();
             case SourceMethodName:
                 return logEvent.getSource().getMethodName();
             case SourceSimpleClassName:

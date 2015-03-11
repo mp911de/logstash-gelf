@@ -5,6 +5,7 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceLineNumber;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
@@ -81,7 +82,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
         super();
         gelfMessageAssembler = new MdcGelfMessageAssembler();
         gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
-                SourceMethodName, SourceSimpleClassName, LoggerName, Marker));
+                SourceMethodName, SourceLineNumber, SourceSimpleClassName, LoggerName, Marker));
     }
 
     @Override

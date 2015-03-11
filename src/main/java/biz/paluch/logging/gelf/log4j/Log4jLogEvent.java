@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.Level;
 import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
@@ -12,6 +11,7 @@ import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 
 import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -99,6 +99,8 @@ class Log4jLogEvent implements LogEvent {
                 return loggingEvent.getThreadName();
             case SourceClassName:
                 return loggingEvent.getLocationInformation().getClassName();
+            case SourceLineNumber:
+                return loggingEvent.getLocationInformation().getLineNumber();
             case SourceMethodName:
                 return loggingEvent.getLocationInformation().getMethodName();
             case SourceSimpleClassName:

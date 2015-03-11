@@ -147,6 +147,11 @@ public abstract class AbstractGelfLogAppenderTest {
         assertEquals("fieldValue1", gelfMessage.getField("fieldName1"));
         assertEquals("fieldValue2", gelfMessage.getField("fieldName2"));
         assertEquals("a value", gelfMessage.getField("mdcField1"));
+        assertNotNull(gelfMessage.getField(LogMessageField.NamedLogField.SourceLineNumber.name()));
+        assertEquals("testFields", gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name()));
+        assertEquals(AbstractGelfLogAppenderTest.class.getName(),
+                gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name()));
+        assertEquals("a value", gelfMessage.getField("mdcField1"));
         assertNull(gelfMessage.getField("mdcField2"));
 
         assertNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION));

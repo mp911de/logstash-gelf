@@ -19,6 +19,7 @@ This are the fields used in GELF messages:
 * SourceClassName
 * SourceSimpleClassName (Simple source class name)
 * SourceMethodName
+* SourceLineNumber
 * Server
 * LoggerName (Name of the logger/category)
 * Marker (logback/log4j2)

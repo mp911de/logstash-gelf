@@ -83,8 +83,17 @@ class LogbackLogEvent implements LogEvent {
         return calleeStackTraceElement.getMethodName();
     }
 
+    public String getSourceLine() {
+        StackTraceElement calleeStackTraceElement = getCalleeStackTraceElement();
+        if (null == calleeStackTraceElement) {
+            return "";
+        }
+
+        return "" + calleeStackTraceElement.getLineNumber();
+    }
+
     private String levelToSyslogLevel(final Level level) {
-        String result = ""+ GelfMessage.DEFAUL_LEVEL;
+        String result = "" + GelfMessage.DEFAUL_LEVEL;
 
         int intLevel = level.toInt();
         if (intLevel > Level.ERROR_INT) {
@@ -127,6 +136,8 @@ class LogbackLogEvent implements LogEvent {
                 return getSourceClassName();
             case SourceMethodName:
                 return getSourceMethodName();
+            case SourceLineNumber:
+                return getSourceLine();
             case SourceSimpleClassName:
                 return GelfUtil.getSimpleClassName(getSourceClassName());
             case LoggerName:
