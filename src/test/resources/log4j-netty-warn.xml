@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="sysout" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] %c: %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
+        <param name="Host" value="localhost"/>
+        <param name="Port" value="19392"/>
+        <param name="Threshold" value="WARN"/>
+    </appender>
+
+    <logger name="org.something">
+        <level value="WARN"/>
+    </logger>
+
+    <root>
+        <priority value="INFO"/>
+        <appender-ref ref="sysout"/>
+        <appender-ref ref="gelf"/>
+    </root>
+
+</log4j:configuration>
