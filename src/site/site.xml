@@ -22,6 +22,7 @@
             <item name="MDC Profiling" href="mdcprofiling.html" />
             <item name="Hostname Lookup" href="hostname-lookup.html" />
             <item name="Default Fields" href="default-fields.html" />
+            <item name="Syslog level mapping" href="syslog-level-mapping.html"/>
             <item name="Stack Trace Filter" href="stack-trace-filter.html"/>
             <item name="Redis" href="redis.html" />
             <item name="Datenpumpe" href="datenpumpe.html" />

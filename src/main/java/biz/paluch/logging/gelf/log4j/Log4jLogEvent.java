@@ -72,7 +72,7 @@ class Log4jLogEvent implements LogEvent {
             return 3;
         }
 
-        if (level.toInt() == Level.FATAL.toInt()) {
+        if (level.toInt() <= Level.FATAL.toInt()) {
             return 2;
         }
 

@@ -108,7 +108,7 @@ class LogbackLogEvent implements LogEvent {
             return 4;
         }
 
-        if (intLevel == Level.ERROR_INT) {
+        if (intLevel <= Level.ERROR_INT) {
             return 3;
         }
 
