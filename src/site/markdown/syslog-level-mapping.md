@@ -1,6 +1,6 @@
 # Syslog level mapping
 
-Gelf requires a syslog level which is an integer. There are several ways how to determine that. log4j for example has an built-in
+Gelf requires a syslog level that is an integer. There are several ways how to determine that. log4j, for example, has a built-in
 mapping. To keep the style consistent over various logging frameworks this is the way how it works:
 
 ## log4j2
