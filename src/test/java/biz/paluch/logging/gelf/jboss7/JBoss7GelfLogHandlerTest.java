@@ -7,13 +7,14 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.jboss.logmanager.MDC;
 import org.jboss.logmanager.NDC;
 import org.junit.Before;
 import org.junit.Test;
+
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
@@ -56,6 +57,69 @@ public class JBoss7GelfLogHandlerTest {
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
         assertEquals("testSimple", gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name()));
         assertEquals(getClass().getName(), gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name()));
+
+    }
+
+    @Test
+    public void testWarning() throws Exception {
+
+        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        logger.warning(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("4", gelfMessage.getLevel());
+    }
+
+    @Test
+    public void testFine() throws Exception {
+
+        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
+        handler.setLevel(Level.ALL);
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+        logger.setLevel(Level.ALL);
+
+        logger.fine(LOG_MESSAGE);
+        assertEquals("7", GelfTestSender.getMessages().get(0).getLevel());
+        GelfTestSender.getMessages().clear();
+
+        logger.info(LOG_MESSAGE);
+        assertEquals("6", GelfTestSender.getMessages().get(0).getLevel());
+        GelfTestSender.getMessages().clear();
+
+        logger.warning(LOG_MESSAGE);
+        assertEquals("4", GelfTestSender.getMessages().get(0).getLevel());
+        GelfTestSender.getMessages().clear();
+
+        logger.severe(LOG_MESSAGE);
+        assertEquals("3", GelfTestSender.getMessages().get(0).getLevel());
+        GelfTestSender.getMessages().clear();
+
+    }
+
+    @Test
+    public void testSevere() throws Exception {
+
+        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
+
+        NDC.clear();
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        NDC.push("ndc message");
+        logger.severe(LOG_MESSAGE);
+        NDC.clear();
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("3", gelfMessage.getLevel());
 
     }
 

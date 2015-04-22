@@ -119,17 +119,28 @@ public class JulLogEvent implements LogEvent {
     }
 
     private int levelToSyslogLevel(final Level level) {
-        final int syslogLevel;
-        if (level == Level.SEVERE) {
-            syslogLevel = 3;
-        } else if (level == Level.WARNING) {
-            syslogLevel = 4;
-        } else if (level == Level.INFO) {
-            syslogLevel = 6;
-        } else {
-            syslogLevel = GelfMessage.DEFAUL_LEVEL;
+
+        if (level.intValue() <= Level.CONFIG.intValue()) {
+            return GelfMessage.DEFAUL_LEVEL;
         }
-        return syslogLevel;
+
+        if (level.intValue() <= Level.INFO.intValue()) {
+            return 6;
+        }
+
+        if (level.intValue() <= Level.WARNING.intValue()) {
+            return 4;
+        }
+
+        if (level.intValue() <= Level.SEVERE.intValue()) {
+            return 3;
+        }
+
+        if (level.intValue() > Level.SEVERE.intValue()) {
+            return 2;
+        }
+
+        return GelfMessage.DEFAUL_LEVEL;
     }
 
     public Values getValues(MessageField field) {

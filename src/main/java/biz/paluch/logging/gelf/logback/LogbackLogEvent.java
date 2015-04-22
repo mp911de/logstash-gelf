@@ -52,7 +52,7 @@ class LogbackLogEvent implements LogEvent {
 
     @Override
     public String getSyslogLevel() {
-        return levelToSyslogLevel(loggingEvent.getLevel());
+        return "" + levelToSyslogLevel(loggingEvent.getLevel());
     }
 
     public String getSourceClassName() {
@@ -67,7 +67,7 @@ class LogbackLogEvent implements LogEvent {
     private StackTraceElement getCalleeStackTraceElement() {
         StackTraceElement[] callerData = loggingEvent.getCallerData();
 
-        if (null != callerData) {
+        if (null != callerData && callerData.length > 0) {
             return callerData[0];
         } else {
             return null;
@@ -92,20 +92,31 @@ class LogbackLogEvent implements LogEvent {
         return "" + calleeStackTraceElement.getLineNumber();
     }
 
-    private String levelToSyslogLevel(final Level level) {
-        String result = "" + GelfMessage.DEFAUL_LEVEL;
+    private int levelToSyslogLevel(final Level level) {
 
         int intLevel = level.toInt();
-        if (intLevel > Level.ERROR_INT) {
-            result = "2";
-        } else if (intLevel == Level.ERROR_INT) {
-            result = "3";
-        } else if (intLevel == Level.WARN_INT) {
-            result = "4";
-        } else if (intLevel == Level.INFO_INT) {
-            result = "6";
+
+        if (intLevel <= Level.DEBUG_INT) {
+            return GelfMessage.DEFAUL_LEVEL;
         }
-        return result;
+
+        if (intLevel <= Level.INFO_INT) {
+            return 6;
+        }
+
+        if (intLevel <= Level.WARN_INT) {
+            return 4;
+        }
+
+        if (intLevel == Level.ERROR_INT) {
+            return 3;
+        }
+
+        if (intLevel < Level.ERROR_INT) {
+            return 2;
+        }
+
+        return GelfMessage.DEFAUL_LEVEL;
     }
 
     @Override

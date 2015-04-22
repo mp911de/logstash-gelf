@@ -56,21 +56,31 @@ class Log4jLogEvent implements LogEvent {
     }
 
     private int levelToSyslogLevel(final Level level) {
-        final int syslogLevel;
-
-        switch (level.toInt()) {
-            case Level.FATAL_INT:
-                return 2;
-            case Level.ERROR_INT:
-                return 3;
-            case Level.WARN_INT:
-                return 4;
-            case Level.INFO_INT:
-                return 6;
-            default:
-                return GelfMessage.DEFAUL_LEVEL;
-
+        if (level.toInt() <= Level.DEBUG.toInt()) {
+            return GelfMessage.DEFAUL_LEVEL;
         }
+
+        if (level.toInt() <= Level.INFO.toInt()) {
+            return 6;
+        }
+
+        if (level.toInt() <= Level.WARN.toInt()) {
+            return 4;
+        }
+
+        if (level.toInt() <= Level.ERROR.toInt()) {
+            return 3;
+        }
+
+        if (level.toInt() == Level.FATAL.toInt()) {
+            return 2;
+        }
+
+        if (level.toInt() > Level.FATAL.toInt()) {
+            return 0;
+        }
+
+        return GelfMessage.DEFAUL_LEVEL;
     }
 
     @Override

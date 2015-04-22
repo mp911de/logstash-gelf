@@ -28,7 +28,7 @@ public abstract class AbstractGelfLogAppenderTest {
     LoggerContext lc = null;
 
     @Test
-    public void testSimpleDebug() throws Exception {
+    public void testLevels() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
 
@@ -36,6 +36,35 @@ public abstract class AbstractGelfLogAppenderTest {
         logger.debug(LOG_MESSAGE);
         assertEquals(0, GelfTestSender.getMessages().size());
 
+        logger.info(LOG_MESSAGE);
+        assertEquals("6", GelfTestSender.getMessages().get(0).getLevel());
+        GelfTestSender.getMessages().clear();
+
+        logger.warn(LOG_MESSAGE);
+        assertEquals("4", GelfTestSender.getMessages().get(0).getLevel());
+        GelfTestSender.getMessages().clear();
+
+        logger.error(LOG_MESSAGE);
+        assertEquals("3", GelfTestSender.getMessages().get(0).getLevel());
+        GelfTestSender.getMessages().clear();
+
+        logger.log(null, getClass().getName(), 0, LOG_MESSAGE, new Object[0], null);
+        assertEquals(0, GelfTestSender.getMessages().size());
+
+        logger.log(null, getClass().getName(), 10, LOG_MESSAGE, new Object[0], null);
+        assertEquals(0, GelfTestSender.getMessages().size());
+
+        logger.log(null, getClass().getName(), 20, LOG_MESSAGE, new Object[0], null);
+        assertEquals("6", GelfTestSender.getMessages().get(0).getLevel());
+        GelfTestSender.getMessages().clear();
+
+        logger.log(null, getClass().getName(), 30, LOG_MESSAGE, new Object[0], null);
+        assertEquals("4", GelfTestSender.getMessages().get(0).getLevel());
+        GelfTestSender.getMessages().clear();
+
+        logger.log(null, getClass().getName(), 40, LOG_MESSAGE, new Object[0], null);
+        assertEquals("3", GelfTestSender.getMessages().get(0).getLevel());
+        GelfTestSender.getMessages().clear();
     }
 
     @Test
@@ -55,30 +84,6 @@ public abstract class AbstractGelfLogAppenderTest {
         assertEquals("6", gelfMessage.getLevel());
         assertEquals(8192, gelfMessage.getMaximumMessageSize());
 
-    }
-
-    @Test
-    public void testSimpleWarn() throws Exception {
-
-        Logger logger = lc.getLogger(getClass());
-
-        logger.warn(LOG_MESSAGE);
-
-        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-
-        assertEquals("4", gelfMessage.getLevel());
-    }
-
-    @Test
-    public void testSimpleError() throws Exception {
-
-        Logger logger = lc.getLogger(getClass());
-
-        logger.error(LOG_MESSAGE);
-
-        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-
-        assertEquals("3", gelfMessage.getLevel());
     }
 
     @Test
