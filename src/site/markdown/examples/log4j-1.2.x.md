@@ -17,7 +17,7 @@ Following settings can be used:
  * filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
  * mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false. See [MDC Profiling](../mdcprofiling.html) for details.
  * facility (Optional): Name of the Facility, default logstash-gelf
- * threshold/level (Optional): Log-Level, default INFO
+ * threshold (Optional): Log-Level, default INFO
  * filter (Optional): Class-Name of a Log-Filter, default none
  * additionalFields (Optional): Post additional fields. Eg. .GelfLogHandler.additionalFields=fieldName=Value
  * mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
