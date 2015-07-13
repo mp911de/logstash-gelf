@@ -6,12 +6,12 @@ logstash-gelf
 [![Build Status](https://api.travis-ci.org/mp911de/logstash-gelf.svg)](https://travis-ci.org/mp911de/logstash-gelf) [![Coverage Status](https://img.shields.io/coveralls/mp911de/logstash-gelf.svg)](https://coveralls.io/r/mp911de/logstash-gelf) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/biz.paluch.logging/logstash-gelf/badge.svg)](https://maven-badges.herokuapp.com/maven-central/biz.paluch.logging/logstash-gelf)
 
 
-Provides logging to logstash using the Graylog Extended Logging Format ([GELF](http://www.graylog2.org/resources/gelf/specification)) for using with:
+Provides logging to logstash using the Graylog Extended Logging Format ([GELF](http://www.graylog2.org/resources/gelf/specification) 1.0 and 1.1) for using with:
 
 * [Java Util Logging](#jul)
 * [log4j 1.2.x](#log4j)
 * [log4j 2.x](#log4j2)
-* [JBoss AS7/Wildfly (JBoss AS8) (mix of Java Util Logging with log4j MDC)](#jbossas7)
+* [JBoss AS7/WildFly 8/WildFly 9](#jbossas7)
 * [Logback](#logback)
 
 See also http://logging.paluch.biz/ or http://www.graylog2.org/resources/gelf/specification for further documentation.
@@ -204,7 +204,7 @@ XML:
 ```    
 
 <a name="jbossas7"/>
-JBoss AS7 GELF/Wildfly GELF (JBoss AS8) configuration
+JBoss AS7/WildFly 8/WildFly 9 configuration
 --------------
 You need to include the library as module (see download above), then add following lines to your configuration:
 

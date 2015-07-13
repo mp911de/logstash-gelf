@@ -3,12 +3,12 @@ Introduction [![Build Status](https://snap-ci.com/mp911de/logstash-gelf/branch/m
 
 ${project.name} (${project.artifactId})
 
-Provides logging to logstash using the Graylog Extended Logging Format (GELF). This implementation comes with support for three areas:
+Provides logging to logstash using the Graylog Extended Logging Format (GELF) 1.0 and 1.1. Following log frameworks/integrations are supported:
 
 * [Java Util Logging](examples/jul.html)
 * [log4j 1.2.x](examples/log4j-1.2.x.html)
 * [log4j 2.x](examples/log4j-2.x.html)
-* [JBoss 7/Wildfly](examples/jbossas7.html)
+* [JBoss 7/WildFly 8/WildFly 9](examples/jbossas7.html)
 * [Logback](examples/logback.html)
 
 How to get

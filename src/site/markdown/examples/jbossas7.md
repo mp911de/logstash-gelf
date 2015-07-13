@@ -25,7 +25,7 @@ Following settings can be used:
  * includeFullMdc (Optional): Include all fields from the MDC, default false
 
 
-JBoss AS7/Wildfly Logging configuration
+JBoss AS7/WildFly 8/WildFly 9 Logging configuration
 --------------
 
 XML Configuration:
