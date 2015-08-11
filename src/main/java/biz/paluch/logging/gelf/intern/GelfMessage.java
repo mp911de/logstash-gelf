@@ -274,7 +274,7 @@ public class GelfMessage {
     /**
      * Add multiple fields (key/value pairs)
      * 
-     * @param fields
+     * @param fields map of fields
      * @return the current GelfMessage.
      */
     public GelfMessage addFields(Map<String, String> fields) {
@@ -288,9 +288,9 @@ public class GelfMessage {
 
     /**
      * Add a particular field.
-     * 
-     * @param key
-     * @param value
+     *
+     * @param key the key
+     * @param value the value
      * @return the current GelfMessage.
      */
     public GelfMessage addField(String key, String value) {

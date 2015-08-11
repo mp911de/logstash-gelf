@@ -14,21 +14,21 @@ public interface Datenpumpe {
     /**
      * Submit a map of key-value pairs using Gelf.
      * 
-     * @param data
+     * @param data map containing the data, must not be {@literal null}
      */
     void submit(Map<String, Object> data);
 
     /**
      * Submit a GelfMessage.
      * 
-     * @param gelfMessage
+     * @param gelfMessage the message, must not be {@literal null}
      */
     void submit(GelfMessage gelfMessage);
 
     /**
      * Submit a Java bean. All accessible fields will be used in a property manner to submit the data.
      *
-     * @param javaBean
+     * @param javaBean the java bean, must not be {@literal null}
      */
     void submit(Object javaBean);
 }

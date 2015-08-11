@@ -26,7 +26,7 @@ public interface GelfSenderConfiguration {
     ErrorReporter getErrorReporter();
     
     /**
-     * Returns some sender specific configurations
+     * @return some sender specific configurations
      */
     Map<String, Object> getSpecificConfigurations();
 }

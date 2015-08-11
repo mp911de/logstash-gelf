@@ -53,6 +53,7 @@ public class RuntimeContainer {
 
     /**
      * Initialize only once.
+     * @param errorReporter the error reporter
      */
     public static void initialize(ErrorReporter errorReporter) {
 
@@ -64,6 +65,7 @@ public class RuntimeContainer {
 
     /**
      * Triggers the hostname lookup.
+     * @param errorReporter the error reporter
      */
     public static void lookupHostname(ErrorReporter errorReporter) {
         String myHostName = getProperty(PROPERTY_LOGSTASH_GELF_HOSTNAME, "unknown");

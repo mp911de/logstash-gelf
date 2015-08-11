@@ -47,9 +47,9 @@ public class RuntimeContainerProperties {
     /**
      * Lookup property from ({@link System#getenv(String)} and {@link System#getProperty(String)} as fallback.
      * 
-     * @param key
-     * @param defaultValue
-     * @return
+     * @param key the property key
+     * @param defaultValue the default value
+     * @return the property value.
      */
     public static String getProperty(String key, String defaultValue) {
         String env = System.getenv(key);

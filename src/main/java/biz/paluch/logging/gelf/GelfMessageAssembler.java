@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf;
 
-import static biz.paluch.logging.gelf.GelfMessageBuilder.*;
+import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -16,6 +16,9 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.HostAndPortProvider;
 
 /**
+ * Creates {@link GelfMessage} based on various {@link LogEvent}. A {@link LogEvent} encapsulates log-framework specifics and
+ * exposes commonly used details of log events.
+ * 
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 15:05
  */
@@ -42,9 +45,9 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSSS";
 
     /**
-     * Initialize datastructure from property provider.
+     * Initialize the {@link GelfMessageAssembler} from a property provider.
      * 
-     * @param propertyProvider
+     * @param propertyProvider property provider to obtain configuration properties
      */
     public void initialize(PropertyProvider propertyProvider) {
         host = propertyProvider.getProperty(PropertyProvider.PROPERTY_HOST);
@@ -80,10 +83,10 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     }
 
     /**
-     * Producte a Gelf message.
+     * Produce a {@link GelfMessage}.
      * 
-     * @param logEvent
-     * @return GelfMessage
+     * @param logEvent the log event
+     * @return a new GelfMessage
      */
     public GelfMessage createGelfMessage(LogEvent logEvent) {
 

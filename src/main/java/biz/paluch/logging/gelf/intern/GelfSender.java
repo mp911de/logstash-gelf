@@ -10,8 +10,8 @@ public interface GelfSender extends Closeable {
     /**
      * Send the Gelf message.
      * 
-     * @param message
-     * @return
+     * @param message the message
+     * @return {@literal true} if the message was sent
      */
     boolean sendMessage(GelfMessage message);
 

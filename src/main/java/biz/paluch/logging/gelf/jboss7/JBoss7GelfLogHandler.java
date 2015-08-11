@@ -22,7 +22,6 @@ import java.util.logging.LogRecord;
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
  * them using UDP (default) or TCP. Following parameters are supported/needed:
- * <p/>
  * <ul>
  * <li>host (Mandatory): Hostname/IP-Address of the Logstash Host
  * <ul>
@@ -48,7 +47,6 @@ import java.util.logging.LogRecord;
  * .JBoss7GelfLogHandler.dynamicMdcFields=mdc.*,[mdc|MDC]fields</li>
  * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
- * <p/>
  * <a name="mdcProfiling"></a>
  * <h2>MDC Profiling</h2>
  * <p>
@@ -57,14 +55,11 @@ import java.util.logging.LogRecord;
  * <ul>
  * <li>profiling.requestStart.millis: Time Millis of the Request-Start (Long or String)</li>
  * </ul>
- * <p/>
- * Two values are set by the Log Appender:
+ * <p>Two values are set by the Log Appender:</p>
  * <ul>
  * <li>profiling.requestEnd: End-Time of the Request-End in Date.toString-representation</li>
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
  * </ul>
- * <p/>
- * </p>
  */
 public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHandler {
 

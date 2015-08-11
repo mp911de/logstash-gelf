@@ -39,7 +39,7 @@ public class GelfMessageBuilder {
     /**
      * Set the version.
      * 
-     * @param version
+     * @param version the version
      * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withVersion(String version) {
@@ -50,7 +50,7 @@ public class GelfMessageBuilder {
     /**
      * Set the host.
      * 
-     * @param host
+     * @param host the host
      * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withHost(String host) {
@@ -61,7 +61,7 @@ public class GelfMessageBuilder {
     /**
      * Set the short_message.
      * 
-     * @param shortMessage
+     * @param shortMessage the short_message
      * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withShortMessage(String shortMessage) {
@@ -72,7 +72,7 @@ public class GelfMessageBuilder {
     /**
      * Set the full_message.
      * 
-     * @param fullMessage
+     * @param fullMessage the fullMessage
      * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withFullMessage(String fullMessage) {
@@ -83,7 +83,7 @@ public class GelfMessageBuilder {
     /**
      * Set the level (severity).
      * 
-     * @param level
+     * @param level the level
      * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withLevel(String level) {
@@ -94,7 +94,7 @@ public class GelfMessageBuilder {
     /**
      * Set the facility.
      * 
-     * @param facility
+     * @param facility the facility
      * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withFacility(String facility) {
@@ -105,8 +105,8 @@ public class GelfMessageBuilder {
     /**
      * Set the max message size.
      * 
-     * @param maximumMessageSize
-     * @return
+     * @param maximumMessageSize the maximumMessageSize
+     * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withMaximumMessageSize(int maximumMessageSize) {
         this.maximumMessageSize = maximumMessageSize;
@@ -116,7 +116,7 @@ public class GelfMessageBuilder {
     /**
      * Set the java timestamp (millis).
      * 
-     * @param javaTimestamp
+     * @param javaTimestamp the javaTimestamp
      * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withJavaTimestamp(long javaTimestamp) {
@@ -127,7 +127,7 @@ public class GelfMessageBuilder {
     /**
      * Add additional fields.
      * 
-     * @param additonalFields
+     * @param additonalFields the additonalFields
      * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withFields(Map<String, String> additonalFields) {
@@ -138,8 +138,8 @@ public class GelfMessageBuilder {
     /**
      * Add an additional field.
      * 
-     * @param key
-     * @param value
+     * @param key the key
+     * @param value the value
      * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withField(String key, String value) {

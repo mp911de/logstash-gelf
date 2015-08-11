@@ -10,7 +10,7 @@ import biz.paluch.logging.RuntimeContainer;
 /**
  * Provides the servername/Hostname.
  * 
- * <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" style="border-bottom:1px solid #9eadc0;">
+ * <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" style="border-bottom:1px solid #9eadc0;" summary="Details for the %host formatter">
  * <tbody>
  * <tr>
  * <th class="colFirst">Option</th>

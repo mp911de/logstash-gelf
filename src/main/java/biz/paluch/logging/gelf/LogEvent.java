@@ -4,7 +4,8 @@ import java.util.Set;
 
 /**
  * 
- * Generic Log Event.
+ * Abstraction for a log event. This interface is usually implemented by a logging framework wrapper to encapsulate the
+ * frameworks specifics and expose the required log event details.
  * 
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 26.09.13 15:16
@@ -43,7 +44,7 @@ public interface LogEvent {
 
     /**
      * 
-     * @param field
+     * @param field the field value
      * @return values for the requested field.
      */
     Values getValues(MessageField field);

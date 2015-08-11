@@ -1,47 +1,28 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceLineNumber;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 import static org.apache.logging.log4j.core.layout.PatternLayout.newBuilder;
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.StaticMessageField;
-import biz.paluch.logging.gelf.intern.Closer;
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+
+import java.util.Collections;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.plugins.Plugin;
-import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
-import org.apache.logging.log4j.core.config.plugins.PluginConfiguration;
-import org.apache.logging.log4j.core.config.plugins.PluginElement;
-import org.apache.logging.log4j.core.config.plugins.PluginFactory;
+import org.apache.logging.log4j.core.config.plugins.*;
 import org.apache.logging.log4j.core.impl.Log4jLogEvent;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.apache.logging.log4j.util.Strings;
 
-import java.util.Collections;
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.intern.*;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
  * them using UDP (default) or TCP. Following parameters are supported/needed:
- * <p/>
  * <ul>
  * <li>host (Mandatory): Hostname/IP-Address of the Logstash Host
  * <ul>
@@ -75,8 +56,7 @@ import java.util.Collections;
  * <li>message</li>
  * <li>short_message</li>
  * </ul>
- * </br>
- * 
+ *
  * <p>
  * You can add different fields:
  * </p>
@@ -87,8 +67,7 @@ import java.util.Collections;
  * <li>Log-Event fields (using <a href="http://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout">Pattern
  * Layout</a>)</li>
  * </ul>
- * </br>
- * 
+ *
  * In order to do so, use nested Field elements below the Appender element.
  * 
  * <h3>Static Literals</h3> <code>
@@ -113,8 +92,8 @@ import java.util.Collections;
  * You can use all built-in Pattern Fields:
  * </p>
  * <code>
-    &lt;Field name="simpleClassName" pattern="%C{1}" /&gt;<br/>
-    &lt;Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" /&gt;<br/>
+    &lt;Field name="simpleClassName" pattern="%C{1}" /&gt;
+    &lt;Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" /&gt;
     &lt;Field name="level" pattern="%level" /&gt;
  </code>
  * 
@@ -122,7 +101,7 @@ import java.util.Collections;
  * Additionally, you can add the <strong>host</strong>-Field, which can supply you either the FQDN hostname, the simple hostname
  * or the local address.
  * </p>
- * <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" style="border-bottom:1px solid #9eadc0;">
+ * <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" style="border-bottom:1px solid #9eadc0;" summary="Details for the %host formatter">
  * <tbody>
  * <tr>
  * <th class="colFirst">Option</th>
@@ -130,8 +109,7 @@ import java.util.Collections;
  * </tr>
  * <tr class="altColor">
  * <td class="colFirst" align="center">
- * <b>host</b><br>
- * &nbsp;&nbsp;{["fqdn"<br>
+ * <b>host</b> &nbsp;&nbsp;{["fqdn"<br>
  * &nbsp;&nbsp;|"simple"<br>
  * &nbsp;&nbsp;|"address"]}</td>
  * <td class="colLast">
@@ -156,23 +134,20 @@ import java.util.Collections;
  * </table>
  * 
  * 
- * <p/>
- * <a name="mdcProfiling"></a>
- * <h2>MDC Profiling</h2>
+ * <a name="mdcProfiling"></a> <h2>MDC Profiling</h2>
  * <p>
  * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must
  * set one value in the MDC:
  * <ul>
  * <li>profiling.requestStart.millis: Time Millis of the Request-Start (Long or String)</li>
  * </ul>
- * <p/>
+ * <p>
  * Two values are set by the Log Appender:
+ * </p>
  * <ul>
  * <li>profiling.requestEnd: End-Time of the Request-End in Date.toString-representation</li>
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
  * </ul>
- * <p/>
- * </p>
  */
 @Plugin(name = "Gelf", category = "Core", elementType = "appender", printObject = true)
 public class GelfLogAppender extends AbstractAppender {
@@ -192,10 +167,6 @@ public class GelfLogAppender extends AbstractAppender {
         this.gelfMessageAssembler = gelfMessageAssembler;
     }
 
-    /**
-     * 
-     * @return GelfLogAppender
-     */
     @PluginFactory
     public static GelfLogAppender createAppender(@PluginConfiguration final Configuration config,
             @PluginAttribute("name") String name, @PluginElement("Filter") Filter filter,
@@ -285,9 +256,9 @@ public class GelfLogAppender extends AbstractAppender {
     /**
      * Configure fields (literals, MDC, layout).
      * 
-     * @param mdcGelfMessageAssembler
-     * @param fields
-     * @param dynamicFieldArray
+     * @param mdcGelfMessageAssembler the assembler
+     * @param fields static field array
+     * @param dynamicFieldArray dynamic field array
      */
     private static void configureFields(MdcGelfMessageAssembler mdcGelfMessageAssembler, GelfLogField[] fields,
             GelfDynamicMdcLogFields[] dynamicFieldArray) {
