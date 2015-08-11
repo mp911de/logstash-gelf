@@ -30,17 +30,15 @@ import biz.paluch.logging.gelf.jul.GelfLogHandler;
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>level (Optional): Log-Level, default INFO</li>
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
- * <li>additionalFields(number) (Optional): Post additional fields. Eg.
- * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
+ * <li>additionalFields(number) (Optional): Post additional fields. Eg. fieldName=Value,field2=value2</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
- * .JBoss7GelfLogHandler.mdcFields=Application,Version,SomeOtherFieldName</li>
+ * Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
- * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
- * .JBoss7GelfLogHandler.dynamicMdcFields=mdc.*,[mdc|MDC]fields</li>
+ * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name. Eg.
+ * mdc.*,[mdc|MDC]fields</li>
  * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
- * <a name="mdcProfiling"></a>
- * <h2>MDC Profiling</h2>
+ * <a name="mdcProfiling"></a> <h2>MDC Profiling</h2>
  * <p>
  * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must
  * set one value in the MDC:

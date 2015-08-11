@@ -10,6 +10,7 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF) 1.
 * [log4j 2.x](examples/log4j-2.x.html)
 * [JBoss 7](examples/jbossas7.html)
 * [WildFly 8/WildFly 9/WildFly 10](examples/wildfly.html)
+* [WildFly 8/WildFly 9/WildFly 10 JSON Formatter](examples/wildfly-json.html)
 * [Logback](examples/logback.html)
 
 How to get

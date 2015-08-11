@@ -25,14 +25,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test for the Hibernate OGM module in WildFly using Redis
+ * Test for the GelfLogHandler of the logstash-gelf module in WildFly.
  *
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 11.08.14 08:36
  */
 @RunWith(Arquillian.class)
-@ServerSetup({ WildFlyIT.LoggerSetup.class })
-public class WildFlyIT {
+@ServerSetup({ WildFlyHandlerIT.LoggerSetup.class })
+public class WildFlyHandlerIT {
 
     static class LoggerSetup implements ServerSetupTask {
 
@@ -82,14 +82,16 @@ public class WildFlyIT {
     }
 
     @Test
-    public void testName() throws Exception {
+    public void testGelfSubmissionToEmbeddedNettyGelfServer() throws Exception {
         NettyLocalServer nettyLocalServer = new NettyLocalServer(NioDatagramChannel.class);
         nettyLocalServer.run();
         String logMessage = "some log event";
 
-        while (nettyLocalServer.getJsonValues().isEmpty()) {
+        int iterations = 0;
+        while (nettyLocalServer.getJsonValues().isEmpty() && iterations < 10) {
             LogManager.getLogger(getClass()).info(logMessage);
             Thread.sleep(100);
+            iterations++;
         }
 
         assertFalse(nettyLocalServer.getJsonValues().isEmpty());
