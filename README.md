@@ -43,7 +43,8 @@ or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-ge
 
 <a name="jul"/>Java Util Logging GELF configuration
 --------------
-Properties:
+
+**Properties**
 
 ```properties
 handlers = biz.paluch.logging.gelf.jul.GelfLogHandler, java.util.logging.ConsoleHandler
@@ -69,7 +70,8 @@ biz.paluch.logging.gelf.jul.GelfLogHandler.level=INFO
 <a name="log4j"/>
 log4j GELF configuration
 --------------
-Properties:
+
+**Properties**
 
 ```properties
 log4j.appender.gelf=biz.paluch.logging.gelf.log4j.GelfLogAppender
@@ -94,7 +96,8 @@ log4j.appender.gelf.IncludeFullMdc=true
 ```
 
 
-XML:
+**XML**
+
 ```xml
 <appender name="gelf" class="biz.paluch.logging.gelf.log4j.GelfLogAppender">
     <param name="Threshold" value="INFO" />
@@ -173,7 +176,8 @@ Option | Description
 --- | ---
 host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, the simple hostname or the local address. You can follow the throwable conversion word with an option in the form %host{option}. <br/> %host{fqdn} default setting, outputs the FQDN hostname, e.g. www.you.host.name.com. <br/>%host{simple} outputs simple hostname, e.g. www. <br/>%host{address} outputs the local IP address of the found hostname, e.g. 1.2.3.4 or affe:affe:affe::1. 
 
-XML:
+**XML**
+
 ```xml    
 <Configuration>
     <Appenders>
@@ -209,7 +213,8 @@ JBoss AS7/WildFly 8/WildFly 9 configuration
 --------------
 You need to include the library as module (see download above), then add following lines to your configuration:
 
-standalone.xml
+**standalone.xml**
+
 ```xml
 <custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler" module="biz.paluch.logging">
     <level name="INFO" />
@@ -335,11 +340,11 @@ This project is built against following dependencies/versions:
 
 * json-simple 1.1.1
 * log4j 1.2.14
-* log4j2 2.1
+* log4j2 2.3
 * Java Util Logging JDK Version 1.6
-* logback 1.0.13
+* logback 1.1.3
 * slf4j-api 1.7.9
-* jedis 2.6.2 (includes commons-pool2 2.2)
+* jedis 2.7.3 (includes commons-pool2 2.3)
 
 Settings
 --------------

@@ -53,7 +53,7 @@ test-coveralls:
 test:
 	make start
 	sleep 2
-	mvn -B -Dtest.withRedis=true clean compile test
+	mvn -B -Dtest.withRedis=true clean verify
 	make stop
 
 travis-install:
