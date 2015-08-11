@@ -25,12 +25,12 @@ Following settings can be used:
  * includeFullMdc (Optional): Include all fields from the MDC, default false
 
 
-JBoss AS7 Logging configuration
+WildFly 8/WildFly 9/WildFly 10 Logging configuration
 --------------
 
 XML Configuration:
 
-     <custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler" module="biz.paluch.logging">
+     <custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.wildfly.WildFlyGelfLogHandler" module="biz.paluch.logging">
         <level name="INFO" />
         <properties>
             <property name="host" value="udp:localhost" />
@@ -63,7 +63,7 @@ XML Configuration:
 
 CLI Configuration:
 
-    /subsystem=logging/custom-handler=GelfLogger/:add(module=biz.paluch.logging,class=biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler,properties={ \
+    /subsystem=logging/custom-handler=GelfLogger/:add(module=biz.paluch.logging,class=biz.paluch.logging.gelf.wildfly.WildFlyGelfLogHandler,properties={ \
            host="udp:localhost", \
            port="12201", \
            version="1.0", \

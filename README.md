@@ -11,7 +11,8 @@ Provides logging to logstash using the Graylog Extended Logging Format ([GELF](h
 * [Java Util Logging](#jul)
 * [log4j 1.2.x](#log4j)
 * [log4j 2.x](#log4j2)
-* [JBoss AS7/WildFly 8/WildFly 9](#jbossas7)
+* [JBoss AS7](#jbossas7)
+* [WildFly 8/WildFly /WildFly 10](#wildfly)
 * [Logback](#logback)
 
 See also http://logging.paluch.biz/ or http://www.graylog2.org/resources/gelf/specification for further documentation.
@@ -211,6 +212,48 @@ You need to include the library as module (see download above), then add followi
 standalone.xml
 ```xml
 <custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler" module="biz.paluch.logging">
+    <level name="INFO" />
+    <properties>
+        <property name="host" value="udp:localhost" />
+        <property name="port" value="12201" />
+        <property name="version" value="1.1" />
+        <property name="facility" value="java-test" />
+        <property name="extractStackTrace" value="true" />
+        <property name="filterStackTrace" value="true" />
+        <property name="mdcProfiling" value="true" />
+        <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+        <property name="maximumMessageSize" value="8192" />
+        
+        <!-- This are static fields -->
+        <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
+        
+        <!-- This are fields using MDC -->
+        <property name="mdcFields" value="mdcField1,mdcField2" />
+        <property name="dynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
+        <property name="includeFullMdc" value="true" />
+    </properties>
+</custom-handler>
+
+...
+
+<root-logger>
+    <level name="INFO"/>
+    <handlers>
+        <handler name="FILE"/>
+        <handler name="CONSOLE"/>
+        <handler name="GelfLogger"/>
+    </handlers>
+</root-logger>
+```
+
+<a name="wildfly"/>
+WildFly 8/WildFly 9/WildFly 10 configuration
+--------------
+You need to include the library as module (see download above). Place it below the `$JBOSS_HOME/modules/system/layers/base` path, then add following lines to your configuration:
+
+standalone.xml
+```xml
+<custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.wildfly.WildFlyGelfLogHandler" module="biz.paluch.logging">
     <level name="INFO" />
     <properties>
         <property name="host" value="udp:localhost" />
