@@ -31,10 +31,10 @@ import static org.junit.Assert.assertTrue;
  * @since 11.08.14 08:36
  */
 @RunWith(Arquillian.class)
-@ServerSetup({ WildFlyIT.JmsQueueSetup.class })
+@ServerSetup({ WildFlyIT.LoggerSetup.class })
 public class WildFlyIT {
 
-    static class JmsQueueSetup implements ServerSetupTask {
+    static class LoggerSetup implements ServerSetupTask {
 
         @Override
         public void setup(ManagementClient managementClient, String containerId) throws Exception {
