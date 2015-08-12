@@ -1,11 +1,7 @@
 package biz.paluch.logging.gelf.wildfly;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.StringWriter;
 import java.util.Map;
@@ -122,6 +118,38 @@ public class WildFlyGelfLogFormatterTest {
 
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testUnknownField() throws Exception {
+
+        WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
+        formatter.setFields("dummy");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNotSupportedField() throws Exception {
+
+        WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
+        formatter.setFields("Marker");
+    }
+
+    @Test
+    public void testFields() throws Exception {
+
+        WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
+        formatter.setFields("Time,Severity,ThreadName,SourceSimpleClassName,NDC");
+
+        handler.setFormatter(formatter);
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        logger.info(LOG_MESSAGE);
+
+        Map<String, Object> message = getMessage();
+
+        assertNotNull(message.get("SourceSimpleClassName"));
+        assertNull(message.get("LoggerName"));
+    }
+
     @Test
     public void testLineBreak() throws Exception {
 
@@ -138,7 +166,7 @@ public class WildFlyGelfLogFormatterTest {
     }
 
     @Test
-    public void testFields() throws Exception {
+    public void testMdcFields() throws Exception {
 
         WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
         formatter.setOriginHost("myhost");

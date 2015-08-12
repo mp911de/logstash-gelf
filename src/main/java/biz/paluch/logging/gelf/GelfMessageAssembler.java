@@ -197,7 +197,9 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     }
 
     public void addField(MessageField field) {
-        this.fields.add(field);
+        if (!fields.contains(field)) {
+            this.fields.add(field);
+        }
     }
 
     public void addFields(Collection<? extends MessageField> fields) {

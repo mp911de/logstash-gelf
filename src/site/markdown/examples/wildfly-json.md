@@ -2,6 +2,8 @@ Settings
 --------------
 Following settings can be used:
 
+ * lineBreak (Optional): End of line, defaults to `\n`
+ * fields (Optional): Comma-separated list of log event fields that should be included in the JSON. Defaults to `Time, Severity, ThreadName, SourceClassName, SourceMethodName, SourceSimpleClassName, LoggerName, NDC`
  * version (Optional): GELF Version 1.0 or 1.1, default 1.0
  * originHost (Optional): Originating Hostname, default FQDN Hostname
  * extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false
@@ -49,6 +51,7 @@ XML Configuration:
             <properties>
                 <property name="version" value="1.0" />
                 <property name="facility" value="java-test" />
+                <property name="fields" value="Time,Severity,ThreadName,SourceClassName,SourceMethodName,SourceSimpleClassName,LoggerName,NDC" />
                 <property name="extractStackTrace" value="true" />
                 <property name="filterStackTrace" value="true" />
                 <property name="mdcProfiling" value="true" />
@@ -81,6 +84,7 @@ CLI Configuration:
     /subsystem=logging/custom-formatter=JsonFormatter/:add(module=biz.paluch.logging,class=biz.paluch.logging.gelf.wildfly.WildFlyJsonFormatter,properties={ \
            version="1.0", \
 		   facility="java-test", \
+		   fields="Time,Severity,ThreadName,SourceClassName,SourceMethodName,SourceSimpleClassName,LoggerName,NDC", \
 		   extractStackTrace=true, \
 		   filterStackTrace=true, \
 		   mdcProfiling=true, \

@@ -21,6 +21,8 @@ import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
 
+import java.util.*;
+
 /**
  * Log-Formatter for JSON using fields specified within GELF. This formatter will produce a JSON object for each log event.
  * Example:
@@ -46,6 +48,8 @@ import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
  * Following parameters are supported/needed:
  * <ul>
  * <li>lineBreak (Optional): End of line, defaults to {@code \n}</li>
+ * <li>fields (Optional): Comma-separated list of log event fields that should be included in the JSON. Defaults to
+ * {@code Time, Severity, ThreadName, SourceClassName, SourceMethodName, SourceSimpleClassName, LoggerName, NDC}</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStacktrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
@@ -76,26 +80,81 @@ import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
  */
 public class WildFlyJsonFormatter extends ExtFormatter {
 
+    public static final String MULTI_VALUE_DELIMITTER = ",";
     private MdcGelfMessageAssembler gelfMessageAssembler = new MdcGelfMessageAssembler();
     private String lineBreak = "\n";
+    private boolean wasSetFieldsCalled = false;
+
+    public static final Set<LogMessageField.NamedLogField> SUPPORTED_FIELDS;
+
+    static {
+        Set<LogMessageField.NamedLogField> supportedFields = new LinkedHashSet<LogMessageField.NamedLogField>();
+
+        supportedFields.add(Time);
+        supportedFields.add(Severity);
+        supportedFields.add(ThreadName);
+        supportedFields.add(SourceClassName);
+        supportedFields.add(SourceMethodName);
+        supportedFields.add(SourceSimpleClassName);
+        supportedFields.add(LoggerName);
+        supportedFields.add(NDC);
+        supportedFields.add(Server);
+
+        SUPPORTED_FIELDS = Collections.unmodifiableSet(supportedFields);
+
+    }
 
     /**
      * Create a new instance of the {@link WildFlyJsonFormatter}.
      */
     public WildFlyJsonFormatter() {
-        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
-                SourceMethodName, SourceSimpleClassName, LoggerName, NDC, Server));
+
     }
 
     @Override
     public String format(ExtLogRecord extLogRecord) {
+        if (!wasSetFieldsCalled) {
+            addFields(SUPPORTED_FIELDS);
+        }
+
         GelfMessage gelfMessage = gelfMessageAssembler.createGelfMessage(new JBoss7JulLogEvent(extLogRecord));
-        return gelfMessage.toJson("") + lineBreak;
+        return gelfMessage.toJson("") + getLineBreak();
+    }
+
+    public void setFields(String fieldSpec) {
+
+        String[] properties = fieldSpec.split(MULTI_VALUE_DELIMITTER);
+        List<LogMessageField.NamedLogField> fields = new ArrayList<LogMessageField.NamedLogField>();
+        for (String field : properties) {
+
+            LogMessageField.NamedLogField namedLogField = LogMessageField.NamedLogField.byName(field.trim());
+            if (namedLogField == null) {
+                throw new IllegalArgumentException("Cannot resolve field name '" + field
+                        + "' to a field. Supported field names are: " + SUPPORTED_FIELDS);
+            }
+
+            if (!SUPPORTED_FIELDS.contains(namedLogField)) {
+                throw new IllegalArgumentException("Field '" + field + "' is not supported. Supported field names are: "
+                        + SUPPORTED_FIELDS);
+            }
+
+            fields.add(namedLogField);
+        }
+
+        addFields(fields);
+
+    }
+
+    private void addFields(Collection<LogMessageField.NamedLogField> fields) {
+        gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(fields
+                .toArray(new LogMessageField.NamedLogField[fields.size()])));
+
+        wasSetFieldsCalled = true;
     }
 
     public void setAdditionalFields(String fieldSpec) {
 
-        String[] properties = fieldSpec.split(",");
+        String[] properties = fieldSpec.split(MULTI_VALUE_DELIMITTER);
 
         for (String field : properties) {
             final int index = field.indexOf('=');
@@ -106,7 +165,7 @@ public class WildFlyJsonFormatter extends ExtFormatter {
     }
 
     public void setMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(",");
+        String[] fields = fieldSpec.split(MULTI_VALUE_DELIMITTER);
 
         for (String field : fields) {
             gelfMessageAssembler.addField(new MdcMessageField(field.trim(), field.trim()));
@@ -114,7 +173,7 @@ public class WildFlyJsonFormatter extends ExtFormatter {
     }
 
     public void setDynamicMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(",");
+        String[] fields = fieldSpec.split(MULTI_VALUE_DELIMITTER);
 
         for (String field : fields) {
             gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
