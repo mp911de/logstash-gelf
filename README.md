@@ -26,10 +26,10 @@ Maven:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
     </dependency>
     
-Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.6.0/logstash-gelf-1.6.0.jar)    
+Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.7.0/logstash-gelf-1.7.0.jar)    
 
 
 JBoss AS/WildFly Module Download:
@@ -37,11 +37,11 @@ JBoss AS/WildFly Module Download:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
         <classifier>logging-module</classifier>
     </dependency>
 
-Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.6.0/logstash-gelf-1.6.0-logging-module.zip)
+Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.7.0/logstash-gelf-1.7.0-logging-module.zip)
 
 
 <a name="jul"/>Java Util Logging GELF configuration
