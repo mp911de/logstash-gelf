@@ -1,8 +1,8 @@
 # Stack Trace Filter
 
-Stack traces provide valueable diagnostic details to find causes for exceptions. Sometimes stack traces contain way too
+Stack traces provide valuable diagnostic details to find causes for exceptions. Sometimes stack traces contain way too
 much details (like AOP classes, lots of java and javax classes). logstash-gelf provides a built-in stack trace filter
-to filter out noise out of stack traces.
+to filter out the noise out of stack traces.
 
 **Original stack trace**
 
@@ -130,7 +130,7 @@ javax.servlet
 ```
 
 The format of `StackTraceFilter.packages` is one package prefix per line. Every entry is tested against `startsWith`.
-These are not regular expressions and the entries do not support wildcards.
+These are not regular expressions, and the entries do not support wildcards.
 
 ## Verbose logging
 

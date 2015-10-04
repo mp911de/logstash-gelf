@@ -1,5 +1,4 @@
-Download logstash-gelf
-======================
+# Download logstash-gelf
 
  logstash-gelf is distributed under the
  [The MIT License (MIT)] (http://opensource.org/licenses/MIT).
@@ -13,7 +12,7 @@ Download logstash-gelf
 |                   | Download      | Checksum      | Signature     |
 | ----------------- |:-------------:|:-------------:|:-------------:|
 | logstash-gelf (jar) |[logstash-gelf-${logstash-gelf-release-version}.jar] (http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}.jar)|[logstash-gelf-${logstash-gelf-release-version}.jar.md5](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}.jar.md5)|[logstash-gelf-${logstash-gelf-release-version}.jar.asc](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}.jar.asc)|
-| logstash-gelf (logging-module.zip) |[logstash-gelf-${logstash-gelf-release-version}-logging-module.zip] (http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}.jar)|[logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.md5](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.md5)|[logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.asc](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.asc)|
+| logstash-gelf (logging-module.zip) |[logstash-gelf-${logstash-gelf-release-version}-logging-module.zip] (http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip)|[logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.md5](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.md5)|[logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.asc](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip.asc)|
 
 It is essential that you verify the integrity of the downloaded files using the PGP or MD5 signatures.
 

@@ -28,8 +28,11 @@ Maven:
         <artifactId>logstash-gelf</artifactId>
         <version>1.6.0</version>
     </dependency>
+    
+Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.6.0/logstash-gelf-1.6.0.jar)    
 
-JBoss Module Download:
+
+JBoss AS/WildFly Module Download:
 
     <dependency>
         <groupId>biz.paluch.logging</groupId>
@@ -38,7 +41,7 @@ JBoss Module Download:
         <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.6.0/logstash-gelf-1.6.0-logging-module.zip
+Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.6.0/logstash-gelf-1.6.0-logging-module.zip)
 
 
 <a name="jul"/>Java Util Logging GELF configuration
@@ -209,7 +212,7 @@ host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, th
 ```    
 
 <a name="jbossas7"/>
-JBoss AS7/WildFly 8/WildFly 9 configuration
+JBoss AS7 configuration
 --------------
 You need to include the library as module (see download above), then add following lines to your configuration:
 
@@ -345,91 +348,6 @@ This project is built against following dependencies/versions:
 * logback 1.1.3
 * slf4j-api 1.7.9
 * jedis 2.7.3 (includes commons-pool2 2.3)
-
-Settings
---------------
-Following settings can be used:
-
-### Basic Properties
-
-* `host` (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash or Redis Host
-    * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
-    * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
-    * [redis](#redis)://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
-    * [redis](#redis-sentinel)://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDBMASTER/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis-sentinel://:donttrustme@127.0.0.1:6379/myMaster/0#myloglist or if no password needed redis-sentinel://127.0.0.1:6379/myMaster/0#myloglist
-    * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
-* `port` (since version 1.2.0, Optional): Port, default 12201
-* `graylogHost` (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
-* `graylogPort` (until version 1.1.0, Optional): Port, default 12201
-* `version` (Optional): GELF Version 1.0 or 1.1, default 1.0
-* `originHost` (Optional): Originating Hostname, default FQDN Hostname
-* `extractStackTrace` (Optional): Post Stack-Trace to StackTrace field, default false
-* `filterStackTrace` (Optional): Perform Stack-Trace filtering (true/false), default false
-* `facility` (Optional): Name of the Facility, default logstash-gelf
-* `threshold`/`level` (Optional): Log-Level, default INFO
-
-### Advanced Properties
-
-* `filter` (Optional): Class-Name of a Log-Filter, default none
-* `mdcProfiling` (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false
-* `additionalFields` (Optional): Post additional fields. Example: .GelfLogHandler.additionalFields=fieldName=Value
-* `mdcFields` (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
-* `dynamicMdcFields` (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
-* `includeFullMdc` (Optional): Include all fields from the MDC, default false
-
-MDC Profiling
---------------
-MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must set one value in the MDC:
-
-`profiling.requestStart.millis` Time Millis of the Request-Start (Long or String)
-
-Two values are set by the Log Appender:
-
- * `profiling.requestEnd` End-Time of the Request-End in Date.toString-representation
- * `profiling.requestDuration` Duration of the request (e.g. 205ms, 16sec)
-
-<a name="redis"/>Notes on redis Connection
---------------
- * IMPORTANT: for getting your logstash config right it is vital to know that we do LPUSH (list push and not channel method)
- * The redis connection is done through jedis (https://github.com/xetorthio/jedis) and can operate on standalone or sentinel instances.
-
-### Redis Standalone
- The Url used as connection property is a java.net.URI , therefore it can have all components.
-
-    redis://[:password@]host[:port]/[databaseNo]#Listname
-
-Example:
-
-    redis://localhost/1#logstash
-    redis://:password@localhost:6379/1#logstash
-
-   * scheme    (fixed: redis, directly used to determine the to be used sender class)
-   * user-info (variable: only the password part is used since redis doesn't have users, indirectly used from jedis)
-   * host      (variable: the host your redis db runs on, indirectly used from jedis)
-   * port      (variable: the port your redis db runs on, indirectly used from jedis)
-   * path      (variable: your redis db number for Redis, indirectly used from jedis)
-   * fragment  (variable: the listname we push the log messages via LPUSH, directly used)
-   * query string
-      * masterId (variable: the sentinel master Id)
-
-
-### Redis Sentinel
-
-    redis-sentinel://[:password@]host[:port][,host[:port]]/[databaseNo][?masterId=sentinelMasterId]#Listname
-
-Example:
-
-    redis-sentinel://localhost/1#logstash
-    redis-sentinel://:password@localhost:26379,otherhost:26379/1?masterId=mymaster#logstash
-
-   * scheme    (fixed: redis-sentinel, directly used to determine the to be used sender class)
-   * user-info (variable: only the password part is used since redis doesn't have users, indirectly used from jedis)
-   * host      (variable: the host your redis db runs on, indirectly used from jedis)
-   * port      (variable: the port your redis db runs on, indirectly used from jedis)
-   * path      (variable: your redis db number for Redis, indirectly used from jedis)
-   * fragment  (variable: the listname we push the log messages via LPUSH, directly used)
-   * query string
-      * masterId (variable: the sentinel master Id)
 
 License
 -------

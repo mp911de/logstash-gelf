@@ -19,22 +19,21 @@ How to get
 Maven:
 
     <dependency>
-        <groupId>biz.paluch.logging</groupId>
+        <groupId>${project.groupId}</groupId>
         <artifactId>${project.artifactId}</artifactId>
         <version>${logstash-gelf-release-version}</version>
     </dependency>
+    
+Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${logstash-gelf-release-version}/${project.artifactId}-${logstash-gelf-release-version}.jar)    
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${logstash-gelf-release-version}/${project.artifactId}-${logstash-gelf-release-version}.jar
 
-JBoss Module Download:
+JBoss AS/WildFly Module Download:
 
     <dependency>
-        <groupId>biz.paluch.logging</groupId>
+        <groupId>${project.groupId}</groupId>
         <artifactId>${project.artifactId}</artifactId>
         <version>${logstash-gelf-release-version}</version>
         <classifier>logging-module</classifier>
     </dependency>
 
-or http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${logstash-gelf-release-version}/${project.artifactId}-${logstash-gelf-release-version}-logging-module.zip
-
-
+Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}${logstash-gelf-release-version}/${project.artifactId}-${logstash-gelf-release-version}-logging-module.zip)

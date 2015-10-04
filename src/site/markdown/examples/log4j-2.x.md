@@ -1,23 +1,22 @@
-Settings
---------------
+log4j2
+=========
+
 Following settings can be used:
 
- * host (since version 1.2.0, Mandatory): Hostname/IP-Address of the Logstash Host
-    * tcp:(the host) for TCP, e.g. tcp:127.0.0.1 or tcp:some.host.com
-    * udp:(the host) for UDP, e.g. udp:127.0.0.1 or udp:some.host.com
-    * redis://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER#REDISDB_LISTNAME , e.g. redis://:donttrustme@127.0.0.1:6379/0#myloglist or if no password needed redis://127.0.0.1:6379/0#myloglist
-    * redis-sentinel://\[:REDISDB_PASSWORD@\]REDISDB_HOST:REDISDB_PORT/REDISDB_NUMBER?masterId=SENTINELMASTERID#REDISDB_LISTNAME , e.g. redis-sentinel://:donttrustme@127.0.0.1:26379?masterId=mymaster/0#myloglist or if no password needed redis-sentinel://127.0.0.1:26379/0?masterId=mymaster#myloglist
-    * (the host) for UDP, e.g. 127.0.0.1 or some.host.com
- * port (since version 1.2.0, Optional): Port, default 12201
- * version (Optional): GELF Version 1.0 or 1.1, default 1.0
- * graylogHost (until version 1.1.0, Mandatory): Hostname/IP-Address of the Logstash Host
- * graylogPort (until version 1.1.0, Optional): Port, default 12201
- * originHost (Optional): Originating Hostname, default FQDN Hostname
- * extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false
- * filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
- * mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false. See [MDC Profiling](../mdcprofiling.html) for details.
- * facility (Optional): Name of the Facility, default logstash-gelf
- * includeFullMdc (Optional): Include all fields from the MDC, default false
+| Attribute Name    | Description                          | Default |
+| ----------------- |:------------------------------------:|:-------:|
+| host              | Hostname/IP-Address of the Logstash host. The `host` field accepts following forms: <ul><li>`tcp:hostname` for TCP transport, e. g. `tcp:127.0.0.1` or `tcp:some.host.com` </li><li>`udp:hostname` for UDP transport, e. g. `udp:127.0.0.1`, `udp:some.host.com` or just `some.host.com`  </li><li>`redis://[:password@]hostname:port/db-number#listname` for Redis transport. See [Redis transport for logstash-gelf](../redis.html) for details. </li><li>`redis-sentinel://[:password@]hostname:port/db-number?masterId=masterId#listname` for Redis transport with Sentinel lookup. See [Redis transport for logstash-gelf](../redis.html) for details. </li></ul> | none | 
+| port              | Port of the Logstash host  | `12201` |
+| version           | GELF Version `1.0` or `1.1` | `1.0` |
+| originHost        | Originating Hostname  | FQDN Hostname |
+| extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
+| filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
+| facility          | Name of the Facility  | `logstash-gelf` |
+| mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
+| includeFullMdc    | Include all fields from the MDC. | `false` |
+| maximumMessageSize| Maximum message size (in bytes). If the message size is exceeded, the appender will submit the message in multiple chunks. | `8192` |
+
+The only mandatory field is `host`. All other fields are optional.
 
 ### Fields
 

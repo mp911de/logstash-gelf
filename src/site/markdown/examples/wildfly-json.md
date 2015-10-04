@@ -1,22 +1,25 @@
-Settings
---------------
+WildFly JSON Formatter
+=========
+
 Following settings can be used:
 
- * lineBreak (Optional): End of line, defaults to `\n`
- * fields (Optional): Comma-separated list of log event fields that should be included in the JSON. Defaults to `Time, Severity, ThreadName, SourceClassName, SourceMethodName, SourceSimpleClassName, LoggerName, NDC`
- * version (Optional): GELF Version 1.0 or 1.1, default 1.0
- * originHost (Optional): Originating Hostname, default FQDN Hostname
- * extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false
- * filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false
- * mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See MDC Profiling, default false. See [MDC Profiling](../mdcprofiling.html) for details.
- * facility (Optional): Name of the Facility, default logstash-gelf
- * threshold/level (Optional): Log-Level, default INFO
- * filter (Optional): Class-Name of a Log-Filter, default none
- * additionalFields (Optional): Post additional fields. Eg. fieldName=Value,fieldName2=Value2
- * mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated mdcFields=Application,Version,SomeOtherFieldName
- * dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name.
- * includeFullMdc (Optional): Include all fields from the MDC, default false
+| Attribute Name    | Description                          | Default |
+| ----------------- |:------------------------------------:|:-------:|
+| lineBreak         | End of line string | `\n` |
+| fields           | Comma-separated list of log event fields that should be included in the JSON | `Time, Severity, ThreadName, SourceClassName, SourceMethodName, SourceSimpleClassName, LoggerName, NDC` |
+| version           | GELF Version `1.0` or `1.1` | `1.0` |
+| originHost        | Originating Hostname  | FQDN Hostname |
+| extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
+| filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
+| facility          | Name of the Facility  | `logstash-gelf` |
+| mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
+| additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `GelfLogHandler.additionalFields=fieldName=Value,fieldName2=Value2` | none |
+| mdcFields         | Send additional fields whose values are obtained from MDC. Name of the Fields are comma-separated. Example: `mdcFields=Application,Version,SomeOtherFieldName` | none |
+| dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
+| includeFullMdc    | Include all fields from the MDC. | `false` |
+| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSSS` |
 
+The only mandatory field is `host`. All other fields are optional.
 
 The JSON formatter creates then messages like:
 
@@ -40,6 +43,17 @@ The JSON formatter creates then messages like:
 ```
 
 Default line break is `\n`, JSON objects are separated by line breaks only.
+
+Preliminary Steps
+--------------
+
+If you want to get started with the logstash-gelf support for WildFly, you will need to integrate logstash-gelf as a module within
+the server. It is possible to create the module manually, but it's easier to use the prepackaged binary. Please
+follow the steps to integrate the module:
+
+1. Obtain the logging module from [Maven](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip) or [Github](https://github.com/mp911de/logstash-gelf/releases/download/logstash-gelf-${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip) 
+2. Extract the module to `<WildFly Home>/modules/system/layers/base`.
+3. Configure the logging subsystem by either adopting the changes in the XML files or by using the CLI
 
 WildFly 8/WildFly 9/WildFly 10 Logging configuration
 --------------

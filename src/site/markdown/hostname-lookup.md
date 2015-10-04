@@ -1,5 +1,5 @@
-Hostname-Lookup
---------------
+# Hostname-Lookup
+
 logstash-gelf contains a class (biz.paluch.logging.RuntimeContainer) which performs a hostname resolution on the first use of the framework.
 This can take some time, especially, when your DNS is not set up for all host addresses.
 
