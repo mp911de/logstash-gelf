@@ -9,6 +9,16 @@ import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
+/**
+ * Log layout format for GELF (Graylog Extended Logging Format). Following parameters are supported:
+ * <ul>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
+ * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
+ * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
+ * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC Profiling</a>, default
+ * false</li>
+ * </ul>
+ */
 public class GelfLayout extends Layout {
 
 	private final MdcGelfMessageAssembler gelfMessageAssembler;
@@ -23,7 +33,7 @@ public class GelfLayout extends Layout {
 	@Override
 	public String format(LoggingEvent loggingEvent) {
 		GelfMessage gelfMessage = gelfMessageAssembler.createGelfMessage(new Log4jLogEvent(loggingEvent));
-		return gelfMessage.toJson("") + System.lineSeparator();
+		return gelfMessage.toJson("") + Layout.LINE_SEP;
 	}
 
 	@Override

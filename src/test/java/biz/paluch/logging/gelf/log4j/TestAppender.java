@@ -22,7 +22,7 @@ public class TestAppender extends WriterAppender {
 
 	public static String[] getLoggedLines() {
 		String loggedLines = TestAppender.baos.toString();
-		return loggedLines.split(System.lineSeparator());
+		return loggedLines.split(Layout.LINE_SEP);
 	}
 
 	public static void clearLoggedLines() {
