@@ -15,7 +15,7 @@ Following settings can be used:
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
 | threshold         | Log-Level threshold | `INFO` |
 | filter            | Class-Name of a Log-Filter  | none |
-| additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `GelfLogHandler.additionalFields=fieldName=Value,fieldName2=Value2` | none |
+| additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `additionalFields=fieldName=Value,fieldName2=Value2` | none |
 | mdcFields         | Send additional fields whose values are obtained from MDC. Name of the Fields are comma-separated. Example: `mdcFields=Application,Version,SomeOtherFieldName` | none |
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |

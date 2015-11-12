@@ -6,20 +6,18 @@ Following settings can be used:
 | Attribute Name    | Description                          | Default |
 | ----------------- |:------------------------------------:|:-------:|
 | lineBreak         | End of line string | `\n` |
-| fields           | Comma-separated list of log event fields that should be included in the JSON | `Time, Severity, ThreadName, SourceClassName, SourceMethodName, SourceSimpleClassName, LoggerName, NDC` |
+| fields            | Comma-separated list of log event fields that should be included in the JSON | `Time, Severity, ThreadName, SourceClassName, SourceMethodName, SourceSimpleClassName, LoggerName, NDC, Server` |
 | version           | GELF Version `1.0` or `1.1` | `1.0` |
 | originHost        | Originating Hostname  | FQDN Hostname |
 | extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
 | filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
 | facility          | Name of the Facility  | `logstash-gelf` |
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
-| additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `GelfLogHandler.additionalFields=fieldName=Value,fieldName2=Value2` | none |
+| additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `additionalFields=fieldName=Value,fieldName2=Value2` | none |
 | mdcFields         | Send additional fields whose values are obtained from MDC. Name of the Fields are comma-separated. Example: `mdcFields=Application,Version,SomeOtherFieldName` | none |
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
 | timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSSS` |
-
-The only mandatory field is `host`. All other fields are optional.
 
 The JSON formatter creates then messages like:
 

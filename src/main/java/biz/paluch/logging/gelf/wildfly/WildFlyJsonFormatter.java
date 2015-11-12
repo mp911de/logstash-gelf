@@ -101,7 +101,6 @@ public class WildFlyJsonFormatter extends ExtFormatter {
         supportedFields.add(Server);
 
         SUPPORTED_FIELDS = Collections.unmodifiableSet(supportedFields);
-
     }
 
     /**

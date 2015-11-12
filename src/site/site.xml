@@ -13,6 +13,7 @@
         <menu name="Examples">
             <item name="Java Util Logging" href="examples/jul.html" />
             <item name="log4j v1.2.x" href="examples/log4j-1.2.x.html" />
+            <item name="log4j v1.2.x JSON Layout" href="examples/log4j-1.2.x-json.html" />
             <item name="log4j v2.x" href="examples/log4j-2.x.html" />
             <item name="JBoss AS7" href="examples/jbossas7.html" />
             <item name="WildFly" href="examples/wildfly.html" />
