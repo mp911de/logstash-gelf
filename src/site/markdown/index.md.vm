@@ -37,4 +37,4 @@ JBoss AS/WildFly Module Download:
         <classifier>logging-module</classifier>
     </dependency>
 
-Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}${logstash-gelf-release-version}/${project.artifactId}-${logstash-gelf-release-version}-logging-module.zip)
+Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${logstash-gelf-release-version}/${project.artifactId}-${logstash-gelf-release-version}-logging-module.zip)
