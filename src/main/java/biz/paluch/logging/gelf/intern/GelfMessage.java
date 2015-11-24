@@ -83,7 +83,7 @@ public class GelfMessage {
 
         if (!isEmpty(getLevel())) {
             if (GELF_VERSION_1_1.equals(version)) {
-                 int level;
+                int level;
                 try {
                     level = Integer.parseInt(getLevel());
                 } catch (NumberFormatException ex) {
@@ -92,7 +92,7 @@ public class GelfMessage {
                 }
                 map.put(FIELD_LEVEL, level);
             } else {
-                 map.put(FIELD_LEVEL, getLevel());
+                map.put(FIELD_LEVEL, getLevel());
             }
         }
 
