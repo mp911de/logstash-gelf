@@ -26,6 +26,9 @@ public class GelfMessageTest {
     private static final Map<String, String> ADDITIONAL_FIELDS = new HashMap<String, String>() {
         {
             put("a", "b");
+            put("doubleNoDecimals", "2.0");
+            put("doubleWithDecimals", "2.1");
+            put("int", "2");
         }
     };
 
@@ -58,6 +61,10 @@ public class GelfMessageTest {
         assertEquals(TIMESTAMP, gelfMessage.getJavaTimestamp().longValue());
         assertEquals(VERSION, gelfMessage.getVersion());
         assertEquals(MESSAGE_SIZE, gelfMessage.getMaximumMessageSize());
+
+        assertThat(gelfMessage.toJson(), containsString("\"_int\":2"));
+        assertThat(gelfMessage.toJson(), containsString("\"_doubleNoDecimals\":2.0"));
+        assertThat(gelfMessage.toJson(), containsString("\"_doubleWithDecimals\":2.1"));
     }
 
     @Test
@@ -79,7 +86,6 @@ public class GelfMessageTest {
         assertEquals(GelfMessage.GELF_VERSION_1_0, gelfMessage.getVersion());
         assertThat(gelfMessage.toJson(), containsString("\"level\":\"6\""));
         assertThat(gelfMessage.toJson(), containsString("\"timestamp\":\"123.456"));
-
     }
 
     @Test

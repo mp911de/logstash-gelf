@@ -105,7 +105,12 @@ public class GelfMessage {
                 // try adding the value as a double
                 Object value;
                 try {
-                    value = Double.parseDouble(additionalField.getValue());
+                    try {
+                        value = Long.parseLong(additionalField.getValue());
+                    } catch (NumberFormatException ex) {
+                        // fallback on the double value
+                        value = Double.parseDouble(additionalField.getValue());
+                    }
                 } catch (NumberFormatException ex) {
                     // fallback on the string value
                     value = additionalField.getValue();
