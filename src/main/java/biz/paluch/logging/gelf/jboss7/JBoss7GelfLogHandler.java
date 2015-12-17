@@ -16,7 +16,9 @@ import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.jboss.logmanager.ExtLogRecord;
+import org.jboss.logmanager.errormanager.OnlyOnceErrorManager;
 
+import java.util.logging.ErrorManager;
 import java.util.logging.LogRecord;
 
 /**
@@ -63,8 +65,10 @@ import java.util.logging.LogRecord;
  */
 public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHandler {
 
+    private static final ErrorManager DEFAULT_ERROR_MANAGER = new OnlyOnceErrorManager();
     public JBoss7GelfLogHandler() {
         super();
+        super.setErrorManager(DEFAULT_ERROR_MANAGER);
     }
 
     protected void initializeDefaultFields() {

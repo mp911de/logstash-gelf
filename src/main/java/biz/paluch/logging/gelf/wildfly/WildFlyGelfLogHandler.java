@@ -2,6 +2,7 @@ package biz.paluch.logging.gelf.wildfly;
 
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 
+import java.util.logging.ErrorManager;
 import java.util.logging.LogRecord;
 
 import org.jboss.logmanager.ExtLogRecord;
@@ -10,6 +11,7 @@ import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
 import biz.paluch.logging.gelf.jul.GelfLogHandler;
+import org.jboss.logmanager.errormanager.OnlyOnceErrorManager;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -55,8 +57,10 @@ import biz.paluch.logging.gelf.jul.GelfLogHandler;
  * 
  */
 public class WildFlyGelfLogHandler extends GelfLogHandler {
+    private static final ErrorManager DEFAULT_ERROR_MANAGER = new OnlyOnceErrorManager();
     public WildFlyGelfLogHandler() {
         super();
+        super.setErrorManager(DEFAULT_ERROR_MANAGER);
     }
 
     protected void initializeDefaultFields() {
