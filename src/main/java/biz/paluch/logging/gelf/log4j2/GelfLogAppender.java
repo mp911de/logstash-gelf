@@ -38,6 +38,8 @@ import biz.paluch.logging.gelf.intern.*;
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
+ * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
+ * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
  * </ul>
  * 
  * <h2>Fields</h2>
@@ -178,7 +180,8 @@ public class GelfLogAppender extends AbstractAppender {
             @PluginAttribute("originHost") String originHost, @PluginAttribute("includeFullMdc") String includeFullMdc,
             @PluginAttribute("facility") String facility, @PluginAttribute("filterStackTrace") String filterStackTrace,
             @PluginAttribute("mdcProfiling") String mdcProfiling,
-            @PluginAttribute("maximumMessageSize") String maximumMessageSize) {
+            @PluginAttribute("maximumMessageSize") String maximumMessageSize,
+            @PluginAttribute("additionalFieldTypes") String additionalFieldTypes) {
 
         RuntimeContainer.initialize(ERROR_REPORTER);
 
@@ -245,6 +248,10 @@ public class GelfLogAppender extends AbstractAppender {
             mdcGelfMessageAssembler.setMaximumMessageSize(Integer.parseInt(maximumMessageSize));
         }
 
+        if (additionalFieldTypes != null) {
+            ConfigurationSupport.setAdditionalFieldTypes(additionalFieldTypes, mdcGelfMessageAssembler);
+        }
+
         configureFields(mdcGelfMessageAssembler, fields, dynamicFieldArray);
 
         GelfLogAppender appender = new GelfLogAppender(name, filter, mdcGelfMessageAssembler);
@@ -255,7 +262,7 @@ public class GelfLogAppender extends AbstractAppender {
 
     /**
      * Configure fields (literals, MDC, layout).
-     * 
+     *
      * @param mdcGelfMessageAssembler the assembler
      * @param fields static field array
      * @param dynamicFieldArray dynamic field array

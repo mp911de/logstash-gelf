@@ -15,6 +15,7 @@ Following settings can be used:
 | level             | Log-Level threshold | `INFO` |
 | filter            | Class-Name of a Log-Filter  | none |
 | additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `additionalFields=fieldName=Value,fieldName2=Value2` | none |
+| additionalFieldTypes | Type specification for additional fields. Supported types: `String`, `long`, `Long`, `double`, `Double` and `discover` (default if not specified, discover field type on parseability). Eg. field=String,field2=double | `discover` for all additional fields |
 | maximumMessageSize| Maximum message size (in bytes). If the message size is exceeded, the appender will submit the message in multiple chunks. | `8192` |
 | timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSSS` |
 
@@ -55,5 +56,6 @@ Extended Properties:
     biz.paluch.logging.gelf.jul.GelfLogHandler.timestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
     biz.paluch.logging.gelf.jul.GelfLogHandler.maximumMessageSize=8192
     biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
+    biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long
     biz.paluch.logging.gelf.jul.GelfLogHandler.level=INFO
     

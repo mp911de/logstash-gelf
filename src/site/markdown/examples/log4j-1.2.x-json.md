@@ -14,6 +14,7 @@ Following settings can be used:
 | facility          | Name of the Facility  | `logstash-gelf` |
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
 | additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `GelfLogHandler.additionalFields=fieldName=Value,fieldName2=Value2` | none |
+| additionalFieldTypes | Type specification for additional and MDC fields. Supported types: `String`, `long`, `Long`, `double`, `Double` and `discover` (default if not specified, discover field type on parseability). Eg. field=String,field2=double | `discover` for all additional fields |
 | mdcFields         | Send additional fields whose values are obtained from MDC. Name of the Fields are comma-separated. Example: `mdcFields=Application,Version,SomeOtherFieldName` | none |
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
@@ -56,6 +57,7 @@ Properties:
     log4j.appender.file.layout.MdcProfiling=true
     log4j.appender.file.layout.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
     log4j.appender.file.layout.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
+    log4j.appender.file.layout.AdditionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long
     log4j.appender.file.layout.MdcFields=mdcField1,mdcField2
     log4j.appender.file.layout.DynamicMdcFields=mdc.*,(mdc|MDC)fields
     log4j.appender.file.layout.IncludeFullMdc=true
@@ -72,6 +74,7 @@ XML:
             <param name="MdcProfiling" value="true" />
             <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
             <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
+            <param name="AdditionalFieldTypes" value="fieldName1=String,fieldName2=Double,fieldName3=Long" />
             <param name="MdcFields" value="mdcField1,mdcField2" />
             <param name="DynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
             <param name="IncludeFullMdc" value="true" />

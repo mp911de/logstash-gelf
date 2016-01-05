@@ -15,6 +15,7 @@
         <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
         <maximumMessageSize>8192</maximumMessageSize>
         <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
+        <additionalFieldTypes>myMdcs=String,myMdci=long,myMdcl=Long,myMdcf=double,myMdcd=Double</additionalFieldTypes>
         <mdcFields>mdcField1,mdcField2</mdcFields>
         <dynamicMdcFields>myMdc.*,[a-z]+Field</dynamicMdcFields>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">

@@ -23,6 +23,7 @@
         </menu>
 
         <menu name="Documentation">
+            <item name="MDC Values" href="mdc.html"/>
             <item name="MDC Profiling" href="mdcprofiling.html" />
             <item name="Hostname Lookup" href="hostname-lookup.html" />
             <item name="Default Fields" href="default-fields.html" />

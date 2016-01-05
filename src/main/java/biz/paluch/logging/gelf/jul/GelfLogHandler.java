@@ -37,6 +37,7 @@ import biz.paluch.logging.gelf.intern.*;
  */
 public class GelfLogHandler extends Handler implements ErrorReporter {
 
+    public static final String MULTI_VALUE_DELIMITTER = ",";
     protected GelfSender gelfSender;
     protected GelfMessageAssembler gelfMessageAssembler;
     protected boolean publishing = false;
@@ -62,6 +63,11 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         final String additionalFields = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELDS);
         if (null != additionalFields) {
             setAdditionalFields(additionalFields);
+        }
+
+        final String additionalFieldTypes = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELD_TYPES);
+        if (null != additionalFieldTypes) {
+            setAdditionalFieldTypes(additionalFieldTypes);
         }
 
         final String filter = propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER);
@@ -152,19 +158,20 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         return gelfMessageAssembler.createGelfMessage(new JulLogEvent(record));
     }
 
-    public void setAdditionalFields(String fieldSpec) {
+    public void setAdditionalFields(String spec) {
+        ConfigurationSupport.setAdditionalFields(spec, gelfMessageAssembler);
+    }
 
-        if (null != fieldSpec) {
-            String[] properties = fieldSpec.split(",");
+    public void setAdditionalFieldTypes(String spec) {
+        ConfigurationSupport.setAdditionalFieldTypes(spec, gelfMessageAssembler);
+    }
 
-            for (String field : properties) {
-                final int index = field.indexOf('=');
-                if (-1 == index) {
-                    continue;
-                }
-                gelfMessageAssembler.addField(new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
-            }
-        }
+    public void setMdcFields(String spec) {
+        ConfigurationSupport.setMdcFields(spec, gelfMessageAssembler);
+    }
+
+    public void setDynamicMdcFields(String spec) {
+        ConfigurationSupport.setDynamicMdcFields(spec, gelfMessageAssembler);
     }
 
     public String getGraylogHost() {

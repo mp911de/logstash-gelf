@@ -42,6 +42,8 @@ import java.util.logging.LogRecord;
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
  * <li>additionalFields(number) (Optional): Post additional fields. Eg.
  * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
+ * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
+ * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * .JBoss7GelfLogHandler.mdcFields=Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
@@ -49,15 +51,16 @@ import java.util.logging.LogRecord;
  * .JBoss7GelfLogHandler.dynamicMdcFields=mdc.*,[mdc|MDC]fields</li>
  * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
- * <a name="mdcProfiling"></a>
- * <h2>MDC Profiling</h2>
+ * <a name="mdcProfiling"></a> <h2>MDC Profiling</h2>
  * <p>
  * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must
  * set one value in the MDC:
  * <ul>
  * <li>profiling.requestStart.millis: Time Millis of the Request-Start (Long or String)</li>
  * </ul>
- * <p>Two values are set by the Log Appender:</p>
+ * <p>
+ * Two values are set by the Log Appender:
+ * </p>
  * <ul>
  * <li>profiling.requestEnd: End-Time of the Request-End in Date.toString-representation</li>
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
@@ -91,32 +94,15 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
     }
 
     public void setAdditionalFields(String fieldSpec) {
-
-        String[] properties = fieldSpec.split(",");
-
-        for (String field : properties) {
-            final int index = field.indexOf('=');
-            if (-1 != index) {
-                getGelfMessageAssembler().addField(
-                        new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
-            }
-        }
+        super.setAdditionalFields(fieldSpec);
     }
 
     public void setMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(",");
-
-        for (String field : fields) {
-            getGelfMessageAssembler().addField(new MdcMessageField(field.trim(), field.trim()));
-        }
+        super.setMdcFields(fieldSpec);
     }
 
     public void setDynamicMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(",");
-
-        for (String field : fields) {
-            gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
-        }
+        super.setMdcFields(fieldSpec);
     }
 
     public boolean isMdcProfiling() {

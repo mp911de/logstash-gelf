@@ -8,6 +8,8 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.jboss.logmanager.MDC;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -116,9 +118,68 @@ public class WildFlyGelfLogHandlerDynamicMdcTest {
 
     }
 
+    @Test
+    public void testWithMdcFieldTypes() throws Exception {
+
+        WildFlyGelfLogHandler handler = getLogHandler();
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        MDC.put("myMdcs", "String");
+        MDC.put("myMdcl", "1");
+        MDC.put("myMdci", "2");
+        MDC.put("myMdcd", "2.1");
+        MDC.put("myMdcf", "2.2");
+
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        JSONObject jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+
+        assertEquals("String", jsonObject.get("myMdcs"));
+        assertEquals(1L, jsonObject.get("myMdcl"));
+        assertEquals(2L, jsonObject.get("myMdci"));
+
+        assertEquals(2.1, jsonObject.get("myMdcd"));
+        assertEquals(2.2, jsonObject.get("myMdcf"));
+
+        MDC.put("myMdcl", "1.1");
+        MDC.put("myMdci", "2.1");
+        MDC.put("myMdcd", "wrong");
+        MDC.put("myMdcf", "wrong");
+
+        GelfTestSender.getMessages().clear();
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        gelfMessage = GelfTestSender.getMessages().get(0);
+        jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+
+        assertEquals(1L, jsonObject.get("myMdcl"));
+        assertEquals(2L, jsonObject.get("myMdci"));
+
+        assertNull(jsonObject.get("myMdcd"));
+        assertEquals(0.0, jsonObject.get("myMdcf"));
+
+        MDC.put("myMdcl", "b");
+        MDC.put("myMdci", "a");
+
+        GelfTestSender.getMessages().clear();
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        gelfMessage = GelfTestSender.getMessages().get(0);
+        jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+
+        assertNull(jsonObject.get("myMdcl"));
+        assertEquals(0L, jsonObject.get("myMdci"));
+    }
+
     private WildFlyGelfLogHandler getLogHandler() {
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         handler.setDynamicMdcFields("myMdc.*,[a-z]+Field");
+        handler.setAdditionalFieldTypes("myMdcs=String,myMdci=long,myMdcl=Long,myMdcf=double,myMdcd=Double");
 
         return handler;
     }

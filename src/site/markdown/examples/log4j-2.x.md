@@ -15,6 +15,7 @@ Following settings can be used:
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
 | maximumMessageSize| Maximum message size (in bytes). If the message size is exceeded, the appender will submit the message in multiple chunks. | `8192` |
+| additionalFieldTypes | Type specification for additional and MDC fields. Supported types: `String`, `long`, `Long`, `double`, `Double` and `discover` (default if not specified, discover field type on parseability). Eg. field=String,field2=double | `discover` for all additional fields |
 
 The only mandatory field is `host`. All other fields are optional.
 
@@ -69,7 +70,7 @@ XML:
         <Appenders>
             <Gelf name="gelf" host="udp:localhost" port="12201" version="1.0" extractStackTrace="true"
                   filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
-                  originHost="my.host.name">
+                  originHost="my.host.name" additionalFieldTypes="fieldName1=String,fieldName2=Double,fieldName3=Long">
                 <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
                 <Field name="level" pattern="%level" />
                 <Field name="simpleClassName" pattern="%C{1}" />

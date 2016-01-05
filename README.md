@@ -66,6 +66,8 @@ biz.paluch.logging.gelf.jul.GelfLogHandler.maximumMessageSize=8192
 
 # This are static fields
 biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
+# Optional: Specify field types
+biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long
 biz.paluch.logging.gelf.jul.GelfLogHandler.level=INFO
 ```
 
@@ -91,6 +93,8 @@ log4j.appender.gelf.MaximumMessageSize=8192
 
 # This are static fields
 log4j.appender.gelf.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
+# Optional: Specify field types
+log4j.appender.gelf.AdditionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long
 
 # This are fields using MDC
 log4j.appender.gelf.MdcFields=mdcField1,mdcField2
@@ -116,6 +120,8 @@ log4j.appender.gelf.IncludeFullMdc=true
     
     <!-- This are static fields -->
     <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
+    <!-- Optional: Specify field types -->
+    <param name="AdditionalFieldTypes" value="fieldName1=String,fieldName2=Double,fieldName3=Long" />
     
     <!-- This are fields using MDC -->
     <param name="MdcFields" value="mdcField1,mdcField2" />
@@ -186,7 +192,7 @@ host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, th
     <Appenders>
         <Gelf name="gelf" host="udp:localhost" port="12201" version="1.1" extractStackTrace="true"
               filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192"
-              originHost="%host{fqdn}">
+              originHost="%host{fqdn}" additionalFieldTypes="fieldName1=String,fieldName2=Double,fieldName3=Long">
             <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
             <Field name="level" pattern="%level" />
             <Field name="simpleClassName" pattern="%C{1}" />
@@ -234,6 +240,8 @@ You need to include the library as module (see download above), then add followi
         
         <!-- This are static fields -->
         <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
+        <!-- Optional: Specify field types -->
+        <property name="additionalFieldTypes" value="fieldName1=String,fieldName2=Double,fieldName3=Long" />
         
         <!-- This are fields using MDC -->
         <property name="mdcFields" value="mdcField1,mdcField2" />
@@ -276,6 +284,8 @@ standalone.xml
         
         <!-- This are static fields -->
         <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
+        <!-- Optional: Specify field types -->
+        <property name="additionalFieldTypes" value="fieldName1=String,fieldName2=Double,fieldName3=Long" />
         
         <!-- This are fields using MDC -->
         <property name="mdcFields" value="mdcField1,mdcField2" />
@@ -321,6 +331,8 @@ logback.xml Example:
         
         <!-- This are static fields -->
         <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
+        <!-- Optional: Specify field types -->
+        <additionalFieldTypes>fieldName1=String,fieldName2=Double,fieldName3=Long</additionalFieldTypes>
         
         <!-- This are fields using MDC -->
         <mdcFields>mdcField1,mdcField2</mdcFields>

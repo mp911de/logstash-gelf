@@ -4,6 +4,7 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 
 import java.util.*;
 
+import biz.paluch.logging.gelf.intern.ConfigurationSupport;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
 
@@ -44,6 +45,8 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>additionalFields(number) (Optional): Post additional fields. Eg. fieldName=Value,field2=value2</li>
+ * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
+ * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
@@ -145,32 +148,20 @@ public class GelfLayout extends Layout {
         wasSetFieldsCalled = true;
     }
 
-    public void setAdditionalFields(String fieldSpec) {
-
-        String[] properties = fieldSpec.split(MULTI_VALUE_DELIMITTER);
-
-        for (String field : properties) {
-            final int index = field.indexOf('=');
-            if (-1 != index) {
-                gelfMessageAssembler.addField(new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
-            }
-        }
+    public void setAdditionalFields(String spec) {
+        ConfigurationSupport.setAdditionalFields(spec, gelfMessageAssembler);
     }
 
-    public void setMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(MULTI_VALUE_DELIMITTER);
-
-        for (String field : fields) {
-            gelfMessageAssembler.addField(new MdcMessageField(field.trim(), field.trim()));
-        }
+    public void setAdditionalFieldTypes(String spec) {
+        ConfigurationSupport.setAdditionalFieldTypes(spec, gelfMessageAssembler);
     }
 
-    public void setDynamicMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(MULTI_VALUE_DELIMITTER);
+    public void setMdcFields(String spec) {
+        ConfigurationSupport.setMdcFields(spec, gelfMessageAssembler);
+    }
 
-        for (String field : fields) {
-            gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
-        }
+    public void setDynamicMdcFields(String spec) {
+        ConfigurationSupport.setDynamicMdcFields(spec, gelfMessageAssembler);
     }
 
     public boolean isMdcProfiling() {

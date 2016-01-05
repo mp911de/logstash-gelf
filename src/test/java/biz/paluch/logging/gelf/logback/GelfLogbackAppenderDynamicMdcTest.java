@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNull;
 
 import java.net.URL;
 
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.MDC;
@@ -94,7 +96,61 @@ public class GelfLogbackAppenderDynamicMdcTest {
 
         assertEquals("included", gelfMessage.getField(SOME_FIELD));
         assertNull(gelfMessage.getField(SOME_OTHER_FIELD));
+    }
 
+    @Test
+    public void testWithMdcFieldTypes() throws Exception {
+
+        Logger logger = lc.getLogger(getClass());
+        MDC.put("myMdcs", "String");
+        MDC.put("myMdcl", "1");
+        MDC.put("myMdci", "2");
+        MDC.put("myMdcd", "2.1");
+        MDC.put("myMdcf", "2.2");
+
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        JSONObject jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+
+        assertEquals("String", jsonObject.get("myMdcs"));
+        assertEquals(1L, jsonObject.get("myMdcl"));
+        assertEquals(2L, jsonObject.get("myMdci"));
+
+        assertEquals(2.1, jsonObject.get("myMdcd"));
+        assertEquals(2.2, jsonObject.get("myMdcf"));
+
+        MDC.put("myMdcl", "1.1");
+        MDC.put("myMdci", "2.1");
+        MDC.put("myMdcd", "wrong");
+        MDC.put("myMdcf", "wrong");
+
+        GelfTestSender.getMessages().clear();
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        gelfMessage = GelfTestSender.getMessages().get(0);
+        jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+
+        assertEquals(1L, jsonObject.get("myMdcl"));
+        assertEquals(2L, jsonObject.get("myMdci"));
+
+        assertNull(jsonObject.get("myMdcd"));
+        assertEquals(0.0, jsonObject.get("myMdcf"));
+
+        MDC.put("myMdcl", "b");
+        MDC.put("myMdci", "a");
+
+        GelfTestSender.getMessages().clear();
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        gelfMessage = GelfTestSender.getMessages().get(0);
+        jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+
+        assertNull(jsonObject.get("myMdcl"));
+        assertEquals(0L, jsonObject.get("myMdci"));
     }
 
 }

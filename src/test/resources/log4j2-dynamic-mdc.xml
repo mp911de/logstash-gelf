@@ -2,7 +2,8 @@
 <Configuration>
 	<Appenders>
 		<Gelf name="gelf" graylogHost="test:localhost" graylogPort="12201" extractStackTrace="true"
-			  filterStackTrace="true" mdcProfiling="true" maximumMessageSize="8192">
+			  filterStackTrace="true" mdcProfiling="true" maximumMessageSize="8192"
+			  additionalFieldTypes="myMdcs=String,myMdci=long,myMdcl=Long,myMdcf=double,myMdcd=Double">
 			<Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
 			<Field name="level" pattern="%level" />
 			<Field name="simpleClassName" pattern="%C{1}" />

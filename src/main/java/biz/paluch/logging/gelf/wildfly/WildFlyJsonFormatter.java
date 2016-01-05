@@ -10,14 +10,12 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimple
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
 
+import biz.paluch.logging.gelf.intern.ConfigurationSupport;
 import org.jboss.logmanager.ExtFormatter;
 import org.jboss.logmanager.ExtLogRecord;
 
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
 
@@ -57,6 +55,8 @@ import java.util.*;
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>additionalFields(number) (Optional): Post additional fields. Eg. fieldName=Value,field2=value2</li>
+ * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
+ * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
@@ -151,32 +151,20 @@ public class WildFlyJsonFormatter extends ExtFormatter {
         wasSetFieldsCalled = true;
     }
 
-    public void setAdditionalFields(String fieldSpec) {
-
-        String[] properties = fieldSpec.split(MULTI_VALUE_DELIMITTER);
-
-        for (String field : properties) {
-            final int index = field.indexOf('=');
-            if (-1 != index) {
-                gelfMessageAssembler.addField(new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
-            }
-        }
+    public void setAdditionalFields(String spec) {
+        ConfigurationSupport.setAdditionalFields(spec, gelfMessageAssembler);
     }
 
-    public void setMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(MULTI_VALUE_DELIMITTER);
-
-        for (String field : fields) {
-            gelfMessageAssembler.addField(new MdcMessageField(field.trim(), field.trim()));
-        }
+    public void setAdditionalFieldTypes(String spec) {
+        ConfigurationSupport.setAdditionalFieldTypes(spec, gelfMessageAssembler);
     }
 
-    public void setDynamicMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(MULTI_VALUE_DELIMITTER);
+    public void setMdcFields(String spec) {
+        ConfigurationSupport.setMdcFields(spec, gelfMessageAssembler);
+    }
 
-        for (String field : fields) {
-            gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
-        }
+    public void setDynamicMdcFields(String spec) {
+        ConfigurationSupport.setDynamicMdcFields(spec, gelfMessageAssembler);
     }
 
     public boolean isMdcProfiling() {

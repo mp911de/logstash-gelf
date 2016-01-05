@@ -6,12 +6,14 @@ import java.util.logging.ErrorManager;
 import java.util.logging.LogRecord;
 
 import org.jboss.logmanager.ExtLogRecord;
+import org.jboss.logmanager.errormanager.OnlyOnceErrorManager;
 
-import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.GelfMessageAssembler;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
 import biz.paluch.logging.gelf.jul.GelfLogHandler;
-import org.jboss.logmanager.errormanager.OnlyOnceErrorManager;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts
@@ -33,6 +35,8 @@ import org.jboss.logmanager.errormanager.OnlyOnceErrorManager;
  * <li>level (Optional): Log-Level, default INFO</li>
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
  * <li>additionalFields(number) (Optional): Post additional fields. Eg. fieldName=Value,field2=value2</li>
+ * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
+ * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
@@ -58,6 +62,7 @@ import org.jboss.logmanager.errormanager.OnlyOnceErrorManager;
  */
 public class WildFlyGelfLogHandler extends GelfLogHandler {
     private static final ErrorManager DEFAULT_ERROR_MANAGER = new OnlyOnceErrorManager();
+
     public WildFlyGelfLogHandler() {
         super();
         super.setErrorManager(DEFAULT_ERROR_MANAGER);
@@ -83,32 +88,15 @@ public class WildFlyGelfLogHandler extends GelfLogHandler {
     }
 
     public void setAdditionalFields(String fieldSpec) {
-
-        String[] properties = fieldSpec.split(",");
-
-        for (String field : properties) {
-            final int index = field.indexOf('=');
-            if (-1 != index) {
-                getGelfMessageAssembler().addField(
-                        new StaticMessageField(field.substring(0, index), field.substring(index + 1)));
-            }
-        }
+        super.setAdditionalFields(fieldSpec);
     }
 
     public void setMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(",");
-
-        for (String field : fields) {
-            getGelfMessageAssembler().addField(new MdcMessageField(field.trim(), field.trim()));
-        }
+        super.setMdcFields(fieldSpec);
     }
 
     public void setDynamicMdcFields(String fieldSpec) {
-        String[] fields = fieldSpec.split(",");
-
-        for (String field : fields) {
-            gelfMessageAssembler.addField(new DynamicMdcMessageField(field.trim()));
-        }
+        super.setDynamicMdcFields(fieldSpec);
     }
 
     public boolean isMdcProfiling() {

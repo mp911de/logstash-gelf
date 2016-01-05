@@ -5,10 +5,7 @@ import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.StackTraceFilter;
@@ -41,6 +38,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private int maximumMessageSize = 8192;
 
     private List<MessageField> fields = new ArrayList<MessageField>();
+    private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
 
     private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSSS";
 
@@ -69,6 +67,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         filterStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE));
 
         setupStaticFields(propertyProvider);
+        setupAdditionalFieldTypes(propertyProvider);
         facility = propertyProvider.getProperty(PropertyProvider.PROPERTY_FACILITY);
         String version = propertyProvider.getProperty(PropertyProvider.PROPERTY_VERSION);
 
@@ -101,6 +100,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         builder.withShortMessage(shortMessage).withFullMessage(message).withJavaTimestamp(logEvent.getLogTimestamp());
         builder.withLevel(logEvent.getSyslogLevel());
         builder.withVersion(getVersion());
+        builder.withAdditionalFieldTypes(additionalFieldTypes);
 
         for (MessageField field : fields) {
             Values values = getValues(logEvent, field);
@@ -193,7 +193,29 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
             fieldNumber++;
         }
+    }
 
+    private void setupAdditionalFieldTypes(PropertyProvider propertyProvider) {
+        int fieldNumber = 0;
+        while (true) {
+            final String property = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELD_TYPE + fieldNumber);
+            if (null == property) {
+                break;
+            }
+            final int index = property.indexOf('=');
+            if (-1 != index) {
+
+                String field = property.substring(0, index);
+                String type = property.substring(index + 1);
+                setAdditionalFieldType(field, type);
+            }
+
+            fieldNumber++;
+        }
+    }
+
+    public void setAdditionalFieldType(String field, String type) {
+        additionalFieldTypes.put(field, type);
     }
 
     public void addField(MessageField field) {

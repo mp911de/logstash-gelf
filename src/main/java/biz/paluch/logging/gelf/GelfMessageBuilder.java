@@ -22,6 +22,7 @@ public class GelfMessageBuilder {
     private String facility = GelfMessage.DEFAULT_FACILITY;
     private Map<String, String> additonalFields = new HashMap<String, String>();
     private int maximumMessageSize = GelfMessage.DEFAULT_MESSAGE_SIZE;
+    private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
 
     private GelfMessageBuilder() {
 
@@ -148,6 +149,17 @@ public class GelfMessageBuilder {
     }
 
     /**
+     * Set additional field types
+     * 
+     * @param additionalFieldTypes the type map
+     * @return GelfMessageBuilder
+     */
+    public GelfMessageBuilder withAdditionalFieldTypes(Map<String, String> additionalFieldTypes) {
+        this.additionalFieldTypes.putAll(additionalFieldTypes);
+        return this;
+    }
+
+    /**
      * Build a new Gelf message based on the builder settings.
      * 
      * @return GelfMessage
@@ -162,6 +174,7 @@ public class GelfMessageBuilder {
         gelfMessage.setJavaTimestamp(javaTimestamp);
         gelfMessage.setFacility(facility);
         gelfMessage.setFacility(facility);
+        gelfMessage.setAdditionalFieldTypes(additionalFieldTypes);
 
         return gelfMessage;
     }

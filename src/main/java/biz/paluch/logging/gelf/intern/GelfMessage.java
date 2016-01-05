@@ -24,6 +24,41 @@ public class GelfMessage {
     public static final String FIELD_FACILITY = "facility";
     public static final String ID_NAME = "id";
 
+    /**
+     * Discover the field type by trying to parse it.
+     */
+    public static final String FIELD_TYPE_DISCOVER = "discover";
+
+    /**
+     * String field type.
+     */
+    public static final String FIELD_TYPE_STRING = "String";
+
+    /**
+     * long field type. Zero if value cannot be converted.
+     */
+    public static final String FIELD_TYPE_LONG = "long";
+
+    /**
+     * Long field type. Null if value cannot be converted.
+     */
+    public static final String FIELD_TYPE_LONG2 = "Long";
+
+    /**
+     * double field type. Zero if value cannot be converted.
+     */
+    public static final String FIELD_TYPE_DOUBLE = "double";
+
+    /**
+     * Double field type. Null if value cannot be converted.
+     */
+    public static final String FIELD_TYPE_DOUBLE2 = "Double";
+
+    /*
+     * Default field type: Discover
+     */
+    public static final String FIELD_TYPE_DEFAULT = FIELD_TYPE_DISCOVER;
+
     public static final String GELF_VERSION_1_0 = "1.0";
     public static final String GELF_VERSION_1_1 = "1.1";
 
@@ -45,6 +80,7 @@ public class GelfMessage {
     private String level;
     private String facility = DEFAULT_FACILITY;
     private Map<String, String> additonalFields = new HashMap<String, String>();
+    private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
     private int maximumMessageSize = DEFAULT_MESSAGE_SIZE;
 
     public GelfMessage() {
@@ -102,24 +138,70 @@ public class GelfMessage {
 
         for (Map.Entry<String, String> additionalField : additonalFields.entrySet()) {
             if (!ID_NAME.equals(additionalField.getKey()) && additionalField.getValue() != null) {
-                // try adding the value as a double
-                Object value;
-                try {
-                    try {
-                        value = Long.parseLong(additionalField.getValue());
-                    } catch (NumberFormatException ex) {
-                        // fallback on the double value
-                        value = Double.parseDouble(additionalField.getValue());
-                    }
-                } catch (NumberFormatException ex) {
-                    // fallback on the string value
-                    value = additionalField.getValue();
+                String value = additionalField.getValue();
+                String fieldType = additionalFieldTypes.get(additionalField.getKey());
+                if (fieldType == null) {
+                    fieldType = FIELD_TYPE_DEFAULT;
                 }
-                map.put(additionalFieldPrefix + additionalField.getKey(), value);
+                Object result = getAdditionalFieldValue(value, fieldType);
+                if (result != null) {
+                    map.put(additionalFieldPrefix + additionalField.getKey(), result);
+                }
             }
         }
 
         return JSONValue.toJSONString(map);
+    }
+
+    /**
+     * Get the field value as requested data type.
+     * @param value the value as string
+     * @param fieldType see field types
+     * @return the field value in the appropriate data type or {@literal null}.
+     */
+    protected Object getAdditionalFieldValue(String value, String fieldType) {
+
+        Object result = null;
+        if (fieldType.equalsIgnoreCase(FIELD_TYPE_DISCOVER)) {
+            try {
+                try {
+                    // try adding the value as a long
+                    result = Long.parseLong(value);
+                } catch (NumberFormatException ex) {
+                    // fallback on the double value
+                    result = Double.parseDouble(value);
+                }
+            } catch (NumberFormatException ex) {
+                // fallback on the string value
+                result = value;
+            }
+        }
+
+        if (fieldType.equalsIgnoreCase(FIELD_TYPE_STRING)) {
+            result = value;
+        }
+
+        if (fieldType.equals(FIELD_TYPE_DOUBLE) || fieldType.equalsIgnoreCase(FIELD_TYPE_DOUBLE2)) {
+            try {
+                result = Double.parseDouble(value);
+            } catch (NumberFormatException ex) {
+                if (fieldType.equals(FIELD_TYPE_DOUBLE)) {
+                    result = Double.valueOf(0);
+                }
+            }
+        }
+
+        if (fieldType.equals(FIELD_TYPE_LONG) || fieldType.equalsIgnoreCase(FIELD_TYPE_LONG2)) {
+            try {
+                result = (long) Double.parseDouble(value);
+            } catch (NumberFormatException ex) {
+                if (fieldType.equals(FIELD_TYPE_LONG)) {
+                    result = Long.valueOf(0);
+                }
+            }
+        }
+
+        return result;
     }
 
     public String toJson() {
@@ -274,6 +356,14 @@ public class GelfMessage {
 
     public void setFacility(String facility) {
         this.facility = facility;
+    }
+
+    public Map<String, String> getAdditionalFieldTypes() {
+        return additionalFieldTypes;
+    }
+
+    public void setAdditionalFieldTypes(Map<String, String> additionalFieldTypes) {
+        this.additionalFieldTypes = additionalFieldTypes;
     }
 
     /**
