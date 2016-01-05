@@ -355,11 +355,11 @@ This project is built against following dependencies/versions:
 
 * json-simple 1.1.1
 * log4j 1.2.14
-* log4j2 2.3
+* log4j2 2.5
 * Java Util Logging JDK Version 1.6
 * logback 1.1.3
-* slf4j-api 1.7.9
-* jedis 2.7.3 (includes commons-pool2 2.3)
+* slf4j-api 1.7.13
+* jedis 2.8.0 (includes commons-pool2 2.3)
 
 License
 -------
