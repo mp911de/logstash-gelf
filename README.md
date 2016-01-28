@@ -359,7 +359,7 @@ This project is built against following dependencies/versions:
 * Java Util Logging JDK Version 1.6
 * logback 1.1.3
 * slf4j-api 1.7.13
-* jedis 2.8.0 (includes commons-pool2 2.3)
+* jedis 2.8.0 (includes commons-pool2 2.4.2)
 
 License
 -------

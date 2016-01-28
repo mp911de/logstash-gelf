@@ -47,6 +47,6 @@ Using logstash-gelf on your classpath
     logstash-gelf-${logstash-gelf-release-version}.jar
     json-simple-1.1.1.jar
     jedis-2.8.jar
-    commons-pool2-2.3.jar
+    commons-pool2-2.4.2.jar
 
 You can do this from the command line or a manifest file.
