@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Appenders>
-        <Gelf name="gelf" graylogHost="tcp:localhost" graylogPort="19392" extractStackTrace="true"
+        <Gelf name="gelf" graylogHost="tcp:localhost?deliveryAttempts=-1&amp;connectionTimeout=1s&amp;readTimeout=2m" graylogPort="19392" extractStackTrace="true"
               filterStackTrace="true" mdcProfiling="true" maximumMessageSize="2000">
             <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
             <Field name="level" pattern="%level" />

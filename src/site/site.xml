@@ -29,6 +29,7 @@
             <item name="Default Fields" href="default-fields.html" />
             <item name="Syslog Level Mapping" href="syslog-level-mapping.html"/>
             <item name="Stack Trace Filter" href="stack-trace-filter.html"/>
+            <item name="TCP Transport" href="tcp.html" />
             <item name="Redis Transport" href="redis.html" />
             <item name="Datenpumpe" href="datenpumpe.html" />
         </menu>

@@ -5,6 +5,8 @@ import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,11 +34,23 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
 
         if (graylogHost.startsWith("tcp:")) {
 
-            int timeoutMs = (int) TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS);
-            String tcpGraylogHost = graylogHost.substring(4, graylogHost.length());
-            return new GelfTCPSender(tcpGraylogHost, port, timeoutMs, timeoutMs, configuration.getErrorReporter());
+            int defaultTimeoutMs = (int) TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS);
+
+            URI uri = URI.create(graylogHost);
+
+            Map<String, String> params = UriParser.parse(uri);
+            int connectionTimeMs = (int) UriParser.getTimeAsMs(params, GelfTCPSender.CONNECTION_TIMEOUT,
+                    defaultTimeoutMs);
+            int readTimeMs = (int) UriParser.getTimeAsMs(params, GelfTCPSender.READ_TIMEOUT, defaultTimeoutMs);
+            int deliveryAttempts = UriParser.getInt(params, GelfTCPSender.RETRIES, 1);
+            boolean keepAlive = UriParser.getString(params, GelfTCPSender.KEEPALIVE, false);
+
+            String tcpGraylogHost = UriParser.getHost(uri);
+            return new GelfTCPSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
+                    configuration.getErrorReporter());
         } else if (graylogHost.startsWith("udp:")) {
-            String udpGraylogHost = graylogHost.substring(4, graylogHost.length());
+            URI uri = URI.create(graylogHost);
+            String udpGraylogHost = UriParser.getHost(uri);
             return new GelfUDPSender(udpGraylogHost, port, configuration.getErrorReporter());
         } else {
             return new GelfUDPSender(graylogHost, port, configuration.getErrorReporter());
