@@ -103,7 +103,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
     }
 
     @Override
-    public void publish(final LogRecord record) {
+    public synchronized void publish(final LogRecord record) {
         if (!isLoggable(record)) {
             return;
         }

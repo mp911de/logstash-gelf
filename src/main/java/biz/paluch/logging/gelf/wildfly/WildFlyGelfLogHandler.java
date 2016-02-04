@@ -74,7 +74,7 @@ public class WildFlyGelfLogHandler extends GelfLogHandler {
     }
 
     @Override
-    public void publish(LogRecord record) {
+    public synchronized void publish(LogRecord record) {
         super.publish(ExtLogRecord.wrap(record));
     }
 
