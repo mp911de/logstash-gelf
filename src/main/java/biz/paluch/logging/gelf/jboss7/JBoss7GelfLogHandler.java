@@ -80,7 +80,7 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
     }
 
     @Override
-    public void publish(LogRecord record) {
+    public synchronized void publish(LogRecord record) {
         super.publish(ExtLogRecord.wrap(record));
     }
 
