@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.log4j.Level;
 import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
+import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 
@@ -108,13 +109,17 @@ class Log4jLogEvent implements LogEvent {
             case ThreadName:
                 return loggingEvent.getThreadName();
             case SourceClassName:
-                return loggingEvent.getLocationInformation().getClassName();
+                return getSourceClassName();
             case SourceLineNumber:
-                return loggingEvent.getLocationInformation().getLineNumber();
+                return getSourceLineNumber();
             case SourceMethodName:
-                return loggingEvent.getLocationInformation().getMethodName();
+                return getSourceMethodName();
             case SourceSimpleClassName:
-                return GelfUtil.getSimpleClassName(loggingEvent.getLocationInformation().getClassName());
+                String sourceClassName = getSourceClassName();
+                if(sourceClassName == null){
+                    return null;
+                }
+                return GelfUtil.getSimpleClassName(sourceClassName);
             case LoggerName:
                 return loggingEvent.getLoggerName();
             case NDC:
@@ -126,6 +131,30 @@ class Log4jLogEvent implements LogEvent {
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);
+    }
+
+    private String getSourceMethodName() {
+        String methodName = loggingEvent.getLocationInformation().getMethodName();
+        if(LocationInfo.NA.equals(methodName)){
+			return null;
+		}
+        return methodName;
+    }
+
+    private String getSourceLineNumber() {
+        String lineNumber = loggingEvent.getLocationInformation().getLineNumber();
+        if(LocationInfo.NA.equals(lineNumber)){
+			return null;
+		}
+        return lineNumber;
+    }
+
+    private String getSourceClassName() {
+        String className = loggingEvent.getLocationInformation().getClassName();
+        if(LocationInfo.NA.equals(className)){
+			return null;
+		}
+        return className;
     }
 
     private String getValue(MdcMessageField field) {

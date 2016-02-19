@@ -6,7 +6,13 @@ import java.util.Set;
 
 import org.apache.logging.log4j.Level;
 
-import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
+import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.LogEvent;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcMessageField;
+import biz.paluch.logging.gelf.MessageField;
+import biz.paluch.logging.gelf.Values;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
@@ -90,13 +96,17 @@ class Log4j2LogEvent implements LogEvent {
             case ThreadName:
                 return logEvent.getThreadName();
             case SourceClassName:
-                return logEvent.getSource().getClassName();
+                return getSourceClassName();
             case SourceLineNumber:
-                return "" + logEvent.getSource().getLineNumber();
+                return getSourceLineNumber();
             case SourceMethodName:
-                return logEvent.getSource().getMethodName();
+                return getSourceMethodName();
             case SourceSimpleClassName:
-                return GelfUtil.getSimpleClassName(logEvent.getSource().getClassName());
+                String sourceClassName = getSourceClassName();
+                if (sourceClassName == null) {
+                    return null;
+                }
+                return GelfUtil.getSimpleClassName(sourceClassName);
             case LoggerName:
                 return logEvent.getLoggerName();
             case Marker:
@@ -107,6 +117,30 @@ class Log4j2LogEvent implements LogEvent {
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);
+    }
+
+    private String getSourceMethodName() {
+        if (logEvent.getSource() == null) {
+            return null;
+        }
+
+        return logEvent.getSource().getMethodName();
+    }
+
+    private String getSourceLineNumber() {
+        if (logEvent.getSource() == null || logEvent.getSource().getLineNumber() <= 0) {
+            return null;
+        }
+
+        return "" + logEvent.getSource().getLineNumber();
+    }
+
+    private String getSourceClassName() {
+        if (logEvent.getSource() == null) {
+            return null;
+        }
+
+        return logEvent.getSource().getClassName();
     }
 
     private Values getMdcValues(DynamicMdcMessageField field) {

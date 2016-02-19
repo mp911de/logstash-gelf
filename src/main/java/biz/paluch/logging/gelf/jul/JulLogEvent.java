@@ -12,7 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.LogEvent;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MessageField;
+import biz.paluch.logging.gelf.Values;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
@@ -159,9 +163,9 @@ public class JulLogEvent implements LogEvent {
             case ThreadName:
                 return getThreadName(logRecord);
             case SourceClassName:
-                return logRecord.getSourceClassName();
+                return getSourceClassName();
             case SourceMethodName:
-                return logRecord.getSourceMethodName();
+                return getSourceMethodName();
             case SourceSimpleClassName:
                 return GelfUtil.getSimpleClassName(logRecord.getSourceClassName());
             case LoggerName:
@@ -169,6 +173,24 @@ public class JulLogEvent implements LogEvent {
         }
 
         throw new UnsupportedOperationException("Cannot provide value for " + field);
+    }
+
+    private String getSourceMethodName() {
+        String sourceMethodName = logRecord.getSourceMethodName();
+        if (sourceMethodName == null || "<unknown>".equals(sourceMethodName)) {
+            return null;
+        }
+
+        return sourceMethodName;
+    }
+
+    private String getSourceClassName() {
+        String sourceClassName = logRecord.getSourceClassName();
+        if (sourceClassName == null || "<unknown>".equals(sourceClassName)) {
+            return null;
+        }
+
+        return sourceClassName;
     }
 
     @Override

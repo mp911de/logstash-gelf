@@ -4,7 +4,12 @@ import java.util.Set;
 
 import org.jboss.logmanager.ExtLogRecord;
 
-import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
+import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcMessageField;
+import biz.paluch.logging.gelf.MessageField;
+import biz.paluch.logging.gelf.Values;
 import biz.paluch.logging.gelf.jul.JulLogEvent;
 
 /**
@@ -43,9 +48,17 @@ public class JBoss7JulLogEvent extends JulLogEvent {
                 }
                 return null;
             case SourceLineNumber:
-                return "" + this.extLogRecord.getSourceLineNumber();
+                return getSourceLineNumber();
         }
         return super.getValue(field);
+    }
+
+    private String getSourceLineNumber() {
+        if (this.extLogRecord.getSourceLineNumber() <= 0) {
+            return null;
+        }
+
+        return "" + this.extLogRecord.getSourceLineNumber();
     }
 
     private Values getMdcValues(DynamicMdcMessageField field) {

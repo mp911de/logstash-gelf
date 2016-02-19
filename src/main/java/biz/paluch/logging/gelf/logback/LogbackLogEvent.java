@@ -4,7 +4,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
+import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.LogEvent;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcMessageField;
+import biz.paluch.logging.gelf.MessageField;
+import biz.paluch.logging.gelf.Values;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -58,7 +64,7 @@ class LogbackLogEvent implements LogEvent {
     public String getSourceClassName() {
         StackTraceElement calleeStackTraceElement = getCalleeStackTraceElement();
         if (null == calleeStackTraceElement) {
-            return "";
+            return null;
         }
 
         return calleeStackTraceElement.getClassName();
@@ -77,7 +83,7 @@ class LogbackLogEvent implements LogEvent {
     public String getSourceMethodName() {
         StackTraceElement calleeStackTraceElement = getCalleeStackTraceElement();
         if (null == calleeStackTraceElement) {
-            return "";
+            return null;
         }
 
         return calleeStackTraceElement.getMethodName();
@@ -86,7 +92,7 @@ class LogbackLogEvent implements LogEvent {
     public String getSourceLine() {
         StackTraceElement calleeStackTraceElement = getCalleeStackTraceElement();
         if (null == calleeStackTraceElement) {
-            return "";
+            return null;
         }
 
         return "" + calleeStackTraceElement.getLineNumber();
@@ -150,6 +156,10 @@ class LogbackLogEvent implements LogEvent {
             case SourceLineNumber:
                 return getSourceLine();
             case SourceSimpleClassName:
+                String sourceClassName = getSourceClassName();
+                if (sourceClassName == null) {
+                    return null;
+                }
                 return GelfUtil.getSimpleClassName(getSourceClassName());
             case LoggerName:
                 return loggingEvent.getLoggerName();
