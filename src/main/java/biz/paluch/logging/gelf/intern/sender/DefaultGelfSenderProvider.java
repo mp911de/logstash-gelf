@@ -3,6 +3,7 @@ package biz.paluch.logging.gelf.intern.sender;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,9 +11,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 
  * (c) https://github.com/Batigoal/logstash-gelf.git
- * 
  */
 public class DefaultGelfSenderProvider implements GelfSenderProvider {
 
@@ -52,6 +51,9 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
             URI uri = URI.create(graylogHost);
             String udpGraylogHost = UriParser.getHost(uri);
             return new GelfUDPSender(udpGraylogHost, port, configuration.getErrorReporter());
+        } else if (graylogHost.startsWith("http")) {
+            return new GelfHTTPSender(graylogHost, port, configuration.getErrorReporter(), HttpClientBuilder.create());
+
         } else {
             return new GelfUDPSender(graylogHost, port, configuration.getErrorReporter());
         }
