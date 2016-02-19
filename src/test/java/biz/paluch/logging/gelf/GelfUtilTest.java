@@ -1,6 +1,7 @@
 package biz.paluch.logging.gelf;
 
 import static org.junit.Assert.assertEquals;
+
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
 import org.jboss.logmanager.ExtLogRecord;
@@ -40,5 +41,11 @@ public class GelfUtilTest {
 
         assertEquals("12sec", message.getAdditonalFields().get(GelfUtil.MDC_REQUEST_DURATION));
 
+    }
+
+    @Test
+    public void addDefaultPortIfMissing() {
+        String url = GelfUtil.addDefaultPortIfMissing("http://example.com/foo", String.valueOf(1234));
+        assertEquals("http://example.com:1234/foo", url);
     }
 }
