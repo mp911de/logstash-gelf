@@ -24,6 +24,8 @@ Following settings can be used:
 
 The only mandatory field is `host`. All other fields are optional.
 
+Please note: If the `debug` attribute of the `configuration` element is not set to `true`, internal appender errors are not shown. 
+
 
 Logback Configuration
 --------------
