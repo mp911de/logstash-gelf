@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf;
 
 import static biz.paluch.logging.RuntimeContainerProperties.getProperty;
-import static java.lang.Boolean.getBoolean;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,11 +10,15 @@ import biz.paluch.logging.gelf.intern.Closer;
 
 /**
  * Field with reference to the log event.
+ *
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class LogMessageField implements MessageField {
 
     public static final String VERBOSE_LOGGING_PROPERTY = "logstash-gelf.LogMessageField.verbose";
-    private static final String DEFAULT_MAPPING = "default-logstash-fields.properties";
+
+	private static final String DEFAULT_MAPPING = "default-logstash-fields.properties";
+	private static final boolean VERBOSE_LOGGING = Boolean.parseBoolean(getProperty(VERBOSE_LOGGING_PROPERTY, "false"));
 
     /**
      * Named references to common log event fields.
@@ -111,7 +114,7 @@ public class LogMessageField implements MessageField {
     }
 
     private static void verboseLog(String message) {
-        if (getBoolean(getProperty(VERBOSE_LOGGING_PROPERTY, "false"))) {
+        if (VERBOSE_LOGGING) {
             System.out.println(message);
         }
     }
