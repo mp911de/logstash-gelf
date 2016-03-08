@@ -15,7 +15,7 @@ import biz.paluch.logging.gelf.intern.Closer;
  * Filtering Facility for Stack-Traces. This is to shorten very long Traces. It leads to a very short Trace containing only the
  * interesting parts. Please provide an own Resource /StackTraceFilter.packages with the packages if you want to use a custom
  * filter (one package per line)
- * 
+ *
  * <code>
  # Packages to filter
  org.h2
@@ -23,44 +23,44 @@ import biz.paluch.logging.gelf.intern.Closer;
  org.apache.coyote
  org.apache.tomcat
  com.arjuna
- org.apache.cxf   
+ org.apache.cxf
  * </code>
- * 
+ *
  * Filtered Example: <code>
  Exception: javax.faces.FacesException: #{documentQueryController.executeQuery}: com.kaufland.dms.commons.exception.DmsTechnicalException: java.io.IOException: aargh
  Caused by: javax.faces.el.EvaluationException: com.kaufland.dms.commons.exception.DmsTechnicalException: java.io.IOException: aargh
  Caused by: com.kaufland.dms.commons.exception.DmsTechnicalException: java.io.IOException: aargh
  Caused by: java.io.IOException: aargh
- 	at com.kaufland.dms.core.business.document.query.DocumentQueryBO.queryDocuments(DocumentQueryBO.java:76)
- 		52 lines skipped for [sun., org.jboss, java.lang.reflect.Method]
- 	at com.kaufland.dms.core.business.document.query.DocumentQueryBO$$$view47.queryDocuments(Unknown Source)
- 	at com.kaufland.dms.core.facade.DocumentFacade.queryDocuments(DocumentFacade.java:169)
- 		10 lines skipped for [sun., org.jboss, java.lang.reflect.Method]
- 	at com.kaufland.dms.commons.exception.safe.ExceptionDecouplingInterceptor.interceptInvocation(ExceptionDecouplingInterceptor.java:31)
- 		41 lines skipped for [sun., org.jboss, java.lang.reflect.Method]
- 	at com.kaufland.dms.core.service.DocumentService$$$view37.queryDocuments(Unknown Source)
- 	at com.kaufland.dms.web.ui.document.query.DocumentQueryController.executeQuery(DocumentQueryController.java:201)
- 	at com.kaufland.dms.web.ui.document.query.DocumentQueryController.executeQuery(DocumentQueryController.java:196)
- 		4 lines skipped for [sun., java.lang.reflect.Method]
- 	at org.apache.el.parser.AstValue.invoke(AstValue.java:258)
- 	at org.apache.el.MethodExpressionImpl.invoke(MethodExpressionImpl.java:278)
- 		2 lines skipped for [org.jboss]
- 	at com.sun.faces.facelets.el.TagMethodExpression.invoke(TagMethodExpression.java:105)
- 	at javax.faces.component.MethodBindingMethodExpressionAdapter.invoke(MethodBindingMethodExpressionAdapter.java:87)
- 	at com.sun.faces.application.ActionListenerImpl.processAction(ActionListenerImpl.java:101)
- 	at javax.faces.component.UICommand.broadcast(UICommand.java:315)
- 	at javax.faces.component.UIViewRoot.broadcastEvents(UIViewRoot.java:786)
- 	at javax.faces.component.UIViewRoot.processApplication(UIViewRoot.java:1251)
- 	at com.sun.faces.lifecycle.InvokeApplicationPhase.execute(InvokeApplicationPhase.java:81)
- 	at com.sun.faces.lifecycle.Phase.doPhase(Phase.java:101)
- 	at com.sun.faces.lifecycle.LifecycleImpl.execute(LifecycleImpl.java:118)
- 	at javax.faces.webapp.FacesServlet.service(FacesServlet.java:593)
- 		2 lines skipped for [org.apache.catalina]
- 	at com.kaufland.dms.web.servlet.IE9CompatibilityFilter.doFilter(IE9CompatibilityFilter.java:26)
- 		19 lines skipped for [org.apache.coyote, org.jboss, org.apache.catalina, org.apache.tomcat]
- 	at java.lang.Thread.run(Thread.java:722)
+     at com.kaufland.dms.core.business.document.query.DocumentQueryBO.queryDocuments(DocumentQueryBO.java:76)
+         52 lines skipped for [sun., org.jboss, java.lang.reflect.Method]
+     at com.kaufland.dms.core.business.document.query.DocumentQueryBO$$$view47.queryDocuments(Unknown Source)
+     at com.kaufland.dms.core.facade.DocumentFacade.queryDocuments(DocumentFacade.java:169)
+         10 lines skipped for [sun., org.jboss, java.lang.reflect.Method]
+     at com.kaufland.dms.commons.exception.safe.ExceptionDecouplingInterceptor.interceptInvocation(ExceptionDecouplingInterceptor.java:31)
+         41 lines skipped for [sun., org.jboss, java.lang.reflect.Method]
+     at com.kaufland.dms.core.service.DocumentService$$$view37.queryDocuments(Unknown Source)
+     at com.kaufland.dms.web.ui.document.query.DocumentQueryController.executeQuery(DocumentQueryController.java:201)
+     at com.kaufland.dms.web.ui.document.query.DocumentQueryController.executeQuery(DocumentQueryController.java:196)
+         4 lines skipped for [sun., java.lang.reflect.Method]
+     at org.apache.el.parser.AstValue.invoke(AstValue.java:258)
+     at org.apache.el.MethodExpressionImpl.invoke(MethodExpressionImpl.java:278)
+         2 lines skipped for [org.jboss]
+     at com.sun.faces.facelets.el.TagMethodExpression.invoke(TagMethodExpression.java:105)
+     at javax.faces.component.MethodBindingMethodExpressionAdapter.invoke(MethodBindingMethodExpressionAdapter.java:87)
+     at com.sun.faces.application.ActionListenerImpl.processAction(ActionListenerImpl.java:101)
+     at javax.faces.component.UICommand.broadcast(UICommand.java:315)
+     at javax.faces.component.UIViewRoot.broadcastEvents(UIViewRoot.java:786)
+     at javax.faces.component.UIViewRoot.processApplication(UIViewRoot.java:1251)
+     at com.sun.faces.lifecycle.InvokeApplicationPhase.execute(InvokeApplicationPhase.java:81)
+     at com.sun.faces.lifecycle.Phase.doPhase(Phase.java:101)
+     at com.sun.faces.lifecycle.LifecycleImpl.execute(LifecycleImpl.java:118)
+     at javax.faces.webapp.FacesServlet.service(FacesServlet.java:593)
+         2 lines skipped for [org.apache.catalina]
+     at com.kaufland.dms.web.servlet.IE9CompatibilityFilter.doFilter(IE9CompatibilityFilter.java:26)
+         19 lines skipped for [org.apache.coyote, org.jboss, org.apache.catalina, org.apache.tomcat]
+     at java.lang.Thread.run(Thread.java:722)
     </code>
- * 
+ *
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class StackTraceFilter {
@@ -127,7 +127,7 @@ public class StackTraceFilter {
 
     /**
      * Filter Stack-Trace
-     * 
+     *
      * @param t the throwable
      * @return String containing the filtered Stack-Trace.
      */
@@ -138,7 +138,7 @@ public class StackTraceFilter {
 
     /**
      * Filter Stack-Trace
-     * 
+     *
      * @param t the throwable
      * @param shouldFilter true in case filtering should be performed. Else stack-trace as string will be returned.
      * @return String containing the Stack-Trace.
@@ -222,7 +222,7 @@ public class StackTraceFilter {
     /**
      * Checks to see if the class is part of a forbidden package. If so, it returns the package name from the list of suppressed
      * packages that matches, otherwise it returns null.
-     * 
+     *
      * @param traceElement StackTraceElement
      * @return forbidden package name or null.
      */

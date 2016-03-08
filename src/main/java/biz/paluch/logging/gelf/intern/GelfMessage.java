@@ -12,7 +12,8 @@ import java.util.zip.GZIPOutputStream;
 import org.json.simple.JSONValue;
 
 /**
- * (c) https://github.com/t0xa/gelfj
+ * @author https://github.com/t0xa/gelfj
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class GelfMessage {
 
@@ -368,7 +369,7 @@ public class GelfMessage {
 
     /**
      * Add multiple fields (key/value pairs)
-     * 
+     *
      * @param fields map of fields
      * @return the current GelfMessage.
      */

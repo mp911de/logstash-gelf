@@ -5,6 +5,9 @@ import org.junit.Test;
 
 import java.util.List;
 
+/**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ */
 public class LogMessageFieldTest {
 
     @Test

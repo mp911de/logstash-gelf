@@ -1,5 +1,8 @@
 package biz.paluch.logging.gelf.standalone;
 
+/**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ */
 public class ShoppingCart {
 
     private String cartId;

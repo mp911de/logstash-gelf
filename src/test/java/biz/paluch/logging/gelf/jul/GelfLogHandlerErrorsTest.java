@@ -27,11 +27,16 @@ import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
+/**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class GelfLogHandlerErrorsTest {
-    public static final String THE_HOST = "the host";
+
+	public static final String THE_HOST = "the host";
     public static final LogRecord MESSAGE = new LogRecord(Level.INFO, "message");
-    @Mock
+
+	@Mock
     private ErrorManager errorManager;
 
     @Mock

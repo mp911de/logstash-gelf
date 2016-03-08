@@ -9,7 +9,6 @@ import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.PropertyProvider;
-import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.*;
 
 /**
@@ -34,13 +33,15 @@ import biz.paluch.logging.gelf.intern.*;
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
  * <li>additionalField.(number) (Optional): Post additional fields. Eg. .GelfLogHandler.additionalField.0=fieldName=Value</li>
  * </ul>
+ *
+ * The {@link #publish(LogRecord)} method is thread-safe and may be called by different threads at any time.
+ *
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class GelfLogHandler extends Handler implements ErrorReporter {
 
-    public static final String MULTI_VALUE_DELIMITTER = ",";
-    protected GelfSender gelfSender;
+    protected volatile GelfSender gelfSender;
     protected GelfMessageAssembler gelfMessageAssembler;
-    protected boolean publishing = false;
 
     public GelfLogHandler() {
         super();
@@ -95,45 +96,36 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
     }
 
     @Override
-    public boolean isLoggable(LogRecord record) {
-        if (publishing) {
-            return false;
-        }
-        return super.isLoggable(record);
-    }
-
-    @Override
-    public synchronized void publish(final LogRecord record) {
+    public void publish(final LogRecord record) {
         if (!isLoggable(record)) {
             return;
         }
 
         try {
-            publishing = true;
-            try {
-                if (null == gelfSender) {
-                    gelfSender = createGelfSender();
+            if (null == gelfSender) {
+                synchronized (this) {
+                    if (null == gelfSender) {
+                        gelfSender = createGelfSender();
+                    }
                 }
-            } catch (Exception e) {
-                reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.OPEN_FAILURE);
+            }
+        } catch (Exception e) {
+            reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.OPEN_FAILURE);
+            return;
+        }
+
+        try {
+            GelfMessage message = createGelfMessage(record);
+            if (!message.isValid()) {
+                reportError("GELF Message is invalid: " + message.toJson(), null, ErrorManager.WRITE_FAILURE);
                 return;
             }
 
-            try {
-                GelfMessage message = createGelfMessage(record);
-                if (!message.isValid()) {
-                    reportError("GELF Message is invalid: " + message.toJson(), null, ErrorManager.WRITE_FAILURE);
-                    return;
-                }
-
-                if (null == gelfSender || !gelfSender.sendMessage(message)) {
-                    reportError("Could not send GELF message", null, ErrorManager.WRITE_FAILURE);
-                }
-            } catch (Exception e) {
-                reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.FORMAT_FAILURE);
+            if (null == gelfSender || !gelfSender.sendMessage(message)) {
+                reportError("Could not send GELF message", null, ErrorManager.WRITE_FAILURE);
             }
-        } finally {
-            publishing = false;
+        } catch (Exception e) {
+            reportError("Could not send GELF message: " + e.getMessage(), e, ErrorManager.FORMAT_FAILURE);
         }
     }
 

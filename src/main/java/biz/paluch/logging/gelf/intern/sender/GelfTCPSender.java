@@ -6,12 +6,15 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.nio.channels.SocketChannel;
+import java.util.concurrent.TimeUnit;
 
 /**
- * (c) https://github.com/t0xa/gelfj
+ * @author https://github.com/t0xa/gelfj
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class GelfTCPSender implements GelfSender {
 
@@ -21,32 +24,67 @@ public class GelfTCPSender implements GelfSender {
     public final static String KEEPALIVE = "keepAlive";
 
     private boolean shutdown = false;
-    private InetAddress host;
-    private int port;
-    private int connectTimeoutMs;
-    private int readTimeoutMs;
-    private int deliveryAttempts;
-    private boolean keepAlive;
-    private Socket socket;
-    private ErrorReporter errorReporter;
+    private final InetAddress host;
+    private final int port;
+    private final int connectTimeoutMs;
+    private final int deliveryAttempts;
+    private final SocketChannel socketChannel;
+    private final ErrorReporter errorReporter;
 
+    private Object connectLock = new Object();
+
+    /**
+     * 
+     * @param host
+     * @param port
+     * @param connectTimeoutMs
+     * @param readTimeoutMs
+     * @param errorReporter
+     * @throws IOException
+     */
     public GelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, ErrorReporter errorReporter)
             throws IOException {
         this(host, port, connectTimeoutMs, readTimeoutMs, 1, false, errorReporter);
     }
 
+    /**
+     * 
+     * @param host
+     * @param port
+     * @param connectTimeoutMs
+     * @param readTimeoutMs
+     * @param deliveryAttempts
+     * @param keepAlive
+     * @param errorReporter
+     * @throws IOException
+     */
     public GelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, int deliveryAttempts,
-                         boolean keepAlive, ErrorReporter errorReporter) throws IOException {
-        this.keepAlive = keepAlive;
+            boolean keepAlive, ErrorReporter errorReporter) throws IOException {
+
         this.host = InetAddress.getByName(host);
         this.port = port;
         this.errorReporter = errorReporter;
         this.connectTimeoutMs = connectTimeoutMs;
-        this.readTimeoutMs = readTimeoutMs;
         this.deliveryAttempts = deliveryAttempts < 1 ? Integer.MAX_VALUE : deliveryAttempts;
+
+        this.socketChannel = createSocketChannel(readTimeoutMs, keepAlive);;
     }
 
+    private SocketChannel createSocketChannel(int readTimeoutMs, boolean keepAlive) throws IOException {
+        SocketChannel socketChannel = SocketChannel.open();
+        socketChannel.configureBlocking(false);
+        socketChannel.socket().setKeepAlive(keepAlive);
+        socketChannel.socket().setSoTimeout(readTimeoutMs);
+        return socketChannel;
+    }
+
+    /**
+     * 
+     * @param message the message
+     * @return
+     */
     public boolean sendMessage(GelfMessage message) {
+
         if (shutdown) {
             return false;
         }
@@ -55,38 +93,75 @@ public class GelfTCPSender implements GelfSender {
 
         for (int i = 0; i < deliveryAttempts; i++) {
             try {
-                // reconnect if necessary
-                if (socket == null) {
-                    socket = createSocket();
+
+                // (re)-connect if necessary
+                if (!socketChannel.isConnected()) {
+                    synchronized (connectLock) {
+                        connect();
+                    }
                 }
 
-                socket.getOutputStream().write(message.toTCPBuffer().array());
+                socketChannel.write(message.toTCPBuffer());
+
                 return true;
             } catch (IOException e) {
+                if (socketChannel != null) {
+                    try {
+                        socketChannel.close();
+                    } catch (IOException o_O) {
+                        // ignore
+                    }
+                }
                 exception = e;
-                // if an error occours, signal failure
-                socket = null;
             }
         }
 
         if (exception != null) {
-            errorReporter.reportError(exception.getMessage(), new IOException("Cannot send data to " + host + ":" + port,
-                    exception));
+            errorReporter.reportError(exception.getMessage(),
+                    new IOException("Cannot send data to " + host + ":" + port, exception));
         }
 
         return false;
     }
 
-    protected Socket createSocket() throws IOException {
-        Socket socket = new Socket();
-        socket.setSoTimeout(readTimeoutMs);
-        socket.setKeepAlive(keepAlive);
-        socket.connect(new InetSocketAddress(host, port), connectTimeoutMs);
-        return socket;
+    protected void connect() throws IOException {
+
+        if (socketChannel.isConnected()) {
+            return;
+        }
+
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(host, port);
+        if (socketChannel.connect(inetSocketAddress)) {
+            return;
+        }
+
+        long connectTimeoutLeft = TimeUnit.MILLISECONDS.toNanos(connectTimeoutMs);
+        long waitTimeoutMs = 10;
+        long waitTimeoutNs = TimeUnit.MILLISECONDS.toNanos(waitTimeoutMs);
+        boolean connected;
+        try {
+            while (!(connected = socketChannel.finishConnect())) {
+                Thread.sleep(waitTimeoutMs);
+                connectTimeoutLeft -= waitTimeoutNs;
+
+                if (connectTimeoutLeft <= 0) {
+                    break;
+                }
+            }
+
+            if (!connected) {
+                throw new ConnectException("Connection timed out. Cannot connect to " + inetSocketAddress + " within "
+                        + TimeUnit.NANOSECONDS.toMillis(connectTimeoutLeft) + "ms");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Connection interrupted", e);
+        }
+
     }
 
     public void close() {
         shutdown = true;
-        Closer.close(socket);
+        Closer.close(socketChannel);
     }
 }

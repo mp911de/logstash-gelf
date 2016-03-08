@@ -12,11 +12,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Singleton for administration of commonly used jedis pools
  *
- * @author (c) https://github.com/Batigoal/logstash-gelf.git
+ * @author https://github.com/Batigoal/logstash-gelf.git
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  *
  */
 enum RedisSenderPoolProvider {
@@ -30,7 +33,7 @@ enum RedisSenderPoolProvider {
 
         /**
          * Create a Jedis Pool for standalone Redis Operations.
-         * 
+         *
          * @param hostURI
          * @param configuredPort
          * @param timeoutMs
@@ -69,7 +72,7 @@ enum RedisSenderPoolProvider {
 
         /**
          * Create a Jedis Pool for sentinel Redis Operations.
-         * 
+         *
          * @param hostURI
          * @param configuredPort
          * @param timeoutMs
@@ -83,6 +86,9 @@ enum RedisSenderPoolProvider {
 
             Set<String> sentinels = getSentinels(hostURI);
             String masterName = getMasterName(hostURI);
+
+            // No logging for Jedis Sentinel at all.
+            Logger.getLogger(JedisSentinelPool.class.getName()).setLevel(Level.OFF);
 
             if (!sentinelPools.containsKey(cleanConnectionString)) {
 

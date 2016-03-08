@@ -6,6 +6,9 @@ import java.io.OutputStreamWriter;
 import org.apache.log4j.Layout;
 import org.apache.log4j.WriterAppender;
 
+/**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ */
 public class TestAppender extends WriterAppender {
 
 	private static final ByteArrayOutputStream baos = new ByteArrayOutputStream();

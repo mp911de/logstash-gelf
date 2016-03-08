@@ -13,9 +13,11 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
 /**
- * (c) https://github.com/t0xa/gelfj
+ * @author https://github.com/t0xa/gelfj
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class GelfUDPSender implements GelfSender {
+
     private InetAddress host;
     private int port;
     private DatagramChannel channel;
@@ -36,6 +38,7 @@ public class GelfUDPSender implements GelfSender {
         } catch (SocketException e) {
             errorReporter.reportError(e.getMessage(), e);
         }
+
         resultingChannel.connect(new InetSocketAddress(this.host, this.port));
         resultingChannel.configureBlocking(false);
 
@@ -47,6 +50,7 @@ public class GelfUDPSender implements GelfSender {
     }
 
     private boolean sendDatagrams(ByteBuffer[] bytesList) {
+
         try {
             for (ByteBuffer buffer : bytesList) {
                 channel.write(buffer);

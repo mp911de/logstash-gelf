@@ -6,6 +6,9 @@ import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
+/**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ */
 public class GelfTestSenderProvider implements GelfSenderProvider {
 
     @Override

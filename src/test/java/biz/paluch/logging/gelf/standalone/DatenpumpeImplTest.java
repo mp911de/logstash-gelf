@@ -9,8 +9,12 @@ import org.junit.Test;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
+/**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ */
 public class DatenpumpeImplTest {
-    @Before
+
+	@Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
     }

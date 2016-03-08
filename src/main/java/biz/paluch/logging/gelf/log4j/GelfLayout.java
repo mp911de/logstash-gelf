@@ -67,6 +67,8 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * <li>profiling.requestEnd: End-Time of the Request-End in Date.toString-representation</li>
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
  * </ul>
+ *
+ * @author <a href="mailto:kai.geisselhardt@kaufland.com">Kai Geisselhardt</a>
  */
 public class GelfLayout extends Layout {
 
@@ -100,7 +102,7 @@ public class GelfLayout extends Layout {
 
     @Override
     public String format(LoggingEvent loggingEvent) {
-		if (!wasSetFieldsCalled) {
+        if (!wasSetFieldsCalled) {
             addFields(SUPPORTED_FIELDS);
         }
         GelfMessage gelfMessage = gelfMessageAssembler.createGelfMessage(new Log4jLogEvent(loggingEvent));

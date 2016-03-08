@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.net.URI;
 
 /**
- * 
- * (c) https://github.com/Batigoal/logstash-gelf.git
- * 
+ *
+ * @author https://github.com/Batigoal/logstash-gelf.git
+ *
  */
 public class RedisGelfSenderProvider implements GelfSenderProvider {
 

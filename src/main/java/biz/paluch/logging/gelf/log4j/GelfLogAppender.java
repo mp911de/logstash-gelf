@@ -7,6 +7,7 @@ import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.spi.LoggingEvent;
 
 import java.util.Collections;
+import java.util.logging.LogRecord;
 
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
@@ -58,6 +59,10 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimple
  * <li>profiling.requestEnd: End-Time of the Request-End in Date.toString-representation</li>
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
  * </ul>
+ *
+ * The {@link #append(LoggingEvent)} method is thread-safe and may be called by different threads at any time.
+ *
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
 
@@ -81,10 +86,6 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
         }
 
         try {
-            if (null == gelfSender) {
-                gelfSender = createGelfSender();
-            }
-
             GelfMessage message = createGelfMessage(event);
             if (!message.isValid()) {
                 reportError("GELF Message is invalid: " + message.toJson(), null);
@@ -110,6 +111,14 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
     @Override
     public boolean requiresLayout() {
         return false;
+    }
+
+    @Override
+    public void activateOptions() {
+
+        if (null == gelfSender) {
+            gelfSender = createGelfSender();
+        }
     }
 
     @Override

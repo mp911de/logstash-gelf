@@ -136,24 +136,24 @@ class Log4jLogEvent implements LogEvent {
     private String getSourceMethodName() {
         String methodName = loggingEvent.getLocationInformation().getMethodName();
         if(LocationInfo.NA.equals(methodName)){
-			return null;
-		}
+            return null;
+        }
         return methodName;
     }
 
     private String getSourceLineNumber() {
         String lineNumber = loggingEvent.getLocationInformation().getLineNumber();
         if(LocationInfo.NA.equals(lineNumber)){
-			return null;
-		}
+            return null;
+        }
         return lineNumber;
     }
 
     private String getSourceClassName() {
         String className = loggingEvent.getLocationInformation().getClassName();
         if(LocationInfo.NA.equals(className)){
-			return null;
-		}
+            return null;
+        }
         return className;
     }
 

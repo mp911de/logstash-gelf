@@ -8,12 +8,9 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethod
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.StaticMessageField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.jboss.logmanager.ExtLogRecord;
 import org.jboss.logmanager.errormanager.OnlyOnceErrorManager;
@@ -65,6 +62,10 @@ import java.util.logging.LogRecord;
  * <li>profiling.requestEnd: End-Time of the Request-End in Date.toString-representation</li>
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
  * </ul>
+ *
+ * The {@link #publish(LogRecord)} method is thread-safe and may be called by different threads at any time.
+ *
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHandler {
 
@@ -80,7 +81,7 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
     }
 
     @Override
-    public synchronized void publish(LogRecord record) {
+    public void publish(LogRecord record) {
         super.publish(ExtLogRecord.wrap(record));
     }
 

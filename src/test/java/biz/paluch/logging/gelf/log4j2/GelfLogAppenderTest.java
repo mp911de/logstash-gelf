@@ -18,6 +18,7 @@ import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class GelfLogAppenderTest {
     public static final String LOG_MESSAGE = "foo bar test log message";

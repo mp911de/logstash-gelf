@@ -9,6 +9,9 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ */
 public class StandaloneGelfSenderTest {
 
     @Before

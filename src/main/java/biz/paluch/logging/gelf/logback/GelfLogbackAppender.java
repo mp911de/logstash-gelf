@@ -17,6 +17,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 
 import java.util.Collections;
+import java.util.logging.LogRecord;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Logback Handler creates GELF Messages and posts them using
@@ -62,12 +63,13 @@ import java.util.Collections;
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
  * </ul>
  *
+ * The {@link #append(ILoggingEvent)} method is thread-safe and may be called by different threads at any time.
+ *
  * @author <a href="mailto:tobiassebastian.kaefer@1und1.de">Tobias Kaefer</a>
  * @since 2013-10-08
  */
 public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements ErrorReporter {
 
-    public static final String MULTI_VALUE_DELIMITTER = ",";
     protected GelfSender gelfSender;
     protected MdcGelfMessageAssembler gelfMessageAssembler;
 
@@ -86,11 +88,6 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
         }
 
         try {
-            if (null == gelfSender) {
-                RuntimeContainer.initialize(this);
-                gelfSender = createGelfSender();
-            }
-
             GelfMessage message = createGelfMessage(event);
             if (!message.isValid()) {
                 reportError("GELF Message is invalid: " + message.toJson(), null);
@@ -103,6 +100,28 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
         } catch (Exception e) {
             reportError("Could not send GELF message: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void start() {
+
+        if (null == gelfSender) {
+            RuntimeContainer.initialize(this);
+            gelfSender = createGelfSender();
+        }
+
+        super.start();
+    }
+
+    @Override
+    public void stop() {
+
+        if(null != gelfSender) {
+            Closer.close(gelfSender);
+            gelfSender = null;
+        }
+
+        super.stop();
     }
 
     protected GelfSender createGelfSender() {

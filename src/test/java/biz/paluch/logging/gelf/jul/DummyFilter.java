@@ -8,7 +8,8 @@ import java.util.logging.LogRecord;
  * @since 17.07.14 12:12
  */
 public class DummyFilter implements Filter {
-    @Override
+
+	@Override
     public boolean isLoggable(LogRecord record) {
         return false;
     }

@@ -7,14 +7,20 @@ import redis.clients.jedis.Jedis;
 import redis.clients.util.Pool;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
- * (c) https://github.com/strima/logstash-gelf.git
+ * @author https://github.com/strima/logstash-gelf.git
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class GelfREDISSender<T> implements GelfSender {
-    private Pool<Jedis> jedisPool;
-    private ErrorReporter errorReporter;
-    private String redisKey;
+
+    private final Pool<Jedis> jedisPool;
+    private final ErrorReporter errorReporter;
+    private final String redisKey;
+    private final Set<Thread> callers = Collections.newSetFromMap(new WeakHashMap<Thread, Boolean>());
 
     public GelfREDISSender(Pool<Jedis> jedisPool, String redisKey, ErrorReporter errorReporter) throws IOException {
         this.jedisPool = jedisPool;
@@ -24,6 +30,19 @@ public class GelfREDISSender<T> implements GelfSender {
 
     public boolean sendMessage(GelfMessage message) {
 
+        // prevent recursive self calls caused by the Redis driver since it
+        if (!callers.add(Thread.currentThread())) {
+            return false;
+        }
+
+        try {
+            return sendMessage0(message);
+        } finally {
+            callers.remove(Thread.currentThread());
+        }
+    }
+
+    protected boolean sendMessage0(GelfMessage message) {
         Jedis jedisClient = null;
         try {
             jedisClient = jedisPool.getResource();
@@ -40,6 +59,6 @@ public class GelfREDISSender<T> implements GelfSender {
     }
 
     public void close() {
-        // We don't need anything -> we use a pool!
+        callers.clear();
     }
 }

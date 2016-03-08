@@ -5,6 +5,7 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import biz.paluch.logging.gelf.LogMessageField;
 
 /**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class PatternLogMessageField extends LogMessageField {
 

@@ -20,6 +20,9 @@ import org.junit.Test;
 
 import biz.paluch.logging.gelf.LogMessageField;
 
+/**
+ * @author <a href="mailto:kai.geisselhardt@kaufland.com">Kai Geisselhardt</a>
+ */
 public class GelfLayoutTest {
 
     private static Logger logger;

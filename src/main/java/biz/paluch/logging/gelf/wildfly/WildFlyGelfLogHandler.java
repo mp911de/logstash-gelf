@@ -58,7 +58,9 @@ import biz.paluch.logging.gelf.jul.GelfLogHandler;
  * <li>profiling.requestEnd: End-Time of the Request-End in Date.toString-representation</li>
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
  * </ul>
- * 
+ * The {@link #publish(LogRecord)} method is thread-safe and may be called by different threads at any time.
+ *
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class WildFlyGelfLogHandler extends GelfLogHandler {
     private static final ErrorManager DEFAULT_ERROR_MANAGER = new OnlyOnceErrorManager();
@@ -74,7 +76,7 @@ public class WildFlyGelfLogHandler extends GelfLogHandler {
     }
 
     @Override
-    public synchronized void publish(LogRecord record) {
+    public void publish(LogRecord record) {
         super.publish(ExtLogRecord.wrap(record));
     }
 

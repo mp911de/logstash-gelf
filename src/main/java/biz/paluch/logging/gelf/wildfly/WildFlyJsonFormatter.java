@@ -24,7 +24,7 @@ import java.util.*;
 /**
  * Log-Formatter for JSON using fields specified within GELF. This formatter will produce a JSON object for each log event.
  * Example:
- * 
+ *
  * <code>
  {
     "NDC": "ndc message",
@@ -40,9 +40,9 @@ import java.util.*;
     "LoggerName": "biz.paluch.logging.gelf.wildfly.WildFlyGelfLogFormatterTest",
     "Thread": "main",
     "MyTime": "2015-08-11 20:53:56,0722"
-}     
+}
  * </code>
- * 
+ *
  * Following parameters are supported/needed:
  * <ul>
  * <li>lineBreak (Optional): End of line, defaults to {@code \n}</li>
@@ -77,6 +77,8 @@ import java.util.*;
  * <li>profiling.requestEnd: End-Time of the Request-End in Date.toString-representation</li>
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
  * </ul>
+ *
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class WildFlyJsonFormatter extends ExtFormatter {
 

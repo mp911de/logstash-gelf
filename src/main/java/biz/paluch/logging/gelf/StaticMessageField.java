@@ -1,6 +1,7 @@
 package biz.paluch.logging.gelf;
 
 /**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class StaticMessageField implements MessageField {
 

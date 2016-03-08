@@ -26,6 +26,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class GelfLogAppenderNettyUdpTest {
     public static final String LOG_MESSAGE = "foo bar test log message";

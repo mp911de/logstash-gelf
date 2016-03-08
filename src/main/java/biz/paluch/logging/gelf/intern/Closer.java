@@ -6,6 +6,7 @@ import java.net.Socket;
 
 /**
  * Internal helper to silently close resources.
+ *
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 17.07.14 10:45
  */
@@ -13,7 +14,7 @@ public class Closer {
 
     /**
      * Close silently the closeable.
-     * 
+     *
      * @param closeable the closeable
      */
     public final static void close(Closeable closeable) {
@@ -28,7 +29,7 @@ public class Closer {
 
     /**
      * Close silently the socket.
-     * 
+     *
      * @param socket the socket
      */
     public final static void close(Socket socket) {

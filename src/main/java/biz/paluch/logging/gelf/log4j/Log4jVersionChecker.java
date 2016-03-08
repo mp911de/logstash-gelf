@@ -5,6 +5,9 @@ import java.lang.reflect.Method;
 
 import org.apache.log4j.spi.LoggingEvent;
 
+/**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ */
 class Log4jVersionChecker {
 
     private static Method methodGetTimeStamp = null;

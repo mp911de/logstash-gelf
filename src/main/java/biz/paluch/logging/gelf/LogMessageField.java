@@ -17,8 +17,8 @@ public class LogMessageField implements MessageField {
 
     public static final String VERBOSE_LOGGING_PROPERTY = "logstash-gelf.LogMessageField.verbose";
 
-	private static final String DEFAULT_MAPPING = "default-logstash-fields.properties";
-	private static final boolean VERBOSE_LOGGING = Boolean.parseBoolean(getProperty(VERBOSE_LOGGING_PROPERTY, "false"));
+    private static final String DEFAULT_MAPPING = "default-logstash-fields.properties";
+    private static final boolean VERBOSE_LOGGING = Boolean.parseBoolean(getProperty(VERBOSE_LOGGING_PROPERTY, "false"));
 
     /**
      * Named references to common log event fields.

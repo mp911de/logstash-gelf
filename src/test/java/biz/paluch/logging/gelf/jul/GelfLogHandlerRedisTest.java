@@ -25,6 +25,7 @@ import java.util.logging.Logger;
  * @since 27.09.13 08:25
  */
 public class GelfLogHandlerRedisTest {
+
     private Jedis jedis;
 
     @Before

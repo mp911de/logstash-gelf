@@ -16,6 +16,9 @@ import org.junit.Test;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
+/**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ */
 public class GelfLogAppenderIncludeFullMdcTest {
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String MDC_MY_MDC1 = "aMdcValue";

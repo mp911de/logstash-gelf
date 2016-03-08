@@ -26,6 +26,9 @@ import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
+/**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class GelfLogAppenderErrorsTest {
 

@@ -41,15 +41,15 @@ import biz.paluch.logging.gelf.intern.*;
  * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
  * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
  * </ul>
- * 
+ *
  * <h2>Fields</h2>
- * 
+ *
  * <p>
  * Log4j v2 supports an extensive and flexible configuration in contrast to other log frameworks (JUL, log4j v1). This allows
  * you to specify your needed fields you want to use in the GELF message. An empty field configuration results in a message
  * containing only
  * </p>
- * 
+ *
  * <ul>
  * <li>timestamp</li>
  * <li>level (syslog level)</li>
@@ -62,7 +62,7 @@ import biz.paluch.logging.gelf.intern.*;
  * <p>
  * You can add different fields:
  * </p>
- * 
+ *
  * <ul>
  * <li>Static Literals</li>
  * <li>MDC Fields</li>
@@ -71,25 +71,25 @@ import biz.paluch.logging.gelf.intern.*;
  * </ul>
  *
  * In order to do so, use nested Field elements below the Appender element.
- * 
+ *
  * <h3>Static Literals</h3> <code>
       &lt;Field name="fieldName1" literal="your literal value" /&gt;
  * </code>
- * 
+ *
  * <h3>MDC Fields</h3> <code>
     &lt;Field name="fieldName1" mdc="name of the MDC entry" /&gt;
  * </code>
- * 
+ *
  * <h3>Dynamic MDC Fields</h3> <code>
      &lt;DynamicMdcFields regex="mdc.*"  /&gt;
  * </code>
- * 
- * 
+ *
+ *
  * <h3>Log-Event fields</h3>
  * <p>
  * See also: <a href="http://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout">Pattern Layout</a>
  * </p>
- * 
+ *
  * <p>
  * You can use all built-in Pattern Fields:
  * </p>
@@ -98,7 +98,7 @@ import biz.paluch.logging.gelf.intern.*;
     &lt;Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" /&gt;
     &lt;Field name="level" pattern="%level" /&gt;
  </code>
- * 
+ *
  * <p>
  * Additionally, you can add the <strong>host</strong>-Field, which can supply you either the FQDN hostname, the simple hostname
  * or the local address.
@@ -134,8 +134,8 @@ import biz.paluch.logging.gelf.intern.*;
  * </tr>
  * </tbody>
  * </table>
- * 
- * 
+ *
+ *
  * <a name="mdcProfiling"></a> <h2>MDC Profiling</h2>
  * <p>
  * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must
@@ -150,9 +150,12 @@ import biz.paluch.logging.gelf.intern.*;
  * <li>profiling.requestEnd: End-Time of the Request-End in Date.toString-representation</li>
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
  * </ul>
+ *
+ * The {@link #append(LogEvent)} method is thread-safe and may be called by different threads at any time.
  */
 @Plugin(name = "Gelf", category = "Core", elementType = "appender", printObject = true)
 public class GelfLogAppender extends AbstractAppender {
+
     private static final Logger LOGGER = StatusLogger.getLogger();
     private static final ErrorReporter ERROR_REPORTER = new ErrorReporter() {
         @Override

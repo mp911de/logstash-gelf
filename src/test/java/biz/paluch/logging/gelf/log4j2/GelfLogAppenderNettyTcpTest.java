@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class GelfLogAppenderNettyTcpTest {
     public static final String LOG_MESSAGE = "foo bar test log message";

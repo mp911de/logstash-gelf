@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 
- * (c) https://github.com/Batigoal/logstash-gelf.git
- * 
+ *
+ * @author https://github.com/Batigoal/logstash-gelf.git
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
 public class DefaultGelfSenderProvider implements GelfSenderProvider {
 
