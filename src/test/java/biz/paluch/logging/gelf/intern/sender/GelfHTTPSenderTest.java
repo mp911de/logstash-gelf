@@ -1,27 +1,29 @@
 package biz.paluch.logging.gelf.intern.sender;
 
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.NettyLocalHTTPServer;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicStatusLine;
-import org.apache.http.util.EntityUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import org.json.simple.JSONObject;
+import org.junit.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.MDC;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
@@ -30,56 +32,68 @@ import static org.mockito.Mockito.*;
 
 public class GelfHTTPSenderTest {
 
+    private NettyLocalHTTPServer server;
 
-    @Mock
-    HttpClientBuilder builder;
-    @Mock
-    CloseableHttpClient closeableHttpClient;
-    @Mock
-    CloseableHttpResponse closeableHttpResponse;
-    @Mock
-    ErrorReporter errorReporter;
+    @Mock ErrorReporter errorReporter;
 
-    @Before
-    public void prepareMocks() throws IOException {
-        MockitoAnnotations.initMocks(this);
-//        when(closeableHttpResponse.getStatusLine()).thenReturn(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 202, "Accepted"));
-//        when(builder.build()).thenReturn(closeableHttpClient);
-//        when(closeableHttpClient.execute((HttpUriRequest) any())).thenReturn(closeableHttpResponse);
+    @Before public void setUpClass() throws Exception {
+        server = new NettyLocalHTTPServer();
+        server.run();
+
     }
 
-    @Test
-    public void sendMessageTest() throws IOException {
-        when(closeableHttpResponse.getStatusLine()).thenReturn(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 202, "Accepted"));
-        when(builder.build()).thenReturn(closeableHttpClient);
-        when(closeableHttpClient.execute((HttpUriRequest) any())).thenReturn(closeableHttpResponse);
+    @After public void tearDownClass() {
+        server.close();
+    }
 
-        String uri = "http://192.168.0.100/gelf";
-        GelfHTTPSender sender = new GelfHTTPSender(uri, 12201, errorReporter, builder);
-        GelfMessage gelfMessage = new GelfMessage();
+    @Before public void setUp() throws IOException {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test public void sendMessageTest() throws IOException {
+
+        server.setReturnStatus(HttpResponseStatus.ACCEPTED);
+        String uri = "http://127.0.0.1:19393";
+        GelfHTTPSender sender = new GelfHTTPSender(new URL(uri), errorReporter);
+        GelfMessage gelfMessage = new GelfMessage("shortMessage", "fullMessage", 12121l, "WARNING");
         boolean success = sender.sendMessage(gelfMessage);
-        verify(builder, times(1)).build();
         assertTrue(success);
         verifyZeroInteractions(errorReporter);
-        ArgumentCaptor<HttpPost> postCaptor = ArgumentCaptor.forClass(HttpPost.class);
-        verify(closeableHttpClient).execute(postCaptor.capture());
-        HttpPost executedPost = postCaptor.getValue();
-        assertEquals("http://192.168.0.100:12201/gelf", executedPost.getURI().toString());
-        assertEquals(gelfMessage.toJson(), EntityUtils.toString(executedPost.getEntity()));
+        List<Object> jsonValues = server.getJsonValues();
+        assertEquals(1, jsonValues.size());
+        JSONObject messageJson = (JSONObject) jsonValues.get(0);
+        assertEquals(gelfMessage.getShortMessage(), messageJson.get("short_message"));
+        assertEquals(gelfMessage.getFullMessage(), messageJson.get("full_message"));
+        assertEquals(gelfMessage.getTimestamp(), messageJson.get("timestamp"));
+        assertEquals(gelfMessage.getLevel(), messageJson.get("level"));
     }
 
-    @Test
-    public void sendMessageTestIncorrectUrl() throws IOException {
-        String uri = "adda";
-        GelfHTTPSender sender = new GelfHTTPSender(uri, 12201, errorReporter, HttpClientBuilder.create());
-        GelfMessage gelfMessage = new GelfMessage();
+    @Test public void sendMessageFailureTest() throws IOException {
+
+        server.setReturnStatus(HttpResponseStatus.INTERNAL_SERVER_ERROR);
+        String uri = "http://127.0.0.1:19393";
+        GelfHTTPSender sender = new GelfHTTPSender(new URL(uri), errorReporter);
+        GelfMessage gelfMessage = new GelfMessage("shortMessage", "fullMessage", 12121l, "WARNING");
         boolean success = sender.sendMessage(gelfMessage);
         assertFalse(success);
-//        verifyZeroInteractions(errorReporter);
-//        ArgumentCaptor<HttpPost> postCaptor = ArgumentCaptor.forClass(HttpPost.class);
-//        verify(closeableHttpClient).execute(postCaptor.capture());
-//        HttpPost executedPost = postCaptor.getValue();
-//        assertEquals("http://192.168.0.100:12201/gelf", executedPost.getURI().toString());
-//        assertEquals(gelfMessage.toJson(), EntityUtils.toString(executedPost.getEntity()));
+        verify(errorReporter, times(1)).reportError(anyString(), any(Exception.class));
     }
+
+    @Test public void testWithLoggingContext() throws JoranException {
+        LoggerContext lc = new LoggerContext();
+        JoranConfigurator configurator = new JoranConfigurator();
+        configurator.setContext(lc);
+        URL xmlConfigFile = getClass().getResource("/logback-gelf-with-http.xml");
+        configurator.doConfigure(xmlConfigFile);
+        Logger testLogger = lc.getLogger("testLogger");
+        testLogger.error("Hi there");
+        List<Object> jsonValues = server.getJsonValues();
+        String uri = server.getHandlerInitializer().getHandler().getUri();
+        assertEquals("/foo/bar", uri);
+        assertEquals(1, jsonValues.size());
+        JSONObject jsonObject = (JSONObject) jsonValues.get(0);
+        assertEquals("Hi there", jsonObject.get("short_message"));
+
+    }
+
 }
