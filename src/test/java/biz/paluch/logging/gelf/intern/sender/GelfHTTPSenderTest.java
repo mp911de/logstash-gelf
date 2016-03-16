@@ -33,28 +33,27 @@ import static org.mockito.Mockito.*;
 public class GelfHTTPSenderTest {
 
     private NettyLocalHTTPServer server;
-
+    private GelfHTTPSender sender;
     @Mock ErrorReporter errorReporter;
 
-    @Before public void setUpClass() throws Exception {
+    @Before public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
         server = new NettyLocalHTTPServer();
         server.run();
+        String uri = "http://127.0.0.1:19393";
+        sender = new GelfHTTPSender(new URL(uri), errorReporter);
 
     }
 
-    @After public void tearDownClass() {
+    @After public void tearDown() {
         server.close();
-    }
-
-    @Before public void setUp() throws IOException {
-        MockitoAnnotations.initMocks(this);
+        sender.close();
     }
 
     @Test public void sendMessageTest() throws IOException {
 
         server.setReturnStatus(HttpResponseStatus.ACCEPTED);
-        String uri = "http://127.0.0.1:19393";
-        GelfHTTPSender sender = new GelfHTTPSender(new URL(uri), errorReporter);
+
         GelfMessage gelfMessage = new GelfMessage("shortMessage", "fullMessage", 12121l, "WARNING");
         boolean success = sender.sendMessage(gelfMessage);
         assertTrue(success);
@@ -66,6 +65,7 @@ public class GelfHTTPSenderTest {
         assertEquals(gelfMessage.getFullMessage(), messageJson.get("full_message"));
         assertEquals(gelfMessage.getTimestamp(), messageJson.get("timestamp"));
         assertEquals(gelfMessage.getLevel(), messageJson.get("level"));
+
     }
 
     @Test public void sendMessageFailureTest() throws IOException {
