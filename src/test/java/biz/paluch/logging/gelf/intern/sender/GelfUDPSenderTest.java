@@ -43,7 +43,6 @@ public class GelfUDPSenderTest {
 
     @Test(expected = UnknownHostException.class)
     public void unknownHostShouldThrowException() throws Exception {
-
         new GelfUDPSender("unknown.host.unknown", 65534, errorReporter);
     }
 }

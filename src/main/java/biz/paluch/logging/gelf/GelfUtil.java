@@ -29,7 +29,7 @@ public class GelfUtil {
     public static final String MDC_REQUEST_DURATION = "profiling.requestDuration";
 
     public static final String MDC_REQUEST_DURATION_MILLIS = "profiling.requestDuration.millis";
-
+    
     private GelfUtil() {
 
     }
@@ -96,66 +96,4 @@ public class GelfUtil {
         return matchingMdcNames;
     }
 
-    public static String addDefaultPortIfMissing(String urlString, String defaultPort) {
-        URL url;
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            return urlString;
-        }
-        if (url.getPort() != -1) {
-            return urlString;
-        }
-        String regex = "http://([^/]+)";
-        String found = getFirstFound(urlString, regex);
-        String replacer = "http://" + found + ":" + defaultPort;
-
-        if (!isEmpty(found)) {
-            urlString = urlString.replaceFirst(regex, replacer);
-        }
-        return urlString;
-    }
-
-    public static String getFirstFound(String contents, String regex) {
-        List<String> founds = getFound(contents, regex);
-        if (isEmpty(founds)) {
-            return null;
-        }
-        return founds.get(0);
-    }
-
-    public static List<String> getFound(String contents, String regex) {
-        if (isEmpty(regex) || isEmpty(contents)) {
-            return null;
-        }
-        List<String> results = new ArrayList<String>();
-        Pattern pattern = Pattern.compile(regex, Pattern.UNICODE_CASE);
-        Matcher matcher = pattern.matcher(contents);
-
-        while (matcher.find()) {
-            if (matcher.groupCount() > 0) {
-                results.add(matcher.group(1));
-            } else {
-                results.add(matcher.group());
-            }
-        }
-        return results;
-    }
-
-    public static boolean isEmpty(List<String> list) {
-        if (list == null || list.size() == 0) {
-            return true;
-        }
-        if (list.size() == 1 && isEmpty(list.get(0))) {
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isEmpty(String str) {
-        if (str != null && str.trim().length() > 0) {
-            return false;
-        }
-        return true;
-    }
 }

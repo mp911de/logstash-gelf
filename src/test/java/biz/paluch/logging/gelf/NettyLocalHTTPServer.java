@@ -1,17 +1,19 @@
 package biz.paluch.logging.gelf;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.http.HttpResponseStatus;
-
 import java.util.List;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpResponseStatus;
+
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
- * @since 10.11.13 10:30
+ * @author Aleksandar Stojadinovic
  */
 public class NettyLocalHTTPServer {
 
@@ -48,5 +50,13 @@ public class NettyLocalHTTPServer {
 
     public GelfInboundHTTPInitializer getHandlerInitializer() {
         return handlerInitializer;
+    }
+
+    public HttpMethod getLastHttpRequest() {
+        return handlerInitializer.getHandler().getHttpRequest().getMethod();
+    }
+
+    public HttpHeaders getLastHttpHeaders() {
+        return handlerInitializer.getHandler().getHttpRequest().headers();
     }
 }

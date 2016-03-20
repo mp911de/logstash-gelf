@@ -9,7 +9,11 @@ import biz.paluch.logging.gelf.intern.sender.DefaultGelfSenderProvider;
 import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
 
 /**
+ * Factory to create a {@link GelfSender} based on the host and protocol details. This factory uses Java's {@link ServiceLoader}
+ * mechanism to discover classes implementing {@link GelfSenderProvider}.
+ * 
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Aleksandar Stojadinovic
  * @since 26.09.13 15:12
  */
 public final class GelfSenderFactory {
@@ -58,12 +62,13 @@ public final class GelfSenderFactory {
      * @return a new {@link GelfSender} instance
      */
     public static GelfSender createSender(GelfSenderConfiguration senderConfiguration) {
+
         ErrorReporter errorReporter = senderConfiguration.getErrorReporter();
         if (senderConfiguration.getHost() == null) {
             senderConfiguration.getErrorReporter().reportError("GELF server hostname is empty!", null);
         } else {
-            try {
 
+            try {
                 for (GelfSenderProvider provider : SenderProviderHolder.getSenderProvider()) {
                     if (provider.supports(senderConfiguration.getHost())) {
                         return provider.create(senderConfiguration);
@@ -98,6 +103,7 @@ public final class GelfSenderFactory {
 
     // For thread safe lazy intialization of provider list
     private static class SenderProviderHolder {
+
         private static ServiceLoader<GelfSenderProvider> gelfSenderProvider = ServiceLoader.load(GelfSenderProvider.class);
         private static List<GelfSenderProvider> providerList = new ArrayList<GelfSenderProvider>();
         private static List<GelfSenderProvider> addedProviders = new ArrayList<GelfSenderProvider>();

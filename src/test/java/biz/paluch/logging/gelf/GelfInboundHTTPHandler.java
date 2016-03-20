@@ -1,25 +1,22 @@
 package biz.paluch.logging.gelf;
 
-import io.netty.buffer.ByteBufInputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.simple.JSONValue;
+
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
-import org.json.simple.JSONValue;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by aleksandar on 3/12/16.
+ * @author Aleksandar Stojadinovic
  */
 public class GelfInboundHTTPHandler extends SimpleChannelInboundHandler<Object> {
+
     private List<Object> values = new ArrayList<Object>();
     private HttpRequest httpRequest;
     private HttpContent httpContent;
@@ -27,7 +24,8 @@ public class GelfInboundHTTPHandler extends SimpleChannelInboundHandler<Object> 
 
     private final StringBuilder contentBuffer = new StringBuilder();
 
-    @Override protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object message) throws Exception {
+    @Override
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object message) throws Exception {
 
         resetState();
         if (message instanceof HttpRequest) {
@@ -36,6 +34,7 @@ public class GelfInboundHTTPHandler extends SimpleChannelInboundHandler<Object> 
         if (message instanceof HttpContent) {
             httpContent = (HttpContent) message;
             contentBuffer.append(httpContent.content().toString(CharsetUtil.UTF_8));
+            
             if (message instanceof LastHttpContent) {
                 Object parsedContent = JSONValue.parse(contentBuffer.toString());
                 synchronized (values) {
@@ -71,10 +70,10 @@ public class GelfInboundHTTPHandler extends SimpleChannelInboundHandler<Object> 
         return httpRequest.getUri();
     }
 
-    public HttpMethod getMethod() {
-        return httpRequest.getMethod();
+    public HttpRequest getHttpRequest() {
+        return httpRequest;
     }
-
+    
     public void setReturnStatus(HttpResponseStatus status) {
         this.responseStatus = status;
     }

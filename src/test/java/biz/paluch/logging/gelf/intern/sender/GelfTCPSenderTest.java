@@ -72,7 +72,6 @@ public class GelfTCPSenderTest {
 
     @Test(expected = UnknownHostException.class)
     public void unknownHostShouldThrowException() throws Exception {
-
         new GelfTCPSender("unknown.host.unknown", 65534, 100, 100, errorReporter);
     }
 }
