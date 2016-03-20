@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNull;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.json.simple.JSONObject;
@@ -25,17 +26,17 @@ import biz.paluch.logging.gelf.LogMessageField;
  */
 public class GelfLayoutTest {
 
-    private static Logger logger;
+    private Logger logger;
 
     @BeforeClass
     public static void beforeClass() {
         DOMConfigurator.configure(GelfLayoutTest.class.getResource("/log4j-gelf-layout.xml"));
-        logger = Logger.getLogger(GelfLayoutTest.class);
     }
 
     @Before
     public void before() {
         TestAppender.clearLoggedLines();
+        logger = Logger.getLogger(GelfLayoutTest.class);
     }
 
     @Test
@@ -75,6 +76,36 @@ public class GelfLayoutTest {
         assertEquals("6", message.get("level"));
         assertEquals("testDefaults", message.get(LogMessageField.NamedLogField.SourceMethodName.name()));
         assertEquals(getClass().getName(), message.get(LogMessageField.NamedLogField.SourceClassName.name()));
+    }
+
+    @Test
+    public void testConfiguration() throws Exception {
+
+        logger = Logger.getLogger("biz.paluch.logging.gelf.log4j.configured");
+
+        MDC.put("mdcField1", "mdcValue1");
+        NDC.push("ndc message");
+        logger.info("test1");
+        logger.info("test2");
+        logger.info("test3");
+        NDC.clear();
+
+        Map<String, Object> message = getMessage();
+
+        assertNull(message.get("version"));
+        assertEquals("test1", message.get("full_message"));
+        assertEquals("test1", message.get("short_message"));
+        assertEquals("ndc message", message.get("NDC"));
+        assertEquals("fieldValue1", message.get("fieldName1"));
+        assertEquals("mdcValue1", message.get("mdcField1"));
+        assertEquals("test", message.get("facility"));
+        assertEquals("biz.paluch.logging.gelf.log4j.configured", message.get("LoggerName"));
+        assertNull(message.get("Thread"));
+        assertNotNull(message.get("timestamp"));
+        assertNotNull(message.get("MyTime"));
+        assertEquals("6", message.get("level"));
+        assertNull(message.get(LogMessageField.NamedLogField.SourceMethodName.name()));
+        assertNull(message.get(LogMessageField.NamedLogField.SourceClassName.name()));
     }
 
     public Map<String, Object> getMessage() {

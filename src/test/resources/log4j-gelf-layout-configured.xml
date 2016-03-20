@@ -4,14 +4,20 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
     <appender name="sysout" class="org.apache.log4j.ConsoleAppender">
-        <layout class="biz.paluch.logging.gelf.log4j.GelfLayout"/>
+        <layout class="biz.paluch.logging.gelf.log4j.GelfLayout">
+            <param name="fields" value="Severity, Time, LoggerName, NDC"/>
+            <param name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2"/>
+            <param name="mdcFields" value="mdcField1,mdcField2"/>
+            <param name="mdcProfiling" value="false"/>
+            <param name="includeFullMdc" value="false"/>
+            <param name="originHost" value="localhost"/>
+            <param name="facility" value="test"/>
+            <param name="extractStackTrace" value="true"/>
+            <param name="filterStackTrace" value="true"/>
+        </layout>
     </appender>
 
     <appender name="test" class="biz.paluch.logging.gelf.log4j.TestAppender">
-        <layout class="biz.paluch.logging.gelf.log4j.GelfLayout"/>
-    </appender>
-
-    <appender name="configured" class="biz.paluch.logging.gelf.log4j.TestAppender">
         <layout class="biz.paluch.logging.gelf.log4j.GelfLayout">
             <param name="fields" value="Severity, Time, LoggerName, NDC"/>
             <param name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2"/>
@@ -30,9 +36,5 @@
         <appender-ref ref="sysout"/>
         <appender-ref ref="test"/>
     </root>
-
-    <category name="biz.paluch.logging.gelf.log4j.configured" additivity="false">
-        <appender-ref ref="configured"/>
-    </category>
 
 </log4j:configuration>

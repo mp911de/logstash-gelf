@@ -66,10 +66,11 @@ import biz.paluch.logging.gelf.intern.Closer;
 public class StackTraceFilter {
 
     public static final String VERBOSE_LOGGING_PROPERTY = "logstash-gelf.StackTraceFilter.verbose";
-
     public static final String FILTER_SETTINGS = "/" + StackTraceFilter.class.getSimpleName() + ".packages";
+    
     private static final String INDENT = "\t";
-
+    private static final boolean VERBOSE_LOGGING = Boolean.parseBoolean(getProperty(VERBOSE_LOGGING_PROPERTY, "false"));
+    
     /**
      * List of Surpressed Packages.
      */
@@ -132,7 +133,6 @@ public class StackTraceFilter {
      * @return String containing the filtered Stack-Trace.
      */
     public static String getFilteredStackTrace(Throwable t) {
-
         return getFilteredStackTrace(t, true);
     }
 
@@ -148,6 +148,7 @@ public class StackTraceFilter {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         writeCleanStackTrace(t, pw, shouldFilter);
+        
         return sw.getBuffer().toString();
     }
 
@@ -238,7 +239,7 @@ public class StackTraceFilter {
     }
 
     private static void verboseLog(String message) {
-        if (getBoolean(getProperty(VERBOSE_LOGGING_PROPERTY, "false"))) {
+        if (VERBOSE_LOGGING) {
             System.out.println(message);
         }
     }
