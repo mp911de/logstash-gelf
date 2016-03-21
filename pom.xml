@@ -287,14 +287,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- HTTP Logging -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${http-components.version}</version>
-        </dependency>
-
-
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
