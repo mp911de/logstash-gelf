@@ -35,19 +35,12 @@ public class GelfUtil {
     }
 
     public static void addMdcProfiling(LogEvent logEvent, GelfMessage gelfMessage) {
-        Object requestStartMs = logEvent.getMdcValue(MDC_REQUEST_START_MS);
-        long timestamp = -1;
+        
+		String requestStartMs = logEvent.getMdcValue(MDC_REQUEST_START_MS);
+        long timestamp;
 
-        if (requestStartMs instanceof Long) {
-            timestamp = ((Long) requestStartMs).longValue();
-        }
-
-        if (timestamp == -1 && requestStartMs instanceof String) {
-            String requestStartMsString = (String) requestStartMs;
-            if (requestStartMsString.length() == 0) {
-                return;
-            }
-            timestamp = Long.parseLong(requestStartMsString);
+        if (requestStartMs != null && !requestStartMs.isEmpty()) {
+            timestamp = Long.parseLong(requestStartMs);
         } else {
             return;
         }
