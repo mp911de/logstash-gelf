@@ -17,7 +17,7 @@ import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 27.09.13 07:47
  */
 public class GelfLogAppenderPropertiesDynamicMdcTest {
@@ -36,7 +36,7 @@ public class GelfLogAppenderPropertiesDynamicMdcTest {
     public void before() throws Exception {
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();
-        PropertyConfigurator.configure(getClass().getResource("/log4j-test-with-mdcfields.properties"));
+        PropertyConfigurator.configure(getClass().getResource("/log4j/log4j-test-with-mdcfields.properties"));
 
         if (MDC.getContext() != null && MDC.getContext().keySet() != null) {
 

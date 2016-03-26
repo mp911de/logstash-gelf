@@ -62,7 +62,7 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimple
  *
  * The {@link #append(LoggingEvent)} method is thread-safe and may be called by different threads at any time.
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
 

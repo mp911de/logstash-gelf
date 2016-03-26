@@ -12,7 +12,7 @@ import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
  * Factory to create a {@link GelfSender} based on the host and protocol details. This factory uses Java's {@link ServiceLoader}
  * mechanism to discover classes implementing {@link GelfSenderProvider}.
  * 
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @author Aleksandar Stojadinovic
  * @since 26.09.13 15:12
  */

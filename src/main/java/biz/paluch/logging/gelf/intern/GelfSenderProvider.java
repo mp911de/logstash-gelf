@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  *
  * @author https://github.com/Batigoal/logstash-gelf.git
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public interface GelfSenderProvider {
 

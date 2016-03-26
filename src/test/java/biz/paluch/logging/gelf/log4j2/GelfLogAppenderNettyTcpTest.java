@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class GelfLogAppenderNettyTcpTest {
     public static final String LOG_MESSAGE = "foo bar test log message";
@@ -36,7 +36,7 @@ public class GelfLogAppenderNettyTcpTest {
 
     @BeforeClass
     public static void setupClass() throws Exception {
-        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2-netty-tcp.xml");
+        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-netty-tcp.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
         server.run();

@@ -1,16 +1,17 @@
 package biz.paluch.logging.gelf.intern.sender;
 
+import biz.paluch.logging.gelf.intern.ErrorReporter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-
 /**
  * @author Aleksandar Stojadinovic
+ * @since 1.9
  */
 public class GelfHTTPSender implements GelfSender {
 

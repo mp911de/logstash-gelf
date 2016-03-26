@@ -13,7 +13,7 @@ import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
 
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class GelfUtilTest {
 

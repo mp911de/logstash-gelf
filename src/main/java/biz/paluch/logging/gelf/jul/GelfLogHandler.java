@@ -36,7 +36,7 @@ import biz.paluch.logging.gelf.intern.*;
  *
  * The {@link #publish(LogRecord)} method is thread-safe and may be called by different threads at any time.
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class GelfLogHandler extends Handler implements ErrorReporter {
 

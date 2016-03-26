@@ -1,6 +1,5 @@
 package biz.paluch.logging.gelf.logback;
 
-import static org.junit.Assert.assertEquals;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import ch.qos.logback.classic.Logger;
@@ -11,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
 
 public class GelfLogbackAppenderSystemPropertiesTest {
 
@@ -38,7 +39,7 @@ public class GelfLogbackAppenderSystemPropertiesTest {
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
 
-        URL xmlConfigFile = getClass().getResource("/logback-gelf-with-systemproperties-fields.xml");
+        URL xmlConfigFile = getClass().getResource("/logback/logback-gelf-with-systemproperties-fields.xml");
 
         configurator.doConfigure(xmlConfigFile);
 

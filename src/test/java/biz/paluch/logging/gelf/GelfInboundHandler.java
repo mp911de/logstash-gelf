@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 10.11.13 10:35
  */
 public class GelfInboundHandler extends ChannelInboundHandlerAdapter {

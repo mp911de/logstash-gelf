@@ -1,6 +1,6 @@
 package biz.paluch.logging;
 
-import static biz.paluch.logging.RuntimeContainerProperties.*;
+import biz.paluch.logging.gelf.intern.ErrorReporter;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -8,13 +8,13 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import biz.paluch.logging.gelf.intern.ErrorReporter;
+import static biz.paluch.logging.RuntimeContainerProperties.*;
 
 /**
  * Static Details about the runtime container: Hostname (simple/fqdn), Address and timestamp of the first access (time when the
  * application was loaded).
  * 
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class RuntimeContainer {
 

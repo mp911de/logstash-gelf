@@ -3,7 +3,7 @@ package biz.paluch.logging.gelf.intern;
 /**
  * Provided a host and a port number.
  * 
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 18.07.14 20:53
  */
 public interface HostAndPortProvider {

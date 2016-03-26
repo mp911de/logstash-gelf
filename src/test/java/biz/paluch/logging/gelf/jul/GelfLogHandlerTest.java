@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 27.09.13 08:25
  */
 public class GelfLogHandlerTest {
@@ -21,7 +21,7 @@ public class GelfLogHandlerTest {
     public void before() throws Exception {
 
         GelfTestSender.getMessages().clear();
-        LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/test-logging.properties"));
+        LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/jul/test-logging.properties"));
         MDC.remove("mdcField1");
     }
 

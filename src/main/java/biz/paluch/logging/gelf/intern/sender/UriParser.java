@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 class UriParser {
     private static final Map<String, TimeUnit> TIME_UNIT_MAP;

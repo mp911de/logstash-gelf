@@ -18,7 +18,7 @@ import com.google.code.tempusfugit.temporal.*;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class GelfLogAppenderNettyTest {
 
@@ -37,7 +37,7 @@ public class GelfLogAppenderNettyTest {
     @Before
     public void before() throws Exception {
         LogManager.getLoggerRepository().resetConfiguration();
-        DOMConfigurator.configure(getClass().getResource("/log4j-netty-warn.xml"));
+        DOMConfigurator.configure(getClass().getResource("/log4j/log4j-netty-warn.xml"));
         server.clear();
     }
 

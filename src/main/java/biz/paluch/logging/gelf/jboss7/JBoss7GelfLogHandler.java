@@ -65,7 +65,7 @@ import java.util.logging.LogRecord;
  *
  * The {@link #publish(LogRecord)} method is thread-safe and may be called by different threads at any time.
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHandler {
 

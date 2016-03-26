@@ -3,7 +3,7 @@ package biz.paluch.logging.gelf.intern;
 /**
  * Error reporter to report errors while submitting log event.
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 27.01.14 09:18
  */
 public interface ErrorReporter {

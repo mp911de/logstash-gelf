@@ -3,14 +3,15 @@ package biz.paluch.logging.gelf.wildfly;
 import java.util.logging.Level;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 11.08.14 08:36
  */
 public class WildFlyLogTestUtil {
+
     public static WildFlyGelfLogHandler getWildFlyGelfLogHandler() {
+
         WildFlyGelfLogHandler handler = new WildFlyGelfLogHandler();
 
         handler.setGraylogHost("test:localhost");
@@ -28,6 +29,7 @@ public class WildFlyLogTestUtil {
         handler.setAdditionalFields("fieldName1=fieldValue1,fieldName2=fieldValue2");
         handler.setLevel(Level.INFO);
         handler.setMdcFields("mdcField1,mdcField2");
+
         return handler;
     }
 }

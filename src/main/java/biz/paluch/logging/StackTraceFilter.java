@@ -61,7 +61,7 @@ import biz.paluch.logging.gelf.intern.Closer;
      at java.lang.Thread.run(Thread.java:722)
     </code>
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class StackTraceFilter {
 

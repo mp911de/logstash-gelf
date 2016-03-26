@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 /**
  * Test for the Formatter of the logstash-gelf module in WildFly.
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 11.08.14 08:36
  */
 @RunWith(Arquillian.class)

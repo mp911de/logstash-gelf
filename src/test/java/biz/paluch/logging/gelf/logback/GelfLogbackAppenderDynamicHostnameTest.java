@@ -31,7 +31,7 @@ public class GelfLogbackAppenderDynamicHostnameTest {
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
 
-        URL xmlConfigFile = getClass().getResource("/logback-gelf-with-dynamic-originhost.xml");
+        URL xmlConfigFile = getClass().getResource("/logback/logback-gelf-with-dynamic-originhost.xml");
 
         configurator.doConfigure(xmlConfigFile);
 

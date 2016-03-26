@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 class Log4jVersionChecker {
 

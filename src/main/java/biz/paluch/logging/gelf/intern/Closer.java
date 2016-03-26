@@ -7,7 +7,7 @@ import java.net.Socket;
 /**
  * Internal helper to silently close resources.
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 17.07.14 10:45
  */
 public class Closer {

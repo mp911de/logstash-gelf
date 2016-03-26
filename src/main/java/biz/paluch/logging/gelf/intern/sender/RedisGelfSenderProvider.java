@@ -13,7 +13,7 @@ import java.net.URI;
 /**
  *
  * @author https://github.com/Batigoal/logstash-gelf.git
- *
+ * @since 1.4 
  */
 public class RedisGelfSenderProvider implements GelfSenderProvider {
 

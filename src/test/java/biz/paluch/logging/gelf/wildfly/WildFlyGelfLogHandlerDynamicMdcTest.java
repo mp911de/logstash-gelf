@@ -18,7 +18,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 11.08.14 08:36
  */
 public class WildFlyGelfLogHandlerDynamicMdcTest {

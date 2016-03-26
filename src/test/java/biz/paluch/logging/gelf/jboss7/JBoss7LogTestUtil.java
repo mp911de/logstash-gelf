@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 28.02.14 11:29
  */
 public class JBoss7LogTestUtil {

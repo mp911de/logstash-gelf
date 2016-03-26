@@ -27,7 +27,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GelfLogAppenderErrorsTest {
@@ -103,7 +103,7 @@ public class GelfLogAppenderErrorsTest {
     @Test(timeout = 500)
     public void gelfPortNotReachable() throws Exception {
         LogManager.getLoggerRepository().resetConfiguration();
-        DOMConfigurator.configure(getClass().getResource("/log4j-gelf-not-reachable.xml"));
+        DOMConfigurator.configure(getClass().getResource("/log4j/log4j-gelf-not-reachable.xml"));
 
         Logger logger = Logger.getLogger(getClass());
 

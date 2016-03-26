@@ -43,7 +43,7 @@ import biz.paluch.logging.RuntimeContainer;
  * </tbody>
  * </table>
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 @Plugin(name = "HostnameConverter", category = "Converter")
 @ConverterKeys({ "host", })

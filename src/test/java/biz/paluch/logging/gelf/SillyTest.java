@@ -11,7 +11,7 @@ import biz.paluch.logging.gelf.log4j.GelfLogAppender;
 import biz.paluch.logging.gelf.logback.GelfLogbackAppender;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 16.07.14 21:00
  */
 public class SillyTest {

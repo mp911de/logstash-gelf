@@ -1,7 +1,7 @@
 package biz.paluch.logging.gelf.standalone;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 31.07.14 09:02
  */
 public class MyBean {

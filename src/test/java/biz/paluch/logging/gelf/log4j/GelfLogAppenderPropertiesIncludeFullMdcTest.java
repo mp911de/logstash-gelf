@@ -1,7 +1,5 @@
 package biz.paluch.logging.gelf.log4j;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.LogManager;
@@ -14,8 +12,11 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 16.07.14 17:30
  */
 public class GelfLogAppenderPropertiesIncludeFullMdcTest {
@@ -30,7 +31,7 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
     public void before() throws Exception {
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();
-        PropertyConfigurator.configure(getClass().getResource("/log4j-test-with-includefullmdc.properties"));
+        PropertyConfigurator.configure(getClass().getResource("/log4j/log4j-test-with-includefullmdc.properties"));
 
         if (MDC.getContext() != null && MDC.getContext().keySet() != null) {
 

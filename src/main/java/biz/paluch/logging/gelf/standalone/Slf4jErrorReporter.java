@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 21.07.14 17:34
  */
 public class Slf4jErrorReporter implements ErrorReporter {

@@ -7,7 +7,7 @@ import java.util.Set;
  * Abstraction for a log event. This interface is usually implemented by a logging framework wrapper to encapsulate the
  * frameworks specifics and expose the required log event details.
  * 
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 26.09.13 15:16
  */
 public interface LogEvent {

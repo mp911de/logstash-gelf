@@ -8,7 +8,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  * Builder to create a GelfMessage.
  * 
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 18.07.14 20:52
  */
 public class GelfMessageBuilder {

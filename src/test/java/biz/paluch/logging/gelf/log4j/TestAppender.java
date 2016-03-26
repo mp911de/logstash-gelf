@@ -7,7 +7,7 @@ import org.apache.log4j.Layout;
 import org.apache.log4j.WriterAppender;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class TestAppender extends WriterAppender {
 

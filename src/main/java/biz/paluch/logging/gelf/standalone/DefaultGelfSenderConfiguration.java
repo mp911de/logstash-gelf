@@ -9,7 +9,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 /**
  * Default Gelf sender configuration for standalone use.
  * 
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 21.07.14 17:34
  */
 public class DefaultGelfSenderConfiguration implements GelfSenderConfiguration {

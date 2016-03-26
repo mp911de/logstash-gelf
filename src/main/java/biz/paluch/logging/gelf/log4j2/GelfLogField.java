@@ -15,7 +15,7 @@ import org.apache.logging.log4j.util.Strings;
 /**
  * Configuration for a log field.
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 @Plugin(name = "Field", category = "Core", printObject = true)
 public class GelfLogField {

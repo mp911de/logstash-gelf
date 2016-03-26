@@ -30,7 +30,7 @@ public class GelfLayoutTest {
 
     @BeforeClass
     public static void beforeClass() {
-        DOMConfigurator.configure(GelfLayoutTest.class.getResource("/log4j-gelf-layout.xml"));
+        DOMConfigurator.configure(GelfLayoutTest.class.getResource("/log4j/log4j-gelf-layout.xml"));
     }
 
     @Before

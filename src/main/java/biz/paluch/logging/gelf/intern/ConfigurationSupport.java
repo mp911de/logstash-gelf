@@ -6,7 +6,7 @@ import biz.paluch.logging.gelf.MdcMessageField;
 import biz.paluch.logging.gelf.StaticMessageField;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class ConfigurationSupport {
     public static final String MULTI_VALUE_DELIMITTER = ",";

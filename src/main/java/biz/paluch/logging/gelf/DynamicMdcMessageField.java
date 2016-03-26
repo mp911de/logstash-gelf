@@ -3,7 +3,7 @@ package biz.paluch.logging.gelf;
 import java.util.regex.Pattern;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 28.02.14 09:56
  */
 public class DynamicMdcMessageField implements MessageField {

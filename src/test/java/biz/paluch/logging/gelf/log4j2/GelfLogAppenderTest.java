@@ -18,12 +18,13 @@ import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class GelfLogAppenderTest {
+
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
-    public static final String CONFIG_XML = "log4j2.xml";
+    public static final String CONFIG_XML = "log4j2/log4j2.xml";
 
     private static LoggerContext loggerContext;
 
@@ -83,7 +84,7 @@ public class GelfLogAppenderTest {
     @Test
     public void testFqdnHost() throws Exception {
 
-        reconfigure("log4j2-origin-host-fqdn.xml");
+        reconfigure("log4j2/log4j2-origin-host-fqdn.xml");
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info(LOG_MESSAGE);
@@ -96,7 +97,7 @@ public class GelfLogAppenderTest {
     @Test
     public void testSimpleHost() throws Exception {
 
-        reconfigure("log4j2-origin-host-simple.xml");
+        reconfigure("log4j2/log4j2-origin-host-simple.xml");
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info(LOG_MESSAGE);
@@ -109,7 +110,7 @@ public class GelfLogAppenderTest {
     @Test
     public void testCustomHost() throws Exception {
 
-        reconfigure("log4j2-origin-host-custom.xml");
+        reconfigure("log4j2/log4j2-origin-host-custom.xml");
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info(LOG_MESSAGE);

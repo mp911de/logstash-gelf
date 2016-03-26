@@ -16,7 +16,7 @@ import biz.paluch.logging.gelf.intern.HostAndPortProvider;
  * Creates {@link GelfMessage} based on various {@link LogEvent}. A {@link LogEvent} encapsulates log-framework specifics and
  * exposes commonly used details of log events.
  * 
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 26.09.13 15:05
  */
 public class GelfMessageAssembler implements HostAndPortProvider {

@@ -5,7 +5,7 @@ import java.util.logging.LogManager;
 import biz.paluch.logging.gelf.PropertyProvider;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 26.09.13 15:04
  */
 public class JulPropertyProvider implements PropertyProvider {

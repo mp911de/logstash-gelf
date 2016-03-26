@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author https://github.com/t0xa/gelfj
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class GelfTCPSender implements GelfSender {
 

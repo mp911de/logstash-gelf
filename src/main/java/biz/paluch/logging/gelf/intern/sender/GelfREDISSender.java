@@ -13,7 +13,8 @@ import java.util.WeakHashMap;
 
 /**
  * @author https://github.com/strima/logstash-gelf.git
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
+ * @since 1.5
  */
 public class GelfREDISSender<T> implements GelfSender {
 

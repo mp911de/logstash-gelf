@@ -2,17 +2,6 @@ package biz.paluch.logging.gelf.jul;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeTrue;
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.Sockets;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
-import biz.paluch.logging.gelf.standalone.DefaultGelfSenderConfiguration;
-import org.apache.log4j.MDC;
-import org.json.simple.JSONValue;
-import org.junit.Before;
-import org.junit.Test;
-import redis.clients.jedis.Jedis;
 
 import java.util.List;
 import java.util.Map;
@@ -20,8 +9,21 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import org.apache.log4j.MDC;
+import org.json.simple.JSONValue;
+import org.junit.Before;
+import org.junit.Test;
+
+import redis.clients.jedis.Jedis;
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.Sockets;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
+import biz.paluch.logging.gelf.standalone.DefaultGelfSenderConfiguration;
+
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 27.09.13 08:25
  */
 public class GelfLogHandlerRedisTest {
@@ -43,7 +45,7 @@ public class GelfLogHandlerRedisTest {
 
     @Test
     public void testStandalone() throws Exception {
-        LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/test-redis-logging.properties"));
+        LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/jul/test-redis-logging.properties"));
 
         Logger logger = Logger.getLogger(getClass().getName());
         String expectedMessage = "message1";
@@ -63,7 +65,8 @@ public class GelfLogHandlerRedisTest {
 
     @Test
     public void testSentinel() throws Exception {
-        LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/test-redis-sentinel-logging.properties"));
+        LogManager.getLogManager()
+                .readConfiguration(getClass().getResourceAsStream("/jul/test-redis-sentinel-logging.properties"));
 
         Logger logger = Logger.getLogger(getClass().getName());
         String expectedMessage = "message1";
@@ -144,6 +147,15 @@ public class GelfLogHandlerRedisTest {
         new RedisGelfSenderProvider().create(configuration);
     }
 
+    @Test(timeout = 5000)
+    public void testRedisNotAvailable() throws Exception {
+        LogManager.getLogManager()
+                .readConfiguration(getClass().getResourceAsStream("/jul/test-redis-not-available.properties"));
 
+        Logger logger = Logger.getLogger(getClass().getName());
+        String expectedMessage = "message1";
+
+        logger.log(Level.INFO, expectedMessage);
+    }
 
 }

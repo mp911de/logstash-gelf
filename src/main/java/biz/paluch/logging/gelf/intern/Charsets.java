@@ -3,10 +3,11 @@ package biz.paluch.logging.gelf.intern;
 import java.nio.charset.Charset;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 17.07.14 10:45
  */
 class Charsets {
+
     public final static Charset ASCII = Charset.forName("ASCII");
     public final static Charset UTF8 = Charset.forName("UTF-8");
 

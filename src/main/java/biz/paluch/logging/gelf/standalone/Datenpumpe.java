@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Datenpumpe allows to submit arbitrary values (flat data set) using Gelf.
  * 
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 31.07.14 08:43
  */
 public interface Datenpumpe {

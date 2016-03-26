@@ -11,7 +11,7 @@ import biz.paluch.logging.gelf.intern.Closer;
 /**
  * Field with reference to the log event.
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class LogMessageField implements MessageField {
 

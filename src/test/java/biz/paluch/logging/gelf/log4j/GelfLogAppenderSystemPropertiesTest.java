@@ -12,7 +12,7 @@ import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 16.07.14 17:30
  */
 public class GelfLogAppenderSystemPropertiesTest {
@@ -36,7 +36,7 @@ public class GelfLogAppenderSystemPropertiesTest {
     protected void setup() {
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();
-        DOMConfigurator.configure(getClass().getResource("/log4j-with-system-properties.xml"));
+        DOMConfigurator.configure(getClass().getResource("/log4j/log4j-with-system-properties.xml"));
     }
 
     @Test

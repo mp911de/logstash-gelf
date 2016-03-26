@@ -10,7 +10,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 27.09.13 08:25
  */
 public class GelfLogHandlerSystemPropertiesTest {
@@ -29,7 +29,7 @@ public class GelfLogHandlerSystemPropertiesTest {
 
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager().readConfiguration(
-                getClass().getResourceAsStream("/test-logging-systemproperties.properties"));
+                getClass().getResourceAsStream("/jul/test-logging-systemproperties.properties"));
     }
 
     @Test

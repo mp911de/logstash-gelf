@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Message-Assembler using MDC.
  * 
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 26.09.13 15:05
  */
 public class MdcGelfMessageAssembler extends GelfMessageAssembler {

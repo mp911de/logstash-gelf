@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test for the GelfLogHandler of the logstash-gelf module in WildFly.
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 11.08.14 08:36
  */
 @RunWith(Arquillian.class)

@@ -28,7 +28,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GelfLogHandlerErrorsTest {
@@ -99,13 +99,4 @@ public class GelfLogHandlerErrorsTest {
         verify(errorManager, atLeast(1)).error(anyString(), any(IllegalStateException.class), anyInt());
     }
 
-    @Test(timeout = 5000)
-    public void testRedisNotAvailable() throws Exception {
-        LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/test-redis-not-available.properties"));
-
-        Logger logger = Logger.getLogger(getClass().getName());
-        String expectedMessage = "message1";
-
-        logger.log(Level.INFO, expectedMessage);
-    }
 }

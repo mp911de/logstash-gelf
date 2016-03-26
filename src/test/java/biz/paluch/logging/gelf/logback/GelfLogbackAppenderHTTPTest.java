@@ -1,25 +1,22 @@
 package biz.paluch.logging.gelf.logback;
 
-import static org.junit.Assert.assertEquals;
-
-import java.net.URL;
-import java.util.List;
-
+import biz.paluch.logging.gelf.NettyLocalHTTPServer;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
 import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.MDC;
 
-import biz.paluch.logging.gelf.NettyLocalHTTPServer;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.sender.GelfHTTPSender;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
+import java.net.URL;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class GelfLogbackAppenderHTTPTest {
 
@@ -33,7 +30,7 @@ public class GelfLogbackAppenderHTTPTest {
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
 
-        URL xmlConfigFile = getClass().getResource("/logback-gelf-with-http.xml");
+        URL xmlConfigFile = getClass().getResource("/logback/logback-gelf-with-http.xml");
 
         configurator.doConfigure(xmlConfigFile);
 

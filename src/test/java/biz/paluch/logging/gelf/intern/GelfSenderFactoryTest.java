@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GelfSenderFactoryTest {

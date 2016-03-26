@@ -40,7 +40,7 @@ public class GelfLogbackAppenderDynamicMdcTest {
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
 
-        URL xmlConfigFile = getClass().getResource("/logback-gelf-with-dynamic-fields.xml");
+        URL xmlConfigFile = getClass().getResource("/logback/logback-gelf-with-dynamic-fields.xml");
 
         configurator.doConfigure(xmlConfigFile);
 

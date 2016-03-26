@@ -19,10 +19,10 @@ import java.util.logging.Logger;
  * Singleton for administration of commonly used jedis pools
  *
  * @author https://github.com/Batigoal/logstash-gelf.git
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
- *
+ * @author Mark Paluch
  */
 enum RedisSenderPoolProvider {
+    
     STANDALONE {
         private Map<String, JedisPool> standalonePools = new HashMap<String, JedisPool>();
 

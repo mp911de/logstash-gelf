@@ -8,7 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import java.util.List;
 
 /**
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  * @since 10.11.13 10:30
  */
 public class NettyLocalServer {

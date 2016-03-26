@@ -78,7 +78,7 @@ import java.util.*;
  * <li>profiling.requestDuration: Duration of the request (e.g. 205ms, 16sec)</li>
  * </ul>
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Mark Paluch
  */
 public class WildFlyJsonFormatter extends ExtFormatter {
 
