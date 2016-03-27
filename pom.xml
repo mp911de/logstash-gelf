@@ -270,6 +270,13 @@
             <version>${log4j2.version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>3.3.2</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- log4j2 END -->
 

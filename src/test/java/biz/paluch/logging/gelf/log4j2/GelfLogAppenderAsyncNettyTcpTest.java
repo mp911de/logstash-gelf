@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderNettyTcpTest {
+public class GelfLogAppenderAsyncNettyTcpTest {
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
@@ -37,7 +37,7 @@ public class GelfLogAppenderNettyTcpTest {
 
     @BeforeClass
     public static void setupClass() throws Exception {
-        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-netty-tcp.xml");
+        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-async-netty-tcp.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
         server.run();
@@ -59,9 +59,9 @@ public class GelfLogAppenderNettyTcpTest {
     }
 
     @Test
-    public void testSimpleInfo() throws Exception {
+    public void testWithLocation() throws Exception {
 
-        Logger logger = loggerContext.getLogger(getClass().getName());
+        Logger logger = loggerContext.getLogger("async.location");
 
         logger.info(LOG_MESSAGE);
 
@@ -93,14 +93,38 @@ public class GelfLogAppenderNettyTcpTest {
 
     }
 
-    @Test(expected = TimeoutException.class)
-    public void testEmptyMessage() throws Exception {
+    @Test
+    public void testWithoutLocation() throws Exception {
 
-        Logger logger = loggerContext.getLogger(getClass().getName());
+        Logger logger = loggerContext.getLogger("async.nolocation");
 
-        logger.info("");
+        logger.info(LOG_MESSAGE);
 
         waitForGelf();
+
+        List jsonValues = server.getJsonValues();
+        assertEquals(1, jsonValues.size());
+
+        JSONObject jsonValue = (JSONObject) jsonValues.get(0);
+
+        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get(GelfMessage.FIELD_HOST));
+        assertEquals(RuntimeContainer.HOSTNAME, jsonValue.get("_server.simple"));
+        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get("_server.fqdn"));
+        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get("_server"));
+        assertEquals(RuntimeContainer.ADDRESS, jsonValue.get("_server.addr"));
+
+        assertEquals("?", jsonValue.get("_className"));
+        assertEquals("?", jsonValue.get("_simpleClassName"));
+
+        assertEquals(EXPECTED_LOG_MESSAGE, jsonValue.get(GelfMessage.FIELD_FULL_MESSAGE));
+        assertEquals(EXPECTED_LOG_MESSAGE, jsonValue.get(GelfMessage.FIELD_SHORT_MESSAGE));
+
+        assertEquals("INFO", jsonValue.get("_level"));
+        assertEquals("6", jsonValue.get(GelfMessage.FIELD_LEVEL));
+
+        assertEquals("logstash-gelf", jsonValue.get(GelfMessage.FIELD_FACILITY));
+        assertEquals("fieldValue1", jsonValue.get("_fieldName1"));
+        assertEquals("fieldValue2", jsonValue.get("_fieldName2"));
 
     }
 
