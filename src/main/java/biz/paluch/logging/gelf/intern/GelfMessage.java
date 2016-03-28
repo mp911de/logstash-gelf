@@ -406,7 +406,7 @@ public class GelfMessage {
         return !isEmpty(shortMessage) || !isEmpty(fullMessage);
     }
 
-    public boolean isEmpty(String str) {
+    public static boolean isEmpty(String str) {
         return str == null || "".equals(str.trim());
     }
 

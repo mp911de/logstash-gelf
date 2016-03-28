@@ -1,21 +1,25 @@
 package biz.paluch.logging.gelf;
 
-import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.StackTraceFilter;
+import static biz.paluch.logging.gelf.GelfMessageBuilder.*;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.HostAndPortProvider;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.StackTraceFilter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.HostAndPortProvider;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Creates {@link GelfMessage} based on various {@link LogEvent}. A {@link LogEvent} encapsulates log-framework specifics and
  * exposes commonly used details of log events.
- * 
+ *
  * @author Mark Paluch
  * @since 26.09.13 15:05
  */
@@ -44,7 +48,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
     /**
      * Initialize the {@link GelfMessageAssembler} from a property provider.
-     * 
+     *
      * @param propertyProvider property provider to obtain configuration properties
      */
     public void initialize(PropertyProvider propertyProvider) {
@@ -83,14 +87,20 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
     /**
      * Produce a {@link GelfMessage}.
-     * 
+     *
      * @param logEvent the log event
      * @return a new GelfMessage
      */
     public GelfMessage createGelfMessage(LogEvent logEvent) {
 
         GelfMessageBuilder builder = newInstance();
+
+		Throwable throwable = logEvent.getThrowable();
         String message = logEvent.getMessage();
+
+		if(GelfMessage.isEmpty(message) && throwable != null) {
+			message = throwable.toString();
+		}
 
         String shortMessage = message;
         if (message.length() > MAX_SHORT_MESSAGE_LENGTH) {
@@ -118,8 +128,8 @@ public class GelfMessageAssembler implements HostAndPortProvider {
             }
         }
 
-        if (extractStackTrace) {
-            addStackTrace(logEvent, builder);
+        if (extractStackTrace && throwable != null) {
+            addStackTrace(throwable, builder);
         }
 
         if (logEvent.getParameters() != null) {
@@ -164,17 +174,14 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         return field.getValue();
     }
 
-    private void addStackTrace(LogEvent logEvent, GelfMessageBuilder builder) {
-        final Throwable thrown = logEvent.getThrowable();
-        if (null != thrown) {
-            if (filterStackTrace) {
-                builder.withField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
-            } else {
-                final StringWriter sw = new StringWriter();
-                thrown.printStackTrace(new PrintWriter(sw));
-                builder.withField(FIELD_STACK_TRACE, sw.toString());
-            }
-        }
+    private void addStackTrace(Throwable thrown, GelfMessageBuilder builder) {
+		if (filterStackTrace) {
+			builder.withField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
+		} else {
+			final StringWriter sw = new StringWriter();
+			thrown.printStackTrace(new PrintWriter(sw));
+			builder.withField(FIELD_STACK_TRACE, sw.toString());
+		}
     }
 
     private void setupStaticFields(PropertyProvider propertyProvider) {

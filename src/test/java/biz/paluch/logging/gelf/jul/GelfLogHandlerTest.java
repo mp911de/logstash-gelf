@@ -1,13 +1,13 @@
 package biz.paluch.logging.gelf.jul;
 
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import static org.junit.Assert.*;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.MDC;
 import org.junit.Before;
 import org.junit.Test;
@@ -136,4 +136,42 @@ public class GelfLogHandlerTest {
         assertEquals("3", gelfMessage.getLevel());
 
     }
+
+	@Test
+    public void testNullMessageAndExceptionFallback() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName());
+
+		logger.log(Level.INFO, null, new IllegalStateException());
+
+		assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("java.lang.IllegalStateException", gelfMessage.getFullMessage());
+        assertEquals("java.lang.IllegalStateException", gelfMessage.getShortMessage());
+    }
+
+	@Test
+    public void testEmptyMessageAndExceptionFallback() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName());
+
+		logger.log(Level.INFO, "", new IllegalStateException("Help!"));
+
+		assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("java.lang.IllegalStateException: Help!", gelfMessage.getFullMessage());
+        assertEquals("java.lang.IllegalStateException: Help!", gelfMessage.getShortMessage());
+    }
+
+	@Test
+    public void testEmptyMessage() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName());
+
+		logger.info("");
+
+		assertEquals(0, GelfTestSender.getMessages().size());
+    }
+
 }

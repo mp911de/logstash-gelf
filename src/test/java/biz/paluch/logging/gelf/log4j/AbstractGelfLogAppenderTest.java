@@ -1,5 +1,10 @@
 package biz.paluch.logging.gelf.log4j;
 
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
@@ -8,12 +13,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
 import org.junit.Test;
-
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author Mark Paluch
@@ -176,4 +175,42 @@ public abstract class AbstractGelfLogAppenderTest {
         assertNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
 
     }
+
+    @Test
+    public void testNullMessageAndExceptionFallback() throws Exception {
+        Logger logger = Logger.getLogger(getClass());
+
+        logger.info(null, new IllegalStateException());
+
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("java.lang.IllegalStateException", gelfMessage.getFullMessage());
+        assertEquals("java.lang.IllegalStateException", gelfMessage.getShortMessage());
+    }
+
+    @Test
+    public void testEmptyMessageAndExceptionFallback() throws Exception {
+        Logger logger = Logger.getLogger(getClass());
+
+        logger.info("", new IllegalStateException("Help!"));
+
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("java.lang.IllegalStateException: Help!", gelfMessage.getFullMessage());
+        assertEquals("java.lang.IllegalStateException: Help!", gelfMessage.getShortMessage());
+    }
+
+    @Test
+    public void testEmptyMessage() throws Exception {
+        Logger logger = Logger.getLogger(getClass());
+
+        logger.info("");
+
+        assertEquals(0, GelfTestSender.getMessages().size());
+    }
+
 }

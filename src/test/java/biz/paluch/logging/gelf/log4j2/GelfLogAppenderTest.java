@@ -1,8 +1,11 @@
 package biz.paluch.logging.gelf.log4j2;
 
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import static org.junit.Assert.*;
 
-import biz.paluch.logging.gelf.LogMessageField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
@@ -11,11 +14,6 @@ import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author Mark Paluch
@@ -197,6 +195,42 @@ public class GelfLogAppenderTest {
                 null, "facility", null, null, null, null);
 
         assertNotNull(result);
+    }
 
+    @Test
+    public void testNullMessageAndExceptionFallback() throws Exception {
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.info((String) null, new IllegalStateException());
+
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("java.lang.IllegalStateException", gelfMessage.getFullMessage());
+        assertEquals("java.lang.IllegalStateException", gelfMessage.getShortMessage());
+    }
+
+    @Test
+    public void testEmptyMessageAndExceptionFallback() throws Exception {
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.info("", new IllegalStateException("Help!"));
+
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("java.lang.IllegalStateException: Help!", gelfMessage.getFullMessage());
+        assertEquals("java.lang.IllegalStateException: Help!", gelfMessage.getShortMessage());
+    }
+
+    @Test
+    public void testEmptyMessage() throws Exception {
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.info("");
+
+        assertEquals(0, GelfTestSender.getMessages().size());
     }
 }
