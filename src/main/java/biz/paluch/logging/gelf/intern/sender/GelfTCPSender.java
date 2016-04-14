@@ -24,7 +24,7 @@ public class GelfTCPSender implements GelfSender {
     public final static String KEEPALIVE = "keepAlive";
 
     private boolean shutdown = false;
-    private final InetAddress host;
+    private final String host;
     private final int port;
     private final int connectTimeoutMs;
     private final int deliveryAttempts;
@@ -61,7 +61,9 @@ public class GelfTCPSender implements GelfSender {
     public GelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, int deliveryAttempts,
             boolean keepAlive, ErrorReporter errorReporter) throws IOException {
 
-        this.host = InetAddress.getByName(host);
+        // validate first address succeeds.
+        InetAddress.getByName(host);
+        this.host = host;
         this.port = port;
         this.errorReporter = errorReporter;
         this.connectTimeoutMs = connectTimeoutMs;
