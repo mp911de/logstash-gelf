@@ -47,7 +47,7 @@ stop:
 test-coveralls:
 	make start
 	sleep 2
-	mvn -B -Dtest.withRedis=true clean compile cobertura:cobertura coveralls:cobertura
+	mvn -B -Dtest.withRedis=true clean compile cobertura:cobertura coveralls:report
 	make stop
 
 test:
