@@ -369,6 +369,6 @@ License
 Contributing
 -------
 Github is for social coding: if you want to write code, I encourage contributions through pull requests from forks of this repository. 
-Create Github tickets for bugs and new features and comment on the ones that you are interested in.
+Create Github tickets for bugs and new features and comment on the ones that you are interested in and take a look into [CONTRIBUTING.md](https://github.com/mp911de/logstash-gelf/blob/master/.github/CONTRIBUTING.md)
 
 
