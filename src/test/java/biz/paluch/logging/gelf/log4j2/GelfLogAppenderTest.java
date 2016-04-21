@@ -119,6 +119,19 @@ public class GelfLogAppenderTest {
     }
 
     @Test
+    public void testEmptyFacility() throws Exception {
+
+        reconfigure("log4j2/log4j2-empty-facility.xml");
+        Logger logger = loggerContext.getLogger(getClass().getName());
+
+        logger.info(LOG_MESSAGE);
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+        assertEquals("", gelfMessage.getFacility());
+    }
+
+    @Test
     public void testSimpleWarn() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());

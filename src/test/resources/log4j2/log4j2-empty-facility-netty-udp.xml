@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Gelf name="gelf" graylogHost="udp:localhost" graylogPort="19392" extractStackTrace="true"
+              filterStackTrace="true" mdcProfiling="true" maximumMessageSize="2000" facility="">
+        </Gelf>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="gelf" />
+        </Root>
+    </Loggers>
+</Configuration>

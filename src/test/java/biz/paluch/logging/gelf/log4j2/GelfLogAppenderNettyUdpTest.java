@@ -37,7 +37,7 @@ public class GelfLogAppenderNettyUdpTest {
 
     @BeforeClass
     public static void setupClass() throws Exception {
-        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-netty.xml");
+        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-netty-udp.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
         server.run();
@@ -90,6 +90,7 @@ public class GelfLogAppenderNettyUdpTest {
         assertEquals("logstash-gelf", jsonValue.get(GelfMessage.FIELD_FACILITY));
         assertEquals("fieldValue1", jsonValue.get("_fieldName1"));
         assertEquals("fieldValue2", jsonValue.get("_fieldName2"));
+        assertEquals(GelfMessage.DEFAULT_FACILITY, jsonValue.get("facility"));
 
     }
 

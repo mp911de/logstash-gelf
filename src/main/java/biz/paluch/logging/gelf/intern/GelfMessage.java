@@ -399,7 +399,7 @@ public class GelfMessage {
     }
 
     public boolean isValid() {
-        return isShortOrFullMessagesExists() && !isEmpty(version) && !isEmpty(host) && !isEmpty(facility);
+        return isShortOrFullMessagesExists() && !isEmpty(version) && !isEmpty(host);
     }
 
     private boolean isShortOrFullMessagesExists() {
