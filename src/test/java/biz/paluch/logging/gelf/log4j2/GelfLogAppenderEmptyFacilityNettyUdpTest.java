@@ -116,10 +116,6 @@ public class GelfLogAppenderEmptyFacilityNettyUdpTest {
 
         JSONObject jsonValue = (JSONObject) jsonValues.get(0);
 
-        assertEquals(RuntimeContainer.ADDRESS, jsonValue.get("_server.addr"));
-
-        assertEquals(getClass().getSimpleName(), jsonValue.get("_simpleClassName"));
-
         String shortMessage = builder.substring(0, 249);
         assertEquals(builder.toString(), jsonValue.get("full_message"));
         assertEquals(shortMessage, jsonValue.get("short_message"));
