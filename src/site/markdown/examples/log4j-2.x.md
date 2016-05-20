@@ -16,6 +16,7 @@ Following settings can be used:
 | includeFullMdc    | Include all fields from the MDC. | `false` |
 | maximumMessageSize| Maximum message size (in bytes). If the message size is exceeded, the appender will submit the message in multiple chunks. | `8192` |
 | additionalFieldTypes | Type specification for additional and MDC fields. Supported types: `String`, `long`, `Long`, `double`, `Double` and `discover` (default if not specified, discover field type on parseability). Eg. field=String,field2=double | `discover` for all additional fields |
+|ignoreExceptions    | The default is `true`, causing exceptions encountered while appending events to be internally logged and then ignored. When set to `false` exceptions will be propagated to the caller, instead. You must set this to false when wrapping this Appender in a `FailoverAppender`.| `true` |
 
 The only mandatory field is `host`. All other fields are optional.
 
@@ -70,7 +71,8 @@ XML:
         <Appenders>
             <Gelf name="gelf" host="udp:localhost" port="12201" version="1.0" extractStackTrace="true"
                   filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
-                  originHost="my.host.name" additionalFieldTypes="fieldName1=String,fieldName2=Double,fieldName3=Long">
+                  originHost="my.host.name" additionalFieldTypes="fieldName1=String,fieldName2=Double,fieldName3=Long"
+                  ignoreExceptions="true">
                 <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
                 <Field name="level" pattern="%level" />
                 <Field name="simpleClassName" pattern="%C{1}" />

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Gelf name="gelf" graylogHost="tcp:localhost" graylogPort="9999" ignoreExceptions="false" />
+
+        <Gelf name="gelfIgnoreExceptions" graylogHost="tcp:localhost" graylogPort="9999" />
+
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+        </Console>
+
+        <Failover name="failover" primary="gelf">
+            <Failovers>
+                <AppenderRef ref="failoverList"/>
+            </Failovers>
+        </Failover>
+
+        <List name="failoverList" />
+        <List name="ignoreList" />
+    </Appenders>
+    <Loggers>
+
+        <Logger name="biz.exception" level="INFO">
+            <AppenderRef ref="gelf"/>
+        </Logger>
+
+        <Logger name="biz.failover" level="INFO">
+            <AppenderRef ref="failover"/>
+        </Logger>
+
+        <Logger name="biz.ignore" level="INFO">
+            <AppenderRef ref="gelfIgnoreExceptions"/>
+            <AppenderRef ref="ignoreList"/>
+        </Logger>
+
+        <Root level="INFO">
+            <AppenderRef ref="CONSOLE"/>
+        </Root>
+    </Loggers>
+</Configuration>

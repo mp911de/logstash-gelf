@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.appender.AppenderLoggingException;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.*;
 import org.apache.logging.log4j.core.impl.Log4jLogEvent;
@@ -40,6 +41,7 @@ import biz.paluch.logging.gelf.intern.*;
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
  * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
+ * <li>ignoreExceptions (Optional): The default is <code>true</code>, causing exceptions encountered while appending events to be internally logged and then ignored. When set to <code>false</code> exceptions will be propagated to the caller, instead. You must set this to false when wrapping this Appender in a <code>FailoverAppender</code>.</li>
  * </ul>
  *
  * <h2>Fields</h2>
@@ -164,12 +166,32 @@ public class GelfLogAppender extends AbstractAppender {
         }
     };
 
-    protected GelfSender gelfSender;
-    private MdcGelfMessageAssembler gelfMessageAssembler;
+    private final ErrorReporter PROPAGATING_ERROR_REPORTER = new ErrorReporter() {
+        @Override
+        public void reportError(String message, Exception e) {
 
-    public GelfLogAppender(String name, Filter filter, MdcGelfMessageAssembler gelfMessageAssembler) {
-        super(name, filter, null);
+            if (e != null) {
+                throw new AppenderLoggingException(e);
+            }
+
+            LOGGER.error(message, null, 0);
+        }
+    };
+
+    protected GelfSender gelfSender;
+    private final MdcGelfMessageAssembler gelfMessageAssembler;
+    private final ErrorReporter errorReporter;
+
+    public GelfLogAppender(String name, Filter filter, MdcGelfMessageAssembler gelfMessageAssembler, boolean ignoreExceptions) {
+
+        super(name, filter, null, ignoreExceptions);
         this.gelfMessageAssembler = gelfMessageAssembler;
+
+        if (ignoreExceptions) {
+            errorReporter = ERROR_REPORTER;
+        } else {
+            errorReporter = PROPAGATING_ERROR_REPORTER;
+        }
     }
 
     @PluginFactory
@@ -184,7 +206,8 @@ public class GelfLogAppender extends AbstractAppender {
             @PluginAttribute("facility") String facility, @PluginAttribute("filterStackTrace") String filterStackTrace,
             @PluginAttribute("mdcProfiling") String mdcProfiling,
             @PluginAttribute("maximumMessageSize") String maximumMessageSize,
-            @PluginAttribute("additionalFieldTypes") String additionalFieldTypes) {
+            @PluginAttribute("additionalFieldTypes") String additionalFieldTypes,
+            @PluginAttribute(value = "ignoreExceptions", defaultBoolean = true) boolean ignoreExceptions) {
 
         RuntimeContainer.initialize(ERROR_REPORTER);
 
@@ -257,7 +280,7 @@ public class GelfLogAppender extends AbstractAppender {
 
         configureFields(mdcGelfMessageAssembler, fields, dynamicFieldArray);
 
-        GelfLogAppender appender = new GelfLogAppender(name, filter, mdcGelfMessageAssembler);
+        GelfLogAppender appender = new GelfLogAppender(name, filter, mdcGelfMessageAssembler, ignoreExceptions);
 
         return appender;
 
@@ -316,6 +339,8 @@ public class GelfLogAppender extends AbstractAppender {
             if (null == gelfSender || !gelfSender.sendMessage(message)) {
                 reportError("Could not send GELF message", null);
             }
+        } catch (AppenderLoggingException e) {
+            throw e;
         } catch (Exception e) {
             reportError("Could not send GELF message: " + e.getMessage(), e);
         }
@@ -326,7 +351,7 @@ public class GelfLogAppender extends AbstractAppender {
     }
 
     public void reportError(String message, Exception exception) {
-        LOGGER.error(message, exception, 0);
+        errorReporter.reportError(message, exception);
     }
 
     @Override
@@ -347,7 +372,6 @@ public class GelfLogAppender extends AbstractAppender {
     }
 
     protected GelfSender createGelfSender() {
-        return GelfSenderFactory.createSender(gelfMessageAssembler, ERROR_REPORTER, Collections.EMPTY_MAP);
+        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.EMPTY_MAP);
     }
-
 }
