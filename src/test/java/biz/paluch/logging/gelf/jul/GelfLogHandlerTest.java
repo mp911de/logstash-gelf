@@ -59,6 +59,16 @@ public class GelfLogHandlerTest {
 
         assertExpectedMessage(expectedMessage);
     }
+    
+    @Test
+    public void testWithResourceBundleFormattingWithoutParameters() throws Exception {
+        Logger logger = Logger.getLogger(getClass().getName(), "messages");
+        String expectedMessage = "no parameter supplied";
+
+        logger.log(Level.INFO, "message.format.withoutParameter");
+
+        assertExpectedMessage(expectedMessage);
+    }
 
     @Test
     public void testWithResourceBundleFormattingMalformed1() throws Exception {

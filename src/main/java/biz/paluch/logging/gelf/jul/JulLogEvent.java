@@ -65,10 +65,12 @@ public class JulLogEvent implements LogEvent {
         if (message == null) {
             message = "";
         }
+        
+        if (record.getResourceBundle() != null && record.getResourceBundle().containsKey(message)) {
+            message = record.getResourceBundle().getString(message);
+        }
+        
         if (parameters != null && parameters.length > 0) {
-            if (record.getResourceBundle() != null && record.getResourceBundle().containsKey(record.getMessage())) {
-                message = record.getResourceBundle().getString(record.getMessage());
-            }
             String originalMessage = message;
 
             // by default, using {0}, {1}, etc. -> MessageFormat
