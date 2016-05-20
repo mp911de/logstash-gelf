@@ -24,14 +24,16 @@ public class GelfTCPSender implements GelfSender {
     public final static String KEEPALIVE = "keepAlive";
 
     private boolean shutdown = false;
+    private volatile SocketChannel socketChannel;
+
     private final String host;
     private final int port;
+    private final int readTimeoutMs;
     private final int connectTimeoutMs;
+    private final boolean keepAlive;
     private final int deliveryAttempts;
-    private final SocketChannel socketChannel;
     private final ErrorReporter errorReporter;
-
-    private Object connectLock = new Object();
+    private final Object connectLock = new Object();
 
     /**
      * 
@@ -67,9 +69,11 @@ public class GelfTCPSender implements GelfSender {
         this.port = port;
         this.errorReporter = errorReporter;
         this.connectTimeoutMs = connectTimeoutMs;
+        this.readTimeoutMs = readTimeoutMs;
+        this.keepAlive = keepAlive;
         this.deliveryAttempts = deliveryAttempts < 1 ? Integer.MAX_VALUE : deliveryAttempts;
 
-        this.socketChannel = createSocketChannel(readTimeoutMs, keepAlive);;
+        this.socketChannel = createSocketChannel(readTimeoutMs, keepAlive);
     }
 
     private SocketChannel createSocketChannel(int readTimeoutMs, boolean keepAlive) throws IOException {
@@ -128,8 +132,14 @@ public class GelfTCPSender implements GelfSender {
 
     protected void connect() throws IOException {
 
+
         if (socketChannel.isConnected()) {
             return;
+        }
+
+        if(!socketChannel.isOpen()){
+            socketChannel.close();
+            socketChannel = createSocketChannel(readTimeoutMs, keepAlive);
         }
 
         InetSocketAddress inetSocketAddress = new InetSocketAddress(host, port);
