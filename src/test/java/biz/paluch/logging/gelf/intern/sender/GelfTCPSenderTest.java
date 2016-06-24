@@ -3,11 +3,17 @@ package biz.paluch.logging.gelf.intern.sender;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.nio.channels.ServerSocketChannel;
+import java.util.Random;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,5 +79,87 @@ public class GelfTCPSenderTest {
     @Test(expected = UnknownHostException.class)
     public void unknownHostShouldThrowException() throws Exception {
         new GelfTCPSender("unknown.host.unknown", 65534, 100, 100, errorReporter);
+    }
+
+    @Test
+    public void shouldOpenConnection() throws Exception {
+
+        int port = randomPort();
+
+        ServerSocketChannel listener = ServerSocketChannel.open();
+        listener.socket().bind(new InetSocketAddress(port));
+
+        GelfTCPSender tcpSender = new GelfTCPSender("127.0.0.1", port, 1000, 1000, errorReporter);
+
+        GelfMessage gelfMessage = new GelfMessage("short", "long", 1, "info");
+        gelfMessage.setHost("host");
+
+        GelfTCPSender spy = spy(tcpSender);
+
+        spy.sendMessage(gelfMessage);
+
+        verify(spy, times(2)).isConnected();
+        verify(spy).connect();
+
+        listener.close();
+        spy.close();
+    }
+
+    @Test
+    public void shouldSendDataToOpenPort() throws Exception {
+
+        int port = randomPort();
+
+        ServerSocketChannel listener = ServerSocketChannel.open();
+        listener.socket().bind(new InetSocketAddress(port));
+
+        GelfTCPSender tcpSender = new GelfTCPSender("127.0.0.1", port, 1000, 1000, errorReporter);
+
+        GelfMessage gelfMessage = new GelfMessage("short", "long", 1, "info");
+        gelfMessage.setHost("host");
+
+        tcpSender.sendMessage(gelfMessage);
+
+        GelfTCPSender spy = spy(tcpSender);
+
+        spy.sendMessage(gelfMessage);
+
+        verify(spy).isConnected();
+        verify(spy, never()).connect();
+
+        listener.close();
+        spy.close();
+    }
+
+    @Test
+    public void shouldSendDataToClosedPort() throws Exception {
+
+        int port = randomPort();
+
+        ServerSocketChannel listener = ServerSocketChannel.open();
+        listener.socket().bind(new InetSocketAddress(port));
+
+        GelfTCPSender tcpSender = new GelfTCPSender("127.0.0.1", port, 1000, 1000, errorReporter);
+
+        listener.socket().close();
+        listener.close();
+
+        GelfMessage gelfMessage = new GelfMessage("short", "long", 1, "info");
+        gelfMessage.setHost("host");
+        tcpSender.sendMessage(gelfMessage);
+
+        GelfTCPSender spy = spy(tcpSender);
+
+        spy.sendMessage(gelfMessage);
+
+        verify(spy, times(2)).isConnected();
+        verify(spy).connect();
+
+        spy.close();
+    }
+
+    protected int randomPort() {
+        Random random = new Random();
+        return random.nextInt(50000) + 1024;
     }
 }

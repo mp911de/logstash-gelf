@@ -1,38 +1,32 @@
 package biz.paluch.logging.gelf.intern.sender;
 
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
+import java.util.concurrent.TimeUnit;
+
 import biz.paluch.logging.gelf.intern.Closer;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.nio.channels.SocketChannel;
-import java.util.concurrent.TimeUnit;
-
 /**
  * @author https://github.com/t0xa/gelfj
  * @author Mark Paluch
  */
-public class GelfTCPSender implements GelfSender {
+public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements GelfSender {
 
     public final static String CONNECTION_TIMEOUT = "connectionTimeout";
     public final static String READ_TIMEOUT = "readTimeout";
     public final static String RETRIES = "deliveryAttempts";
     public final static String KEEPALIVE = "keepAlive";
 
-    private boolean shutdown = false;
-    private volatile SocketChannel socketChannel;
-
-    private final String host;
-    private final int port;
     private final int readTimeoutMs;
     private final int connectTimeoutMs;
     private final boolean keepAlive;
     private final int deliveryAttempts;
-    private final ErrorReporter errorReporter;
+
     private final Object connectLock = new Object();
 
     /**
@@ -63,17 +57,14 @@ public class GelfTCPSender implements GelfSender {
     public GelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, int deliveryAttempts,
             boolean keepAlive, ErrorReporter errorReporter) throws IOException {
 
-        // validate first address succeeds.
-        InetAddress.getByName(host);
-        this.host = host;
-        this.port = port;
-        this.errorReporter = errorReporter;
+        super(errorReporter, host, port);
+
         this.connectTimeoutMs = connectTimeoutMs;
         this.readTimeoutMs = readTimeoutMs;
         this.keepAlive = keepAlive;
         this.deliveryAttempts = deliveryAttempts < 1 ? Integer.MAX_VALUE : deliveryAttempts;
 
-        this.socketChannel = createSocketChannel(readTimeoutMs, keepAlive);
+        this.setChannel(createSocketChannel(readTimeoutMs, keepAlive));
     }
 
     private SocketChannel createSocketChannel(int readTimeoutMs, boolean keepAlive) throws IOException {
@@ -85,13 +76,12 @@ public class GelfTCPSender implements GelfSender {
     }
 
     /**
-     * 
      * @param message the message
      * @return
      */
     public boolean sendMessage(GelfMessage message) {
 
-        if (shutdown) {
+        if (isShutdown()) {
             return false;
         }
 
@@ -101,30 +91,24 @@ public class GelfTCPSender implements GelfSender {
             try {
 
                 // (re)-connect if necessary
-                if (!socketChannel.isConnected()) {
+                if (!isConnected()) {
                     synchronized (connectLock) {
                         connect();
                     }
                 }
 
-                socketChannel.write(message.toTCPBuffer());
+                channel().write(message.toTCPBuffer());
 
                 return true;
             } catch (IOException e) {
-                if (socketChannel != null) {
-                    try {
-                        socketChannel.close();
-                    } catch (IOException o_O) {
-                        // ignore
-                    }
-                }
+                Closer.close(channel());
                 exception = e;
             }
         }
 
         if (exception != null) {
-            errorReporter.reportError(exception.getMessage(),
-                    new IOException("Cannot send data to " + host + ":" + port, exception));
+            reportError(exception.getMessage(),
+                    new IOException("Cannot send data to " + getHost() + ":" + getPort(), exception));
         }
 
         return false;
@@ -132,18 +116,17 @@ public class GelfTCPSender implements GelfSender {
 
     protected void connect() throws IOException {
 
-
-        if (socketChannel.isConnected()) {
+        if (isConnected()) {
             return;
         }
 
-        if(!socketChannel.isOpen()){
-            socketChannel.close();
-            socketChannel = createSocketChannel(readTimeoutMs, keepAlive);
+        if (!channel().isOpen()) {
+            Closer.close(channel());
+            setChannel(createSocketChannel(readTimeoutMs, keepAlive));
         }
 
-        InetSocketAddress inetSocketAddress = new InetSocketAddress(host, port);
-        if (socketChannel.connect(inetSocketAddress)) {
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(getHost(), getPort());
+        if (channel().connect(inetSocketAddress)) {
             return;
         }
 
@@ -152,7 +135,7 @@ public class GelfTCPSender implements GelfSender {
         long waitTimeoutNs = TimeUnit.MILLISECONDS.toNanos(waitTimeoutMs);
         boolean connected;
         try {
-            while (!(connected = socketChannel.finishConnect())) {
+            while (!(connected = channel().finishConnect())) {
                 Thread.sleep(waitTimeoutMs);
                 connectTimeoutLeft -= waitTimeoutNs;
 
@@ -169,11 +152,10 @@ public class GelfTCPSender implements GelfSender {
             Thread.currentThread().interrupt();
             throw new IOException("Connection interrupted", e);
         }
-
     }
 
-    public void close() {
-        shutdown = true;
-        Closer.close(socketChannel);
+    @Override
+    protected boolean isConnected(SocketChannel channel) {
+        return channel.isConnected();
     }
 }
