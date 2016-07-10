@@ -12,8 +12,8 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
-import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,7 +74,7 @@ public class GelfHTTPSenderTest {
         List<Object> jsonValues = server.getJsonValues();
         assertEquals(1, jsonValues.size());
 
-        JSONObject messageJson = (JSONObject) jsonValues.get(0);
+        Map<String, Object> messageJson = (Map<String, Object>) jsonValues.get(0);
         assertEquals(gelfMessage.getShortMessage(), messageJson.get("short_message"));
         assertEquals(gelfMessage.getFullMessage(), messageJson.get("full_message"));
         assertEquals(gelfMessage.getTimestamp(), messageJson.get("timestamp"));

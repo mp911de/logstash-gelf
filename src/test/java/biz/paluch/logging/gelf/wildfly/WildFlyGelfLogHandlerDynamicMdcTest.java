@@ -4,18 +4,17 @@ import static biz.paluch.logging.gelf.wildfly.WildFlyLogTestUtil.getWildFlyGelfL
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.Map;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import biz.paluch.logging.gelf.JsonUtil;
 import org.jboss.logmanager.MDC;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler;
 
 /**
  * @author Mark Paluch
@@ -135,11 +134,11 @@ public class WildFlyGelfLogHandlerDynamicMdcTest {
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-        JSONObject jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+        Map<String, Object> jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
         assertEquals("String", jsonObject.get("myMdcs"));
-        assertEquals(1L, jsonObject.get("myMdcl"));
-        assertEquals(2L, jsonObject.get("myMdci"));
+        assertEquals(1, jsonObject.get("myMdcl"));
+        assertEquals(2, jsonObject.get("myMdci"));
 
         assertEquals(2.1, jsonObject.get("myMdcd"));
         assertEquals(2.2, jsonObject.get("myMdcf"));
@@ -154,10 +153,10 @@ public class WildFlyGelfLogHandlerDynamicMdcTest {
         assertEquals(1, GelfTestSender.getMessages().size());
 
         gelfMessage = GelfTestSender.getMessages().get(0);
-        jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+        jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
-        assertEquals(1L, jsonObject.get("myMdcl"));
-        assertEquals(2L, jsonObject.get("myMdci"));
+        assertEquals(1, jsonObject.get("myMdcl"));
+        assertEquals(2, jsonObject.get("myMdci"));
 
         assertNull(jsonObject.get("myMdcd"));
         assertEquals(0.0, jsonObject.get("myMdcf"));
@@ -170,10 +169,10 @@ public class WildFlyGelfLogHandlerDynamicMdcTest {
         assertEquals(1, GelfTestSender.getMessages().size());
 
         gelfMessage = GelfTestSender.getMessages().get(0);
-        jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+        jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
         assertNull(jsonObject.get("myMdcl"));
-        assertEquals(0L, jsonObject.get("myMdci"));
+        assertEquals(0, jsonObject.get("myMdci"));
     }
 
     private WildFlyGelfLogHandler getLogHandler() {

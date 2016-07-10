@@ -4,7 +4,6 @@ import biz.paluch.logging.gelf.NettyLocalHTTPServer;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
-import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +11,7 @@ import org.slf4j.MDC;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -58,7 +58,7 @@ public class GelfLogbackAppenderHTTPTest {
         assertEquals("/foo/bar", uri);
         assertEquals(1, jsonValues.size());
 
-        JSONObject jsonObject = (JSONObject) jsonValues.get(0);
+        Map<String, Object> jsonObject = (Map<String, Object>) jsonValues.get(0);
         assertEquals("Hi there", jsonObject.get("short_message"));
     }
 }

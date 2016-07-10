@@ -2,6 +2,7 @@ package biz.paluch.logging;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RuntimeContainerTest {
@@ -9,7 +10,6 @@ public class RuntimeContainerTest {
     @Test
     public void testMain() throws Exception {
         RuntimeContainer.main(new String[0]);
-
     }
 
     @Test

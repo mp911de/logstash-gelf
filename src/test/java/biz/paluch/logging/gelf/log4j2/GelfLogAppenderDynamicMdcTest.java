@@ -1,18 +1,19 @@
 package biz.paluch.logging.gelf.log4j2;
 
 import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.JsonUtil;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -114,11 +115,11 @@ public class GelfLogAppenderDynamicMdcTest {
         assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-        JSONObject jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+        Map<String, Object> jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
         assertEquals("String", jsonObject.get("myMdcs"));
-        assertEquals(1L, jsonObject.get("myMdcl"));
-        assertEquals(2L, jsonObject.get("myMdci"));
+        assertEquals(1, jsonObject.get("myMdcl"));
+        assertEquals(2, jsonObject.get("myMdci"));
 
         assertEquals(2.1, jsonObject.get("myMdcd"));
         assertEquals(2.2, jsonObject.get("myMdcf"));
@@ -133,10 +134,10 @@ public class GelfLogAppenderDynamicMdcTest {
         assertEquals(1, GelfTestSender.getMessages().size());
 
         gelfMessage = GelfTestSender.getMessages().get(0);
-        jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+        jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
-        assertEquals(1L, jsonObject.get("myMdcl"));
-        assertEquals(2L, jsonObject.get("myMdci"));
+        assertEquals(1, jsonObject.get("myMdcl"));
+        assertEquals(2, jsonObject.get("myMdci"));
 
         assertNull(jsonObject.get("myMdcd"));
         assertEquals(0.0, jsonObject.get("myMdcf"));
@@ -149,9 +150,9 @@ public class GelfLogAppenderDynamicMdcTest {
         assertEquals(1, GelfTestSender.getMessages().size());
 
         gelfMessage = GelfTestSender.getMessages().get(0);
-        jsonObject = (JSONObject) JSONValue.parse(gelfMessage.toJson(""));
+        jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
         assertNull(jsonObject.get("myMdcl"));
-        assertEquals(0L, jsonObject.get("myMdci"));
+        assertEquals(0, jsonObject.get("myMdci"));
     }
 }

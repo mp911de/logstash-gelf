@@ -353,7 +353,6 @@ Versions/Dependencies
 --------------
 This project is built against following dependencies/versions:
 
-* json-simple 1.1.1
 * log4j 1.2.14
 * log4j2 2.5
 * Java Util Logging JDK Version 1.6

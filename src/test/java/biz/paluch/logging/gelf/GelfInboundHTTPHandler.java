@@ -3,8 +3,6 @@ package biz.paluch.logging.gelf;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.simple.JSONValue;
-
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -36,7 +34,7 @@ public class GelfInboundHTTPHandler extends SimpleChannelInboundHandler<Object> 
             contentBuffer.append(httpContent.content().toString(CharsetUtil.UTF_8));
             
             if (message instanceof LastHttpContent) {
-                Object parsedContent = JSONValue.parse(contentBuffer.toString());
+                Object parsedContent = JsonUtil.parseToMap(contentBuffer.toString());
                 synchronized (values) {
                     values.add(parsedContent);
                 }

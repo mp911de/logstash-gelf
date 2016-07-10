@@ -7,14 +7,11 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Map;
 
+import biz.paluch.logging.gelf.JsonUtil;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -109,14 +106,10 @@ public class GelfLayoutTest {
     }
 
     public Map<String, Object> getMessage() {
-        try {
-            return (Map) new JSONParser().parse(TestAppender.getLoggedLines()[0]);
-        } catch (ParseException e) {
-            throw new IllegalStateException(e);
-        }
+        return (Map) JsonUtil.parseToMap(TestAppender.getLoggedLines()[0]);
     }
 
-    private JSONObject parseToJSONObject(String value) {
-        return (JSONObject) JSONValue.parse(value);
+    private Map<String, Object> parseToJSONObject(String value) {
+        return JsonUtil.parseToMap(value);
     }
 }

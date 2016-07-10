@@ -1,17 +1,16 @@
 package biz.paluch.logging.gelf;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.util.ReferenceCountUtil;
-import org.json.simple.JSONValue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,9 +27,10 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
     private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
     private static final byte[] GZIP_ID = new byte[] { 0x1f, 0xffffff8b };
 
-    private Map<ChunkId, List<Chunk>> chunks = new HashMap<ChunkId, List<Chunk>>();
-    private List<Object> values = new ArrayList<Object>();
+    private final Map<ChunkId, List<Chunk>> chunks = new HashMap<ChunkId, List<Chunk>>();
+    private final List<Object> values = new ArrayList<Object>();
     private ByteArrayOutputStream intermediate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -112,7 +112,7 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
                     }
                 }
 
-                Object parse = JSONValue.parse(new InputStreamReader(is, "UTF-8"));
+                Object parse = objectMapper.readValue(is, Map.class);
                 synchronized (values) {
                     values.add(parse);
                 }

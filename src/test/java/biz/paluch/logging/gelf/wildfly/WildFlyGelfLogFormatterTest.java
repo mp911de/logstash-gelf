@@ -12,12 +12,11 @@ import java.util.logging.Logger;
 import org.jboss.logmanager.MDC;
 import org.jboss.logmanager.NDC;
 import org.jboss.logmanager.handlers.WriterHandler;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.JsonUtil;
 import biz.paluch.logging.gelf.LogMessageField;
 
 /**
@@ -209,10 +208,6 @@ public class WildFlyGelfLogFormatterTest {
     }
 
     public Map<String, Object> getMessage() {
-        try {
-            return (Map) new JSONParser().parse(stringWriter.getBuffer().toString());
-        } catch (ParseException e) {
-            throw new IllegalStateException(e);
-        }
+        return JsonUtil.parseToMap(stringWriter.getBuffer().toString());
     }
 }

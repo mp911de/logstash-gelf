@@ -9,8 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import biz.paluch.logging.gelf.JsonUtil;
 import org.apache.log4j.MDC;
-import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,7 +55,7 @@ public class GelfLogHandlerRedisTest {
         List<String> list = jedis.lrange("list", 0, jedis.llen("list"));
         assertEquals(1, list.size());
 
-        Map<String, String> map = (Map<String, String>) JSONValue.parse(list.get(0));
+        Map<String, Object> map = JsonUtil.parseToMap(list.get(0));
 
         assertEquals(expectedMessage, map.get("full_message"));
         assertEquals(expectedMessage, map.get("short_message"));
@@ -76,7 +76,7 @@ public class GelfLogHandlerRedisTest {
         List<String> list = jedis.lrange("list", 0, jedis.llen("list"));
         assertEquals(1, list.size());
 
-        Map<String, String> map = (Map<String, String>) JSONValue.parse(list.get(0));
+        Map<String, Object> map = JsonUtil.parseToMap(list.get(0));
 
         assertEquals(expectedMessage, map.get("full_message"));
         assertEquals(expectedMessage, map.get("short_message"));

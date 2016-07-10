@@ -76,7 +76,7 @@ public class WildFlyHandlerIT {
     public static Archive<?> createTestArchive() {
 
         File[] files = Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("io.netty:netty-all", "com.googlecode.json-simple:json-simple").withoutTransitivity().asFile();
+                .resolve("io.netty:netty-all").withoutTransitivity().asFile();
         return ShrinkWrap.create(WebArchive.class, "logstash-gelf.war").addAsLibraries(files)
                 .addClasses(NettyLocalServer.class, GelfInboundHandler.class);
     }

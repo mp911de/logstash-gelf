@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
-import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -72,7 +72,7 @@ public class GelfLogAppenderEmptyFacilityNettyUdpTest {
         List jsonValues = server.getJsonValues();
         assertEquals(1, jsonValues.size());
 
-        JSONObject jsonValue = (JSONObject) jsonValues.get(0);
+        Map<String, Object> jsonValue = (Map<String, Object>) jsonValues.get(0);
 
         assertNull(jsonValue.get("facility"));
 
@@ -114,7 +114,7 @@ public class GelfLogAppenderEmptyFacilityNettyUdpTest {
         List jsonValues = server.getJsonValues();
         assertEquals(1, jsonValues.size());
 
-        JSONObject jsonValue = (JSONObject) jsonValues.get(0);
+        Map<String, Object> jsonValue = (Map<String, Object>) jsonValues.get(0);
 
         String shortMessage = builder.substring(0, 249);
         assertEquals(builder.toString(), jsonValue.get("full_message"));

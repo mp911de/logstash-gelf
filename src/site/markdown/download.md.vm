@@ -45,7 +45,6 @@ Using logstash-gelf on your classpath
   the dependencies listed below to your classpath.
 
     logstash-gelf-${logstash-gelf-release-version}.jar
-    json-simple-1.1.1.jar
     jedis-2.8.1.jar (optional for Redis usage)
     commons-pool2-2.4.2.jar (optional for Redis usage)
 

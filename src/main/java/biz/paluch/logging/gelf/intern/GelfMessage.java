@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
-import org.json.simple.JSONValue;
-
 /**
  * @author https://github.com/t0xa/gelfj
  * @author Mark Paluch
@@ -71,10 +69,11 @@ public class GelfMessage {
 
     private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
     private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
+    private static final byte[] NONE = lastFourAsciiBytes("none");
 
     private String version = GELF_VERSION;
     private String host;
-    private byte[] hostBytes = lastFourAsciiBytes("none");
+    private byte[] hostBytes = NONE;
     private String shortMessage;
     private String fullMessage;
     private long javaTimestamp;
@@ -96,25 +95,36 @@ public class GelfMessage {
     }
 
     public String toJson(String additionalFieldPrefix) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        return new String(toJsonByteArray(additionalFieldPrefix), Charsets.UTF8);
+    }
 
-        if (!isEmpty(getHost())) {
-            map.put(FIELD_HOST, getHost());
-        }
+    public byte[] toJsonByteArray(String additionalFieldPrefix) {
+
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        toJson(OutputAccessor.from(buffer), additionalFieldPrefix);
+
+        return buffer.toByteArray();
+    }
+
+    protected void toJson(OutputAccessor out, String additionalFieldPrefix) {
+
+        boolean hasFields = false;
+
+        JsonWriter.writeObjectStart(out);
+
+        hasFields = writeIfNotEmpty(out, hasFields, FIELD_HOST, getHost());
 
         if (!isEmpty(shortMessage)) {
-            map.put(FIELD_SHORT_MESSAGE, getShortMessage());
+            hasFields = writeIfNotEmpty(out, hasFields, FIELD_SHORT_MESSAGE, getShortMessage());
         }
 
-        if (!isEmpty(getFullMessage())) {
-            map.put(FIELD_FULL_MESSAGE, getFullMessage());
-        }
+        hasFields = writeIfNotEmpty(out, hasFields, FIELD_FULL_MESSAGE, getFullMessage());
 
         if (getJavaTimestamp() != 0) {
             if (GELF_VERSION_1_1.equals(version)) {
-                map.put(FIELD_TIMESTAMP, getTimestampAsBigDecimal().doubleValue());
+                hasFields = writeIfNotEmpty(out, hasFields, FIELD_TIMESTAMP, getTimestampAsBigDecimal().doubleValue());
             } else {
-                map.put(FIELD_TIMESTAMP, getTimestamp());
+                hasFields = writeIfNotEmpty(out, hasFields, FIELD_TIMESTAMP, getTimestampAsBigDecimal().toString());
             }
         }
 
@@ -127,14 +137,14 @@ public class GelfMessage {
                     // fallback on the default value
                     level = DEFAUL_LEVEL;
                 }
-                map.put(FIELD_LEVEL, level);
+                hasFields = writeIfNotEmpty(out, hasFields, FIELD_LEVEL, level);
             } else {
-                map.put(FIELD_LEVEL, getLevel());
+                hasFields = writeIfNotEmpty(out, hasFields, FIELD_LEVEL, getLevel());
             }
         }
 
         if (!isEmpty(getFacility())) {
-            map.put(FIELD_FACILITY, getFacility());
+            hasFields = writeIfNotEmpty(out, hasFields, FIELD_FACILITY, getFacility());
         }
 
         for (Map.Entry<String, String> additionalField : additonalFields.entrySet()) {
@@ -146,16 +156,47 @@ public class GelfMessage {
                 }
                 Object result = getAdditionalFieldValue(value, fieldType);
                 if (result != null) {
-                    map.put(additionalFieldPrefix + additionalField.getKey(), result);
+                    hasFields = writeIfNotEmpty(out, hasFields, additionalFieldPrefix + additionalField.getKey(), result);
                 }
             }
         }
 
-        return JSONValue.toJSONString(map);
+        JsonWriter.writeObjectEnd(out);
+    }
+
+    private boolean writeIfNotEmpty(OutputAccessor out, boolean hasFields, String field, Object value) {
+
+        if (value == null) {
+            return hasFields;
+        }
+
+        if (value instanceof String) {
+
+            if (isEmpty((String) value)) {
+                return hasFields;
+            }
+
+            if (hasFields) {
+                JsonWriter.writeKeyValueSeparator(out);
+            }
+
+            JsonWriter.writeMapEntry(out, field, value);
+
+            return true;
+        }
+
+        if (hasFields) {
+            JsonWriter.writeKeyValueSeparator(out);
+        }
+
+        JsonWriter.writeMapEntry(out, field, value);
+
+        return true;
     }
 
     /**
      * Get the field value as requested data type.
+     * 
      * @param value the value as string
      * @param fieldType see field types
      * @return the field value in the appropriate data type or {@literal null}.
@@ -210,7 +251,7 @@ public class GelfMessage {
     }
 
     public ByteBuffer[] toUDPBuffers() {
-        byte[] messageBytes = gzipMessage(toJson());
+        byte[] messageBytes = gzipMessage(toJsonByteArray("_"));
         // calculate the length of the datagrams array
         int diagrams_length = messageBytes.length / maximumMessageSize;
         // In case of a remainder, due to the integer division, add a extra datagram
@@ -229,16 +270,15 @@ public class GelfMessage {
     }
 
     public ByteBuffer toTCPBuffer() {
-        byte[] messageBytes;
+
         // Do not use GZIP, as the headers will contain \0 bytes
         // graylog2-server uses \0 as a delimiter for TCP frames
         // see: https://github.com/Graylog2/graylog2-server/issues/127
-        String json = toJson();
-        json += '\0';
-        messageBytes = Charsets.utf8(json);
+        byte[] messageBytes = toJsonByteArray("_");
 
-        ByteBuffer buffer = ByteBuffer.allocate(messageBytes.length);
+        ByteBuffer buffer = ByteBuffer.allocate(messageBytes.length + 1);
         buffer.put(messageBytes);
+        buffer.put((byte) '\0');
         buffer.flip();
         return buffer;
     }
@@ -269,14 +309,13 @@ public class GelfMessage {
         return (int) System.currentTimeMillis();
     }
 
-    private byte[] gzipMessage(String message) {
+    private byte[] gzipMessage(byte[] message) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         try {
             GZIPOutputStream stream = new GZIPOutputStream(bos);
-            byte[] bytes = Charsets.utf8(message);
 
-            stream.write(bytes);
+            stream.write(message);
             stream.finish();
             Closer.close(stream);
             byte[] zipped = bos.toByteArray();
@@ -287,7 +326,7 @@ public class GelfMessage {
         }
     }
 
-    private byte[] lastFourAsciiBytes(String host) {
+    private static byte[] lastFourAsciiBytes(String host) {
         final String shortHost = host.length() >= 4 ? host.substring(host.length() - 4) : host;
         return Charsets.ascii(shortHost);
     }
