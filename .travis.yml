@@ -4,6 +4,8 @@ script: make test-coveralls
 sudo: required
 dist: trusty
 group: edge
+env:
+  - MAVEN_SKIP_RC=true
 cache:
   directories:
     - '$HOME/.m2/repository'
