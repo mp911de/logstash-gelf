@@ -1,13 +1,20 @@
 language: java
 install: make travis-install
 script: make test-coveralls
-sudo: false
+sudo: required
+dist: trusty
+group: edge
 cache:
   directories:
     - '$HOME/.m2/repository'
 jdk:
+  - oraclejdk9
   - oraclejdk8
   - oraclejdk7
+
+matrix:
+  allow_failures:
+     - jdk: oraclejdk9
 notifications:
   webhooks:
     urls:

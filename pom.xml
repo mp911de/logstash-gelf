@@ -362,6 +362,12 @@
             <artifactId>wildfly-arquillian-common</artifactId>
             <version>1.0.0.Alpha5</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>sun.jdk</groupId>
+                    <artifactId>jconsole</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
