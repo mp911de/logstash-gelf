@@ -426,10 +426,10 @@
         <profile>
             <id>wildfly</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <jdk>1.8</jdk>
             </activation>
             <properties>
-                <version.wildfly>10.0.0.CR5</version.wildfly>
+                <version.wildfly>10.0.0.Final</version.wildfly>
                 <version.org.wildfly.arquillian>1.0.1.Final</version.org.wildfly.arquillian>
                 <jboss.home>${project.build.directory}/wildfly-${version.wildfly}</jboss.home>
             </properties>
