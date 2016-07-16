@@ -77,8 +77,6 @@
         <maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
         <doxia-module-markdown.version>1.7</doxia-module-markdown.version>
         <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
-        <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
-        <coveralls-maven-plugin.version>4.1.0</coveralls-maven-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <netty-all.version>4.0.36.Final</netty-all.version>
         <maven-scm-publish-plugin.version>1.1</maven-scm-publish-plugin.version>
@@ -87,6 +85,7 @@
         <maven-assembly-plugin.version>2.6</maven-assembly-plugin.version>
         <maven-scm-provider-gitexe.version>1.9</maven-scm-provider-gitexe.version>
         <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
+        <maven.jacoco.version>0.7.5.201505241946</maven.jacoco.version>
     </properties>
 
     <developers>
@@ -169,22 +168,6 @@
             </plugin>
 
             <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>${coveralls-maven-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>${cobertura-maven-plugin.version}</version>
-                <configuration>
-                    <format>xml</format>
-                    <maxmem>256m</maxmem>
-                    <aggregate>true</aggregate>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>${site-plugin.version}</version>
@@ -225,6 +208,25 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven.jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

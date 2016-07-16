@@ -43,13 +43,6 @@ stop:
 	rm -f *.aof
 	rm -f *.rdb
 
-
-test-coveralls:
-	make start
-	sleep 2
-	mvn -B -Dtest.withRedis=true clean compile cobertura:cobertura coveralls:report
-	make stop
-
 test:
 	make start
 	sleep 2

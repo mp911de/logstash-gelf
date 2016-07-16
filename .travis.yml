@@ -1,22 +1,29 @@
 language: java
 install: make travis-install
-script: make test-coveralls
+script: make test
 sudo: required
 dist: trusty
 group: edge
+
 env:
   - MAVEN_SKIP_RC=true
+
 cache:
   directories:
     - '$HOME/.m2/repository'
+
 jdk:
   - oraclejdk9
   - oraclejdk8
   - oraclejdk7
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
 matrix:
   allow_failures:
      - jdk: oraclejdk9
+
 notifications:
   webhooks:
     urls:
