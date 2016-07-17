@@ -2,10 +2,12 @@ package biz.paluch.logging.gelf.log4j;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assume.assumeTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import biz.paluch.logging.gelf.Log4jUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -65,6 +67,8 @@ public class GelfLogAppenderPropertiesDynamicMdcTest {
     @Test
     public void testWithMdcPrefix() throws Exception {
 
+        assumeTrue(Log4jUtil.isLog4jMDCAvailable());
+
         Logger logger = Logger.getLogger(getClass());
         MDC.put(MDC_MY_MDC, VALUE_1);
         MDC.put(MY_MDC_WITH_SUFFIX1, VALUE_2);
@@ -83,6 +87,8 @@ public class GelfLogAppenderPropertiesDynamicMdcTest {
 
     @Test
     public void testWithMdcRegex() throws Exception {
+
+        assumeTrue(Log4jUtil.isLog4jMDCAvailable());
 
         Logger logger = Logger.getLogger(getClass());
         MDC.put(SOME_FIELD, "included");

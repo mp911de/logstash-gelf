@@ -1,13 +1,11 @@
 package biz.paluch.logging.gelf.log4j;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
+import static org.junit.Assume.assumeTrue;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -115,21 +113,25 @@ public abstract class AbstractGelfLogAppenderTest {
 
         assertEquals("fieldValue1", gelfMessage.getField("fieldName1"));
         assertEquals("fieldValue2", gelfMessage.getField("fieldName2"));
-        assertEquals("a value", gelfMessage.getField("mdcField1"));
+
+        if(Log4jUtil.isLog4jMDCAvailable()) {
+            assertEquals("a value", gelfMessage.getField("mdcField1"));
+            assertEquals("a value", gelfMessage.getField("mdcField1"));
+            assertNull(gelfMessage.getField("mdcField2"));
+
+            assertNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION));
+            assertNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
+        }
         assertNotNull(gelfMessage.getField(LogMessageField.NamedLogField.SourceLineNumber.name()));
         assertEquals("testFields", gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name()));
         assertEquals(AbstractGelfLogAppenderTest.class.getName(),
                 gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name()));
-        assertEquals("a value", gelfMessage.getField("mdcField1"));
-        assertNull(gelfMessage.getField("mdcField2"));
-
-        assertNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION));
-        assertNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
-
     }
 
     @Test
     public void testProfiling() throws Exception {
+
+        assumeTrue(Log4jUtil.isLog4jMDCAvailable());
 
         Logger logger = Logger.getLogger(getClass());
         MDC.put(GelfUtil.MDC_REQUEST_START_MS, "" + System.currentTimeMillis());
@@ -141,11 +143,12 @@ public abstract class AbstractGelfLogAppenderTest {
 
         assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION));
         assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
-
     }
 
     @Test
     public void testLongProfiling() throws Exception {
+
+        assumeTrue(Log4jUtil.isLog4jMDCAvailable());
 
         Logger logger = Logger.getLogger(getClass());
         MDC.put(GelfUtil.MDC_REQUEST_START_MS, "" + (System.currentTimeMillis() - 2000));
@@ -157,11 +160,12 @@ public abstract class AbstractGelfLogAppenderTest {
 
         assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION));
         assertNotNull(gelfMessage.getField(GelfUtil.MDC_REQUEST_END));
-
     }
 
     @Test
     public void testProfilingWrongStart() throws Exception {
+
+        assumeTrue(Log4jUtil.isLog4jMDCAvailable());
 
         Logger logger = Logger.getLogger(getClass());
         MDC.put(GelfUtil.MDC_REQUEST_START_MS, "");

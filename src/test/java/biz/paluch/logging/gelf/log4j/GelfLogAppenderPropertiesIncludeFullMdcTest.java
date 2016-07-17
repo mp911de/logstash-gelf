@@ -1,6 +1,7 @@
 package biz.paluch.logging.gelf.log4j;
 
 import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.Log4jUtil;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * @author Mark Paluch
@@ -29,6 +31,9 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
 
     @Before
     public void before() throws Exception {
+
+        assumeTrue(Log4jUtil.isLog4jMDCAvailable());
+
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();
         PropertyConfigurator.configure(getClass().getResource("/log4j/log4j-test-with-includefullmdc.properties"));

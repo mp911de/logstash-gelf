@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Map;
 
-import biz.paluch.logging.gelf.JsonUtil;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
@@ -16,6 +15,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import biz.paluch.logging.gelf.JsonUtil;
+import biz.paluch.logging.gelf.Log4jUtil;
 import biz.paluch.logging.gelf.LogMessageField;
 
 /**
@@ -94,7 +95,11 @@ public class GelfLayoutTest {
         assertEquals("test1", message.get("short_message"));
         assertEquals("ndc message", message.get("NDC"));
         assertEquals("fieldValue1", message.get("fieldName1"));
-        assertEquals("mdcValue1", message.get("mdcField1"));
+
+        if (Log4jUtil.isLog4jMDCAvailable()) {
+            assertEquals("mdcValue1", message.get("mdcField1"));
+        }
+
         assertEquals("test", message.get("facility"));
         assertEquals("biz.paluch.logging.gelf.log4j.configured", message.get("LoggerName"));
         assertNull(message.get("Thread"));
