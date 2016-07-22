@@ -19,8 +19,8 @@ Controlling lookup order
 -------------------------
 You can provide a system property, `logstash-gelf.resolutionOrder` to control the lookup order.
  
-* Use `localhost,network` for: First inspect the local host name, then try to get the host name from network devices. 
-* Use `network,localhost` for: First inspect the network devices to retrieve a host name, then try to get the host name from the local host.
+* Use `localhost,network` for: First inspect the localhost name, then try to get the host name from network devices. 
+* Use `network,localhost` for: First inspect the network devices to retrieve a hos name, then try to get the hostname from the localhost (default).
 
 Bypassing Hostname-Lookup
 -------------------------
