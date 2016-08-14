@@ -1,20 +1,18 @@
 package biz.paluch.logging.gelf;
 
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.StackTraceFilter;
-import static biz.paluch.logging.gelf.GelfMessageBuilder.*;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.HostAndPortProvider;
+import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.RuntimeContainerProperties;
+import biz.paluch.logging.StackTraceFilter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.HostAndPortProvider;
+import biz.paluch.logging.gelf.intern.PoolingGelfMessageBuilder;
 
 /**
  * Creates {@link GelfMessage} based on various {@link LogEvent}. A {@link LogEvent} encapsulates log-framework specifics and
@@ -24,6 +22,10 @@ import java.util.Map;
  * @since 26.09.13 15:05
  */
 public class GelfMessageAssembler implements HostAndPortProvider {
+
+    public final static String PROPERTY_USE_POOLING = "logstash-gelf.message.pooling";
+    private final static boolean USE_POOLING = Boolean
+            .valueOf(RuntimeContainerProperties.getProperty(PROPERTY_USE_POOLING, "true"));
 
     private static final int MAX_SHORT_MESSAGE_LENGTH = 250;
     private static final int MAX_PORT_NUMBER = 65535;
@@ -45,6 +47,19 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
 
     private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSSS";
+
+    private boolean usePooling = USE_POOLING;
+
+    private ThreadLocal<PoolingGelfMessageBuilder> builders = new ThreadLocal<PoolingGelfMessageBuilder>() {
+
+        @Override
+        protected PoolingGelfMessageBuilder initialValue() {
+            return PoolingGelfMessageBuilder.newInstance();
+        }
+    };
+
+    public GelfMessageAssembler() {
+    }
 
     /**
      * Initialize the {@link GelfMessageAssembler} from a property provider.
@@ -93,14 +108,14 @@ public class GelfMessageAssembler implements HostAndPortProvider {
      */
     public GelfMessage createGelfMessage(LogEvent logEvent) {
 
-        GelfMessageBuilder builder = newInstance();
+        GelfMessageBuilder builder = usePooling ? builders.get().recycle() : newInstance();
 
-		Throwable throwable = logEvent.getThrowable();
+        Throwable throwable = logEvent.getThrowable();
         String message = logEvent.getMessage();
 
-		if(GelfMessage.isEmpty(message) && throwable != null) {
-			message = throwable.toString();
-		}
+        if (GelfMessage.isEmpty(message) && throwable != null) {
+            message = throwable.toString();
+        }
 
         String shortMessage = message;
         if (message.length() > MAX_SHORT_MESSAGE_LENGTH) {
@@ -175,13 +190,13 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     }
 
     private void addStackTrace(Throwable thrown, GelfMessageBuilder builder) {
-		if (filterStackTrace) {
-			builder.withField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
-		} else {
-			final StringWriter sw = new StringWriter();
-			thrown.printStackTrace(new PrintWriter(sw));
-			builder.withField(FIELD_STACK_TRACE, sw.toString());
-		}
+        if (filterStackTrace) {
+            builder.withField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
+        } else {
+            final StringWriter sw = new StringWriter();
+            thrown.printStackTrace(new PrintWriter(sw));
+            builder.withField(FIELD_STACK_TRACE, sw.toString());
+        }
     }
 
     private void setupStaticFields(PropertyProvider propertyProvider) {
@@ -304,8 +319,8 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     public void setMaximumMessageSize(int maximumMessageSize) {
 
         if (maximumMessageSize > MAX_MESSAGE_SIZE || maximumMessageSize < 1) {
-            throw new IllegalArgumentException("Invalid maximum message size: " + maximumMessageSize + ", supported range: 1-"
-                    + MAX_MESSAGE_SIZE);
+            throw new IllegalArgumentException(
+                    "Invalid maximum message size: " + maximumMessageSize + ", supported range: 1-" + MAX_MESSAGE_SIZE);
         }
 
         this.maximumMessageSize = maximumMessageSize;

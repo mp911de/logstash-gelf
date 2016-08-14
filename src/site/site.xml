@@ -30,6 +30,7 @@
             <item name="Syslog Level Mapping" href="syslog-level-mapping.html"/>
             <item name="Stack Trace Filter" href="stack-trace-filter.html"/>
             <item name="TCP Transport" href="tcp.html" />
+            <item name="UDP Transport" href="udp.html" />
             <item name="Redis Transport" href="redis.html" />
             <item name="HTTP Transport" href="http.html" />
             <item name="Datenpumpe" href="datenpumpe.html" />

@@ -19,13 +19,40 @@ public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements
 
     private final Object connectLock = new Object();
 
+    private final ThreadLocal<ByteBuffer> writeBuffers = new ThreadLocal<ByteBuffer>() {
+        @Override
+        protected ByteBuffer initialValue() {
+            return ByteBuffer.allocateDirect(BUFFER_SIZE);
+        }
+    };
+
+    private final ThreadLocal<ByteBuffer> tempBuffers = new ThreadLocal<ByteBuffer>() {
+        @Override
+        protected ByteBuffer initialValue() {
+            return ByteBuffer.allocateDirect(BUFFER_SIZE);
+        }
+    };
+
     public GelfUDPSender(String host, int port, ErrorReporter errorReporter) throws IOException {
         super(errorReporter, host, port);
         connect();
     }
 
     public boolean sendMessage(GelfMessage message) {
-        return sendDatagrams(message.toUDPBuffers());
+
+        if (BUFFER_SIZE == 0) {
+            return sendDatagrams(message.toUDPBuffers());
+        }
+
+        return sendDatagrams(message.toUDPBuffers(getWriteBuffer(), getTempBuffer()));
+    }
+
+    protected ByteBuffer getWriteBuffer() {
+        return (ByteBuffer) writeBuffers.get().clear();
+    }
+
+    protected ByteBuffer getTempBuffer() {
+        return (ByteBuffer) tempBuffers.get().clear();
     }
 
     private boolean sendDatagrams(ByteBuffer[] bytesList) {

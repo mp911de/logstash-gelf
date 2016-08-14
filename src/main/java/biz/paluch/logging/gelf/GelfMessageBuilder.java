@@ -13,19 +13,18 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  */
 public class GelfMessageBuilder {
 
-    private String version = GelfMessage.GELF_VERSION;
-    private String host;
-    private String shortMessage;
-    private String fullMessage;
-    private long javaTimestamp;
-    private String level;
-    private String facility = GelfMessage.DEFAULT_FACILITY;
-    private Map<String, String> additonalFields = new HashMap<String, String>();
-    private int maximumMessageSize = GelfMessage.DEFAULT_MESSAGE_SIZE;
-    private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
+    protected String version = GelfMessage.GELF_VERSION;
+    protected String host;
+    protected String shortMessage;
+    protected String fullMessage;
+    protected long javaTimestamp;
+    protected String level;
+    protected String facility = GelfMessage.DEFAULT_FACILITY;
+    protected int maximumMessageSize = GelfMessage.DEFAULT_MESSAGE_SIZE;
+    protected Map<String, String> additionalFields = new HashMap<String, String>();
+    protected Map<String, String> additionalFieldTypes = new HashMap<String, String>();
 
-    private GelfMessageBuilder() {
-
+    protected GelfMessageBuilder() {
     }
 
     /**
@@ -128,11 +127,11 @@ public class GelfMessageBuilder {
     /**
      * Add additional fields.
      * 
-     * @param additonalFields the additonalFields
+     * @param additionalFields the additionalFields
      * @return GelfMessageBuilder
      */
-    public GelfMessageBuilder withFields(Map<String, String> additonalFields) {
-        this.additonalFields.putAll(additonalFields);
+    public GelfMessageBuilder withFields(Map<String, String> additionalFields) {
+        this.additionalFields.putAll(additionalFields);
         return this;
     }
 
@@ -144,7 +143,7 @@ public class GelfMessageBuilder {
      * @return GelfMessageBuilder
      */
     public GelfMessageBuilder withField(String key, String value) {
-        this.additonalFields.put(key, value);
+        this.additionalFields.put(key, value);
         return this;
     }
 
@@ -167,12 +166,11 @@ public class GelfMessageBuilder {
     public GelfMessage build() {
 
         GelfMessage gelfMessage = new GelfMessage(shortMessage, fullMessage, javaTimestamp, level);
-        gelfMessage.addFields(additonalFields);
+        gelfMessage.addFields(additionalFields);
         gelfMessage.setMaximumMessageSize(maximumMessageSize);
         gelfMessage.setVersion(version);
         gelfMessage.setHost(host);
         gelfMessage.setJavaTimestamp(javaTimestamp);
-        gelfMessage.setFacility(facility);
         gelfMessage.setFacility(facility);
         gelfMessage.setAdditionalFieldTypes(additionalFieldTypes);
 

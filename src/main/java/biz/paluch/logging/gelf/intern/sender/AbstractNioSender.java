@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
 import java.nio.channels.spi.AbstractSelectableChannel;
 
+import biz.paluch.logging.RuntimeContainerProperties;
 import biz.paluch.logging.gelf.intern.Closer;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 
@@ -14,6 +15,14 @@ import biz.paluch.logging.gelf.intern.ErrorReporter;
  * @author Mark Paluch
  */
 public abstract class AbstractNioSender<T extends AbstractSelectableChannel & ByteChannel> implements ErrorReporter {
+
+    /**
+     * Buffer size for transmit buffers. Defaults to 99 * 8192
+     */
+    public static final String PROPERTY_BUFFER_SIZE = "logstash-gelf.buffer.size";
+
+    protected final static int BUFFER_SIZE = Integer
+            .parseInt(RuntimeContainerProperties.getProperty(PROPERTY_BUFFER_SIZE, "" + (99 * 8192)));
 
     private T channel;
     private volatile boolean shutdown = false;

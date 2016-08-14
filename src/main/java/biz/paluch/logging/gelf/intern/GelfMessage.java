@@ -1,5 +1,8 @@
 package biz.paluch.logging.gelf.intern;
 
+import static biz.paluch.logging.gelf.intern.JsonWriter.writeKeyValueSeparator;
+import static biz.paluch.logging.gelf.intern.JsonWriter.writeMapEntry;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -10,8 +13,14 @@ import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 /**
+ * Represents a Gelf message. A Gelf message contains all required Fields according to the Gelf Spec.
+ *
+ * A {@link GelfMessage} can be converted to {@link #toJson()}, to {@link #toTCPBuffer()} and to {@link #toUDPBuffers()}. It
+ * also provides methods accepting {@link ByteBuffer} to reduce GC pressure.
+ *
  * @author https://github.com/t0xa/gelfj
  * @author Mark Paluch
+ * @link http://docs.graylog.org/en/2.0/pages/gelf.html
  */
 public class GelfMessage {
 
@@ -94,11 +103,27 @@ public class GelfMessage {
         this.level = level;
     }
 
+    /**
+     * Create a JSON representation for this {@link GelfMessage}. Additional fields are prefixed with underscore {@code _}.
+     *
+     * @return
+     */
+    public String toJson() {
+        return toJson("_");
+    }
+
+    /**
+     * Create a JSON representation for this {@link GelfMessage}. Additional fields are prefixed with
+     * {@code additionalFieldPrefix}.
+     * 
+     * @param additionalFieldPrefix must not be {@literal null}
+     * @return
+     */
     public String toJson(String additionalFieldPrefix) {
         return new String(toJsonByteArray(additionalFieldPrefix), Charsets.UTF8);
     }
 
-    public byte[] toJsonByteArray(String additionalFieldPrefix) {
+    private byte[] toJsonByteArray(String additionalFieldPrefix) {
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         toJson(OutputAccessor.from(buffer), additionalFieldPrefix);
@@ -106,13 +131,23 @@ public class GelfMessage {
         return buffer.toByteArray();
     }
 
-    protected void toJson(OutputAccessor out, String additionalFieldPrefix) {
+    /**
+     * Create a JSON representation for this {@link GelfMessage} and write it to the {@link ByteBuffer}. Additional fields are
+     * prefixed with {@code additionalFieldPrefix}.
+     * 
+     * @param byteBuffer must not be {@literal null}
+     * @param additionalFieldPrefix must not be {@literal null}
+     * @return
+     */
+    public void toJson(ByteBuffer byteBuffer, String additionalFieldPrefix) {
+        toJson(OutputAccessor.from(byteBuffer), additionalFieldPrefix);
+    }
 
-        boolean hasFields = false;
+    protected void toJson(OutputAccessor out, String additionalFieldPrefix) {
 
         JsonWriter.writeObjectStart(out);
 
-        hasFields = writeIfNotEmpty(out, hasFields, FIELD_HOST, getHost());
+        boolean hasFields = writeIfNotEmpty(out, false, FIELD_HOST, getHost());
 
         if (!isEmpty(shortMessage)) {
             hasFields = writeIfNotEmpty(out, hasFields, FIELD_SHORT_MESSAGE, getShortMessage());
@@ -164,7 +199,10 @@ public class GelfMessage {
         JsonWriter.writeObjectEnd(out);
     }
 
-    private boolean writeIfNotEmpty(OutputAccessor out, boolean hasFields, String field, Object value) {
+    /**
+     * Write a Value to JSON if the value is not empty.
+     */
+    private static boolean writeIfNotEmpty(OutputAccessor out, boolean hasFields, String field, Object value) {
 
         if (value == null) {
             return hasFields;
@@ -172,36 +210,36 @@ public class GelfMessage {
 
         if (value instanceof String) {
 
-            if (isEmpty((String) value)) {
+            if (GelfMessage.isEmpty((String) value)) {
                 return hasFields;
             }
 
             if (hasFields) {
-                JsonWriter.writeKeyValueSeparator(out);
+                writeKeyValueSeparator(out);
             }
 
-            JsonWriter.writeMapEntry(out, field, value);
+            writeMapEntry(out, field, value);
 
             return true;
         }
 
         if (hasFields) {
-            JsonWriter.writeKeyValueSeparator(out);
+            writeKeyValueSeparator(out);
         }
 
-        JsonWriter.writeMapEntry(out, field, value);
+        writeMapEntry(out, field, value);
 
         return true;
     }
 
     /**
      * Get the field value as requested data type.
-     * 
+     *
      * @param value the value as string
      * @param fieldType see field types
      * @return the field value in the appropriate data type or {@literal null}.
      */
-    protected Object getAdditionalFieldValue(String value, String fieldType) {
+    private Object getAdditionalFieldValue(String value, String fieldType) {
 
         Object result = null;
         if (fieldType.equalsIgnoreCase(FIELD_TYPE_DISCOVER)) {
@@ -246,27 +284,49 @@ public class GelfMessage {
         return result;
     }
 
-    public String toJson() {
-        return toJson("_");
+    public ByteBuffer[] toUDPBuffers() {
+
+        byte[] messageBytes = gzipMessage(toJsonByteArray("_"));
+
+        if (messageBytes.length > maximumMessageSize) {
+            // calculate the length of the datagrams array
+            int datagrams_length = messageBytes.length / maximumMessageSize;
+            // In case of a remainder, due to the integer division, add a extra datagram
+            if (messageBytes.length % maximumMessageSize != 0) {
+                datagrams_length++;
+            }
+
+            ByteBuffer targetBuffer = ByteBuffer.allocate(messageBytes.length + (datagrams_length * 12));
+
+            return sliceDatagrams(ByteBuffer.wrap(messageBytes), datagrams_length, targetBuffer);
+        }
+
+        ByteBuffer[] datagrams = new ByteBuffer[1];
+        datagrams[0] = ByteBuffer.allocate(messageBytes.length);
+        datagrams[0].put(messageBytes);
+        datagrams[0].flip();
+        return datagrams;
     }
 
-    public ByteBuffer[] toUDPBuffers() {
-        byte[] messageBytes = gzipMessage(toJsonByteArray("_"));
+    public ByteBuffer[] toUDPBuffers(ByteBuffer buffer, ByteBuffer tempBuffer) {
+
+        tempBuffer.put(gzipMessage(toJsonByteArray("_")));
+
         // calculate the length of the datagrams array
-        int diagrams_length = messageBytes.length / maximumMessageSize;
-        // In case of a remainder, due to the integer division, add a extra datagram
-        if (messageBytes.length % maximumMessageSize != 0) {
-            diagrams_length++;
+
+        if (tempBuffer.position() > maximumMessageSize) {
+
+            int diagrams_length = tempBuffer.position() / maximumMessageSize;
+            // In case of a remainder, due to the integer division, add a extra datagram
+            if (tempBuffer.position() % maximumMessageSize != 0) {
+                diagrams_length++;
+            }
+
+            buffer.clear();
+            return sliceDatagrams((ByteBuffer) tempBuffer.flip(), diagrams_length, buffer);
         }
-        ByteBuffer[] datagrams = new ByteBuffer[diagrams_length];
-        if (messageBytes.length > maximumMessageSize) {
-            sliceDatagrams(messageBytes, datagrams);
-        } else {
-            datagrams[0] = ByteBuffer.allocate(messageBytes.length);
-            datagrams[0].put(messageBytes);
-            datagrams[0].flip();
-        }
-        return datagrams;
+
+        return new ByteBuffer[] { (ByteBuffer) tempBuffer.flip() };
     }
 
     public ByteBuffer toTCPBuffer() {
@@ -283,26 +343,44 @@ public class GelfMessage {
         return buffer;
     }
 
-    private void sliceDatagrams(byte[] messageBytes, ByteBuffer[] datagrams) {
-        int messageLength = messageBytes.length;
-        byte[] messageId = ByteBuffer.allocate(8).putInt(getCurrentMillis()) // 4 least-significant-bytes of the time in millis
-                .put(hostBytes) // 4 least-significant-bytes of the host
-                .array();
+    public ByteBuffer toTCPBuffer(ByteBuffer buffer) {
+        // Do not use GZIP, as the headers will contain \0 bytes
+        // graylog2-server uses \0 as a delimiter for TCP frames
+        // see: https://github.com/Graylog2/graylog2-server/issues/127
+
+        toJson(buffer, "_");
+
+        buffer.put((byte) '\0');
+        buffer.flip();
+        return buffer;
+    }
+
+    protected ByteBuffer[] sliceDatagrams(ByteBuffer source, int datagrams, ByteBuffer target) {
+        int messageLength = source.limit();
+
+        int millis = getCurrentMillis();
 
         // Reuse length of datagrams array since this is supposed to be the correct number of datagrams
-        int num = datagrams.length;
-        for (int idx = 0; idx < num; idx++) {
-            byte[] header = concatByteArray(GELF_CHUNKED_ID, concatByteArray(messageId, new byte[] { (byte) idx, (byte) num }));
+        ByteBuffer[] slices = new ByteBuffer[datagrams];
+        for (int idx = 0; idx < datagrams; idx++) {
+
+            int start = target.position();
+            target.put(GELF_CHUNKED_ID).putInt(millis).put(hostBytes).put((byte) idx).put((byte) datagrams);
+
             int from = idx * maximumMessageSize;
             int to = from + maximumMessageSize;
             if (to >= messageLength) {
                 to = messageLength;
             }
-            byte[] datagram = concatByteArray(header, Arrays.copyOfRange(messageBytes, from, to));
-            datagrams[idx] = ByteBuffer.allocate(datagram.length);
-            datagrams[idx].put(datagram);
-            datagrams[idx].flip();
+
+            ByteBuffer duplicate = (ByteBuffer) source.duplicate().limit(to).position(from);
+            target.put(duplicate);
+            int end = target.position();
+
+            slices[idx] = (ByteBuffer) target.duplicate().limit(end).position(start);
         }
+
+        return slices;
     }
 
     public int getCurrentMillis() {
@@ -403,7 +481,7 @@ public class GelfMessage {
     }
 
     public void setAdditionalFieldTypes(Map<String, String> additionalFieldTypes) {
-        this.additionalFieldTypes = additionalFieldTypes;
+        this.additionalFieldTypes.putAll(additionalFieldTypes);
     }
 
     /**
@@ -417,6 +495,7 @@ public class GelfMessage {
         if (fields == null) {
             throw new IllegalArgumentException("fields is null");
         }
+
         getAdditonalFields().putAll(fields);
         return this;
     }
@@ -447,12 +526,6 @@ public class GelfMessage {
 
     public static boolean isEmpty(String str) {
         return str == null || "".equals(str.trim());
-    }
-
-    private byte[] concatByteArray(byte[] first, byte[] second) {
-        byte[] result = Arrays.copyOf(first, first.length + second.length);
-        System.arraycopy(second, 0, result, first.length, second.length);
-        return result;
     }
 
     public int getMaximumMessageSize() {
@@ -526,5 +599,4 @@ public class GelfMessage {
         result = 31 * result + maximumMessageSize;
         return result;
     }
-
 }

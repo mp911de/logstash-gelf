@@ -3,6 +3,7 @@ package biz.paluch.logging.gelf.intern.sender;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +29,13 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
     private final int deliveryAttempts;
 
     private final Object connectLock = new Object();
+
+    private final ThreadLocal<ByteBuffer> writeBuffers = new ThreadLocal<ByteBuffer>() {
+        @Override
+        protected ByteBuffer initialValue() {
+            return ByteBuffer.allocateDirect(BUFFER_SIZE);
+        }
+    };
 
     /**
      * 
@@ -97,7 +105,11 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
                     }
                 }
 
-                channel().write(message.toTCPBuffer());
+                if (BUFFER_SIZE == 0) {
+                    channel().write(message.toTCPBuffer());
+                } else {
+                    channel().write(message.toTCPBuffer(getByteBuffer()));
+                }
 
                 return true;
             } catch (IOException e) {
@@ -112,6 +124,12 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
         }
 
         return false;
+    }
+
+    protected ByteBuffer getByteBuffer() {
+        ByteBuffer byteBuffer = writeBuffers.get();
+        byteBuffer.clear();
+        return byteBuffer;
     }
 
     protected void connect() throws IOException {

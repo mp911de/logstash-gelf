@@ -1,15 +1,27 @@
 package biz.paluch.logging.gelf.intern;
 
-import static biz.paluch.logging.gelf.GelfMessageBuilder.*;
-import static org.hamcrest.CoreMatchers.*;
+import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
+import org.jboss.as.protocol.StreamUtils;
 import org.junit.Test;
 
+import biz.paluch.logging.StackTraceFilter;
 import biz.paluch.logging.gelf.GelfMessageBuilder;
 
 public class GelfMessageTest {
@@ -29,6 +41,13 @@ public class GelfMessageTest {
             put("doubleNoDecimals", "2.0");
             put("doubleWithDecimals", "2.1");
             put("int", "2");
+            put("exception1", StackTraceFilter.getFilteredStackTrace(new IOException(new Exception(new Exception()))));
+            put("exception2",
+                    StackTraceFilter.getFilteredStackTrace(new IllegalStateException(new Exception(new Exception()))));
+            put("exception3", StackTraceFilter
+                    .getFilteredStackTrace(new IllegalArgumentException(new Exception(new IllegalArgumentException()))));
+            put("exception4", StackTraceFilter.getFilteredStackTrace(new Exception(new Exception(new Exception()))));
+            put("exception5", StackTraceFilter.getFilteredStackTrace(new Exception(new Exception(new ConnectException()))));
         }
     };
 
@@ -65,6 +84,118 @@ public class GelfMessageTest {
         assertThat(gelfMessage.toJson(), containsString("\"_int\":2"));
         assertThat(gelfMessage.toJson(), containsString("\"_doubleNoDecimals\":2.0"));
         assertThat(gelfMessage.toJson(), containsString("\"_doubleWithDecimals\":2.1"));
+    }
+
+    @Test
+    public void testEncoded() throws Exception {
+
+        GelfMessage gelfMessage = createGelfMessage();
+
+        String message = gelfMessage.toJson("_");
+
+        ByteBuffer buffer = ByteBuffer.allocate(8192);
+        gelfMessage.toJson(buffer, "_");
+
+        String string = toString(buffer);
+
+        assertEquals(message, string);
+    }
+
+    @Test
+    public void testTcp() throws Exception {
+
+        GelfMessage gelfMessage = createGelfMessage();
+
+        ByteBuffer buffer = ByteBuffer.allocateDirect(8192);
+
+        ByteBuffer oldWay = gelfMessage.toTCPBuffer();
+        ByteBuffer newWay = gelfMessage.toTCPBuffer(buffer);
+
+        assertEquals(oldWay.remaining(), newWay.remaining());
+
+        byte[] oldBytes = new byte[oldWay.remaining()];
+        byte[] newBytes = new byte[newWay.remaining()];
+
+        oldWay.get(oldBytes);
+        newWay.get(newBytes);
+
+        assertTrue(Arrays.equals(newBytes, oldBytes));
+    }
+
+    @Test
+    public void testUdp() throws Exception {
+
+        GelfMessage gelfMessage = createGelfMessage();
+
+        ByteBuffer buffer = ByteBuffer.allocateDirect(8192);
+        ByteBuffer buffer2 = ByteBuffer.allocateDirect(8192);
+
+        ByteBuffer[] oldWay = gelfMessage.toUDPBuffers();
+        ByteBuffer[] newWay = gelfMessage.toUDPBuffers(buffer, buffer2);
+
+        assertEquals(oldWay.length, newWay.length);
+
+        for (int i = 0; i < oldWay.length; i++) {
+
+            ByteBuffer oldChunk = oldWay[i];
+            ByteBuffer newChunk = newWay[i];
+
+            byte[] oldBytes = new byte[oldChunk.remaining()];
+            byte[] newBytes = new byte[newChunk.remaining()];
+
+            oldChunk.get(oldBytes);
+            newChunk.get(newBytes);
+
+            GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(newBytes));
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            StreamUtils.copyStream(gzipInputStream, baos);
+            assertTrue(Arrays.equals(newBytes, oldBytes));
+        }
+    }
+
+    @Test
+    public void testUdpChunked() throws Exception {
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 20000; i++) {
+            int charId = (int) (Math.random() * Character.MAX_CODE_POINT);
+            builder.append(charId);
+        }
+
+        GelfMessage gelfMessage = createGelfMessage();
+        gelfMessage.setFullMessage(builder.toString());
+
+        ByteBuffer buffer = ByteBuffer.allocateDirect(1200000);
+        ByteBuffer tempBuffer = ByteBuffer.allocateDirect(60000);
+
+        ByteBuffer[] oldWay = gelfMessage.toUDPBuffers();
+        ByteBuffer[] newWay = gelfMessage.toUDPBuffers(buffer, tempBuffer);
+
+        assertEquals(oldWay.length, newWay.length);
+
+        for (int i = 0; i < oldWay.length; i++) {
+
+            ByteBuffer oldChunk = oldWay[i];
+            ByteBuffer newChunk = newWay[i];
+
+            byte[] oldBytes = new byte[oldChunk.remaining()];
+            byte[] newBytes = new byte[newChunk.remaining()];
+
+            oldChunk.get(oldBytes);
+            newChunk.get(newBytes);
+
+            assertTrue(Arrays.equals(newBytes, oldBytes));
+        }
+    }
+
+    protected String toString(ByteBuffer allocate) {
+        if (allocate.hasArray()) {
+            return new String(allocate.array(), 0, allocate.arrayOffset() + allocate.position());
+        } else {
+            final byte[] b = new byte[allocate.remaining()];
+            allocate.duplicate().get(b);
+            return new String(b);
+        }
     }
 
     @Test
@@ -126,7 +257,13 @@ public class GelfMessageTest {
     }
 
     private GelfMessage createGelfMessage() {
-        GelfMessage gelfMessage = new GelfMessage();
+
+        GelfMessage gelfMessage = new GelfMessage() {
+            @Override
+            public int getCurrentMillis() {
+                return 1000;
+            }
+        };
 
         gelfMessage.setFacility(FACILITY);
         gelfMessage.setVersion(VERSION);
