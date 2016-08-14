@@ -19,25 +19,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import biz.paluch.logging.gelf.NettyLocalHTTPServer;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.core.joran.spi.JoranException;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Aleksandar Stojadinovic
  */
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class GelfHTTPSenderTest {
 
-    public static final GelfMessage GELF_MESSAGE = new GelfMessage("shortMessage", "fullMessage", 12121L, "WARNING");
+    private static final GelfMessage GELF_MESSAGE = new GelfMessage("shortMessage", "fullMessage", 12121L, "WARNING");
     private NettyLocalHTTPServer server;
     private GelfHTTPSender sender;
 
@@ -48,9 +44,19 @@ public class GelfHTTPSenderTest {
     public void setUp() throws Exception {
         server = new NettyLocalHTTPServer();
         server.run();
-        
-        String uri = "http://127.0.0.1:19393";
-        sender = new GelfHTTPSender(new URL(uri), 1000, 1000, errorReporter);
+
+        sender = new GelfHTTPSender(new URL("http://127.0.0.1:19393"), 1000, 1000, new ErrorReporter() {
+
+            @Override
+            public void reportError(String message, Exception e) {
+
+                System.out.println(message);
+
+                if (e != null) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @After
@@ -64,7 +70,7 @@ public class GelfHTTPSenderTest {
 
         server.setReturnStatus(HttpResponseStatus.ACCEPTED);
 
-        GelfMessage gelfMessage = new GelfMessage("shortMessage", "fullMessage", 12121l, "WARNING");
+        GelfMessage gelfMessage = new GelfMessage("shortMessage", "fullMessage", 12121L, "WARNING");
 
         boolean success = sender.sendMessage(gelfMessage);
 
