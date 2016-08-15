@@ -111,7 +111,13 @@ public class GelfLayoutTest {
     }
 
     public Map<String, Object> getMessage() {
-        return (Map) JsonUtil.parseToMap(TestAppender.getLoggedLines()[0]);
+        String s = TestAppender.getLoggedLines()[0];
+        try {
+            return (Map) JsonUtil.parseToMap(s);
+        } catch (RuntimeException e) {
+            System.out.println("Trying to parse: " + s);
+            throw e;
+        }
     }
 
     private Map<String, Object> parseToJSONObject(String value) {
