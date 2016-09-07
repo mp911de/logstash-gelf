@@ -73,6 +73,10 @@ biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFieldTypes=fieldName1=Strin
 biz.paluch.logging.gelf.jul.GelfLogHandler.level=INFO
 ```
 
+Glassfish/Payara configuration
+-------------
+You need to install the library with its dependencies (see download above) in Glassfish. Place it below the `$GFHOME/glassfish/domains/$YOURDOMAIN/lib/ext/` path, then add the [Java Util Logging](#jul) to your `logging.properties` file.
+
 
 <a name="log4j"/>
 log4j GELF configuration
@@ -131,7 +135,7 @@ log4j.appender.gelf.IncludeFullMdc=true
     <param name="IncludeFullMdc" value="true" />
 </appender>
 ```
-    
+
 <a name="log4j2"/>
 log4j2 GELF configuration
 --------------

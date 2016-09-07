@@ -25,6 +25,9 @@ the params are exposed as individual fields prefixed with `MessageParam`.
 
 Please note: The logging Jar files need to be on the boot class path, else JUL won't load the handler. 
 
+Glassfish/Payara configuration
+-------------
+You need to install the library with its dependencies (see download above) in Glassfish/Payara. Place it below the `$GFHOME/glassfish/domains/$YOURDOMAIN/lib/ext/` path, then configure your `logging.properties` file.
 
 Java Util Logging Configuration
 --------------
@@ -58,4 +61,3 @@ Extended Properties:
     biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
     biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long
     biz.paluch.logging.gelf.jul.GelfLogHandler.level=INFO
-    
