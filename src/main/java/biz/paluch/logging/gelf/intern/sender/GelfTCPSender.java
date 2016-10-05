@@ -29,6 +29,7 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
     private final int deliveryAttempts;
 
     private final Object connectLock = new Object();
+    private final Object writeLock = new Object();
 
     private final ThreadLocal<ByteBuffer> writeBuffers = new ThreadLocal<ByteBuffer>() {
         @Override
@@ -95,26 +96,32 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
 
         IOException exception = null;
 
-        for (int i = 0; i < deliveryAttempts; i++) {
-            try {
+        synchronized (writeLock) {
+            for (int i = 0; i < deliveryAttempts; i++) {
+                try {
 
-                // (re)-connect if necessary
-                if (!isConnected()) {
-                    synchronized (connectLock) {
-                        connect();
+                    // (re)-connect if necessary
+                    if (!isConnected()) {
+                        synchronized (connectLock) {
+                            connect();
+                        }
                     }
-                }
 
-                if (BUFFER_SIZE == 0) {
-                    channel().write(message.toTCPBuffer());
-                } else {
-                    channel().write(message.toTCPBuffer(getByteBuffer()));
-                }
+                    ByteBuffer byteBuffer;
+                    if (BUFFER_SIZE == 0) {
+                        byteBuffer = message.toTCPBuffer();
+                    } else {
+                        byteBuffer = message.toTCPBuffer(getByteBuffer());
+                    }
+                    while(byteBuffer.hasRemaining()) {
+                        channel().write(byteBuffer);
+                    }
 
-                return true;
-            } catch (IOException e) {
-                Closer.close(channel());
-                exception = e;
+                    return true;
+                } catch (IOException e) {
+                    Closer.close(channel());
+                    exception = e;
+                }
             }
         }
 
