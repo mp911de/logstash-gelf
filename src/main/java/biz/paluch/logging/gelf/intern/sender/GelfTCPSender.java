@@ -3,6 +3,7 @@ package biz.paluch.logging.gelf.intern.sender;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +29,7 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
     private final boolean keepAlive;
     private final int deliveryAttempts;
 
-    private final Object connectLock = new Object();
+    private final Object ioLock = new Object();
 
     private final ThreadLocal<ByteBuffer> writeBuffers = new ThreadLocal<ByteBuffer>() {
         @Override
@@ -75,7 +76,7 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
         this.setChannel(createSocketChannel(readTimeoutMs, keepAlive));
     }
 
-    private SocketChannel createSocketChannel(int readTimeoutMs, boolean keepAlive) throws IOException {
+    protected SocketChannel createSocketChannel(int readTimeoutMs, boolean keepAlive) throws IOException {
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
         socketChannel.socket().setKeepAlive(keepAlive);
@@ -100,15 +101,26 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
 
                 // (re)-connect if necessary
                 if (!isConnected()) {
-                    synchronized (connectLock) {
+                    synchronized (ioLock) {
                         connect();
                     }
                 }
-
+                ByteBuffer buffer;
                 if (BUFFER_SIZE == 0) {
-                    channel().write(message.toTCPBuffer());
+                    buffer = message.toTCPBuffer();
                 } else {
-                    channel().write(message.toTCPBuffer(getByteBuffer()));
+                    buffer = message.toTCPBuffer(getByteBuffer());
+                }
+
+                synchronized (ioLock) {
+                    while (buffer.hasRemaining()) {
+                        int written = channel().write(buffer);
+                        if (written < 0) {
+                            // indicator the socket was closed
+                            Closer.close(channel());
+                            throw new SocketException("Cannot write buffer to channel");
+                        }
+                    }
                 }
 
                 return true;

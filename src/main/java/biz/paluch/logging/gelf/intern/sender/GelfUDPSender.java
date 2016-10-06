@@ -17,7 +17,7 @@ import biz.paluch.logging.gelf.intern.GelfSender;
  */
 public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements GelfSender {
 
-    private final Object connectLock = new Object();
+    private final Object ioLock = new Object();
 
     private final ThreadLocal<ByteBuffer> writeBuffers = new ThreadLocal<ByteBuffer>() {
         @Override
@@ -60,13 +60,18 @@ public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements
         try {
             // (re)-connect if necessary
             if (!isConnected()) {
-                synchronized (connectLock) {
+                synchronized (ioLock) {
                     connect();
                 }
             }
 
             for (ByteBuffer buffer : bytesList) {
-                channel().write(buffer);
+
+                synchronized (ioLock) {
+                    while (buffer.hasRemaining()) {
+                        channel().write(buffer);
+                    }
+                }
             }
         } catch (IOException e) {
             reportError(e.getMessage(), new IOException("Cannot send data to " + getHost() + ":" + getPort(), e));
@@ -99,7 +104,6 @@ public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements
         } catch (SocketException e) {
             reportError(e.getMessage(), e);
         }
-
     }
 
     @Override
