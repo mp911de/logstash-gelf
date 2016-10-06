@@ -1,6 +1,4 @@
 language: java
-install: make travis-install
-script: make test
 sudo: required
 dist: trusty
 group: edge
@@ -16,6 +14,12 @@ jdk:
   - oraclejdk9
   - oraclejdk8
   - oraclejdk7
+
+before_install:
+  - src/test/bash/create_certificates.sh
+
+install: make travis-install
+script: make test
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

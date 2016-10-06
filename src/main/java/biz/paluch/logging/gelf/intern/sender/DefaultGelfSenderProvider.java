@@ -3,10 +3,14 @@ package biz.paluch.logging.gelf.intern.sender;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
 
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
@@ -40,8 +44,36 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
             boolean keepAlive = UriParser.getString(params, GelfTCPSender.KEEPALIVE, false);
 
             String tcpGraylogHost = UriParser.getHost(uri);
+            SocketFactory socketFactory = SocketFactory.getDefault();
+
             return new GelfTCPSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
                     configuration.getErrorReporter());
+        }
+    };
+
+    private static final GelfSenderProducer tcpSslSenderFactory = new GelfSenderProducer() {
+
+        @Override
+        public GelfSender create(GelfSenderConfiguration configuration, String host, int port) throws IOException {
+
+            int defaultTimeoutMs = (int) TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS);
+
+            URI uri = URI.create(host);
+
+            Map<String, String> params = UriParser.parse(uri);
+            int connectionTimeMs = (int) UriParser.getTimeAsMs(params, GelfTCPSender.CONNECTION_TIMEOUT, defaultTimeoutMs);
+            int readTimeMs = (int) UriParser.getTimeAsMs(params, GelfTCPSender.READ_TIMEOUT, defaultTimeoutMs);
+            int deliveryAttempts = UriParser.getInt(params, GelfTCPSender.RETRIES, 1);
+            boolean keepAlive = UriParser.getString(params, GelfTCPSender.KEEPALIVE, false);
+
+            String tcpGraylogHost = UriParser.getHost(uri);
+
+            try {
+                return new GelfTCPSSLSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
+                        configuration.getErrorReporter(), SSLContext.getDefault());
+            } catch (NoSuchAlgorithmException e) {
+                throw new IllegalStateException(e);
+            }
         }
     };
 
@@ -79,6 +111,7 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
     static {
         Map<String, GelfSenderProducer> prefixToFactory = new HashMap<String, GelfSenderProducer>();
         prefixToFactory.put("tcp:", tcpSenderFactory);
+        prefixToFactory.put("ssl:", tcpSslSenderFactory);
         prefixToFactory.put("udp:", udpSenderFactory);
         prefixToFactory.put("http", httpSenderFactory);
 

@@ -113,15 +113,8 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
                 }
 
                 synchronized (ioLock) {
-                    while (buffer.hasRemaining()) {
-                        int written = channel().write(buffer);
-                        if (written < 0) {
-                            // indicator the socket was closed
-                            Closer.close(channel());
-                            throw new SocketException("Cannot write buffer to channel");
-                        }
-                    }
-                }
+					write(buffer);
+				}
 
                 return true;
             } catch (IOException e) {
@@ -138,16 +131,30 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
         return false;
     }
 
-    protected ByteBuffer getByteBuffer() {
+
+    protected void write(ByteBuffer buffer) throws IOException {
+
+    	while (buffer.hasRemaining()) {
+			int written = channel().write(buffer);
+
+			if (written < 0) {
+				// indicator the socket was closed
+				Closer.close(channel());
+				throw new SocketException("Cannot write buffer to channel");
+			}
+		}
+	}
+
+	protected ByteBuffer getByteBuffer() {
         ByteBuffer byteBuffer = writeBuffers.get();
         byteBuffer.clear();
         return byteBuffer;
     }
 
-    protected void connect() throws IOException {
+    protected boolean connect() throws IOException {
 
         if (isConnected()) {
-            return;
+            return false;
         }
 
         if (!channel().isOpen()) {
@@ -157,7 +164,7 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
 
         InetSocketAddress inetSocketAddress = new InetSocketAddress(getHost(), getPort());
         if (channel().connect(inetSocketAddress)) {
-            return;
+            return true;
         }
 
         long connectTimeoutLeft = TimeUnit.MILLISECONDS.toNanos(connectTimeoutMs);
@@ -178,7 +185,9 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
                 throw new ConnectException("Connection timed out. Cannot connect to " + inetSocketAddress + " within "
                         + TimeUnit.NANOSECONDS.toMillis(connectTimeoutLeft) + "ms");
             }
-        } catch (InterruptedException e) {
+
+			return connected;
+		} catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IOException("Connection interrupted", e);
         }

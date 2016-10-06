@@ -1,0 +1,258 @@
+package biz.paluch.logging.gelf.intern.sender;
+
+import java.io.IOException;
+import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLEngineResult;
+import javax.net.ssl.SSLSession;
+
+import biz.paluch.logging.gelf.intern.ErrorReporter;
+
+/**
+ * TCP with SSL {@link biz.paluch.logging.gelf.intern.GelfSender}.
+ * 
+ * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @since 1.11
+ */
+public class GelfTCPSSLSender extends GelfTCPSender {
+
+    private final SSLContext sslContext;
+    private final ThreadLocal<ByteBuffer> sslNetworkBuffers = new ThreadLocal<ByteBuffer>();
+	private final ThreadLocal<ByteBuffer> tempBuffers = new ThreadLocal<ByteBuffer>();
+
+	private volatile SSLEngine sslEngine;
+
+    private volatile SSLSession sslSession;
+
+    public GelfTCPSSLSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, int deliveryAttempts,
+            boolean keepAlive, ErrorReporter errorReporter, SSLContext sslContext) throws IOException {
+
+        super(host, port, connectTimeoutMs, readTimeoutMs, deliveryAttempts, keepAlive, errorReporter);
+
+        this.sslContext = sslContext;
+    }
+
+    @Override
+    protected boolean connect() throws IOException {
+
+		this.sslEngine = sslContext.createSSLEngine();
+		this.sslEngine.setUseClientMode(true);
+        this.sslSession = sslEngine.getSession();
+
+        if (super.connect()) {
+            // Begin handshake
+            sslEngine.beginHandshake();
+            doHandshake(channel(), sslEngine, ByteBuffer.allocate(sslSession.getPacketBufferSize()),
+                    ByteBuffer.allocate(sslSession.getPacketBufferSize()));
+        }
+        return false;
+    }
+
+    protected boolean isConnected() throws IOException {
+
+        if (channel() != null && channel().isOpen() && isConnected(channel())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    protected void write(ByteBuffer gelfBuffer) throws IOException {
+
+        while (gelfBuffer.hasRemaining()) {
+
+            read();
+
+            ByteBuffer myNetData = getNetworkBuffer();
+            // Generate SSL/TLS encoded data (handshake or application data)
+            gelfBuffer.mark();
+            SSLEngineResult res = sslEngine.wrap(gelfBuffer, myNetData);
+
+            // Process status of call
+            if (res.getStatus() == SSLEngineResult.Status.BUFFER_OVERFLOW) {
+                this.sslNetworkBuffers.set(enlargeBuffer(gelfBuffer, myNetData));
+                gelfBuffer.reset();
+            }
+
+            if (res.getStatus() == SSLEngineResult.Status.OK) {
+                myNetData.flip();
+
+                // Send SSL/TLS encoded data to peer
+                while (myNetData.hasRemaining()) {
+                    int written = channel().write(myNetData);
+                    if (written == -1) {
+                        throw new SocketException("Channel closed");
+                    }
+                }
+            }
+        }
+    }
+
+    private void read() throws IOException {
+
+        ByteBuffer myNetData = getNetworkBuffer();
+        ByteBuffer tempBuffer = getTempBuffer();
+
+        if (channel().read(myNetData) < 0) {
+            throw new SocketException("Channel closed");
+        }
+
+        // Process incoming handshaking data
+        myNetData.flip();
+        sslEngine.unwrap(myNetData, tempBuffer);
+    }
+
+    private ByteBuffer getNetworkBuffer() {
+        ByteBuffer networkBuffer = this.sslNetworkBuffers.get();
+        if (networkBuffer == null) {
+            this.sslNetworkBuffers.set(networkBuffer = ByteBuffer.allocateDirect(sslSession.getPacketBufferSize()));
+        }
+        networkBuffer.clear();
+        return networkBuffer;
+    }
+
+    private ByteBuffer getTempBuffer() {
+        ByteBuffer tempBuffer = this.tempBuffers.get();
+        if (tempBuffer == null) {
+            this.tempBuffers.set(tempBuffer = ByteBuffer.allocateDirect(sslSession.getApplicationBufferSize()));
+        }
+        tempBuffer.clear();
+        return tempBuffer;
+    }
+
+    private ByteBuffer enlargeBuffer(ByteBuffer src, ByteBuffer dst) {
+
+        // Could attempt to drain the dst buffer of any already obtained
+        // data, but we'll just increase it to the size needed.
+        ByteBuffer buffer = ByteBuffer.allocate(dst.capacity() + src.remaining());
+        dst.flip();
+        buffer.put(dst);
+        return buffer;
+
+    }
+
+    private void doHandshake(SocketChannel socketChannel, SSLEngine sslEngine, ByteBuffer myNetData, ByteBuffer peerNetData)
+            throws IOException {
+
+        // Create byte buffers to use for holding application data
+        int appBufferSize = sslEngine.getSession().getApplicationBufferSize();
+        ByteBuffer myAppData = ByteBuffer.allocate(appBufferSize);
+        ByteBuffer peerAppData = ByteBuffer.allocate(appBufferSize);
+
+        SSLEngineResult.HandshakeStatus hs = sslEngine.getHandshakeStatus();
+
+        // Process handshaking message
+        while (hs != SSLEngineResult.HandshakeStatus.FINISHED && hs != SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING) {
+
+            switch (hs) {
+
+                case NEED_UNWRAP:
+                    // Receive handshaking data from peer
+                    if (socketChannel.read(peerNetData) < 0) {
+                        throw new SocketException("Channel closed");
+                    }
+
+                    // Process incoming handshaking data
+                    peerNetData.flip();
+                    SSLEngineResult res = sslEngine.unwrap(peerNetData, peerAppData);
+                    peerNetData.compact();
+                    hs = res.getHandshakeStatus();
+
+                    // Check status
+                    switch (res.getStatus()) {
+                        case OK:
+                            // Handle OK status
+                            break;
+                        case BUFFER_OVERFLOW:
+                            peerAppData = enlargeBuffer(peerNetData, peerAppData);
+                            break;
+
+                        case BUFFER_UNDERFLOW:
+
+                            break;
+                    }
+                    break;
+
+                case NEED_WRAP:
+                    // Empty the local network packet buffer.
+                    myNetData.clear();
+
+                    // Generate handshaking data
+                    res = sslEngine.wrap(myAppData, myNetData);
+                    hs = res.getHandshakeStatus();
+
+                    // Check status
+                    switch (res.getStatus()) {
+                        case OK:
+                            myNetData.flip();
+
+                            // Send the handshaking data to peer
+                            while (myNetData.hasRemaining()) {
+                                if (socketChannel.write(myNetData) < 0) {
+                                    // Handle closed channel
+                                }
+                            }
+                            break;
+                        case BUFFER_OVERFLOW:
+                            myNetData = enlargeBuffer(myAppData, myNetData);
+                            break;
+
+                        case BUFFER_UNDERFLOW:
+                            break;
+                        case CLOSED:
+
+                            if (sslEngine.isOutboundDone()) {
+                                return;
+                            } else {
+                                sslEngine.closeOutbound();
+                                hs = sslEngine.getHandshakeStatus();
+                                break;
+                            }
+
+                        default:
+                            throw new IOException("Cannot wrap data: " + res.getStatus());
+
+                    }
+                    break;
+
+                case NEED_TASK:
+                    Runnable task;
+                    while ((task = sslEngine.getDelegatedTask()) != null) {
+                        task.run();
+                    }
+                    hs = sslEngine.getHandshakeStatus();
+                    break;
+
+                case FINISHED:
+                    return;
+            }
+        }
+    }
+
+    @Override
+    public void close() {
+
+        if (channel() != null) {
+
+            try {
+                closeSocketChannel();
+            } catch (IOException e) {
+                reportError(e.getMessage(), e);
+            }
+        }
+
+        super.close();
+    }
+
+    private void closeSocketChannel() throws IOException {
+
+        sslEngine.closeOutbound();
+        doHandshake(channel(), sslEngine, ByteBuffer.allocate(sslSession.getPacketBufferSize()),
+                ByteBuffer.allocate(sslSession.getPacketBufferSize()));
+    }
+}

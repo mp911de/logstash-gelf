@@ -3,15 +3,27 @@
 
 The TCP transport for logstash-gelf allows to configure TCP-specific options. Options are configured in a URI Query-String style:
 
+**Plaintext**
+
     tcp:hostname?readTimeout=10s&connectionTimeout=1000ms&deliveryAttempts=5&keepAlive=true
+
+**SSL**
+
+    ssl:hostname?readTimeout=10s&connectionTimeout=1000ms&deliveryAttempts=5&keepAlive=true
 
 ## Options
 
+* URI scheme specifies whether to use plaintext `tcp` or SSL `ssl`. 
 * `readTimeout` Socket Read-Timeout (SO_TIMEOUT). The unit can be specified as suffix (see below). A timeout of zero is interpreted as an infinite timeout. Defaults to `2s`. 
 * `connectionTimeout` Socket Connection-Timeout (SO_TIMEOUT). The unit can be specified as suffix (see below). A timeout of zero is interpreted as an infinite timeout. Defaults to `2s`.
 * `deliveryAttempts` Number of Delivery-Attempts. Will retry to deliver the message and reconnect if necessary. A number of zero is interpreted as an infinite attempts. Defaults to `1`.   
 * `keepAlive` Enable TCP keepAlive. Defaults to `false`.   
 
+## SSL
+
+TCP with SSL uses the JVM's truststore settings. You can specify a truststore by configuring the location to the truststore by setting `javax.net.ssl.trustStore`. Make sure this system property is set before bootstrapping any SSL-related components. Once the default SSL context is initialized, changes to `javax.net.ssl.trustStore` are not applied.
+  
+A customized `javax.net.ssl.SSLContext` can be provided by implementing an own `GelfSenderProvider` that configures `GelfTCPSSLSender`.
 
 ## Timeout Units
 
