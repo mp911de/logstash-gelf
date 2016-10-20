@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
@@ -28,6 +29,17 @@ public class GelfTCPSSLSender extends GelfTCPSender {
 
     private volatile SSLSession sslSession;
 
+    /**
+     * @param host the host, must not be {@literal null}.
+     * @param port the port.
+     * @param connectTimeoutMs connection timeout, in {@link TimeUnit#MILLISECONDS}.
+     * @param readTimeoutMs read timeout, in {@link TimeUnit#MILLISECONDS}.
+     * @param deliveryAttempts number of delivery attempts.
+     * @param keepAlive {@literal true} to enable TCP keep-alive.
+     * @param errorReporter the error reporter, must not be {@literal null}.
+     * @param sslContext the SSL context, must not be {@literal null}.
+     * @throws IOException in case of I/O errors
+     */
     public GelfTCPSSLSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, int deliveryAttempts,
             boolean keepAlive, ErrorReporter errorReporter, SSLContext sslContext) throws IOException {
 

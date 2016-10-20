@@ -4,13 +4,7 @@ import java.util.List;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.AdaptiveRecvByteBufAllocator;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.ServerChannel;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 
 /**
@@ -60,8 +54,11 @@ public class NettyLocalServer {
     }
 
     public void close() {
-        f.channel().close();
-        f = null;
+
+        if (f != null) {
+            f.channel().close();
+            f = null;
+        }
     }
 
     public List<Object> getJsonValues() {

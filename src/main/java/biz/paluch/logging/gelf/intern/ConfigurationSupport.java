@@ -13,7 +13,6 @@ public class ConfigurationSupport {
     public static final char EQ = '=';
 
     private ConfigurationSupport() {
-
     }
 
     /**
@@ -56,7 +55,7 @@ public class ConfigurationSupport {
      * Set the dynamic MDC fields.
      * 
      * @param spec field, .*FieldSuffix, fieldPrefix.*
-     * @param gelfMessageAssembler
+     * @param gelfMessageAssembler the {@link GelfMessageAssembler}.
      */
     public static void setDynamicMdcFields(String spec, GelfMessageAssembler gelfMessageAssembler) {
         if (null != spec) {

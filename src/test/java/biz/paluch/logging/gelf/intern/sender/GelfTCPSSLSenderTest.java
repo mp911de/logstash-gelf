@@ -96,10 +96,6 @@ public class GelfTCPSSLSenderTest {
 
     @AfterClass
     public static void afterClass() throws Exception {
-
-        if (server != null) {
             server.close();
-        }
     }
-
 }

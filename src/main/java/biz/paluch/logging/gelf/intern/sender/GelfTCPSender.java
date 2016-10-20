@@ -39,13 +39,12 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
     };
 
     /**
-     * 
-     * @param host
-     * @param port
-     * @param connectTimeoutMs
-     * @param readTimeoutMs
-     * @param errorReporter
-     * @throws IOException
+     * @param host the host, must not be {@literal null}.
+     * @param port the port.
+     * @param connectTimeoutMs connection timeout, in {@link TimeUnit#MILLISECONDS}.
+     * @param readTimeoutMs read timeout, in {@link TimeUnit#MILLISECONDS}.
+     * @param errorReporter the error reporter, must not be {@literal null}.
+     * @throws IOException in case of I/O errors
      */
     public GelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, ErrorReporter errorReporter)
             throws IOException {
@@ -53,15 +52,14 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
     }
 
     /**
-     * 
-     * @param host
-     * @param port
-     * @param connectTimeoutMs
-     * @param readTimeoutMs
-     * @param deliveryAttempts
-     * @param keepAlive
-     * @param errorReporter
-     * @throws IOException
+     * @param host the host, must not be {@literal null}.
+     * @param port the port.
+     * @param connectTimeoutMs connection timeout, in {@link TimeUnit#MILLISECONDS}.
+     * @param readTimeoutMs read timeout, in {@link TimeUnit#MILLISECONDS}.
+     * @param deliveryAttempts number of delivery attempts.
+     * @param keepAlive {@literal true} to enable TCP keep-alive.
+     * @param errorReporter the error reporter, must not be {@literal null}.
+     * @throws IOException in case of I/O errors
      */
     public GelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, int deliveryAttempts,
             boolean keepAlive, ErrorReporter errorReporter) throws IOException {
@@ -86,7 +84,7 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
 
     /**
      * @param message the message
-     * @return
+     * @return {@literal true} if message was sent.
      */
     public boolean sendMessage(GelfMessage message) {
 

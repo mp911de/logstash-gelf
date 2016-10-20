@@ -36,8 +36,11 @@ public class NettyLocalHTTPServer {
     }
 
     public void close() {
-        f.channel().close();
-        f = null;
+
+        if (f != null) {
+            f.channel().close();
+            f = null;
+        }
     }
 
     public List<Object> getJsonValues() {

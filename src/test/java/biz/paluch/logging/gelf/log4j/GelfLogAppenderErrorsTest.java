@@ -102,6 +102,7 @@ public class GelfLogAppenderErrorsTest {
 
     @Test(timeout = 500)
     public void gelfPortNotReachable() throws Exception {
+
         LogManager.getLoggerRepository().resetConfiguration();
         DOMConfigurator.configure(getClass().getResource("/log4j/log4j-gelf-not-reachable.xml"));
 

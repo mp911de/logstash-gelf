@@ -45,6 +45,7 @@ public class GelfLogHandlerRedisTest {
 
     @Test
     public void testStandalone() throws Exception {
+
         LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/jul/test-redis-logging.properties"));
 
         Logger logger = Logger.getLogger(getClass().getName());
@@ -65,6 +66,9 @@ public class GelfLogHandlerRedisTest {
 
     @Test
     public void testSentinel() throws Exception {
+
+        assumeTrue(Sockets.isOpen("localhost", 26379));
+
         LogManager.getLogManager()
                 .readConfiguration(getClass().getResourceAsStream("/jul/test-redis-sentinel-logging.properties"));
 
@@ -86,7 +90,9 @@ public class GelfLogHandlerRedisTest {
 
     @Test
     public void testMinimalRedisUri() throws Exception {
+
         assumeTrue(Sockets.isOpen("localhost", 6379));
+
         String uri = "redis://localhost/#list";
 
         RedisGelfSenderProvider provider = new RedisGelfSenderProvider();
@@ -99,6 +105,7 @@ public class GelfLogHandlerRedisTest {
 
     @Test
     public void testRedisWithPortUri() throws Exception {
+
         String uri = "redis://localhost:6479/#list";
 
         RedisGelfSenderProvider provider = new RedisGelfSenderProvider();
@@ -112,6 +119,7 @@ public class GelfLogHandlerRedisTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void uriWithoutHost() throws Exception {
+
         String uri = "redis:///#list";
 
         DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
@@ -122,6 +130,7 @@ public class GelfLogHandlerRedisTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void uriWithoutFragment() throws Exception {
+
         String uri = "redis://host/";
 
         DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
@@ -131,6 +140,7 @@ public class GelfLogHandlerRedisTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void uriWithoutFragment2() throws Exception {
+
         String uri = "redis://host";
 
         DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
@@ -140,6 +150,7 @@ public class GelfLogHandlerRedisTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void uriWithoutFragment3() throws Exception {
+
         String uri = "redis://host#";
 
         DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
@@ -149,6 +160,7 @@ public class GelfLogHandlerRedisTest {
 
     @Test(timeout = 5000)
     public void testRedisNotAvailable() throws Exception {
+
         LogManager.getLogManager()
                 .readConfiguration(getClass().getResourceAsStream("/jul/test-redis-not-available.properties"));
 
@@ -157,5 +169,4 @@ public class GelfLogHandlerRedisTest {
 
         logger.log(Level.INFO, expectedMessage);
     }
-
 }

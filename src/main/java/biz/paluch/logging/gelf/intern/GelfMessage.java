@@ -20,7 +20,7 @@ import java.util.zip.GZIPOutputStream;
  *
  * @author https://github.com/t0xa/gelfj
  * @author Mark Paluch
- * @link http://docs.graylog.org/en/2.0/pages/gelf.html
+ * @see <a href="http://docs.graylog.org/en/2.0/pages/gelf.html">http://docs.graylog.org/en/2.0/pages/gelf.html</a>
  */
 public class GelfMessage {
 
@@ -106,7 +106,7 @@ public class GelfMessage {
     /**
      * Create a JSON representation for this {@link GelfMessage}. Additional fields are prefixed with underscore {@code _}.
      *
-     * @return
+     * @return the JSON string.
      */
     public String toJson() {
         return toJson("_");
@@ -117,7 +117,7 @@ public class GelfMessage {
      * {@code additionalFieldPrefix}.
      * 
      * @param additionalFieldPrefix must not be {@literal null}
-     * @return
+     * @return the JSON string.
      */
     public String toJson(String additionalFieldPrefix) {
         return new String(toJsonByteArray(additionalFieldPrefix), Charsets.UTF8);
@@ -137,7 +137,6 @@ public class GelfMessage {
      * 
      * @param byteBuffer must not be {@literal null}
      * @param additionalFieldPrefix must not be {@literal null}
-     * @return
      */
     public void toJson(ByteBuffer byteBuffer, String additionalFieldPrefix) {
         toJson(OutputAccessor.from(byteBuffer), additionalFieldPrefix);
