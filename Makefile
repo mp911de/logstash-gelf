@@ -46,7 +46,7 @@ stop:
 test:
 	make start
 	sleep 2
-	mvn -B -Dtest.withRedis=true clean verify
+	./mvnw -B -Dtest.withRedis=true clean verify
 	make stop
 
 travis-install:
