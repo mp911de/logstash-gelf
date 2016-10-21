@@ -120,6 +120,7 @@ public class GelfTCPSSLSender extends GelfTCPSender {
     }
 
     private ByteBuffer getNetworkBuffer() {
+
         ByteBuffer networkBuffer = this.sslNetworkBuffers.get();
         if (networkBuffer == null) {
             this.sslNetworkBuffers.set(networkBuffer = ByteBuffer.allocateDirect(sslSession.getPacketBufferSize()));
@@ -129,6 +130,7 @@ public class GelfTCPSSLSender extends GelfTCPSender {
     }
 
     private ByteBuffer getTempBuffer() {
+
         ByteBuffer tempBuffer = this.tempBuffers.get();
         if (tempBuffer == null) {
             this.tempBuffers.set(tempBuffer = ByteBuffer.allocateDirect(sslSession.getApplicationBufferSize()));

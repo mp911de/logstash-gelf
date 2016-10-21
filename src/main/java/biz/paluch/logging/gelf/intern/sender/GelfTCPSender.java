@@ -107,12 +107,12 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
                 if (BUFFER_SIZE == 0) {
                     buffer = message.toTCPBuffer();
                 } else {
-                    buffer = message.toTCPBuffer(getByteBuffer());
+                    buffer = GelfBuffers.toTCPBuffer(message, writeBuffers);
                 }
 
                 synchronized (ioLock) {
-					write(buffer);
-				}
+                    write(buffer);
+                }
 
                 return true;
             } catch (IOException e) {
@@ -129,24 +129,17 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
         return false;
     }
 
-
     protected void write(ByteBuffer buffer) throws IOException {
 
-    	while (buffer.hasRemaining()) {
-			int written = channel().write(buffer);
+        while (buffer.hasRemaining()) {
+            int written = channel().write(buffer);
 
-			if (written < 0) {
-				// indicator the socket was closed
-				Closer.close(channel());
-				throw new SocketException("Cannot write buffer to channel");
-			}
-		}
-	}
-
-	protected ByteBuffer getByteBuffer() {
-        ByteBuffer byteBuffer = writeBuffers.get();
-        byteBuffer.clear();
-        return byteBuffer;
+            if (written < 0) {
+                // indicator the socket was closed
+                Closer.close(channel());
+                throw new SocketException("Cannot write buffer to channel");
+            }
+        }
     }
 
     protected boolean connect() throws IOException {
@@ -184,8 +177,8 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
                         + TimeUnit.NANOSECONDS.toMillis(connectTimeoutLeft) + "ms");
             }
 
-			return connected;
-		} catch (InterruptedException e) {
+            return connected;
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IOException("Connection interrupted", e);
         }

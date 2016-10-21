@@ -44,15 +44,7 @@ public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements
             return sendDatagrams(message.toUDPBuffers());
         }
 
-        return sendDatagrams(message.toUDPBuffers(getWriteBuffer(), getTempBuffer()));
-    }
-
-    protected ByteBuffer getWriteBuffer() {
-        return (ByteBuffer) writeBuffers.get().clear();
-    }
-
-    protected ByteBuffer getTempBuffer() {
-        return (ByteBuffer) tempBuffers.get().clear();
+        return sendDatagrams(GelfBuffers.toUDPBuffers(message, writeBuffers, tempBuffers));
     }
 
     private boolean sendDatagrams(ByteBuffer[] bytesList) {

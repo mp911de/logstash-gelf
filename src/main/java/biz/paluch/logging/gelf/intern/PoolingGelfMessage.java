@@ -59,6 +59,8 @@ class PoolingGelfMessage extends GelfMessage {
             gzip(buffer, gz);
             gz.finish();
 
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

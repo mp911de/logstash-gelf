@@ -12,9 +12,11 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.util.Random;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -158,8 +160,49 @@ public class GelfTCPSenderTest {
         spy.close();
     }
 
+    @Test
+    public void shouldSendHugeMessage() throws Exception {
+
+        NoopGelfTCPSender tcpSender = new NoopGelfTCPSender("127.0.0.1", 1234, 1000, 1000, errorReporter);
+
+        GelfMessage gelfMessage = new GelfMessage("short", "long", 1, "info");
+        gelfMessage.setHost("host");
+
+        for (int i = 0; i < 100; i++) {
+            gelfMessage.addField(RandomStringUtils.random(1024), RandomStringUtils.random(1024));
+        }
+
+        tcpSender.sendMessage(gelfMessage);
+
+        ByteBuffer buffer = tcpSender.buffer;
+        assertEquals((byte) '{', buffer.get());
+        buffer.position(buffer.limit() - 2);
+        assertEquals((byte) '}', buffer.get());
+        assertEquals((byte) 0, buffer.get());
+    }
+
     protected int randomPort() {
         Random random = new Random();
         return random.nextInt(50000) + 1024;
+    }
+
+    static class NoopGelfTCPSender extends GelfTCPSender {
+
+        ByteBuffer buffer;
+
+        public NoopGelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, ErrorReporter errorReporter)
+                throws IOException {
+            super(host, port, connectTimeoutMs, readTimeoutMs, errorReporter);
+        }
+
+        @Override
+        protected boolean isConnected() throws IOException {
+            return true;
+        }
+
+        @Override
+        protected void write(ByteBuffer buffer) throws IOException {
+            this.buffer = buffer;
+        }
     }
 }

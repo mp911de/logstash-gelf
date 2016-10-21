@@ -12,6 +12,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -80,6 +81,7 @@ public class GelfTCPSSLSenderTest {
 
         GelfMessage gelfMessage = new GelfMessage("hello", "world", 1234, "7");
         tcpsslSender.write(gelfMessage.toTCPBuffer());
+
         for (int i = 0; i < 100; i++) {
             if (!server.getJsonValues().isEmpty()) {
                 continue;
@@ -91,11 +93,10 @@ public class GelfTCPSSLSenderTest {
         assertThat(server.getJsonValues()).isNotEmpty();
 
         tcpsslSender.close();
-
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
-            server.close();
+        server.close();
     }
 }

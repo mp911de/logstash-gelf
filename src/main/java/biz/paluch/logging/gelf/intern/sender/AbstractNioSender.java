@@ -22,7 +22,7 @@ public abstract class AbstractNioSender<T extends AbstractSelectableChannel & By
     public static final String PROPERTY_BUFFER_SIZE = "logstash-gelf.buffer.size";
 
     protected final static int BUFFER_SIZE = Integer
-            .parseInt(RuntimeContainerProperties.getProperty(PROPERTY_BUFFER_SIZE, "" + (99 * 8192)));
+            .parseInt(RuntimeContainerProperties.getProperty(PROPERTY_BUFFER_SIZE, "" + (40 * 8192)));
 
     private T channel;
     private volatile boolean shutdown = false;

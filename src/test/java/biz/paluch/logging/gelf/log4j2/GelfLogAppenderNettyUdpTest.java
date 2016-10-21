@@ -31,6 +31,7 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  * @author Mark Paluch
  */
 public class GelfLogAppenderNettyUdpTest {
+
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
