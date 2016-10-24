@@ -4,20 +4,25 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceLineNumber;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+
+import java.util.Collections;
+
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.*;
+import biz.paluch.logging.gelf.intern.Closer;
+import biz.paluch.logging.gelf.intern.ConfigurationSupport;
+import biz.paluch.logging.gelf.intern.ErrorReporter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-
-import java.util.Collections;
-import java.util.logging.LogRecord;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Logback Handler creates GELF Messages and posts them using

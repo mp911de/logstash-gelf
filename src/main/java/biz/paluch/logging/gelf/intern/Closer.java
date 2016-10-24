@@ -17,7 +17,7 @@ public class Closer {
      *
      * @param closeable the closeable
      */
-    public final static void close(Closeable closeable) {
+    public static final void close(Closeable closeable) {
         try {
             if (closeable != null) {
                 closeable.close();
@@ -32,7 +32,7 @@ public class Closer {
      *
      * @param socket the socket
      */
-    public final static void close(Socket socket) {
+    public static final void close(Socket socket) {
         try {
             if (socket != null) {
                 socket.close();

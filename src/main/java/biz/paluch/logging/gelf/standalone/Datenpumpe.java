@@ -1,8 +1,8 @@
 package biz.paluch.logging.gelf.standalone;
 
-import biz.paluch.logging.gelf.intern.GelfMessage;
-
 import java.util.Map;
+
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * Datenpumpe allows to submit arbitrary values (flat data set) using Gelf.

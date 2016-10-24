@@ -11,7 +11,13 @@ import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 
-import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.DynamicMdcMessageField;
+import biz.paluch.logging.gelf.GelfUtil;
+import biz.paluch.logging.gelf.LogEvent;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcMessageField;
+import biz.paluch.logging.gelf.MessageField;
+import biz.paluch.logging.gelf.Values;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**

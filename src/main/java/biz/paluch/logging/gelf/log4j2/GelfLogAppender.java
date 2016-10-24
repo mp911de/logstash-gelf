@@ -255,19 +255,19 @@ public class GelfLogAppender extends AbstractAppender {
         }
 
         if (extractStackTrace != null) {
-            mdcGelfMessageAssembler.setExtractStackTrace(extractStackTrace.equals("true"));
+            mdcGelfMessageAssembler.setExtractStackTrace("true".equals(extractStackTrace));
         }
 
         if (filterStackTrace != null) {
-            mdcGelfMessageAssembler.setFilterStackTrace(filterStackTrace.equals("true"));
+            mdcGelfMessageAssembler.setFilterStackTrace("true".equals(filterStackTrace));
         }
 
         if (mdcProfiling != null) {
-            mdcGelfMessageAssembler.setMdcProfiling(mdcProfiling.equals("true"));
+            mdcGelfMessageAssembler.setMdcProfiling("true".equals(mdcProfiling));
         }
 
         if (includeFullMdc != null) {
-            mdcGelfMessageAssembler.setIncludeFullMdc(includeFullMdc.equals("true"));
+            mdcGelfMessageAssembler.setIncludeFullMdc("true".equals(includeFullMdc));
         }
 
         if (maximumMessageSize != null) {
@@ -280,10 +280,7 @@ public class GelfLogAppender extends AbstractAppender {
 
         configureFields(mdcGelfMessageAssembler, fields, dynamicFieldArray);
 
-        GelfLogAppender appender = new GelfLogAppender(name, filter, mdcGelfMessageAssembler, ignoreExceptions);
-
-        return appender;
-
+        return new GelfLogAppender(name, filter, mdcGelfMessageAssembler, ignoreExceptions);
     }
 
     /**
@@ -295,7 +292,8 @@ public class GelfLogAppender extends AbstractAppender {
      */
     private static void configureFields(MdcGelfMessageAssembler mdcGelfMessageAssembler, GelfLogField[] fields,
             GelfDynamicMdcLogFields[] dynamicFieldArray) {
-        if (fields == null || fields.length == 0) {
+
+    	if (fields == null || fields.length == 0) {
             mdcGelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
                     SourceMethodName, SourceLineNumber, SourceSimpleClassName, LoggerName, Marker));
             return;
@@ -325,7 +323,8 @@ public class GelfLogAppender extends AbstractAppender {
 
     @Override
     public void append(LogEvent event) {
-        if (event == null) {
+        
+    	if (event == null) {
             return;
         }
 

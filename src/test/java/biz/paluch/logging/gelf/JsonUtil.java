@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JsonUtil {
 
-    private final static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Parse a JSON string to a {@link Map}

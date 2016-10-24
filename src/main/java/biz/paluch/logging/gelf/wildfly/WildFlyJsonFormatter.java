@@ -10,16 +10,21 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimple
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
 import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
 
-import biz.paluch.logging.gelf.intern.ConfigurationSupport;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.jboss.logmanager.ExtFormatter;
 import org.jboss.logmanager.ExtLogRecord;
 
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.ConfigurationSupport;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
-
-import java.util.*;
 
 /**
  * Log-Formatter for JSON using fields specified within GELF. This formatter will produce a JSON object for each log event.

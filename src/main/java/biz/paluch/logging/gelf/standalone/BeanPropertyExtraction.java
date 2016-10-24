@@ -12,11 +12,11 @@ import java.util.regex.Pattern;
  * @since 31.07.14 08:56
  */
 class BeanPropertyExtraction {
-    public final static String IS_REGEX = "is([^ ]+)";
-    public final static String GET_REGEX = "get([^ ]+)";
+    public static final String IS_REGEX = "is([^ ]+)";
+    public static final String GET_REGEX = "get([^ ]+)";
 
-    public final static Pattern IS_PATTERN = Pattern.compile(IS_REGEX);
-    public final static Pattern GET_PATTERN = Pattern.compile(GET_REGEX);
+    public static final Pattern IS_PATTERN = Pattern.compile(IS_REGEX);
+    public static final Pattern GET_PATTERN = Pattern.compile(GET_REGEX);
 
     static Map<String, Object> extractProperties(Object object) {
 

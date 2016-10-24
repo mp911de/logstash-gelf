@@ -1,13 +1,13 @@
 package biz.paluch.logging.gelf.standalone;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import biz.paluch.logging.gelf.GelfMessageBuilder;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Mark Paluch

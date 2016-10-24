@@ -10,6 +10,5 @@ class RedisSenderConstants {
     public static final String REDIS_SENTINEL_SCHEME = "redis-sentinel";
 
     private RedisSenderConstants() {
-
     }
 }

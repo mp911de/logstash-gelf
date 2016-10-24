@@ -6,6 +6,10 @@ import java.nio.ByteBuffer;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
+ * Utility to create TCP/UDP buffers from a {@link GelfMessage} by working with {@link ByteBuffer}. Buffers are provided by
+ * {@link ThreadLocal} and enlarged if the buffer size is exceeded. Enlarged buffers are returned to their originating
+ * {@link ThreadLocal}.
+ * 
  * @author Mark Paluch
  */
 class GelfBuffers {
@@ -18,7 +22,7 @@ class GelfBuffers {
      * @param tempBuffers
      * @return
      */
-    static ByteBuffer[] toUDPBuffers(GelfMessage message, ThreadLocal<ByteBuffer> writeBuffers,
+    protected static ByteBuffer[] toUDPBuffers(GelfMessage message, ThreadLocal<ByteBuffer> writeBuffers,
             ThreadLocal<ByteBuffer> tempBuffers) {
 
         while (true) {
@@ -39,7 +43,7 @@ class GelfBuffers {
      * @param writeBuffers
      * @return
      */
-    static ByteBuffer toTCPBuffer(GelfMessage message, ThreadLocal<ByteBuffer> writeBuffers) {
+    protected static ByteBuffer toTCPBuffer(GelfMessage message, ThreadLocal<ByteBuffer> writeBuffers) {
 
         while (true) {
 

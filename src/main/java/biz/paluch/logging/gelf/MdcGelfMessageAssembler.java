@@ -1,8 +1,8 @@
 package biz.paluch.logging.gelf;
 
-import biz.paluch.logging.gelf.intern.GelfMessage;
-
 import java.util.Set;
+
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * Message-Assembler using MDC.

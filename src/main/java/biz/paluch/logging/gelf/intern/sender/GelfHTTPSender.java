@@ -1,27 +1,38 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import biz.paluch.logging.gelf.intern.ErrorReporter;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.intern.GelfSender;
+
 /**
+ * HTTP-based Gelf sender. This sender uses Java's HTTP client to {@code POST} JSON Gelf messages to an endpoint.
+ * 
  * @author Aleksandar Stojadinovic
  * @since 1.9
  */
 public class GelfHTTPSender implements GelfSender {
+
+    private static final int HTTP_ACCEPTED_STATUS = 202;
 
     private final int connectTimeoutMs;
     private final int readTimeoutMs;
     private final ErrorReporter errorReporter;
     private final URL url;
 
-    private int HTTP_ACCEPTED_STATUS = 202;
-
+    /**
+     * Create a new {@link GelfHTTPSender} given {@code url}, {@code connectTimeoutMs}, {@code readTimeoutMs} and
+     * {@link ErrorReporter}.
+     * 
+     * @param url
+     * @param connectTimeoutMs
+     * @param readTimeoutMs
+     * @param errorReporter
+     */
     public GelfHTTPSender(URL url, int connectTimeoutMs, int readTimeoutMs, ErrorReporter errorReporter) {
 
         this.connectTimeoutMs = connectTimeoutMs;
@@ -36,6 +47,7 @@ public class GelfHTTPSender implements GelfSender {
         HttpURLConnection connection = null;
 
         try {
+
             connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(connectTimeoutMs);
             connection.setReadTimeout(readTimeoutMs);
@@ -53,6 +65,7 @@ public class GelfHTTPSender implements GelfSender {
             } else {
                 errorReporter.reportError("Server responded with unexpected status code: " + responseCode, null);
             }
+
         } catch (IOException e) {
             errorReporter.reportError("Cannot send data to " + url, e);
         } finally {
@@ -66,6 +79,5 @@ public class GelfHTTPSender implements GelfSender {
 
     @Override
     public void close() {
-
     }
 }

@@ -1,15 +1,15 @@
 package biz.paluch.logging.gelf.intern.sender;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
+
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import redis.clients.jedis.Jedis;
 import redis.clients.util.Pool;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
 
 /**
  * @author https://github.com/strima/logstash-gelf.git

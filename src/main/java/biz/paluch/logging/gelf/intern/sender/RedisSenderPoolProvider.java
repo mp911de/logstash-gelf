@@ -1,12 +1,5 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.JedisSentinelPool;
-import redis.clients.jedis.Protocol;
-import redis.clients.util.Pool;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +7,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisSentinelPool;
+import redis.clients.jedis.Protocol;
+import redis.clients.util.Pool;
 
 /**
  * Singleton for administration of commonly used jedis pools

@@ -3,7 +3,11 @@ package biz.paluch.logging.gelf.intern;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
 
 import biz.paluch.logging.gelf.intern.sender.DefaultGelfSenderProvider;
 import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;

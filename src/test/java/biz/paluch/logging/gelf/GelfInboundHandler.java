@@ -34,6 +34,7 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+       
         try {
 
             boolean requireNullEnd = false;
@@ -175,7 +176,8 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
     }
 
     private class ChunkId {
-        private byte[] id;
+
+    	private byte[] id;
         private byte count;
 
         private ChunkId(byte[] id, byte count) {

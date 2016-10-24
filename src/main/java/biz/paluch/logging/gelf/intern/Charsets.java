@@ -8,14 +8,14 @@ import java.nio.charset.Charset;
  */
 class Charsets {
 
-    public final static Charset ASCII = Charset.forName("ASCII");
-    public final static Charset UTF8 = Charset.forName("UTF-8");
+    public static final Charset ASCII = Charset.forName("ASCII");
+    public static final Charset UTF8 = Charset.forName("UTF-8");
 
-    public final static byte[] ascii(String input) {
+    public static final byte[] ascii(String input) {
         return input.getBytes(ASCII);
     }
 
-    public final static byte[] utf8(String input) {
+    public static final byte[] utf8(String input) {
         return input.getBytes(UTF8);
     }
 

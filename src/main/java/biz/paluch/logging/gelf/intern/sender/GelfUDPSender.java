@@ -22,14 +22,14 @@ public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements
     private final ThreadLocal<ByteBuffer> writeBuffers = new ThreadLocal<ByteBuffer>() {
         @Override
         protected ByteBuffer initialValue() {
-            return ByteBuffer.allocateDirect(BUFFER_SIZE);
+            return ByteBuffer.allocateDirect(INITIAL_BUFFER_SIZE);
         }
     };
 
     private final ThreadLocal<ByteBuffer> tempBuffers = new ThreadLocal<ByteBuffer>() {
         @Override
         protected ByteBuffer initialValue() {
-            return ByteBuffer.allocateDirect(BUFFER_SIZE);
+            return ByteBuffer.allocateDirect(INITIAL_BUFFER_SIZE);
         }
     };
 
@@ -40,7 +40,7 @@ public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements
 
     public boolean sendMessage(GelfMessage message) {
 
-        if (BUFFER_SIZE == 0) {
+        if (INITIAL_BUFFER_SIZE == 0) {
             return sendDatagrams(message.toUDPBuffers());
         }
 

@@ -1,22 +1,17 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.NDC;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
+
+import java.util.logging.ErrorManager;
+import java.util.logging.LogRecord;
+
+import org.jboss.logmanager.ExtLogRecord;
+import org.jboss.logmanager.errormanager.OnlyOnceErrorManager;
+
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.GelfMessage;
-import org.jboss.logmanager.ExtLogRecord;
-import org.jboss.logmanager.errormanager.OnlyOnceErrorManager;
-
-import java.util.logging.ErrorManager;
-import java.util.logging.LogRecord;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts

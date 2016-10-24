@@ -1,13 +1,16 @@
 package biz.paluch.logging;
 
-import static biz.paluch.logging.RuntimeContainerProperties.*;
-import static java.lang.Boolean.*;
+import static biz.paluch.logging.RuntimeContainerProperties.getProperty;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
 import biz.paluch.logging.gelf.intern.Closer;
 

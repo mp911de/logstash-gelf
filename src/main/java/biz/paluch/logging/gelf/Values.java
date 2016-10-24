@@ -6,10 +6,13 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Value object to abstract multiple values mapped by a {@link String} key.
+ * 
  * @author Mark Paluch
  * @since 28.02.14 09:50
  */
 public class Values {
+
     private Map<String, Object> values = new HashMap<String, Object>();
 
     public Values() {
@@ -37,8 +40,8 @@ public class Values {
         values.put(key, value);
     }
 
-    public <T> T getValue(String key) {
+    @SuppressWarnings("unchecked")
+	public <T> T getValue(String key) {
         return (T) values.get(key);
     }
-
 }

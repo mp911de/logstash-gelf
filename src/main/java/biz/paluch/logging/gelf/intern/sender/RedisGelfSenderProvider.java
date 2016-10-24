@@ -1,5 +1,8 @@
 package biz.paluch.logging.gelf.intern.sender;
 
+import java.io.IOException;
+import java.net.URI;
+
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
@@ -7,13 +10,11 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Protocol;
 import redis.clients.util.Pool;
 
-import java.io.IOException;
-import java.net.URI;
-
 /**
- *
+ * {@link GelfSenderProvider} to provide {@link GelfREDISSender}.
+ * 
  * @author https://github.com/Batigoal/logstash-gelf.git
- * @since 1.4 
+ * @since 1.4
  */
 public class RedisGelfSenderProvider implements GelfSenderProvider {
 
@@ -25,6 +26,7 @@ public class RedisGelfSenderProvider implements GelfSenderProvider {
 
     @Override
     public GelfSender create(GelfSenderConfiguration configuration) throws IOException {
+
         String graylogHost = configuration.getHost();
 
         URI hostUri = URI.create(graylogHost);
@@ -44,8 +46,8 @@ public class RedisGelfSenderProvider implements GelfSenderProvider {
         if (hostUri.getHost() == null) {
             throw new IllegalArgumentException("Redis URI must specify host");
         }
+
         Pool<Jedis> pool = RedisSenderPoolProvider.getJedisPool(hostUri, port);
         return new GelfREDISSender(pool, hostUri.getFragment(), configuration.getErrorReporter());
     }
-
 }

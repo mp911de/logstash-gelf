@@ -5,7 +5,12 @@ import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.RuntimeContainerProperties;
@@ -23,8 +28,8 @@ import biz.paluch.logging.gelf.intern.PoolingGelfMessageBuilder;
  */
 public class GelfMessageAssembler implements HostAndPortProvider {
 
-    public final static String PROPERTY_USE_POOLING = "logstash-gelf.message.pooling";
-    private final static boolean USE_POOLING = Boolean
+    public static final String PROPERTY_USE_POOLING = "logstash-gelf.message.pooling";
+    private static final boolean USE_POOLING = Boolean
             .valueOf(RuntimeContainerProperties.getProperty(PROPERTY_USE_POOLING, "true"));
 
     private static final int MAX_SHORT_MESSAGE_LENGTH = 250;

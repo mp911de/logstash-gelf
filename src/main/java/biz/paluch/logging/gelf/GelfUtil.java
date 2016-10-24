@@ -1,12 +1,10 @@
 package biz.paluch.logging.gelf;
 
-import biz.paluch.logging.gelf.intern.GelfMessage;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author Mark Paluch

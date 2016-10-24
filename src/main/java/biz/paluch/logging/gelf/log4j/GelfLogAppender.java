@@ -1,19 +1,16 @@
 package biz.paluch.logging.gelf.log4j;
 
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.gelf.*;
-import biz.paluch.logging.gelf.intern.*;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
+
+import java.util.Collections;
+
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.spi.LoggingEvent;
 
-import java.util.Collections;
-import java.util.logging.LogRecord;
-
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.NDC;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Server;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.*;
 
 /**
  * Logging-Handler for GELF (Graylog Extended Logging Format). This Java-Util-Logging Handler creates GELF Messages and posts

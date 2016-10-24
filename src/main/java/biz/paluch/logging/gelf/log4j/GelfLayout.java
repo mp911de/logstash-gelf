@@ -1,14 +1,29 @@
 package biz.paluch.logging.gelf.log4j;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.NDC;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Server;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceLineNumber;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
-import biz.paluch.logging.gelf.intern.ConfigurationSupport;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
 
-import biz.paluch.logging.gelf.*;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.ConfigurationSupport;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**

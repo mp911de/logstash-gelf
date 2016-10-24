@@ -10,25 +10,26 @@ import java.util.Map;
  */
 class JsonWriter {
 
-    private final static byte[] NULL = "null".getBytes();
-    private final static byte[] TRUE = "true".getBytes();
-    private final static byte[] FALSE = "false".getBytes();
+    private static final byte[] NULL = "null".getBytes();
+    private static final byte[] TRUE = "true".getBytes();
+    private static final byte[] FALSE = "false".getBytes();
 
-    private final static byte[] B = "\\b".getBytes();
-    private final static byte[] T = "\\t".getBytes();
-    private final static byte[] N = "\\n".getBytes();
-    private final static byte[] F = "\\f".getBytes();
-    private final static byte[] R = "\\r".getBytes();
-    private final static byte[] QUOT = "\\\"".getBytes();
-    private final static byte[] BSLASH = "\\\\".getBytes();
-    private final static byte[] Q_AND_C = "\":".getBytes();
-    private final static byte[] NaN = "NaN".getBytes();
-    private final static byte[] Infinite = "Infinite".getBytes();
+    private static final byte[] B = "\\b".getBytes();
+    private static final byte[] T = "\\t".getBytes();
+    private static final byte[] N = "\\n".getBytes();
+    private static final byte[] F = "\\f".getBytes();
+    private static final byte[] R = "\\r".getBytes();
+    private static final byte[] QUOT = "\\\"".getBytes();
+    private static final byte[] BSLASH = "\\\\".getBytes();
+    private static final byte[] Q_AND_C = "\":".getBytes();
+    private static final byte[] NaN = "NaN".getBytes();
+    private static final byte[] Infinite = "Infinite".getBytes();
 
     private static final byte WRITE_UTF_UNKNOWN = (byte) '?';
 
-    private final static char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
-    private final static byte[] HEX_BYTES;
+    private static final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
+    private static final byte[] HEX_BYTES;
+    
     static {
         int len = HEX_CHARS.length;
         HEX_BYTES = new byte[len];

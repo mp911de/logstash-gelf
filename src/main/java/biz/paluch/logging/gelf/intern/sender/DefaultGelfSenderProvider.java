@@ -25,7 +25,11 @@ import biz.paluch.logging.gelf.intern.GelfSenderProvider;
  */
 public class DefaultGelfSenderProvider implements GelfSenderProvider {
 
+	/**
+	 * Default GELF port.
+	 */
     public static final int DEFAULT_PORT = 12201;
+
     private static final Map<String, GelfSenderProducer> factories;
 
     private static final GelfSenderProducer tcpSenderFactory = new GelfSenderProducer() {
@@ -37,13 +41,13 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
 
             URI uri = URI.create(host);
 
-            Map<String, String> params = UriParser.parse(uri);
-            int connectionTimeMs = (int) UriParser.getTimeAsMs(params, GelfTCPSender.CONNECTION_TIMEOUT, defaultTimeoutMs);
-            int readTimeMs = (int) UriParser.getTimeAsMs(params, GelfTCPSender.READ_TIMEOUT, defaultTimeoutMs);
-            int deliveryAttempts = UriParser.getInt(params, GelfTCPSender.RETRIES, 1);
-            boolean keepAlive = UriParser.getString(params, GelfTCPSender.KEEPALIVE, false);
+            Map<String, String> params = QueryStringParser.parse(uri);
+            int connectionTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.CONNECTION_TIMEOUT, defaultTimeoutMs);
+            int readTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.READ_TIMEOUT, defaultTimeoutMs);
+            int deliveryAttempts = QueryStringParser.getInt(params, GelfTCPSender.RETRIES, 1);
+            boolean keepAlive = QueryStringParser.getString(params, GelfTCPSender.KEEPALIVE, false);
 
-            String tcpGraylogHost = UriParser.getHost(uri);
+            String tcpGraylogHost = QueryStringParser.getHost(uri);
             SocketFactory socketFactory = SocketFactory.getDefault();
 
             return new GelfTCPSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
@@ -60,13 +64,13 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
 
             URI uri = URI.create(host);
 
-            Map<String, String> params = UriParser.parse(uri);
-            int connectionTimeMs = (int) UriParser.getTimeAsMs(params, GelfTCPSender.CONNECTION_TIMEOUT, defaultTimeoutMs);
-            int readTimeMs = (int) UriParser.getTimeAsMs(params, GelfTCPSender.READ_TIMEOUT, defaultTimeoutMs);
-            int deliveryAttempts = UriParser.getInt(params, GelfTCPSender.RETRIES, 1);
-            boolean keepAlive = UriParser.getString(params, GelfTCPSender.KEEPALIVE, false);
+            Map<String, String> params = QueryStringParser.parse(uri);
+            int connectionTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.CONNECTION_TIMEOUT, defaultTimeoutMs);
+            int readTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.READ_TIMEOUT, defaultTimeoutMs);
+            int deliveryAttempts = QueryStringParser.getInt(params, GelfTCPSender.RETRIES, 1);
+            boolean keepAlive = QueryStringParser.getString(params, GelfTCPSender.KEEPALIVE, false);
 
-            String tcpGraylogHost = UriParser.getHost(uri);
+            String tcpGraylogHost = QueryStringParser.getHost(uri);
 
             try {
                 return new GelfTCPSSLSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
@@ -83,7 +87,7 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
         public GelfSender create(GelfSenderConfiguration configuration, String host, int port) throws IOException {
 
             URI uri = URI.create(host);
-            String udpGraylogHost = UriParser.getHost(uri);
+            String udpGraylogHost = QueryStringParser.getHost(uri);
             return new GelfUDPSender(udpGraylogHost, port, configuration.getErrorReporter());
         }
     };
@@ -109,7 +113,8 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
     };
 
     static {
-        Map<String, GelfSenderProducer> prefixToFactory = new HashMap<String, GelfSenderProducer>();
+
+    	Map<String, GelfSenderProducer> prefixToFactory = new HashMap<String, GelfSenderProducer>();
         prefixToFactory.put("tcp:", tcpSenderFactory);
         prefixToFactory.put("ssl:", tcpSslSenderFactory);
         prefixToFactory.put("udp:", udpSenderFactory);
@@ -157,5 +162,4 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
          */
         GelfSender create(GelfSenderConfiguration configuration, String host, int port) throws IOException;
     }
-
 }

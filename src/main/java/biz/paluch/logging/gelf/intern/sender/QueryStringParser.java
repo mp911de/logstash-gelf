@@ -8,9 +8,12 @@ import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Query string parser for {@link URI} query strings.
+ * 
  * @author Mark Paluch
  */
-class UriParser {
+class QueryStringParser {
+
     private static final Map<String, TimeUnit> TIME_UNIT_MAP;
 
     static {
@@ -26,12 +29,13 @@ class UriParser {
     }
 
     /**
-     * Parse the query part of an {@link URI} to a single-valued key-value map. All keys are tranformed to lower-case.
+     * Parse the query part of an {@link URI} to a single-valued key-value map. All keys are transformed to lower-case.
      * 
      * @param uri
      * @return the key-value map.
      */
     static Map<String, String> parse(URI uri) {
+
         Map<String, String> result = new HashMap<String, String>();
 
         String queryString = uri.getQuery();
@@ -59,6 +63,7 @@ class UriParser {
     }
 
     static long getTimeAsMs(Map<String, String> map, String key, long defaultTimeMs) {
+
         String value = map.get(key.toLowerCase());
         if (value == null || value.trim().equals("")) {
             return defaultTimeMs;
@@ -85,6 +90,7 @@ class UriParser {
     }
 
     public static int getInt(Map<String, String> map, String key, int defaultValue) {
+
         String value = map.get(key.toLowerCase());
         if (value == null || value.trim().equals("")) {
             return defaultValue;
@@ -93,6 +99,7 @@ class UriParser {
     }
 
     public static boolean getString(Map<String, String> map, String key, boolean defaultValue) {
+
         String value = map.get(key.toLowerCase());
         if (value == null || value.trim().equals("")) {
             return defaultValue;

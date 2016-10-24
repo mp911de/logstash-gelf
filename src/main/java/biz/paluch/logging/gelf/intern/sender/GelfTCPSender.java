@@ -19,10 +19,10 @@ import biz.paluch.logging.gelf.intern.GelfSender;
  */
 public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements GelfSender {
 
-    public final static String CONNECTION_TIMEOUT = "connectionTimeout";
-    public final static String READ_TIMEOUT = "readTimeout";
-    public final static String RETRIES = "deliveryAttempts";
-    public final static String KEEPALIVE = "keepAlive";
+    public static final String CONNECTION_TIMEOUT = "connectionTimeout";
+    public static final String READ_TIMEOUT = "readTimeout";
+    public static final String RETRIES = "deliveryAttempts";
+    public static final String KEEPALIVE = "keepAlive";
 
     private final int readTimeoutMs;
     private final int connectTimeoutMs;
@@ -34,7 +34,7 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
     private final ThreadLocal<ByteBuffer> writeBuffers = new ThreadLocal<ByteBuffer>() {
         @Override
         protected ByteBuffer initialValue() {
-            return ByteBuffer.allocateDirect(BUFFER_SIZE);
+            return ByteBuffer.allocateDirect(INITIAL_BUFFER_SIZE);
         }
     };
 
@@ -104,7 +104,7 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
                     }
                 }
                 ByteBuffer buffer;
-                if (BUFFER_SIZE == 0) {
+                if (INITIAL_BUFFER_SIZE == 0) {
                     buffer = message.toTCPBuffer();
                 } else {
                     buffer = GelfBuffers.toTCPBuffer(message, writeBuffers);
