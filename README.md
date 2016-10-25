@@ -28,7 +28,7 @@ Maven:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.10.0</version>
+        <version>x.y.z</version>
     </dependency>
     
 Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.10.0/logstash-gelf-1.10.0.jar)    
@@ -39,7 +39,7 @@ JBoss AS/WildFly Module Download:
     <dependency>
         <groupId>biz.paluch.logging</groupId>
         <artifactId>logstash-gelf</artifactId>
-        <version>1.10.0</version>
+        <version>x.y.z</version>
         <classifier>logging-module</classifier>
     </dependency>
 
