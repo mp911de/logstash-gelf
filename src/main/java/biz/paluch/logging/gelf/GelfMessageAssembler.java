@@ -5,12 +5,7 @@ import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.RuntimeContainerProperties;
@@ -44,6 +39,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private String originHost;
     private int port;
     private String facility;
+    private boolean includeLogMessageParameters = true;
     private StackTraceExtraction stackTraceExtraction = StackTraceExtraction.OFF;
     private int maximumMessageSize = 8192;
 
@@ -71,6 +67,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
      * @param propertyProvider property provider to obtain configuration properties
      */
     public void initialize(PropertyProvider propertyProvider) {
+
         host = propertyProvider.getProperty(PropertyProvider.PROPERTY_HOST);
         if (host == null) {
             host = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_HOST);
@@ -89,6 +86,12 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         setExtractStackTrace(propertyProvider.getProperty(PropertyProvider.PROPERTY_EXTRACT_STACKTRACE));
         setFilterStackTrace(
                 "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE)));
+
+        String includeLogMessageParameters = propertyProvider
+                .getProperty(PropertyProvider.PROPERTY_INCLUDE_LOG_MESSAGE_PARAMETERS);
+        if (includeLogMessageParameters != null && !includeLogMessageParameters.trim().equals("")) {
+            setIncludeLogMessageParameters("true".equalsIgnoreCase(includeLogMessageParameters));
+        }
 
         setupStaticFields(propertyProvider);
         setupAdditionalFieldTypes(propertyProvider);
@@ -152,7 +155,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
             addStackTrace(throwable, builder);
         }
 
-        if (logEvent.getParameters() != null) {
+        if (includeLogMessageParameters && logEvent.getParameters() != null) {
             for (int i = 0; i < logEvent.getParameters().length; i++) {
                 Object param = logEvent.getParameters()[i];
                 builder.withField(FIELD_MESSAGE_PARAM + i, "" + param);
@@ -324,6 +327,14 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
     public void setFilterStackTrace(boolean filterStackTrace) {
         this.stackTraceExtraction = stackTraceExtraction.applyFilter(filterStackTrace);
+    }
+
+    public boolean isIncludeLogMessageParameters() {
+        return includeLogMessageParameters;
+    }
+
+    public void setIncludeLogMessageParameters(boolean includeLogMessageParameters) {
+        this.includeLogMessageParameters = includeLogMessageParameters;
     }
 
     public String getTimestampPattern() {

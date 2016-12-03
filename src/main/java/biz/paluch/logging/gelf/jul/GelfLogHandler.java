@@ -24,8 +24,11 @@ import biz.paluch.logging.gelf.intern.*;
  * <li>port (Optional): Port, default 12201</li>
  * <li>version (Optional): GELF Version 1.0 or 1.1, default 1.0</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
- * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 = throwable.cause, -1 = root cause]), default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 =
+ * throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
+ * <li>includeLogMessageParameters (Optional): Include message parameters from the log event (see
+ * {@link LogRecord#getParameters()}, default true</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
@@ -54,24 +57,24 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         JulPropertyProvider propertyProvider = new JulPropertyProvider(GelfLogHandler.class);
         gelfMessageAssembler.initialize(propertyProvider);
 
-        final String level = propertyProvider.getProperty(PropertyProvider.PROPERTY_LEVEL);
+        String level = propertyProvider.getProperty(PropertyProvider.PROPERTY_LEVEL);
         if (null != level) {
             setLevel(Level.parse(level.trim()));
         } else {
             setLevel(Level.INFO);
         }
 
-        final String additionalFields = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELDS);
+        String additionalFields = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELDS);
         if (null != additionalFields) {
             setAdditionalFields(additionalFields);
         }
 
-        final String additionalFieldTypes = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELD_TYPES);
+        String additionalFieldTypes = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELD_TYPES);
         if (null != additionalFieldTypes) {
             setAdditionalFieldTypes(additionalFieldTypes);
         }
 
-        final String filter = propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER);
+        String filter = propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER);
         try {
             if (null != filter) {
                 final Class clazz = ClassLoader.getSystemClassLoader().loadClass(filter);
@@ -228,6 +231,14 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
 
     public void setFilterStackTrace(boolean filterStackTrace) {
         gelfMessageAssembler.setFilterStackTrace(filterStackTrace);
+    }
+
+    public boolean isIncludeLogMessageParameters() {
+        return gelfMessageAssembler.isIncludeLogMessageParameters();
+    }
+
+    public void setIncludeLogMessageParameters(boolean includeLogMessageParameters) {
+        gelfMessageAssembler.setIncludeLogMessageParameters(includeLogMessageParameters);
     }
 
     public String getTimestampPattern() {

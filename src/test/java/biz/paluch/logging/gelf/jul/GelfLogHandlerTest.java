@@ -1,8 +1,8 @@
 package biz.paluch.logging.gelf.jul;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 import org.apache.log4j.MDC;
 import org.junit.Before;
 import org.junit.Test;
+
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author Mark Paluch
@@ -46,7 +49,35 @@ public class GelfLogHandlerTest {
         Object[] params = new Object[] { "a", "b", "c" };
         logger.log(Level.INFO, expectedMessage, params);
 
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertEquals("a", gelfMessage.getField("MessageParam0"));
+        assertEquals("b", gelfMessage.getField("MessageParam1"));
+
         assertExpectedMessage(expectedMessage);
+
+    }
+
+    @Test
+    public void testWithoutMessageParameters() throws Exception {
+
+        LogManager.getLogManager()
+                .readConfiguration(getClass().getResourceAsStream("/jul/test-logging-without-message-parameters.properties"));
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        String expectedMessage = "message1";
+
+        Object[] params = new Object[] { "a", "b", "c" };
+        logger.log(Level.INFO, expectedMessage, params);
+
+        assertEquals(1, GelfTestSender.getMessages().size());
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertNull(gelfMessage.getField("MessageParam0"));
+        assertNull(gelfMessage.getField("MessageParam1"));
     }
 
     @Test
@@ -59,7 +90,7 @@ public class GelfLogHandlerTest {
 
         assertExpectedMessage(expectedMessage);
     }
-    
+
     @Test
     public void testWithResourceBundleFormattingWithoutParameters() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName(), "messages");
@@ -147,13 +178,13 @@ public class GelfLogHandlerTest {
 
     }
 
-	@Test
+    @Test
     public void testNullMessageAndExceptionFallback() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
-		logger.log(Level.INFO, null, new IllegalStateException());
+        logger.log(Level.INFO, null, new IllegalStateException());
 
-		assertEquals(1, GelfTestSender.getMessages().size());
+        assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
@@ -161,13 +192,13 @@ public class GelfLogHandlerTest {
         assertEquals("java.lang.IllegalStateException", gelfMessage.getShortMessage());
     }
 
-	@Test
+    @Test
     public void testEmptyMessageAndExceptionFallback() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
-		logger.log(Level.INFO, "", new IllegalStateException("Help!"));
+        logger.log(Level.INFO, "", new IllegalStateException("Help!"));
 
-		assertEquals(1, GelfTestSender.getMessages().size());
+        assertEquals(1, GelfTestSender.getMessages().size());
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
@@ -175,13 +206,13 @@ public class GelfLogHandlerTest {
         assertEquals("java.lang.IllegalStateException: Help!", gelfMessage.getShortMessage());
     }
 
-	@Test
+    @Test
     public void testEmptyMessage() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
-		logger.info("");
+        logger.info("");
 
-		assertEquals(0, GelfTestSender.getMessages().size());
+        assertEquals(0, GelfTestSender.getMessages().size());
     }
 
 }

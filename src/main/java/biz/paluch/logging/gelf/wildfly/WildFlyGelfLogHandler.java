@@ -28,14 +28,18 @@ import biz.paluch.logging.gelf.jul.GelfLogHandler;
  * <li>port (Optional): Port, default 12201</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStacktrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
- * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 = throwable.cause, -1 = root cause]), default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 =
+ * throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
+ * <li>includeLogMessageParameters (Optional): Include message parameters from the log event (see
+ * {@link LogRecord#getParameters()}, default true</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>level (Optional): Log-Level, default INFO</li>
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>
  * <li>additionalFields(number) (Optional): Post additional fields. Eg. fieldName=Value,field2=value2</li>
  * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
- * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
+ * double, Double and discover (default if not specified, discover field type on parseability). Eg.
+ * field=String,field2=double</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
@@ -43,7 +47,8 @@ import biz.paluch.logging.gelf.jul.GelfLogHandler;
  * mdc.*,[mdc|MDC]fields</li>
  * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
- * <a name="mdcProfiling"></a> <h2>MDC Profiling</h2>
+ * <a name="mdcProfiling"></a>
+ * <h2>MDC Profiling</h2>
  * <p>
  * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must
  * set one value in the MDC:

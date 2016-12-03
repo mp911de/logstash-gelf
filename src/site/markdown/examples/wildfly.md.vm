@@ -11,6 +11,7 @@ Following settings can be used:
 | originHost        | Originating Hostname  | FQDN Hostname |
 | extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
 | filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
+| includeLogMessageParameters | Include message parameters from the log event | `true` |
 | facility          | Name of the Facility  | `logstash-gelf` |
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
 | level             | Log-Level threshold | `INFO` |
@@ -21,7 +22,7 @@ Following settings can be used:
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
 | maximumMessageSize| Maximum message size (in bytes). If the message size is exceeded, the appender will submit the message in multiple chunks. | `8192` |
-| timestampPattern    | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSSS` |
+| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSSS` |
 
 The only mandatory field is `host`. All other fields are optional.
 
@@ -51,6 +52,7 @@ XML Configuration:
             <property name="facility" value="java-test" />
             <property name="extractStackTrace" value="true" />
             <property name="filterStackTrace" value="true" />
+            <property name="includeLogMessageParameters" value="true" />
             <property name="mdcProfiling" value="true" />
             <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
             <property name="maximumMessageSize" value="8192" />
@@ -83,6 +85,7 @@ CLI Configuration:
 		   facility="java-test", \
 		   extractStackTrace=true, \
 		   filterStackTrace=true, \
+		   includeLogMessageParameters=true, \
 		   mdcProfiling=true, \
 		   timestampPattern="yyyy-MM-dd HH:mm:ss,SSSS", \
 		   maximumMessageSize=8192, \
