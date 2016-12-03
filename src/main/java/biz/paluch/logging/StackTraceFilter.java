@@ -2,22 +2,16 @@ package biz.paluch.logging;
 
 import static biz.paluch.logging.RuntimeContainerProperties.getProperty;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import biz.paluch.logging.gelf.intern.Closer;
 
 /**
- * Filtering Facility for Stack-Traces. This is to shorten very long Traces. It leads to a very short Trace containing only the
- * interesting parts. Please provide an own Resource /StackTraceFilter.packages with the packages if you want to use a custom
- * filter (one package per line)
+ * Filtering Facility for stack traces. This is to shorten very long Traces. It creates a redacted trace containing only the
+ * interesting parts. Please provide an own Resource {@code /StackTraceFilter.packages} with the package prefixes if you want to
+ * use a custom filter (one package per line).
  *
  * <code>
  # Packages to filter
@@ -29,40 +23,116 @@ import biz.paluch.logging.gelf.intern.Closer;
  org.apache.cxf
  * </code>
  *
- * Filtered Example: <code>
- Exception: javax.faces.FacesException: #{documentQueryController.executeQuery}: com.kaufland.dms.commons.exception.DmsTechnicalException: java.io.IOException: aargh
- Caused by: javax.faces.el.EvaluationException: com.kaufland.dms.commons.exception.DmsTechnicalException: java.io.IOException: aargh
- Caused by: com.kaufland.dms.commons.exception.DmsTechnicalException: java.io.IOException: aargh
- Caused by: java.io.IOException: aargh
-     at com.kaufland.dms.core.business.document.query.DocumentQueryBO.queryDocuments(DocumentQueryBO.java:76)
-         52 lines skipped for [sun., org.jboss, java.lang.reflect.Method]
-     at com.kaufland.dms.core.business.document.query.DocumentQueryBO$$$view47.queryDocuments(Unknown Source)
-     at com.kaufland.dms.core.facade.DocumentFacade.queryDocuments(DocumentFacade.java:169)
-         10 lines skipped for [sun., org.jboss, java.lang.reflect.Method]
-     at com.kaufland.dms.commons.exception.safe.ExceptionDecouplingInterceptor.interceptInvocation(ExceptionDecouplingInterceptor.java:31)
-         41 lines skipped for [sun., org.jboss, java.lang.reflect.Method]
-     at com.kaufland.dms.core.service.DocumentService$$$view37.queryDocuments(Unknown Source)
-     at com.kaufland.dms.web.ui.document.query.DocumentQueryController.executeQuery(DocumentQueryController.java:201)
-     at com.kaufland.dms.web.ui.document.query.DocumentQueryController.executeQuery(DocumentQueryController.java:196)
-         4 lines skipped for [sun., java.lang.reflect.Method]
-     at org.apache.el.parser.AstValue.invoke(AstValue.java:258)
-     at org.apache.el.MethodExpressionImpl.invoke(MethodExpressionImpl.java:278)
-         2 lines skipped for [org.jboss]
-     at com.sun.faces.facelets.el.TagMethodExpression.invoke(TagMethodExpression.java:105)
-     at javax.faces.component.MethodBindingMethodExpressionAdapter.invoke(MethodBindingMethodExpressionAdapter.java:87)
-     at com.sun.faces.application.ActionListenerImpl.processAction(ActionListenerImpl.java:101)
-     at javax.faces.component.UICommand.broadcast(UICommand.java:315)
-     at javax.faces.component.UIViewRoot.broadcastEvents(UIViewRoot.java:786)
-     at javax.faces.component.UIViewRoot.processApplication(UIViewRoot.java:1251)
-     at com.sun.faces.lifecycle.InvokeApplicationPhase.execute(InvokeApplicationPhase.java:81)
-     at com.sun.faces.lifecycle.Phase.doPhase(Phase.java:101)
-     at com.sun.faces.lifecycle.LifecycleImpl.execute(LifecycleImpl.java:118)
-     at javax.faces.webapp.FacesServlet.service(FacesServlet.java:593)
-         2 lines skipped for [org.apache.catalina]
-     at com.kaufland.dms.web.servlet.IE9CompatibilityFilter.doFilter(IE9CompatibilityFilter.java:26)
-         19 lines skipped for [org.apache.coyote, org.jboss, org.apache.catalina, org.apache.tomcat]
-     at java.lang.Thread.run(Thread.java:722)
+ * Original stack trace: <code>java.lang.RuntimeException: entryMethod
+	at biz.paluch.logging.StackTraceFilterTest.entryMethod(StackTraceFilterTest.java:49)
+	at biz.paluch.logging.StackTraceFilterTest.printStackTrace(StackTraceFilterTest.java:35)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:160)
+	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68)
+	at com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:51)
+	at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:237)
+	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:147)
+Caused by: biz.paluch.logging.StackTraceFilterTest$MyException: Intermediate 2
+	at biz.paluch.logging.StackTraceFilterTest.intermediate2(StackTraceFilterTest.java:58)
+	at biz.paluch.logging.StackTraceFilterTest.intermediate1(StackTraceFilterTest.java:53)
+	... 30 more
+	Suppressed: java.lang.RuntimeException: surpressed
+		at biz.paluch.logging.StackTraceFilterTest.intermediate2(StackTraceFilterTest.java:59)
+		... 31 more
+		Suppressed: java.lang.RuntimeException: surpressed
+			at biz.paluch.logging.StackTraceFilterTest.intermediate2(StackTraceFilterTest.java:60)
+			... 31 more
+		Suppressed: java.lang.IllegalArgumentException: Failed to parse byte.
+			at org.jboss.common.beans.property.ByteEditor.setAsText(ByteEditor.java:48)
+			at biz.paluch.logging.StackTraceFilterTest.intermediate2(StackTraceFilterTest.java:65)
+			... 31 more
+		Caused by: java.lang.NumberFormatException: For input string: "adsd"
+			at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
+			at java.lang.Integer.parseInt(Integer.java:580)
+			at java.lang.Integer.valueOf(Integer.java:740)
+			at java.lang.Integer.decode(Integer.java:1197)
+			at java.lang.Byte.decode(Byte.java:277)
+			at org.jboss.common.beans.property.ByteEditor.setAsText(ByteEditor.java:45)
+			... 32 more
+Caused by: biz.paluch.logging.StackTraceFilterTest$MyException: Message
+	at biz.paluch.logging.StackTraceFilterTest.intermediate3(StackTraceFilterTest.java:77)
+	... 32 more
+	Suppressed: java.lang.IllegalStateException: Some illegal state
+		at biz.paluch.logging.StackTraceFilterTest.cause(StackTraceFilterTest.java:84)
+		at biz.paluch.logging.StackTraceFilterTest.intermediate3(StackTraceFilterTest.java:78)
+		... 32 more
+	Suppressed: java.lang.IllegalStateException: Some illegal state
+		at biz.paluch.logging.StackTraceFilterTest.cause(StackTraceFilterTest.java:84)
+		at biz.paluch.logging.StackTraceFilterTest.intermediate3(StackTraceFilterTest.java:79)
+		... 32 more
+Caused by: java.lang.IllegalStateException: Some illegal state
+	at biz.paluch.logging.StackTraceFilterTest.cause(StackTraceFilterTest.java:84)
+	... 33 more
     </code>
+ *
+ * Filtered stack trace: <code>java.lang.RuntimeException: entryMethod
+	at biz.paluch.logging.StackTraceFilterTest.entryMethod(StackTraceFilterTest.java:49)
+	at biz.paluch.logging.StackTraceFilterTest.filterWholeStackTrace(StackTraceFilterTest.java:43)
+			19 lines skipped for [java.lang, sun., org.junit]
+	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68)
+	at com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:51)
+	at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:237)
+	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70)
+			4 lines skipped for [java.lang, sun.]
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:147)
+Caused by: biz.paluch.logging.StackTraceFilterTest$MyException: Intermediate 2
+	at biz.paluch.logging.StackTraceFilterTest.intermediate2(StackTraceFilterTest.java:58)
+	at biz.paluch.logging.StackTraceFilterTest.intermediate1(StackTraceFilterTest.java:53)
+	... 30 more
+	Suppressed: java.lang.RuntimeException: surpressed
+		at biz.paluch.logging.StackTraceFilterTest.intermediate2(StackTraceFilterTest.java:59)
+		... 31 more
+		Suppressed: java.lang.RuntimeException: surpressed
+			at biz.paluch.logging.StackTraceFilterTest.intermediate2(StackTraceFilterTest.java:60)
+			... 31 more
+		Suppressed: java.lang.IllegalArgumentException: Failed to parse byte.
+			at org.jboss.common.beans.property.ByteEditor.setAsText(ByteEditor.java:48)
+			at biz.paluch.logging.StackTraceFilterTest.intermediate2(StackTraceFilterTest.java:65)
+			... 31 more
+		Caused by: java.lang.NumberFormatException: For input string: "adsd"
+					6 lines skipped for [java.lang, org.jboss]
+			... 32 more
+Caused by: biz.paluch.logging.StackTraceFilterTest$MyException: Message
+	at biz.paluch.logging.StackTraceFilterTest.intermediate3(StackTraceFilterTest.java:77)
+	... 32 more
+	Suppressed: java.lang.IllegalStateException: Some illegal state
+		at biz.paluch.logging.StackTraceFilterTest.cause(StackTraceFilterTest.java:84)
+		at biz.paluch.logging.StackTraceFilterTest.intermediate3(StackTraceFilterTest.java:78)
+		... 32 more
+	Suppressed: java.lang.IllegalStateException: Some illegal state
+		at biz.paluch.logging.StackTraceFilterTest.cause(StackTraceFilterTest.java:84)
+		at biz.paluch.logging.StackTraceFilterTest.intermediate3(StackTraceFilterTest.java:79)
+		... 32 more
+Caused by: java.lang.IllegalStateException: Some illegal state
+	at biz.paluch.logging.StackTraceFilterTest.cause(StackTraceFilterTest.java:84)
+	... 33 more</code>
  *
  * @author Mark Paluch
  */
@@ -70,12 +140,15 @@ public class StackTraceFilter {
 
     public static final String VERBOSE_LOGGING_PROPERTY = "logstash-gelf.StackTraceFilter.verbose";
     public static final String FILTER_SETTINGS = "/" + StackTraceFilter.class.getSimpleName() + ".packages";
-    
+
     private static final String INDENT = "\t";
     private static final boolean VERBOSE_LOGGING = Boolean.parseBoolean(getProperty(VERBOSE_LOGGING_PROPERTY, "false"));
-    
+
+    private static final Pattern AT_PATTERN = Pattern.compile("(" + INDENT + ")+at");
+    private static final Pattern SURPRESSED_PATTERN = Pattern.compile("(" + INDENT + ")+Suppressed\\:");
+
     /**
-     * List of Surpressed Packages.
+     * List of suppressed Packages.
      */
     private static Set<String> suppressedPackages;
 
@@ -126,113 +199,196 @@ public class StackTraceFilter {
      * Utility-Constructor.
      */
     private StackTraceFilter() {
-
     }
 
     /**
-     * Filter Stack-Trace
+     * Get a filterered stack trace.
      *
      * @param t the throwable
-     * @return String containing the filtered Stack-Trace.
+     * @return String containing the filtered stack trace.
      */
     public static String getFilteredStackTrace(Throwable t) {
         return getFilteredStackTrace(t, true);
     }
 
     /**
-     * Filter Stack-Trace
+     * Get a filterered stack trace.
      *
      * @param t the throwable
-     * @param shouldFilter true in case filtering should be performed. Else stack-trace as string will be returned.
-     * @return String containing the Stack-Trace.
+     * @param shouldFilter true in case filtering should be performed. Else stack trace as string will be returned.
+     * @return String containing the stack trace.
+     * @deprecated since 1.11.1. Use {@link #getStackTrace(Throwable, int)} to get the stack trace without filtering or
+     *             {@link #getFilteredStackTrace(Throwable)} to get the filtered the stack trace.
      */
+    @Deprecated
     public static String getFilteredStackTrace(Throwable t, boolean shouldFilter) {
+
+        if (shouldFilter) {
+            return getFilteredStackTrace(t, 0);
+        }
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-        writeCleanStackTrace(t, pw, shouldFilter);
-        
+        t.printStackTrace(pw);
+        pw.close();
+
         return sw.getBuffer().toString();
     }
 
-    private static void writeCleanStackTrace(Throwable t, PrintWriter s, boolean wantsFilter) {
+    /**
+     * Filter stack trace by selecting the {@link Throwable} using a reference position. Intermediate throwables will be printed
+     * with just their header.
+     *
+     * @param t the throwable
+     * @param ref throwable reference position, see {@link #getThrowable(List, int)}.
+     * @return String containing the stack trace.
+     * @since 1.11.1
+     */
+    public static String getFilteredStackTrace(Throwable t, int ref) {
 
-        s.print("Exception: ");
+        StringWriter sw = new StringWriter();
+        FilterWriter filterWriter = new StackTraceFilterWriter(sw);
 
-        printExceptionChain(t, s);
+        printStackTrace(t, filterWriter, ref);
 
-        Set<String> skippedPackages = new HashSet<String>();
-        int skippedLines = 0;
-        boolean shouldFilter = wantsFilter;
+        return sw.getBuffer().toString();
+    }
+
+    /**
+     * Get the {@link Throwable}'s stack trace.
+     *
+     * @param t the throwable
+     * @return String containing the stack trace.
+     * @since 1.11.1
+     */
+    public static String getStackTrace(Throwable t) {
+        return getStackTrace(t, 0);
+    }
+
+    /**
+     * Get the stack trace by selecting the {@link Throwable} using a reference position. Intermediate throwables will be
+     * printed with just their header.
+     *
+     * @param t the throwable
+     * @param ref throwable reference position, see {@link #getThrowable(List, int)}.
+     * @return String containing the stack trace.
+     * @since 1.11.1
+     */
+    public static String getStackTrace(Throwable t, int ref) {
+
+        StringWriter sw = new StringWriter();
+        printStackTrace(t, sw, ref);
+
+        return sw.getBuffer().toString();
+    }
+
+    private static void printStackTrace(Throwable t, Writer writer, int ref) {
+
+        List<Throwable> throwables = getThrowables(t);
+        PrintWriter exceptionWriter = new PrintWriter(writer);
+        Throwable subject = ref == 0 ? throwables.get(ref) : getThrowable(throwables, ref);
         boolean first = true;
 
-        for (StackTraceElement traceElement : getBottomThrowable(t).getStackTrace()) {
-            String forbiddenPackageName = null;
+        for (Throwable throwable : throwables) {
 
-            if (shouldFilter && !first) {
-                forbiddenPackageName = tryGetForbiddenPackageName(traceElement);
+            if (subject == throwable) {
+                break;
+            }
+
+            if (!first) {
+                exceptionWriter.print("Caused by: ");
             }
 
             first = false;
 
-            if (forbiddenPackageName == null) {
-
-                if (!skippedPackages.isEmpty()) {
-                    // 37 lines skipped for [org.h2, org.hibernate, sun.,
-                    // java.lang.reflect.Method, $Proxy]
-                    s.println(getSkippedPackagesMessage(skippedPackages, skippedLines));
-                }
-
-                // at hib.HibExample.test(HibExample.java:18)
-                s.println(INDENT + "at " + traceElement);
-                skippedPackages.clear();
-                skippedLines = 0;
-            } else {
-                skippedLines++;
-                skippedPackages.add(forbiddenPackageName);
-            }
+            exceptionWriter.print(throwable.toString());
+            exceptionWriter.println();
         }
 
-        if (skippedLines > 0) {
-            s.println(getSkippedPackagesMessage(skippedPackages, skippedLines));
+        if (ref != 0) {
+            exceptionWriter.print("Caused by: ");
         }
+
+        subject.printStackTrace(exceptionWriter);
+    }
+
+    /**
+     * Return a {@link Throwable} by its reference position.
+     * <p>
+     * This method extracts a {@link Throwable} from the exception chain of {@link Throwable#getCause() causes}. A reference of
+     * {@code 0} returns the original {@link Throwable}, values greater zero will walk the cause chain up so a reference
+     * {@code 1} returns {@code t.getCause()}. Negative reference values will walk the causing exception from the root cause
+     * side. A reference of {@code -1} returns the root cause, {@code -2} the exception that wraps the root cause and so on.
+     *
+     * @param throwable the caught {@link Throwable}.
+     * @param ref reference position
+     * @return the selected {@link Throwable}.
+     */
+    public static Throwable getThrowable(Throwable throwable, int ref) {
+        return getThrowable(getThrowables(throwable), ref);
+    }
+
+    private static Throwable getThrowable(List<Throwable> throwables, int ref) {
+
+        if (ref >= 0) {
+            return throwables.get(Math.min(ref, throwables.size() - 1));
+        }
+
+        return throwables.get(Math.max(throwables.size() + ref, 0));
+    }
+
+    private static List<Throwable> getThrowables(Throwable t) {
+
+        List<Throwable> throwables = new ArrayList<Throwable>();
+
+        Throwable current = t;
+
+        do {
+            throwables.add(current);
+            current = current.getCause();
+        } while (current != null && !throwables.contains(current));
+        return throwables;
+    }
+
+    private static int getIndentation(String traceElement) {
+
+        int index = traceElement.indexOf(INDENT);
+        int indentationLevel = 0;
+
+        while (index != -1) {
+            indentationLevel++;
+            index = traceElement.indexOf(INDENT, index + 1);
+        }
+
+        return indentationLevel;
+
     }
 
     // 37 lines skipped for [org.h2, org.hibernate, sun.,
     // java.lang.reflect.Method, $Proxy]
-    private static String getSkippedPackagesMessage(Set<String> skippedPackages, int skippedLines) {
+    private static String getSkippedPackagesMessage(Set<String> skippedPackages, int skippedLines, int indentationLevel) {
 
-        return INDENT + INDENT + skippedLines + " line" + (skippedLines == 1 ? "" : "s") + " skipped for " + skippedPackages;
-    }
+        StringBuilder stringBuilder = new StringBuilder();
 
-    private static Throwable getBottomThrowable(Throwable t) {
-
-        Throwable result = t;
-        while (result.getCause() != null) {
-            result = result.getCause();
+        for (int i = 0; i < 2 + indentationLevel; i++) {
+            stringBuilder.append(INDENT);
         }
-        return result;
-    }
 
-    private static void printExceptionChain(Throwable t, PrintWriter s) {
+        stringBuilder.append(skippedLines).append(" line").append((skippedLines == 1 ? "" : "s")).append(" skipped for ")
+                .append(skippedPackages);
 
-        s.println(t);
-        if (t.getCause() != null) {
-            s.print("Caused by: ");
-            printExceptionChain(t.getCause(), s);
-        }
+        return stringBuilder.toString();
     }
 
     /**
      * Checks to see if the class is part of a forbidden package. If so, it returns the package name from the list of suppressed
      * packages that matches, otherwise it returns null.
      *
-     * @param traceElement StackTraceElement
+     * @param classAndMethod StackTraceElement
      * @return forbidden package name or null.
      */
-    private static String tryGetForbiddenPackageName(StackTraceElement traceElement) {
+    private static String tryGetForbiddenPackageName(String classAndMethod) {
 
-        String classAndMethod = traceElement.getClassName() + "." + traceElement.getMethodName();
         for (String pkg : suppressedPackages) {
             if (classAndMethod.startsWith(pkg)) {
                 return pkg;
@@ -247,4 +403,98 @@ public class StackTraceFilter {
         }
     }
 
+    static class StackTraceFilterWriter extends FilterWriter {
+
+        private final String traceElementPrefix = INDENT + "at ";
+        Set<String> skippedPackages = new HashSet<String>();
+        int skippedLines;
+        boolean endsWithNewLine;
+        boolean first = true;
+        int indentationLevel;
+
+        private final String lineSeparator = java.security.AccessController
+                .doPrivileged(new sun.security.action.GetPropertyAction("line.separator"));
+
+        public StackTraceFilterWriter(Writer s) {
+            super(s);
+        }
+
+        @Override
+        public void write(String str, int off, int len) throws IOException {
+
+            String toWrite = str.substring(off, len);
+
+            if (skippedLines > 0 && toWrite.equals(lineSeparator) && endsWithNewLine) {
+                return;
+            }
+
+            if (toWrite.equals(lineSeparator)) {
+                endsWithNewLine = true;
+                super.write(str, off, len);
+                return;
+            }
+
+            if (SURPRESSED_PATTERN.matcher(toWrite).find()) {
+                first = true;
+            }
+
+            if (endsWithNewLine && AT_PATTERN.matcher(toWrite).find()) {
+
+                String traceElement = getTraceElement(toWrite);
+
+                String forbiddenPackageName = null;
+
+                if (!first) {
+                    forbiddenPackageName = tryGetForbiddenPackageName(traceElement);
+                }
+
+                first = false;
+
+                if (forbiddenPackageName == null) {
+                    afterFiltering();
+                    super.write(str, off, len);
+                } else {
+
+                    indentationLevel = getIndentation(toWrite);
+                    skippedLines++;
+                    skippedPackages.add(forbiddenPackageName);
+                }
+                return;
+            }
+
+            afterFiltering();
+
+            super.write(str, off, len);
+            endsWithNewLine = str.equals(lineSeparator);
+        }
+
+        private void afterFiltering() throws IOException {
+
+            if (!skippedPackages.isEmpty()) {
+                // 37 lines skipped for [org.h2, org.hibernate, sun.,
+                // java.lang.reflect.Method, $Proxy]
+                String skippedPackagesMessage = getSkippedPackagesMessage(skippedPackages, skippedLines, indentationLevel);
+
+                skippedPackages.clear();
+                skippedLines = 0;
+                write(skippedPackagesMessage);
+                write(lineSeparator);
+
+                // at hib.HibExample.test(HibExample.java:18)
+                indentationLevel = 0;
+            }
+        }
+
+        private String getTraceElement(String toWrite) {
+            return toWrite.substring(toWrite.indexOf(traceElementPrefix) + traceElementPrefix.length());
+        }
+
+        @Override
+        public void close() throws IOException {
+            if (skippedLines > 0) {
+                write(getSkippedPackagesMessage(skippedPackages, skippedLines, indentationLevel));
+            }
+            super.close();
+        }
+    }
 }

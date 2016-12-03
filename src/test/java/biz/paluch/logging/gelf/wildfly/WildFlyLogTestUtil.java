@@ -22,7 +22,7 @@ public class WildFlyLogTestUtil {
         handler.setVersion(GelfMessage.GELF_VERSION_1_1);
 
         handler.setFacility("java-test");
-        handler.setExtractStackTrace(true);
+        handler.setExtractStackTrace("0");
         handler.setFilterStackTrace(true);
         handler.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSSS");
         handler.setMaximumMessageSize(8192);

@@ -51,7 +51,7 @@ public class SillyTest {
     public void testSameFieldsGelfLogHandler() {
         GelfLogHandler sut = new GelfLogHandler();
         sut.setAdditionalFields("");
-        sut.setExtractStackTrace(true);
+        sut.setExtractStackTrace("true");
         sut.setFacility(FACILITY);
         sut.setFilterStackTrace(true);
         sut.setGraylogHost(HOST);
@@ -69,7 +69,7 @@ public class SillyTest {
         assertEquals(TIMESTAMP_PATTERN, sut.getTimestampPattern());
         assertEquals(RuntimeContainer.FQDN_HOSTNAME, sut.getOriginHost());
 
-        assertTrue(sut.isExtractStackTrace());
+        assertEquals("true", sut.getExtractStackTrace());
         assertTrue(sut.isFilterStackTrace());
     }
 
@@ -90,7 +90,7 @@ public class SillyTest {
     public void testSameFieldsGelfLogAppender12x() {
         GelfLogAppender sut = new GelfLogAppender();
         sut.setAdditionalFields("");
-        sut.setExtractStackTrace(true);
+        sut.setExtractStackTrace("true");
         sut.setFacility(FACILITY);
         sut.setFilterStackTrace(true);
         sut.setGraylogHost(HOST);
@@ -110,7 +110,7 @@ public class SillyTest {
         assertEquals(TIMESTAMP_PATTERN, sut.getTimestampPattern());
         assertEquals(RuntimeContainer.FQDN_HOSTNAME, sut.getOriginHost());
 
-        assertTrue(sut.isExtractStackTrace());
+        assertEquals("true", sut.getExtractStackTrace());
         assertTrue(sut.isFilterStackTrace());
         assertTrue(sut.isIncludeFullMdc());
         assertTrue(sut.isMdcProfiling());
@@ -121,7 +121,7 @@ public class SillyTest {
         GelfLogbackAppender sut = new GelfLogbackAppender();
 
         sut.setAdditionalFields("");
-        sut.setExtractStackTrace(true);
+        sut.setExtractStackTrace("true");
         sut.setFacility(FACILITY);
         sut.setFilterStackTrace(true);
         sut.setGraylogHost(HOST);
@@ -141,7 +141,7 @@ public class SillyTest {
         assertEquals(TIMESTAMP_PATTERN, sut.getTimestampPattern());
         assertEquals(RuntimeContainer.FQDN_HOSTNAME, sut.getOriginHost());
 
-        assertTrue(sut.isExtractStackTrace());
+        assertEquals("true", sut.getExtractStackTrace());
         assertTrue(sut.isFilterStackTrace());
         assertTrue(sut.isIncludeFullMdc());
         assertTrue(sut.isMdcProfiling());

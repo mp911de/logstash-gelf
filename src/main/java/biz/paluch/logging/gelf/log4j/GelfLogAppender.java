@@ -25,7 +25,7 @@ import biz.paluch.logging.gelf.intern.*;
  * <li>port (Optional): Port, default 12201</li>
  * <li>version (Optional): GELF Version 1.0 or 1.1, default 1.0</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
- * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 = throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
@@ -194,11 +194,11 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
         gelfMessageAssembler.setFacility(facility);
     }
 
-    public boolean isExtractStackTrace() {
-        return gelfMessageAssembler.isExtractStackTrace();
+    public String getExtractStackTrace() {
+        return gelfMessageAssembler.getExtractStackTrace();
     }
 
-    public void setExtractStackTrace(boolean extractStacktrace) {
+    public void setExtractStackTrace(String extractStacktrace) {
         gelfMessageAssembler.setExtractStackTrace(extractStacktrace);
     }
 

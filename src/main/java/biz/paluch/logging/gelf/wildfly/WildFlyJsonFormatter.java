@@ -54,7 +54,7 @@ import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
  * <li>fields (Optional): Comma-separated list of log event fields that should be included in the JSON. Defaults to
  * {@code Time, Severity, ThreadName, SourceClassName, SourceMethodName, SourceSimpleClassName, LoggerName, NDC}</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
- * <li>extractStacktrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 = throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
@@ -206,11 +206,11 @@ public class WildFlyJsonFormatter extends ExtFormatter {
         gelfMessageAssembler.setFacility(facility);
     }
 
-    public boolean isExtractStackTrace() {
-        return gelfMessageAssembler.isExtractStackTrace();
+    public String getExtractStackTrace() {
+        return gelfMessageAssembler.getExtractStackTrace();
     }
 
-    public void setExtractStackTrace(boolean extractStacktrace) {
+    public void setExtractStackTrace(String extractStacktrace) {
         gelfMessageAssembler.setExtractStackTrace(extractStacktrace);
     }
 

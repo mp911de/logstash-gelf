@@ -44,8 +44,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private String originHost;
     private int port;
     private String facility;
-    private boolean extractStackTrace;
-    private boolean filterStackTrace;
+    private StackTraceExtraction stackTraceExtraction = StackTraceExtraction.OFF;
     private int maximumMessageSize = 8192;
 
     private List<MessageField> fields = new ArrayList<MessageField>();
@@ -87,8 +86,9 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         }
 
         originHost = propertyProvider.getProperty(PropertyProvider.PROPERTY_ORIGIN_HOST);
-        extractStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_EXTRACT_STACKTRACE));
-        filterStackTrace = "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE));
+        setExtractStackTrace(propertyProvider.getProperty(PropertyProvider.PROPERTY_EXTRACT_STACKTRACE));
+        setFilterStackTrace(
+                "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE)));
 
         setupStaticFields(propertyProvider);
         setupAdditionalFieldTypes(propertyProvider);
@@ -148,7 +148,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
             }
         }
 
-        if (extractStackTrace && throwable != null) {
+        if (stackTraceExtraction.isEnabled() && throwable != null) {
             addStackTrace(throwable, builder);
         }
 
@@ -195,11 +195,11 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     }
 
     private void addStackTrace(Throwable thrown, GelfMessageBuilder builder) {
-        if (filterStackTrace) {
-            builder.withField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown));
+        if (stackTraceExtraction.isFilter()) {
+            builder.withField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown, stackTraceExtraction.getRef()));
         } else {
             final StringWriter sw = new StringWriter();
-            thrown.printStackTrace(new PrintWriter(sw));
+            StackTraceFilter.getThrowable(thrown, stackTraceExtraction.getRef()).printStackTrace(new PrintWriter(sw));
             builder.withField(FIELD_STACK_TRACE, sw.toString());
         }
     }
@@ -294,19 +294,36 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     }
 
     public boolean isExtractStackTrace() {
-        return extractStackTrace;
+        return stackTraceExtraction.isEnabled();
+    }
+
+    public String getExtractStackTrace() {
+
+        if (stackTraceExtraction.isEnabled()) {
+
+            if (stackTraceExtraction.getRef() == 0) {
+                return "true";
+            }
+            return Integer.toString(stackTraceExtraction.getRef());
+        }
+
+        return "false";
     }
 
     public void setExtractStackTrace(boolean extractStackTrace) {
-        this.extractStackTrace = extractStackTrace;
+        this.stackTraceExtraction = stackTraceExtraction.applyExtaction("" + extractStackTrace);
+    }
+
+    public void setExtractStackTrace(String value) {
+        this.stackTraceExtraction = stackTraceExtraction.applyExtaction(value);
     }
 
     public boolean isFilterStackTrace() {
-        return filterStackTrace;
+        return stackTraceExtraction.isEnabled();
     }
 
     public void setFilterStackTrace(boolean filterStackTrace) {
-        this.filterStackTrace = filterStackTrace;
+        this.stackTraceExtraction = stackTraceExtraction.applyFilter(filterStackTrace);
     }
 
     public String getTimestampPattern() {
@@ -343,5 +360,70 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         }
 
         this.version = version;
+    }
+
+    static class StackTraceExtraction {
+
+        private static final StackTraceExtraction OFF = new StackTraceExtraction(false, false, 0);
+        private static final StackTraceExtraction ON = new StackTraceExtraction(true, false, 0);
+        private static final StackTraceExtraction FILTERED = new StackTraceExtraction(true, true, 0);
+        private final boolean enabled;
+        private final boolean filter;
+        private final int ref;
+
+        private StackTraceExtraction(boolean enabled, boolean filter, int ref) {
+            this.enabled = enabled;
+            this.filter = filter;
+            this.ref = ref;
+        }
+
+        /**
+         * Parse the stack trace filtering value.
+         * 
+         * @param value
+         * @return
+         */
+        public static StackTraceExtraction from(String value, boolean filter) {
+
+            if (value == null) {
+                return OFF;
+            }
+
+            boolean enabled = Boolean.parseBoolean(value);
+
+            int ref = 0;
+            if (!value.equalsIgnoreCase("false") && !value.trim().isEmpty()) {
+                try {
+                    ref = Integer.parseInt(value);
+                    enabled = true;
+                } catch (NumberFormatException e) {
+                    ref = 0;
+                }
+            }
+
+            return new StackTraceExtraction(enabled, filter, ref);
+        }
+
+        public StackTraceExtraction applyExtaction(String value) {
+
+            StackTraceExtraction parsed = from(value, isFilter());
+            return new StackTraceExtraction(parsed.isEnabled(), parsed.isFilter(), parsed.getRef());
+        }
+
+        public StackTraceExtraction applyFilter(boolean filterStackTrace) {
+            return new StackTraceExtraction(isEnabled(), filterStackTrace, getRef());
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public boolean isFilter() {
+            return filter;
+        }
+
+        public int getRef() {
+            return ref;
+        }
     }
 }

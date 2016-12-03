@@ -136,4 +136,11 @@ These are not regular expressions, and the entries do not support wildcards.
 
 You can turn on verbose logging to inspect the discovery of `StackTraceFilter.packages` by setting 
 the system property `logstash-gelf.StackTraceFilter.verbose` to `true`.
+
+## Advanced Stack Trace Extraction
+
+`extractStackTrace` allows an extended configuration to specify a positional reference of exceptions. You can specify a positional throwable reference by setting `extractStackTrace` to a numerical value. Throwable reference specifies a position inside the exception cause chain. 
+
+A reference of `0` corresponds with `true` and will extract the whole stack trace. Any positive value will walk the cause chain. So `1` corresponds with `exception.getCause()`, `2` with `exception.getCause().getCause()` (you'll get the idea). If the reference value is greater than causes are available, walking up the chain is capped at the last found exception.
  
+Negative values walk the exception chain from the root cause side. `-1` will extract the root cause, `-2` the exception wrapping the root cause.

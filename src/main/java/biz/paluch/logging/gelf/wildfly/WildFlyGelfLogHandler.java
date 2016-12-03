@@ -28,9 +28,8 @@ import biz.paluch.logging.gelf.jul.GelfLogHandler;
  * <li>port (Optional): Port, default 12201</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStacktrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 = throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
- * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
- * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>level (Optional): Log-Level, default INFO</li>
  * <li>filter (Optional): Class-Name of a Log-Filter, default none</li>

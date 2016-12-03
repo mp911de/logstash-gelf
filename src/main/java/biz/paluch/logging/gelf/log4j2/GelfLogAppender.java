@@ -34,14 +34,17 @@ import biz.paluch.logging.gelf.intern.*;
  * <li>port (Optional): Port, default 12201</li>
  * <li>version (Optional): GELF Version 1.0 or 1.1, default 1.0</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
- * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 = throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
- * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
- * <li>ignoreExceptions (Optional): The default is <code>true</code>, causing exceptions encountered while appending events to be internally logged and then ignored. When set to <code>false</code> exceptions will be propagated to the caller, instead. You must set this to false when wrapping this Appender in a <code>FailoverAppender</code>.</li>
+ * double, Double and discover (default if not specified, discover field type on parseability). Eg.
+ * field=String,field2=double</li>
+ * <li>ignoreExceptions (Optional): The default is <code>true</code>, causing exceptions encountered while appending events to
+ * be internally logged and then ignored. When set to <code>false</code> exceptions will be propagated to the caller, instead.
+ * You must set this to false when wrapping this Appender in a <code>FailoverAppender</code>.</li>
  * </ul>
  *
  * <h2>Fields</h2>
@@ -105,15 +108,15 @@ import biz.paluch.logging.gelf.intern.*;
  * Additionally, you can add the <strong>host</strong>-Field, which can supply you either the FQDN hostname, the simple hostname
  * or the local address.
  * </p>
- * <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" style="border-bottom:1px solid #9eadc0;" summary="Details for the %host formatter">
+ * <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" style="border-bottom:1px solid #9eadc0;" summary=
+ * "Details for the %host formatter">
  * <tbody>
  * <tr>
  * <th class="colFirst">Option</th>
  * <th class="colLast">Description</th>
  * </tr>
  * <tr class="altColor">
- * <td class="colFirst" align="center">
- * <b>host</b> &nbsp;&nbsp;{["fqdn"<br>
+ * <td class="colFirst" align="center"><b>host</b> &nbsp;&nbsp;{["fqdn"<br>
  * &nbsp;&nbsp;|"simple"<br>
  * &nbsp;&nbsp;|"address"]}</td>
  * <td class="colLast">
@@ -138,7 +141,8 @@ import biz.paluch.logging.gelf.intern.*;
  * </table>
  *
  *
- * <a name="mdcProfiling"></a> <h2>MDC Profiling</h2>
+ * <a name="mdcProfiling"></a>
+ * <h2>MDC Profiling</h2>
  * <p>
  * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must
  * set one value in the MDC:
@@ -255,7 +259,7 @@ public class GelfLogAppender extends AbstractAppender {
         }
 
         if (extractStackTrace != null) {
-            mdcGelfMessageAssembler.setExtractStackTrace("true".equals(extractStackTrace));
+            mdcGelfMessageAssembler.setExtractStackTrace(extractStackTrace);
         }
 
         if (filterStackTrace != null) {
@@ -323,7 +327,7 @@ public class GelfLogAppender extends AbstractAppender {
 
     @Override
     public void append(LogEvent event) {
-        
+
     	if (event == null) {
             return;
         }

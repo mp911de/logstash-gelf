@@ -20,7 +20,7 @@ public class JBoss7LogTestUtil {
         handler.setVersion(GelfMessage.GELF_VERSION_1_1);
 
         handler.setFacility("java-test");
-        handler.setExtractStackTrace(true);
+        handler.setExtractStackTrace("true");
         handler.setFilterStackTrace(true);
         handler.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSSS");
         handler.setMaximumMessageSize(8192);

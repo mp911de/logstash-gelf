@@ -194,7 +194,7 @@ public class WildFlyGelfLogFormatterTest {
 
         WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
         formatter.setOriginHost("myhost");
-        formatter.setExtractStackTrace(true);
+        formatter.setExtractStackTrace("true");
 
         handler.setFormatter(formatter);
         Logger logger = Logger.getLogger(getClass().getName());
