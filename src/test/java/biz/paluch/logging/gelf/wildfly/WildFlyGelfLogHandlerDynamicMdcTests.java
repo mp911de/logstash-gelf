@@ -1,8 +1,7 @@
 package biz.paluch.logging.gelf.wildfly;
 
 import static biz.paluch.logging.gelf.wildfly.WildFlyLogTestUtil.getWildFlyGelfLogHandler;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 import java.util.logging.LogManager;
@@ -47,12 +46,12 @@ public class WildFlyGelfLogHandlerDynamicMdcTests {
         logger.addHandler(handler);
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         String myMdc = gelfMessage.getField(MDC_MY_MDC);
-        assertNull(myMdc);
+        assertThat(myMdc).isNull();
     }
 
     @Test
@@ -66,13 +65,13 @@ public class WildFlyGelfLogHandlerDynamicMdcTests {
         MDC.put(MY_MDC_WITH_SUFFIX2, VALUE_3);
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(VALUE_1, gelfMessage.getField(MDC_MY_MDC));
-        assertEquals(VALUE_2, gelfMessage.getField(MY_MDC_WITH_SUFFIX1));
-        assertEquals(VALUE_3, gelfMessage.getField(MY_MDC_WITH_SUFFIX2));
+        assertThat(gelfMessage.getField(MDC_MY_MDC)).isEqualTo(VALUE_1);
+        assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX1)).isEqualTo(VALUE_2);
+        assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX2)).isEqualTo(VALUE_3);
 
     }
 
@@ -86,12 +85,12 @@ public class WildFlyGelfLogHandlerDynamicMdcTests {
         MDC.put(MDC_SOME_OTHER_FIELD, "excluded");
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("included", gelfMessage.getField(MDC_SOME_FIELD));
-        assertNull(gelfMessage.getField("someOtherField"));
+        assertThat(gelfMessage.getField(MDC_SOME_FIELD)).isEqualTo("included");
+        assertThat(gelfMessage.getField("someOtherField")).isNull();
 
     }
 
@@ -108,13 +107,13 @@ public class WildFlyGelfLogHandlerDynamicMdcTests {
         MDC.put(MY_MDC_WITH_SUFFIX2, VALUE_3);
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(VALUE_1, gelfMessage.getField(MDC_MY_MDC));
-        assertEquals(VALUE_2, gelfMessage.getField(MY_MDC_WITH_SUFFIX1));
-        assertEquals(VALUE_3, gelfMessage.getField(MY_MDC_WITH_SUFFIX2));
+        assertThat(gelfMessage.getField(MDC_MY_MDC)).isEqualTo(VALUE_1);
+        assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX1)).isEqualTo(VALUE_2);
+        assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX2)).isEqualTo(VALUE_3);
 
     }
 
@@ -132,17 +131,17 @@ public class WildFlyGelfLogHandlerDynamicMdcTests {
         MDC.put("myMdcf", "2.2");
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
         Map<String, Object> jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
-        assertEquals("String", jsonObject.get("myMdcs"));
-        assertEquals(1, jsonObject.get("myMdcl"));
-        assertEquals(2, jsonObject.get("myMdci"));
+        assertThat(jsonObject.get("myMdcs")).isEqualTo("String");
+        assertThat(jsonObject.get("myMdcl")).isEqualTo(1);
+        assertThat(jsonObject.get("myMdci")).isEqualTo(2);
 
-        assertEquals(2.1, jsonObject.get("myMdcd"));
-        assertEquals(2.2, jsonObject.get("myMdcf"));
+        assertThat(jsonObject.get("myMdcd")).isEqualTo(2.1);
+        assertThat(jsonObject.get("myMdcf")).isEqualTo(2.2);
 
         MDC.put("myMdcl", "1.1");
         MDC.put("myMdci", "2.1");
@@ -151,29 +150,29 @@ public class WildFlyGelfLogHandlerDynamicMdcTests {
 
         GelfTestSender.getMessages().clear();
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         gelfMessage = GelfTestSender.getMessages().get(0);
         jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
-        assertEquals(1, jsonObject.get("myMdcl"));
-        assertEquals(2, jsonObject.get("myMdci"));
+        assertThat(jsonObject.get("myMdcl")).isEqualTo(1);
+        assertThat(jsonObject.get("myMdci")).isEqualTo(2);
 
-        assertNull(jsonObject.get("myMdcd"));
-        assertEquals(0.0, jsonObject.get("myMdcf"));
+        assertThat(jsonObject.get("myMdcd")).isNull();
+        assertThat(jsonObject.get("myMdcf")).isEqualTo(0.0);
 
         MDC.put("myMdcl", "b");
         MDC.put("myMdci", "a");
 
         GelfTestSender.getMessages().clear();
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         gelfMessage = GelfTestSender.getMessages().get(0);
         jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
-        assertNull(jsonObject.get("myMdcl"));
-        assertEquals(0, jsonObject.get("myMdci"));
+        assertThat(jsonObject.get("myMdcl")).isNull();
+        assertThat(jsonObject.get("myMdci")).isEqualTo(0);
     }
 
     private WildFlyGelfLogHandler getLogHandler() {

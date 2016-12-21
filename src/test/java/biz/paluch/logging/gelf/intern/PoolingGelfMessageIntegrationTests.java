@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.intern;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -57,7 +56,7 @@ public class PoolingGelfMessageIntegrationTests {
         ByteBuffer[] oldWay = gelfMessage.toUDPBuffers();
         ByteBuffer[] newWay = poolingGelfMessage.toUDPBuffers(buffer, buffer2);
 
-        assertEquals(oldWay.length, newWay.length);
+        assertThat(newWay.length).isEqualTo(oldWay.length);
 
         for (int i = 0; i < oldWay.length; i++) {
 
@@ -73,7 +72,7 @@ public class PoolingGelfMessageIntegrationTests {
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(newBytes));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             StreamUtils.copyStream(gzipInputStream, baos);
-            assertTrue(Arrays.equals(newBytes, oldBytes));
+            assertThat(Arrays.equals(newBytes, oldBytes)).isTrue();
         }
     }
 
@@ -98,7 +97,7 @@ public class PoolingGelfMessageIntegrationTests {
         ByteBuffer[] oldWay = gelfMessage.toUDPBuffers();
         ByteBuffer[] newWay = poolingGelfMessage.toUDPBuffers(buffer, tempBuffer);
 
-        assertEquals(oldWay.length, newWay.length);
+        assertThat(newWay.length).isEqualTo(oldWay.length);
 
         for (int i = 0; i < oldWay.length; i++) {
 
@@ -111,7 +110,7 @@ public class PoolingGelfMessageIntegrationTests {
             oldChunk.get(oldBytes);
             newChunk.get(newBytes);
 
-            assertTrue(Arrays.equals(newBytes, oldBytes));
+            assertThat(Arrays.equals(newBytes, oldBytes)).isTrue();
         }
     }
 

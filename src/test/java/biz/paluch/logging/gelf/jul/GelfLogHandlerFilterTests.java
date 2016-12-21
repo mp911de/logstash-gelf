@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.jul;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -22,7 +22,8 @@ public class GelfLogHandlerFilterTests {
     public void before() throws Exception {
 
         GelfTestSender.getMessages().clear();
-        LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/jul/test-logging-with-filter.properties"));
+        LogManager.getLogManager()
+                .readConfiguration(getClass().getResourceAsStream("/jul/test-logging-with-filter.properties"));
         MDC.remove("mdcField1");
     }
 
@@ -38,6 +39,6 @@ public class GelfLogHandlerFilterTests {
 
         String expectedMessage = "foo bar test log message";
         logger.info(expectedMessage);
-        assertEquals(0, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).isEmpty();
     }
 }

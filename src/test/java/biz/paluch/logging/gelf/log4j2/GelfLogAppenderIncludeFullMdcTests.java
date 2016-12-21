@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,12 +53,12 @@ public class GelfLogAppenderIncludeFullMdcTests {
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertNull(gelfMessage.getField(MDC_MY_MDC1));
-        assertNull(gelfMessage.getField(MDC_MY_MDC2));
+        assertThat(gelfMessage.getField(MDC_MY_MDC1)).isNull();
+        assertThat(gelfMessage.getField(MDC_MY_MDC2)).isNull();
     }
 
     @Test
@@ -70,12 +69,12 @@ public class GelfLogAppenderIncludeFullMdcTests {
         ThreadContext.put(MDC_MY_MDC2, VALUE_2);
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(VALUE_1, gelfMessage.getField(MDC_MY_MDC1));
-        assertEquals(VALUE_2, gelfMessage.getField(MDC_MY_MDC2));
+        assertThat(gelfMessage.getField(MDC_MY_MDC1)).isEqualTo(VALUE_1);
+        assertThat(gelfMessage.getField(MDC_MY_MDC2)).isEqualTo(VALUE_2);
 
     }
 

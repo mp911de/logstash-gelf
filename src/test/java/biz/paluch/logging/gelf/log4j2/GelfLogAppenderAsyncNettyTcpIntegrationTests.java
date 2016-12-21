@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Map;
@@ -71,28 +71,28 @@ public class GelfLogAppenderAsyncNettyTcpIntegrationTests {
         waitForGelf();
 
         List jsonValues = server.getJsonValues();
-        assertEquals(1, jsonValues.size());
+        assertThat(jsonValues).hasSize(1);
 
         Map<String, Object> jsonValue = (Map<String, Object>) jsonValues.get(0);
 
-        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get(GelfMessage.FIELD_HOST));
-        assertEquals(RuntimeContainer.HOSTNAME, jsonValue.get("_server.simple"));
-        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get("_server.fqdn"));
-        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get("_server"));
-        assertEquals(RuntimeContainer.ADDRESS, jsonValue.get("_server.addr"));
+        assertThat(jsonValue.get(GelfMessage.FIELD_HOST)).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
+        assertThat(jsonValue.get("_server.simple")).isEqualTo(RuntimeContainer.HOSTNAME);
+        assertThat(jsonValue.get("_server.fqdn")).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
+        assertThat(jsonValue.get("_server")).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
+        assertThat(jsonValue.get("_server.addr")).isEqualTo(RuntimeContainer.ADDRESS);
 
-        assertEquals(getClass().getName(), jsonValue.get("_className"));
-        assertEquals(getClass().getSimpleName(), jsonValue.get("_simpleClassName"));
+        assertThat(jsonValue.get("_className")).isEqualTo(getClass().getName());
+        assertThat(jsonValue.get("_simpleClassName")).isEqualTo(getClass().getSimpleName());
 
-        assertEquals(EXPECTED_LOG_MESSAGE, jsonValue.get(GelfMessage.FIELD_FULL_MESSAGE));
-        assertEquals(EXPECTED_LOG_MESSAGE, jsonValue.get(GelfMessage.FIELD_SHORT_MESSAGE));
+        assertThat(jsonValue.get(GelfMessage.FIELD_FULL_MESSAGE)).isEqualTo(EXPECTED_LOG_MESSAGE);
+        assertThat(jsonValue.get(GelfMessage.FIELD_SHORT_MESSAGE)).isEqualTo(EXPECTED_LOG_MESSAGE);
 
-        assertEquals("INFO", jsonValue.get("_level"));
-        assertEquals("6", jsonValue.get(GelfMessage.FIELD_LEVEL));
+        assertThat(jsonValue.get("_level")).isEqualTo("INFO");
+        assertThat(jsonValue.get(GelfMessage.FIELD_LEVEL)).isEqualTo("6");
 
-        assertEquals("logstash-gelf", jsonValue.get(GelfMessage.FIELD_FACILITY));
-        assertEquals("fieldValue1", jsonValue.get("_fieldName1"));
-        assertEquals("fieldValue2", jsonValue.get("_fieldName2"));
+        assertThat(jsonValue.get(GelfMessage.FIELD_FACILITY)).isEqualTo("logstash-gelf");
+        assertThat(jsonValue.get("_fieldName1")).isEqualTo("fieldValue1");
+        assertThat(jsonValue.get("_fieldName2")).isEqualTo("fieldValue2");
 
     }
 
@@ -106,28 +106,28 @@ public class GelfLogAppenderAsyncNettyTcpIntegrationTests {
         waitForGelf();
 
         List jsonValues = server.getJsonValues();
-        assertEquals(1, jsonValues.size());
+        assertThat(jsonValues).hasSize(1);
 
         Map<String, Object> jsonValue = (Map<String, Object>) jsonValues.get(0);
 
-        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get(GelfMessage.FIELD_HOST));
-        assertEquals(RuntimeContainer.HOSTNAME, jsonValue.get("_server.simple"));
-        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get("_server.fqdn"));
-        assertEquals(RuntimeContainer.FQDN_HOSTNAME, jsonValue.get("_server"));
-        assertEquals(RuntimeContainer.ADDRESS, jsonValue.get("_server.addr"));
+        assertThat(jsonValue.get(GelfMessage.FIELD_HOST)).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
+        assertThat(jsonValue.get("_server.simple")).isEqualTo(RuntimeContainer.HOSTNAME);
+        assertThat(jsonValue.get("_server.fqdn")).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
+        assertThat(jsonValue.get("_server")).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
+        assertThat(jsonValue.get("_server.addr")).isEqualTo(RuntimeContainer.ADDRESS);
 
-        assertEquals("?", jsonValue.get("_className"));
-        assertEquals("?", jsonValue.get("_simpleClassName"));
+        assertThat(jsonValue.get("_className")).isEqualTo("?");
+        assertThat(jsonValue.get("_simpleClassName")).isEqualTo("?");
 
-        assertEquals(EXPECTED_LOG_MESSAGE, jsonValue.get(GelfMessage.FIELD_FULL_MESSAGE));
-        assertEquals(EXPECTED_LOG_MESSAGE, jsonValue.get(GelfMessage.FIELD_SHORT_MESSAGE));
+        assertThat(jsonValue.get(GelfMessage.FIELD_FULL_MESSAGE)).isEqualTo(EXPECTED_LOG_MESSAGE);
+        assertThat(jsonValue.get(GelfMessage.FIELD_SHORT_MESSAGE)).isEqualTo(EXPECTED_LOG_MESSAGE);
 
-        assertEquals("INFO", jsonValue.get("_level"));
-        assertEquals("6", jsonValue.get(GelfMessage.FIELD_LEVEL));
+        assertThat(jsonValue.get("_level")).isEqualTo("INFO");
+        assertThat(jsonValue.get(GelfMessage.FIELD_LEVEL)).isEqualTo("6");
 
-        assertEquals("logstash-gelf", jsonValue.get(GelfMessage.FIELD_FACILITY));
-        assertEquals("fieldValue1", jsonValue.get("_fieldName1"));
-        assertEquals("fieldValue2", jsonValue.get("_fieldName2"));
+        assertThat(jsonValue.get(GelfMessage.FIELD_FACILITY)).isEqualTo("logstash-gelf");
+        assertThat(jsonValue.get("_fieldName1")).isEqualTo("fieldValue1");
+        assertThat(jsonValue.get("_fieldName2")).isEqualTo("fieldValue2");
 
     }
 

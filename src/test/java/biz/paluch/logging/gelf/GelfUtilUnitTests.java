@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
-
 
 /**
  * @author Mark Paluch
@@ -29,7 +28,7 @@ public class GelfUtilUnitTests {
 
         GelfUtil.addMdcProfiling(new JBoss7JulLogEvent(extLogRecord), message);
 
-        assertEquals("12sec", message.getAdditonalFields().get(GelfUtil.MDC_REQUEST_DURATION));
+        assertThat(message.getAdditonalFields().get(GelfUtil.MDC_REQUEST_DURATION)).isEqualTo("12sec");
     }
 
     @Test
@@ -43,7 +42,7 @@ public class GelfUtilUnitTests {
 
         GelfUtil.addMdcProfiling(new JBoss7JulLogEvent(extLogRecord), message);
 
-        assertEquals("12sec", message.getAdditonalFields().get(GelfUtil.MDC_REQUEST_DURATION));
+        assertThat(message.getAdditonalFields().get(GelfUtil.MDC_REQUEST_DURATION)).isEqualTo("12sec");
     }
-    
+
 }

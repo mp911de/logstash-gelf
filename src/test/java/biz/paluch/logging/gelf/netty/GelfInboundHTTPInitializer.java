@@ -11,7 +11,7 @@ import io.netty.handler.codec.http.HttpResponseEncoder;
  * @author Aleksandar Stojadinovic
  */
 public class GelfInboundHTTPInitializer extends ChannelInitializer<SocketChannel> {
-    
+
     protected GelfInboundHTTPHandler handler;
 
     public GelfInboundHTTPInitializer() {
@@ -20,9 +20,9 @@ public class GelfInboundHTTPInitializer extends ChannelInitializer<SocketChannel
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
-        
+
         ChannelPipeline pipeline = socketChannel.pipeline();
-        
+
         pipeline.addLast(new HttpRequestDecoder());
         pipeline.addLast(new HttpObjectAggregator(1048576));
         pipeline.addLast(new HttpResponseEncoder());

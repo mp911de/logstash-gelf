@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -16,26 +16,26 @@ public class MessageFieldUnitTests {
     @Test
     public void testMdcMessageField() throws Exception {
         MdcMessageField field = new MdcMessageField(NAME, "mdcName");
-        assertEquals(MdcMessageField.class.getSimpleName() + " [name='name', mdcName='mdcName']", field.toString());
+        assertThat(field.toString()).isEqualTo(MdcMessageField.class.getSimpleName() + " [name='name', mdcName='mdcName']");
     }
 
     @Test
     public void testLogMessageField() throws Exception {
         LogMessageField field = new LogMessageField(NAME, LogMessageField.NamedLogField.byName("SourceMethodName"));
-        assertEquals(LogMessageField.class.getSimpleName() + " [name='name', namedLogField=SourceMethodName]",
-                field.toString());
+        assertThat(field.toString())
+                .isEqualTo(LogMessageField.class.getSimpleName() + " [name='name', namedLogField=SourceMethodName]");
     }
 
     @Test
     public void testStaticMessageField() throws Exception {
         StaticMessageField field = new StaticMessageField(NAME, "value");
-        assertEquals(StaticMessageField.class.getSimpleName() + " [name='name', value='value']", field.toString());
+        assertThat(field.toString()).isEqualTo(StaticMessageField.class.getSimpleName() + " [name='name', value='value']");
     }
 
     @Test
     public void testDynamicMdcMessageField() throws Exception {
         DynamicMdcMessageField field = new DynamicMdcMessageField(".*");
-        assertEquals(DynamicMdcMessageField.class.getSimpleName() + " [regex='.*']", field.toString());
+        assertThat(field.toString()).isEqualTo(DynamicMdcMessageField.class.getSimpleName() + " [regex='.*']");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class MessageFieldUnitTests {
         List<LogMessageField> result = LogMessageField.getDefaultMapping(false, LogMessageField.NamedLogField.LoggerName,
                 LogMessageField.NamedLogField.NDC);
 
-        assertEquals(2, result.size());
+        assertThat(result).hasSize(2);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class MessageFieldUnitTests {
 
         List<LogMessageField> result = LogMessageField.getDefaultMapping(false, LogMessageField.NamedLogField.values());
 
-        assertEquals(LogMessageField.NamedLogField.values().length, result.size());
+        assertThat(result.size()).isEqualTo(LogMessageField.NamedLogField.values().length);
     }
 
     @Test
@@ -59,6 +59,6 @@ public class MessageFieldUnitTests {
 
         List<LogMessageField> result = LogMessageField.getDefaultMapping(true, LogMessageField.NamedLogField.values());
 
-        assertEquals(LogMessageField.NamedLogField.values().length, result.size());
+        assertThat(result.size()).isEqualTo(LogMessageField.NamedLogField.values().length);
     }
 }

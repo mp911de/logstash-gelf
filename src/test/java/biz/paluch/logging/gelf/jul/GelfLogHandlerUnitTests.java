@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.jul;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -31,16 +30,16 @@ public class GelfLogHandlerUnitTests {
 
         sut.flush();
 
-        assertEquals(FACILITY, sut.getFacility());
-        assertEquals(HOST, sut.getGraylogHost());
-        assertEquals(HOST, sut.getHost());
-        assertEquals(GRAYLOG_PORT, sut.getPort());
-        assertEquals(GRAYLOG_PORT, sut.getGraylogPort());
-        assertEquals(MAXIMUM_MESSAGE_SIZE, sut.getMaximumMessageSize());
-        assertEquals(TIMESTAMP_PATTERN, sut.getTimestampPattern());
-        assertEquals(RuntimeContainer.FQDN_HOSTNAME, sut.getOriginHost());
+        assertThat(sut.getFacility()).isEqualTo(FACILITY);
+        assertThat(sut.getGraylogHost()).isEqualTo(HOST);
+        assertThat(sut.getHost()).isEqualTo(HOST);
+        assertThat(sut.getPort()).isEqualTo(GRAYLOG_PORT);
+        assertThat(sut.getGraylogPort()).isEqualTo(GRAYLOG_PORT);
+        assertThat(sut.getMaximumMessageSize()).isEqualTo(MAXIMUM_MESSAGE_SIZE);
+        assertThat(sut.getTimestampPattern()).isEqualTo(TIMESTAMP_PATTERN);
+        assertThat(sut.getOriginHost()).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
 
-        assertEquals("true", sut.getExtractStackTrace());
-        assertTrue(sut.isFilterStackTrace());
+        assertThat(sut.getExtractStackTrace()).isEqualTo("true");
+        assertThat(sut.isFilterStackTrace()).isTrue();
     }
 }

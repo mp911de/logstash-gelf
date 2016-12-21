@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.logback;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URL;
 import java.util.List;
@@ -56,10 +56,10 @@ public class GelfLogbackAppenderHTTPIntegrationTests {
         List<Object> jsonValues = server.getJsonValues();
         String uri = server.getHandlerInitializer().getHandler().getUri();
 
-        assertEquals("/foo/bar", uri);
-        assertEquals(1, jsonValues.size());
+        assertThat(uri).isEqualTo("/foo/bar");
+        assertThat(jsonValues).hasSize(1);
 
         Map<String, Object> jsonObject = (Map<String, Object>) jsonValues.get(0);
-        assertEquals("Hi there", jsonObject.get("short_message"));
+        assertThat(jsonObject.get("short_message")).isEqualTo("Hi there");
     }
 }

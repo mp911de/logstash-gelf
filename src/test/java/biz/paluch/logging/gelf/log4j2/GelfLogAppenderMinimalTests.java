@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,9 +50,9 @@ public class GelfLogAppenderMinimalTests {
     public void testSimpleDebug() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
-        assertEquals(0, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).isEmpty();
         logger.debug(LOG_MESSAGE);
-        assertEquals(0, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).isEmpty();
 
     }
 
@@ -63,18 +62,18 @@ public class GelfLogAppenderMinimalTests {
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info(new MarkerManager.Log4jMarker("test"), LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
-        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
-        assertNotNull(gelfMessage.getField("MyTime"));
-        assertEquals("test", gelfMessage.getAdditonalFields().get("Marker"));
-        assertEquals("6", gelfMessage.getLevel());
+        assertThat(gelfMessage.getFullMessage()).isEqualTo(EXPECTED_LOG_MESSAGE);
+        assertThat(gelfMessage.getShortMessage()).isEqualTo(EXPECTED_LOG_MESSAGE);
+        assertThat(gelfMessage.getField("MyTime")).isNotNull();
+        assertThat(gelfMessage.getAdditonalFields().get("Marker")).isEqualTo("test");
+        assertThat(gelfMessage.getLevel()).isEqualTo("6");
 
-        assertNotNull(gelfMessage.getField(LogMessageField.NamedLogField.SourceLineNumber.name()));
-        assertEquals("testSimpleInfo", gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name()));
-        assertEquals(getClass().getName(), gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name()));
+        assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceLineNumber.name())).isNotNull();
+        assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name())).isEqualTo("testSimpleInfo");
+        assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name())).isEqualTo(getClass().getName());
 
     }
 }

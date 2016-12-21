@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Map;
@@ -70,11 +69,11 @@ public class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
         waitForGelf();
 
         List jsonValues = server.getJsonValues();
-        assertEquals(1, jsonValues.size());
+        assertThat(jsonValues).hasSize(1);
 
         Map<String, Object> jsonValue = (Map<String, Object>) jsonValues.get(0);
 
-        assertNull(jsonValue.get("facility"));
+        assertThat(jsonValue.get("facility")).isNull();
 
     }
 
@@ -112,13 +111,13 @@ public class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
         waitForGelf();
 
         List jsonValues = server.getJsonValues();
-        assertEquals(1, jsonValues.size());
+        assertThat(jsonValues).hasSize(1);
 
         Map<String, Object> jsonValue = (Map<String, Object>) jsonValues.get(0);
 
         String shortMessage = builder.substring(0, 249);
-        assertEquals(builder.toString(), jsonValue.get("full_message"));
-        assertEquals(shortMessage, jsonValue.get("short_message"));
+        assertThat(jsonValue.get("full_message")).isEqualTo(builder.toString());
+        assertThat(jsonValue.get("short_message")).isEqualTo(shortMessage);
 
     }
 

@@ -1,7 +1,6 @@
 package biz.paluch.logging;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,13 +29,13 @@ public class StackTraceFilterUnitTests {
     @Test
     public void testFindThrowable() {
 
-        assertEquals(RuntimeException.class, StackTraceFilter.getThrowable(entryMethod(), 0).getClass());
-        assertEquals(MyException.class, StackTraceFilter.getThrowable(entryMethod(), 1).getClass());
-        assertEquals(IllegalStateException.class, StackTraceFilter.getThrowable(entryMethod(), 3).getClass());
-        assertEquals(IllegalStateException.class, StackTraceFilter.getThrowable(entryMethod(), -1).getClass());
+        assertThat(StackTraceFilter.getThrowable(entryMethod(), 0)).isExactlyInstanceOf(RuntimeException.class);
+        assertThat(StackTraceFilter.getThrowable(entryMethod(), 1)).isExactlyInstanceOf(MyException.class);
+        assertThat(StackTraceFilter.getThrowable(entryMethod(), 3)).isExactlyInstanceOf(IllegalStateException.class);
+        assertThat(StackTraceFilter.getThrowable(entryMethod(), -1)).isExactlyInstanceOf(IllegalStateException.class);
 
-        assertEquals(RuntimeException.class, StackTraceFilter.getThrowable(entryMethod(), -10).getClass());
-        assertEquals(IllegalStateException.class, StackTraceFilter.getThrowable(entryMethod(), 10).getClass());
+        assertThat(StackTraceFilter.getThrowable(entryMethod(), -10)).isExactlyInstanceOf(RuntimeException.class);
+        assertThat(StackTraceFilter.getThrowable(entryMethod(), 10)).isExactlyInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -58,7 +57,7 @@ public class StackTraceFilterUnitTests {
 
         assertThat(lines).contains("\tSuppressed: java.lang.RuntimeException: suppressed");
         assertThat(lines).contains("\t\tCaused by: java.lang.NumberFormatException: For input string: \"text\"");
-        assertThat(lines).excludes("\t\t\t\t\t1 line skipped for [org.jboss]");
+        assertThat(lines).doesNotContain("\t\t\t\t\t1 line skipped for [org.jboss]");
     }
 
     @Test
@@ -69,10 +68,10 @@ public class StackTraceFilterUnitTests {
 
         assertThat(lines).containsSequence("java.lang.RuntimeException: entryMethod",
                 "Caused by: biz.paluch.logging.StackTraceFilterUnitTests$MyException: Intermediate 2");
-        assertThat(lines).excludes("\t\tCaused by: java.lang.NumberFormatException: For input string: \"text\"");
-        assertThat(lines).excludes("\tCaused by: java.lang.NumberFormatException: For input string: \"text\"");
+        assertThat(lines).doesNotContain("\t\tCaused by: java.lang.NumberFormatException: For input string: \"text\"");
+        assertThat(lines).doesNotContain("\tCaused by: java.lang.NumberFormatException: For input string: \"text\"");
         assertThat(lines).contains("\tSuppressed: java.lang.IllegalStateException: Some illegal state");
-        assertThat(lines).excludes("\t\t\t\t\t1 line skipped for [org.jboss]");
+        assertThat(lines).doesNotContain("\t\t\t\t\t1 line skipped for [org.jboss]");
     }
 
     @Test

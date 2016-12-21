@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -18,8 +18,8 @@ public class JBoss7GelfLogHandlerUnitTests {
         sut.setMdcFields("");
         sut.setMdcProfiling(true);
 
-        assertTrue(sut.isIncludeFullMdc());
-        assertTrue(sut.isMdcProfiling());
+        assertThat(sut.isIncludeFullMdc()).isTrue();
+        assertThat(sut.isMdcProfiling()).isTrue();
     }
 
 }

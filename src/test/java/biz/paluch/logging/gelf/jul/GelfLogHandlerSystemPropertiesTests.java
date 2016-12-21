@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.jul;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -31,8 +31,8 @@ public class GelfLogHandlerSystemPropertiesTests {
         System.clearProperty(PROPERTY2);
 
         GelfTestSender.getMessages().clear();
-        LogManager.getLogManager().readConfiguration(
-                getClass().getResourceAsStream("/jul/test-logging-systemproperties.properties"));
+        LogManager.getLogManager()
+                .readConfiguration(getClass().getResourceAsStream("/jul/test-logging-systemproperties.properties"));
     }
 
     @Test
@@ -41,14 +41,14 @@ public class GelfLogHandlerSystemPropertiesTests {
         Logger logger = Logger.getLogger(getClass().getName());
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("${user.language}", gelfMessage.getField("propertyField1"));
-        assertEquals("${myproperty}", gelfMessage.getField("propertyField2"));
-        assertEquals("${otherproperty:fallback}", gelfMessage.getField("propertyField3"));
-        assertEquals("embedded${myproperty}property", gelfMessage.getField("propertyField4"));
+        assertThat(gelfMessage.getField("propertyField1")).isEqualTo("${user.language}");
+        assertThat(gelfMessage.getField("propertyField2")).isEqualTo("${myproperty}");
+        assertThat(gelfMessage.getField("propertyField3")).isEqualTo("${otherproperty:fallback}");
+        assertThat(gelfMessage.getField("propertyField4")).isEqualTo("embedded${myproperty}property");
     }
 
 }

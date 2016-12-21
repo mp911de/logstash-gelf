@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.wildfly;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 
@@ -70,7 +69,8 @@ public class WildFlyHandlerIntegrationTests {
     @Deployment
     public static Archive<?> createTestArchive() {
 
-        File[] files = Maven.resolver().loadPomFromFile("pom.xml").resolve("io.netty:netty-all").withoutTransitivity().asFile();
+        File[] files = Maven.resolver().loadPomFromFile("pom.xml").resolve("io.netty:netty-all", "org.assertj:assertj-core")
+                .withoutTransitivity().asFile();
         return ShrinkWrap.create(WebArchive.class, "logstash-gelf.war").addAsLibraries(files).addClasses(NettyLocalServer.class,
                 GelfInboundHandler.class);
     }
@@ -88,7 +88,7 @@ public class WildFlyHandlerIntegrationTests {
             iterations++;
         }
 
-        assertFalse(nettyLocalServer.getJsonValues().isEmpty());
+        assertThat(nettyLocalServer.getJsonValues()).isNotEmpty();
 
         boolean foundSomeLogEvent = false;
 
@@ -97,7 +97,7 @@ public class WildFlyHandlerIntegrationTests {
                 foundSomeLogEvent = true;
             }
         }
-        assertTrue(foundSomeLogEvent);
+        assertThat(foundSomeLogEvent).isTrue();
         nettyLocalServer.close();
     }
 }

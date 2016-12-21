@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.jul;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assume.assumeTrue;
 
 import java.util.List;
@@ -54,13 +54,13 @@ public class GelfLogHandlerRedisIntegrationTests {
         logger.log(Level.INFO, expectedMessage);
 
         List<String> list = jedis.lrange("list", 0, jedis.llen("list"));
-        assertEquals(1, list.size());
+        assertThat(list).hasSize(1);
 
         Map<String, Object> map = JsonUtil.parseToMap(list.get(0));
 
-        assertEquals(expectedMessage, map.get("full_message"));
-        assertEquals(expectedMessage, map.get("short_message"));
-        assertEquals("fieldValue1", map.get("fieldName1"));
+        assertThat(map.get("full_message")).isEqualTo(expectedMessage);
+        assertThat(map.get("short_message")).isEqualTo(expectedMessage);
+        assertThat(map.get("fieldName1")).isEqualTo("fieldValue1");
 
     }
 
@@ -78,13 +78,13 @@ public class GelfLogHandlerRedisIntegrationTests {
         logger.log(Level.INFO, expectedMessage);
 
         List<String> list = jedis.lrange("list", 0, jedis.llen("list"));
-        assertEquals(1, list.size());
+        assertThat(list).hasSize(1);
 
         Map<String, Object> map = JsonUtil.parseToMap(list.get(0));
 
-        assertEquals(expectedMessage, map.get("full_message"));
-        assertEquals(expectedMessage, map.get("short_message"));
-        assertEquals("fieldValue1", map.get("fieldName1"));
+        assertThat(map.get("full_message")).isEqualTo(expectedMessage);
+        assertThat(map.get("short_message")).isEqualTo(expectedMessage);
+        assertThat(map.get("fieldName1")).isEqualTo("fieldValue1");
 
     }
 

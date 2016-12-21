@@ -1,7 +1,7 @@
 package biz.paluch.logging.gelf.standalone;
 
 import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,11 +32,11 @@ public class StandaloneGelfSenderTests {
 
         sender.sendMessage(newInstance().withFullMessage("message").withFacility(null).build());
 
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-        assertEquals("message", gelfMessage.getFullMessage());
-        assertEquals("{\"full_message\":\"message\"}", gelfMessage.toJson());
+        assertThat(gelfMessage.getFullMessage()).isEqualTo("message");
+        assertThat(gelfMessage.toJson()).isEqualTo("{\"full_message\":\"message\"}");
 
     }
 }

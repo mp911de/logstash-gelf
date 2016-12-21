@@ -1,12 +1,10 @@
 package biz.paluch.logging.gelf.intern;
 
 import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -55,15 +53,15 @@ public class GelfMessageUnitTests {
     public void testBuilder() throws Exception {
         GelfMessage gelfMessage = buildGelfMessage();
 
-        assertEquals(FACILITY, gelfMessage.getFacility());
-        assertEquals("b", gelfMessage.getField("a"));
-        assertEquals(FULL_MESSAGE, gelfMessage.getFullMessage());
-        assertEquals(HOST, gelfMessage.getHost());
-        assertEquals(LEVEL, gelfMessage.getLevel());
-        assertEquals(SHORT_MESSAGE, gelfMessage.getShortMessage());
-        assertEquals(TIMESTAMP, gelfMessage.getJavaTimestamp().longValue());
-        assertEquals(VERSION, gelfMessage.getVersion());
-        assertEquals(MESSAGE_SIZE, gelfMessage.getMaximumMessageSize());
+        assertThat(gelfMessage.getFacility()).isEqualTo(FACILITY);
+        assertThat(gelfMessage.getField("a")).isEqualTo("b");
+        assertThat(gelfMessage.getFullMessage()).isEqualTo(FULL_MESSAGE);
+        assertThat(gelfMessage.getHost()).isEqualTo(HOST);
+        assertThat(gelfMessage.getLevel()).isEqualTo(LEVEL);
+        assertThat(gelfMessage.getShortMessage()).isEqualTo(SHORT_MESSAGE);
+        assertThat(gelfMessage.getJavaTimestamp().longValue()).isEqualTo(TIMESTAMP);
+        assertThat(gelfMessage.getVersion()).isEqualTo(VERSION);
+        assertThat(gelfMessage.getMaximumMessageSize()).isEqualTo(MESSAGE_SIZE);
 
     }
 
@@ -71,15 +69,15 @@ public class GelfMessageUnitTests {
     public void testGelfMessage() throws Exception {
         GelfMessage gelfMessage = createGelfMessage();
 
-        assertEquals(FACILITY, gelfMessage.getFacility());
-        assertEquals("b", gelfMessage.getField("a"));
-        assertEquals(FULL_MESSAGE, gelfMessage.getFullMessage());
-        assertEquals(HOST, gelfMessage.getHost());
-        assertEquals(LEVEL, gelfMessage.getLevel());
-        assertEquals(SHORT_MESSAGE, gelfMessage.getShortMessage());
-        assertEquals(TIMESTAMP, gelfMessage.getJavaTimestamp().longValue());
-        assertEquals(VERSION, gelfMessage.getVersion());
-        assertEquals(MESSAGE_SIZE, gelfMessage.getMaximumMessageSize());
+        assertThat(gelfMessage.getFacility()).isEqualTo(FACILITY);
+        assertThat(gelfMessage.getField("a")).isEqualTo("b");
+        assertThat(gelfMessage.getFullMessage()).isEqualTo(FULL_MESSAGE);
+        assertThat(gelfMessage.getHost()).isEqualTo(HOST);
+        assertThat(gelfMessage.getLevel()).isEqualTo(LEVEL);
+        assertThat(gelfMessage.getShortMessage()).isEqualTo(SHORT_MESSAGE);
+        assertThat(gelfMessage.getJavaTimestamp().longValue()).isEqualTo(TIMESTAMP);
+        assertThat(gelfMessage.getVersion()).isEqualTo(VERSION);
+        assertThat(gelfMessage.getMaximumMessageSize()).isEqualTo(MESSAGE_SIZE);
 
         assertThat(gelfMessage.toJson(), containsString("\"_int\":2"));
         assertThat(gelfMessage.toJson(), containsString("\"_doubleNoDecimals\":2.0"));
@@ -98,7 +96,7 @@ public class GelfMessageUnitTests {
 
         String string = toString(buffer);
 
-        assertEquals(message, string);
+        assertThat(string).isEqualTo(message);
     }
 
     @Test
@@ -111,7 +109,7 @@ public class GelfMessageUnitTests {
         ByteBuffer oldWay = gelfMessage.toTCPBuffer();
         ByteBuffer newWay = gelfMessage.toTCPBuffer(buffer);
 
-        assertEquals(oldWay.remaining(), newWay.remaining());
+        assertThat(newWay.remaining()).isEqualTo(oldWay.remaining());
 
         byte[] oldBytes = new byte[oldWay.remaining()];
         byte[] newBytes = new byte[newWay.remaining()];
@@ -119,7 +117,7 @@ public class GelfMessageUnitTests {
         oldWay.get(oldBytes);
         newWay.get(newBytes);
 
-        assertTrue(Arrays.equals(newBytes, oldBytes));
+        assertThat(Arrays.equals(newBytes, oldBytes)).isTrue();
     }
 
     @Test
@@ -133,7 +131,7 @@ public class GelfMessageUnitTests {
         ByteBuffer[] oldWay = gelfMessage.toUDPBuffers();
         ByteBuffer[] newWay = gelfMessage.toUDPBuffers(buffer, buffer2);
 
-        assertEquals(oldWay.length, newWay.length);
+        assertThat(newWay.length).isEqualTo(oldWay.length);
 
         for (int i = 0; i < oldWay.length; i++) {
 
@@ -149,7 +147,7 @@ public class GelfMessageUnitTests {
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(newBytes));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             StreamUtils.copyStream(gzipInputStream, baos);
-            assertTrue(Arrays.equals(newBytes, oldBytes));
+            assertThat(Arrays.equals(newBytes, oldBytes)).isTrue();
         }
     }
 
@@ -171,7 +169,7 @@ public class GelfMessageUnitTests {
         ByteBuffer[] oldWay = gelfMessage.toUDPBuffers();
         ByteBuffer[] newWay = gelfMessage.toUDPBuffers(buffer, tempBuffer);
 
-        assertEquals(oldWay.length, newWay.length);
+        assertThat(newWay.length).isEqualTo(oldWay.length);
 
         for (int i = 0; i < oldWay.length; i++) {
 
@@ -184,7 +182,7 @@ public class GelfMessageUnitTests {
             oldChunk.get(oldBytes);
             newChunk.get(newBytes);
 
-            assertTrue(Arrays.equals(newBytes, oldBytes));
+            assertThat(Arrays.equals(newBytes, oldBytes)).isTrue();
         }
     }
 
@@ -203,7 +201,7 @@ public class GelfMessageUnitTests {
         GelfMessage gelfMessage = new GelfMessage();
         gelfMessage.addField("something", null);
 
-        assertFalse(gelfMessage.toJson().contains("something"));
+        assertThat(gelfMessage.toJson().contains("something")).isFalse();
 
     }
 
@@ -214,7 +212,7 @@ public class GelfMessageUnitTests {
         gelfMessage.setLevel("6");
         gelfMessage.setJavaTimestamp(123456L);
 
-        assertEquals(GelfMessage.GELF_VERSION_1_0, gelfMessage.getVersion());
+        assertThat(gelfMessage.getVersion()).isEqualTo(GelfMessage.GELF_VERSION_1_0);
         assertThat(gelfMessage.toJson(), containsString("\"level\":\"6\""));
         assertThat(gelfMessage.toJson(), containsString("\"timestamp\":\"123.456"));
     }
@@ -227,7 +225,7 @@ public class GelfMessageUnitTests {
         gelfMessage.setJavaTimestamp(123456L);
         gelfMessage.setVersion(GelfMessage.GELF_VERSION_1_1);
 
-        assertEquals(GelfMessage.GELF_VERSION_1_1, gelfMessage.getVersion());
+        assertThat(gelfMessage.getVersion()).isEqualTo(GelfMessage.GELF_VERSION_1_1);
         assertThat(gelfMessage.toJson(), containsString("\"level\":6"));
         assertThat(gelfMessage.toJson(), containsString("\"timestamp\":123.456"));
 
@@ -238,12 +236,12 @@ public class GelfMessageUnitTests {
         GelfMessage created = createGelfMessage();
         GelfMessage build = buildGelfMessage();
 
-        assertTrue(created.equals(build));
-        assertEquals(created, build);
-        assertEquals(created.hashCode(), build.hashCode());
+        assertThat(created.equals(build)).isTrue();
+        assertThat(build).isEqualTo(created);
+        assertThat(build.hashCode()).isEqualTo(created.hashCode());
 
         build.setFacility("other");
-        assertFalse(created.equals(build));
+        assertThat(created.equals(build)).isFalse();
         assertNotEquals(created, build);
     }
 
@@ -252,8 +250,8 @@ public class GelfMessageUnitTests {
         GelfMessage created = new GelfMessage();
         GelfMessage build = newInstance().build();
 
-        assertTrue(created.equals(build));
-        assertEquals(created.hashCode(), build.hashCode());
+        assertThat(created.equals(build)).isTrue();
+        assertThat(build.hashCode()).isEqualTo(created.hashCode());
     }
 
     private GelfMessage createGelfMessage() {

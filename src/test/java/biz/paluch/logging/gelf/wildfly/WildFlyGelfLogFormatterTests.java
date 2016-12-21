@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.wildfly;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.StringWriter;
 import java.util.Map;
@@ -52,18 +51,18 @@ public class WildFlyGelfLogFormatterTests {
 
         Map<String, Object> message = getMessage();
 
-        assertNull(message.get("version"));
-        assertEquals(EXPECTED_LOG_MESSAGE, message.get("full_message"));
-        assertEquals(EXPECTED_LOG_MESSAGE, message.get("short_message"));
-        assertEquals("ndc message", message.get("NDC"));
-        assertEquals("logstash-gelf", message.get("facility"));
-        assertEquals(getClass().getName(), message.get("LoggerName"));
-        assertNotNull(message.get("Thread"));
-        assertNotNull(message.get("timestamp"));
-        assertNotNull(message.get("MyTime"));
-        assertEquals("6", message.get("level"));
-        assertEquals("testDefaults", message.get(LogMessageField.NamedLogField.SourceMethodName.name()));
-        assertEquals(getClass().getName(), message.get(LogMessageField.NamedLogField.SourceClassName.name()));
+        assertThat(message.get("version")).isNull();
+        assertThat(message.get("full_message")).isEqualTo(EXPECTED_LOG_MESSAGE);
+        assertThat(message.get("short_message")).isEqualTo(EXPECTED_LOG_MESSAGE);
+        assertThat(message.get("NDC")).isEqualTo("ndc message");
+        assertThat(message.get("facility")).isEqualTo("logstash-gelf");
+        assertThat(message.get("LoggerName")).isEqualTo(getClass().getName());
+        assertThat(message.get("Thread")).isNotNull();
+        assertThat(message.get("timestamp")).isNotNull();
+        assertThat(message.get("MyTime")).isNotNull();
+        assertThat(message.get("level")).isEqualTo("6");
+        assertThat(message.get(LogMessageField.NamedLogField.SourceMethodName.name())).isEqualTo("testDefaults");
+        assertThat(message.get(LogMessageField.NamedLogField.SourceClassName.name())).isEqualTo(getClass().getName());
     }
 
     @Test
@@ -76,8 +75,8 @@ public class WildFlyGelfLogFormatterTests {
         logger.info("");
         Map<String, Object> message = getMessage();
 
-        assertNull(message.get("full_message"));
-        assertNull(message.get("short_message"));
+        assertThat(message.get("full_message")).isNull();
+        assertThat(message.get("short_message")).isNull();
 
     }
 
@@ -94,8 +93,8 @@ public class WildFlyGelfLogFormatterTests {
 
         Map<String, Object> message = getMessage();
 
-        assertEquals(expectedMessage, message.get("full_message"));
-        assertEquals(expectedMessage, message.get("short_message"));
+        assertThat(message.get("full_message")).isEqualTo(expectedMessage);
+        assertThat(message.get("short_message")).isEqualTo(expectedMessage);
     }
 
     @Test
@@ -112,8 +111,8 @@ public class WildFlyGelfLogFormatterTests {
 
         Map<String, Object> message = getMessage();
 
-        assertEquals(expectedMessage, message.get("full_message"));
-        assertEquals(expectedMessage, message.get("short_message"));
+        assertThat(message.get("full_message")).isEqualTo(expectedMessage);
+        assertThat(message.get("short_message")).isEqualTo(expectedMessage);
 
     }
 
@@ -145,8 +144,8 @@ public class WildFlyGelfLogFormatterTests {
 
         Map<String, Object> message = getMessage();
 
-        assertNotNull(message.get("SourceSimpleClassName"));
-        assertNull(message.get("LoggerName"));
+        assertThat(message.get("SourceSimpleClassName")).isNotNull();
+        assertThat(message.get("LoggerName")).isNull();
     }
 
     @Test
@@ -161,7 +160,7 @@ public class WildFlyGelfLogFormatterTests {
 
         logger.info(LOG_MESSAGE);
         logger.info(LOG_MESSAGE);
-        assertTrue(stringWriter.getBuffer().toString().contains("}XxX{"));
+        assertThat(stringWriter.getBuffer().toString().contains("}XxX{")).isTrue();
     }
 
     @Test
@@ -183,10 +182,10 @@ public class WildFlyGelfLogFormatterTests {
 
         Map<String, Object> message = getMessage();
 
-        assertEquals("myhost", message.get("host"));
-        assertEquals("fieldValue1", message.get("fieldName1"));
-        assertEquals("fieldValue2", message.get("fieldName2"));
-        assertEquals("a value", message.get("mdcField1"));
+        assertThat(message.get("host")).isEqualTo("myhost");
+        assertThat(message.get("fieldName1")).isEqualTo("fieldValue1");
+        assertThat(message.get("fieldName2")).isEqualTo("fieldValue2");
+        assertThat(message.get("mdcField1")).isEqualTo("a value");
     }
 
     @Test
@@ -204,7 +203,7 @@ public class WildFlyGelfLogFormatterTests {
 
         Map<String, Object> message = getMessage();
 
-        assertThat(message.get("StackTrace").toString(), containsString("boom!"));
+        assertThat(message.get("StackTrace").toString()).contains("boom!");
     }
 
     public Map<String, Object> getMessage() {

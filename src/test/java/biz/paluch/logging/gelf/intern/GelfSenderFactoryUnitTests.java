@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.intern;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.reset;
@@ -67,14 +66,14 @@ public class GelfSenderFactoryUnitTests {
 
         GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
 
-        assertSame(sender, result);
+        assertThat(result).isSameAs(sender);
     }
 
     @Test
     public void testCreateSenderFailUdp() throws Exception {
 
         GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
@@ -83,7 +82,7 @@ public class GelfSenderFactoryUnitTests {
         reset(assembler);
         when(assembler.getHost()).thenReturn("tcp:" + THE_HOST);
         GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
@@ -93,7 +92,7 @@ public class GelfSenderFactoryUnitTests {
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new UnknownHostException());
 
         GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
-        assertNull(result);
+        assertThat(result).isNull();
 
         verify(errorReporter).reportError(anyString(), any(UnknownHostException.class));
 
@@ -106,7 +105,7 @@ public class GelfSenderFactoryUnitTests {
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new SocketException());
 
         GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
-        assertNull(result);
+        assertThat(result).isNull();
 
         verify(errorReporter).reportError(anyString(), any(SocketException.class));
 
@@ -119,7 +118,7 @@ public class GelfSenderFactoryUnitTests {
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new IOException());
 
         GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
-        assertNull(result);
+        assertThat(result).isNull();
 
         verify(errorReporter).reportError(anyString(), any(IOException.class));
 

@@ -9,7 +9,7 @@ import java.util.logging.LogRecord;
  */
 public class DummyFilter implements Filter {
 
-	@Override
+    @Override
     public boolean isLoggable(LogRecord record) {
         return false;
     }

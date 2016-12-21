@@ -33,7 +33,7 @@ public class GelfInboundHTTPHandler extends SimpleChannelInboundHandler<Object> 
         if (message instanceof HttpContent) {
             httpContent = (HttpContent) message;
             contentBuffer.append(httpContent.content().toString(CharsetUtil.UTF_8));
-            
+
             if (message instanceof LastHttpContent) {
                 Object parsedContent = JsonUtil.parseToMap(contentBuffer.toString());
                 synchronized (values) {
@@ -72,7 +72,7 @@ public class GelfInboundHTTPHandler extends SimpleChannelInboundHandler<Object> 
     public HttpRequest getHttpRequest() {
         return httpRequest;
     }
-    
+
     public void setReturnStatus(HttpResponseStatus status) {
         this.responseStatus = status;
     }

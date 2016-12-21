@@ -1,8 +1,7 @@
 package biz.paluch.logging.gelf.jboss7;
 
 import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.getJBoss7GelfLogHandler;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -18,8 +17,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  * @since 27.09.13 08:36
  */
-public class JBoss7GelfLogHandlerDynamicMdcTests
-{
+public class JBoss7GelfLogHandlerDynamicMdcTests {
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
     public static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
@@ -46,12 +44,12 @@ public class JBoss7GelfLogHandlerDynamicMdcTests
         logger.addHandler(handler);
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         String myMdc = gelfMessage.getField(MDC_MY_MDC);
-        assertNull(myMdc);
+        assertThat(myMdc).isNull();
     }
 
     @Test
@@ -66,13 +64,13 @@ public class JBoss7GelfLogHandlerDynamicMdcTests
         MDC.put(MY_MDC_WITH_SUFFIX2, VALUE_3);
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(VALUE_1, gelfMessage.getField(MDC_MY_MDC));
-        assertEquals(VALUE_2, gelfMessage.getField(MY_MDC_WITH_SUFFIX1));
-        assertEquals(VALUE_3, gelfMessage.getField(MY_MDC_WITH_SUFFIX2));
+        assertThat(gelfMessage.getField(MDC_MY_MDC)).isEqualTo(VALUE_1);
+        assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX1)).isEqualTo(VALUE_2);
+        assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX2)).isEqualTo(VALUE_3);
 
     }
 
@@ -87,12 +85,12 @@ public class JBoss7GelfLogHandlerDynamicMdcTests
         MDC.put(MDC_SOME_OTHER_FIELD, "excluded");
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("included", gelfMessage.getField(MDC_SOME_FIELD));
-        assertNull(gelfMessage.getField("someOtherField"));
+        assertThat(gelfMessage.getField(MDC_SOME_FIELD)).isEqualTo("included");
+        assertThat(gelfMessage.getField("someOtherField")).isNull();
 
     }
 
@@ -109,13 +107,13 @@ public class JBoss7GelfLogHandlerDynamicMdcTests
         MDC.put(MY_MDC_WITH_SUFFIX2, VALUE_3);
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(VALUE_1, gelfMessage.getField(MDC_MY_MDC));
-        assertEquals(VALUE_2, gelfMessage.getField(MY_MDC_WITH_SUFFIX1));
-        assertEquals(VALUE_3, gelfMessage.getField(MY_MDC_WITH_SUFFIX2));
+        assertThat(gelfMessage.getField(MDC_MY_MDC)).isEqualTo(VALUE_1);
+        assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX1)).isEqualTo(VALUE_2);
+        assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX2)).isEqualTo(VALUE_3);
 
     }
 

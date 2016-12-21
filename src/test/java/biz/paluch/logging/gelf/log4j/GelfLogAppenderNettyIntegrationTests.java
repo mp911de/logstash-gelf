@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.log4j;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.concurrent.TimeoutException;
 
@@ -60,7 +60,7 @@ public class GelfLogAppenderNettyIntegrationTests {
 
         new ThreadSleep(Duration.seconds(2)).sleep();
 
-        assertEquals(0, server.getJsonValues().size());
+        assertThat(server.getJsonValues()).isEmpty();
     }
 
     @Test
@@ -73,7 +73,7 @@ public class GelfLogAppenderNettyIntegrationTests {
 
         waitForGelf(4);
 
-        assertEquals(4, server.getJsonValues().size());
+        assertThat(server.getJsonValues()).hasSize(4);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class GelfLogAppenderNettyIntegrationTests {
 
         new ThreadSleep(Duration.seconds(2)).sleep();
 
-        assertEquals(0, server.getJsonValues().size());
+        assertThat(server.getJsonValues()).isEmpty();
     }
 
     @Test
@@ -99,6 +99,6 @@ public class GelfLogAppenderNettyIntegrationTests {
 
         waitForGelf(4);
 
-        assertEquals(4, server.getJsonValues().size());
+        assertThat(server.getJsonValues()).hasSize(4);
     }
 }

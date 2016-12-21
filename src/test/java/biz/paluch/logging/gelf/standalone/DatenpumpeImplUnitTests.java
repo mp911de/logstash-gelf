@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.standalone;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +13,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  */
 public class DatenpumpeImplUnitTests {
 
-	@Before
+    @Before
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
     }
@@ -30,15 +29,15 @@ public class DatenpumpeImplUnitTests {
 
         datenpumpe.submit(bean);
 
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("value field", gelfMessage.getField("value"));
-        assertEquals("true", gelfMessage.getField("boolean"));
-        assertNotNull(gelfMessage.getField("object"));
+        assertThat(gelfMessage.getField("value")).isEqualTo("value field");
+        assertThat(gelfMessage.getField("boolean")).isEqualTo("true");
+        assertThat(gelfMessage.getField("object")).isNotNull();
 
-        assertEquals(3, gelfMessage.getAdditonalFields().size());
+        assertThat(gelfMessage.getAdditonalFields()).hasSize(3);
 
         datenpumpe.close();
 
@@ -61,7 +60,7 @@ public class DatenpumpeImplUnitTests {
 
         datenpumpe.submit(shoppingCart);
 
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 

@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -49,8 +48,8 @@ public class GelfTCPSenderUnitTests {
         verify(errorReporter).reportError(anyString(), captor.capture());
 
         Exception exception = captor.getValue();
-        assertEquals(IOException.class, exception.getClass());
-        assertEquals(ConnectException.class, exception.getCause().getClass());
+        assertThat(exception.getClass()).isEqualTo(IOException.class);
+        assertThat(exception.getCause().getClass()).isEqualTo(ConnectException.class);
     }
 
     @Test
@@ -63,8 +62,8 @@ public class GelfTCPSenderUnitTests {
         verify(errorReporter).reportError(anyString(), captor.capture());
 
         Exception exception = captor.getValue();
-        assertEquals(IOException.class, exception.getClass());
-        assertEquals(ConnectException.class, exception.getCause().getClass());
+        assertThat(exception.getClass()).isEqualTo(IOException.class);
+        assertThat(exception.getCause().getClass()).isEqualTo(ConnectException.class);
     }
 
     @Test
@@ -75,7 +74,7 @@ public class GelfTCPSenderUnitTests {
         tcpSender.sendMessage(new GelfMessage());
 
         long duration = System.currentTimeMillis() - now;
-        assertTrue(duration > 500);
+        assertThat(duration > 500).isTrue();
     }
 
     @Test(expected = UnknownHostException.class)
@@ -175,10 +174,10 @@ public class GelfTCPSenderUnitTests {
         tcpSender.sendMessage(gelfMessage);
 
         ByteBuffer buffer = tcpSender.buffer;
-        assertEquals((byte) '{', buffer.get());
+        assertThat(buffer.get()).isEqualTo((byte) '{');
         buffer.position(buffer.limit() - 2);
-        assertEquals((byte) '}', buffer.get());
-        assertEquals((byte) 0, buffer.get());
+        assertThat(buffer.get()).isEqualTo((byte) '}');
+        assertThat(buffer.get()).isEqualTo((byte) 0);
     }
 
     protected int randomPort() {

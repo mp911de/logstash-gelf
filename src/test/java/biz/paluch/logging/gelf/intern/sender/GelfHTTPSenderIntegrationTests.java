@@ -1,8 +1,6 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -74,17 +72,17 @@ public class GelfHTTPSenderIntegrationTests {
 
         boolean success = sender.sendMessage(gelfMessage);
 
-        assertTrue(success);
+        assertThat(success).isTrue();
         verifyZeroInteractions(errorReporter);
 
         List<Object> jsonValues = server.getJsonValues();
-        assertEquals(1, jsonValues.size());
+        assertThat(jsonValues).hasSize(1);
 
         Map<String, Object> messageJson = (Map<String, Object>) jsonValues.get(0);
-        assertEquals(gelfMessage.getShortMessage(), messageJson.get("short_message"));
-        assertEquals(gelfMessage.getFullMessage(), messageJson.get("full_message"));
-        assertEquals(gelfMessage.getTimestamp(), messageJson.get("timestamp"));
-        assertEquals(gelfMessage.getLevel(), messageJson.get("level"));
+        assertThat(messageJson.get("short_message")).isEqualTo(gelfMessage.getShortMessage());
+        assertThat(messageJson.get("full_message")).isEqualTo(gelfMessage.getFullMessage());
+        assertThat(messageJson.get("timestamp")).isEqualTo(gelfMessage.getTimestamp());
+        assertThat(messageJson.get("level")).isEqualTo(gelfMessage.getLevel());
     }
 
     @Test
@@ -94,8 +92,8 @@ public class GelfHTTPSenderIntegrationTests {
 
         boolean success = sender.sendMessage(GELF_MESSAGE);
 
-        assertTrue(success);
-        assertEquals("POST", server.getLastHttpRequest().name());
+        assertThat(success).isTrue();
+        assertThat(server.getLastHttpRequest().name()).isEqualTo("POST");
     }
 
     @Test
@@ -105,8 +103,8 @@ public class GelfHTTPSenderIntegrationTests {
 
         boolean success = sender.sendMessage(GELF_MESSAGE);
 
-        assertTrue(success);
-        assertEquals("application/json", server.getLastHttpHeaders().get("Content-type"));
+        assertThat(success).isTrue();
+        assertThat(server.getLastHttpHeaders().get("Content-type")).isEqualTo("application/json");
 
     }
 
@@ -120,7 +118,7 @@ public class GelfHTTPSenderIntegrationTests {
 
         boolean success = sender.sendMessage(GELF_MESSAGE);
 
-        assertFalse(success);
+        assertThat(success).isFalse();
         verify(errorReporter, times(1)).reportError(anyString(), ArgumentMatchers.<Exception> isNull());
     }
 

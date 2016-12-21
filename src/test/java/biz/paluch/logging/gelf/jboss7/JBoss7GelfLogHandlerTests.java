@@ -1,9 +1,7 @@
 package biz.paluch.logging.gelf.jboss7;
 
 import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.getJBoss7GelfLogHandler;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -46,19 +44,19 @@ public class JBoss7GelfLogHandlerTests {
         NDC.push("ndc message");
         logger.info(LOG_MESSAGE);
         NDC.clear();
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(GelfMessage.GELF_VERSION_1_1, gelfMessage.getVersion());
-        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getFullMessage());
-        assertEquals(EXPECTED_LOG_MESSAGE, gelfMessage.getShortMessage());
-        assertEquals("ndc message", gelfMessage.getField("NDC"));
-        assertNotNull(gelfMessage.getField("MyTime"));
-        assertEquals("6", gelfMessage.getLevel());
-        assertEquals(8192, gelfMessage.getMaximumMessageSize());
-        assertEquals("testSimple", gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name()));
-        assertEquals(getClass().getName(), gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name()));
+        assertThat(gelfMessage.getVersion()).isEqualTo(GelfMessage.GELF_VERSION_1_1);
+        assertThat(gelfMessage.getFullMessage()).isEqualTo(EXPECTED_LOG_MESSAGE);
+        assertThat(gelfMessage.getShortMessage()).isEqualTo(EXPECTED_LOG_MESSAGE);
+        assertThat(gelfMessage.getField("NDC")).isEqualTo("ndc message");
+        assertThat(gelfMessage.getField("MyTime")).isNotNull();
+        assertThat(gelfMessage.getLevel()).isEqualTo("6");
+        assertThat(gelfMessage.getMaximumMessageSize()).isEqualTo(8192);
+        assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name())).isEqualTo("testSimple");
+        assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name())).isEqualTo(getClass().getName());
 
     }
 
@@ -71,10 +69,10 @@ public class JBoss7GelfLogHandlerTests {
         logger.addHandler(handler);
 
         logger.warning(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-        assertEquals("4", gelfMessage.getLevel());
+        assertThat(gelfMessage.getLevel()).isEqualTo("4");
     }
 
     @Test
@@ -88,19 +86,19 @@ public class JBoss7GelfLogHandlerTests {
         logger.setLevel(Level.ALL);
 
         logger.fine(LOG_MESSAGE);
-        assertEquals("7", GelfTestSender.getMessages().get(0).getLevel());
+        assertThat(GelfTestSender.getMessages().get(0).getLevel()).isEqualTo("7");
         GelfTestSender.getMessages().clear();
 
         logger.info(LOG_MESSAGE);
-        assertEquals("6", GelfTestSender.getMessages().get(0).getLevel());
+        assertThat(GelfTestSender.getMessages().get(0).getLevel()).isEqualTo("6");
         GelfTestSender.getMessages().clear();
 
         logger.warning(LOG_MESSAGE);
-        assertEquals("4", GelfTestSender.getMessages().get(0).getLevel());
+        assertThat(GelfTestSender.getMessages().get(0).getLevel()).isEqualTo("4");
         GelfTestSender.getMessages().clear();
 
         logger.severe(LOG_MESSAGE);
-        assertEquals("3", GelfTestSender.getMessages().get(0).getLevel());
+        assertThat(GelfTestSender.getMessages().get(0).getLevel()).isEqualTo("3");
         GelfTestSender.getMessages().clear();
 
     }
@@ -117,11 +115,11 @@ public class JBoss7GelfLogHandlerTests {
         NDC.push("ndc message");
         logger.severe(LOG_MESSAGE);
         NDC.clear();
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("3", gelfMessage.getLevel());
+        assertThat(gelfMessage.getLevel()).isEqualTo("3");
 
     }
 
@@ -134,7 +132,7 @@ public class JBoss7GelfLogHandlerTests {
         logger.addHandler(handler);
 
         logger.info("");
-        assertEquals(0, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).isEmpty();
 
     }
 
@@ -149,14 +147,14 @@ public class JBoss7GelfLogHandlerTests {
         String logMessage = "foo bar test log message {0}";
         String expectedMessage = "foo bar test log message aaa";
         logger.log(Level.INFO, logMessage, new String[] { "aaa" });
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(expectedMessage, gelfMessage.getFullMessage());
-        assertEquals(expectedMessage, gelfMessage.getShortMessage());
-        assertEquals("6", gelfMessage.getLevel());
-        assertEquals(8192, gelfMessage.getMaximumMessageSize());
+        assertThat(gelfMessage.getFullMessage()).isEqualTo(expectedMessage);
+        assertThat(gelfMessage.getShortMessage()).isEqualTo(expectedMessage);
+        assertThat(gelfMessage.getLevel()).isEqualTo("6");
+        assertThat(gelfMessage.getMaximumMessageSize()).isEqualTo(8192);
 
     }
 
@@ -172,12 +170,12 @@ public class JBoss7GelfLogHandlerTests {
         String expectedMessage = "foo bar test log message aaa";
 
         logger.log(Level.INFO, logMessage, new String[] { "aaa" });
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(expectedMessage, gelfMessage.getFullMessage());
-        assertEquals(expectedMessage, gelfMessage.getShortMessage());
+        assertThat(gelfMessage.getFullMessage()).isEqualTo(expectedMessage);
+        assertThat(gelfMessage.getShortMessage()).isEqualTo(expectedMessage);
 
     }
 
@@ -192,14 +190,14 @@ public class JBoss7GelfLogHandlerTests {
         MDC.put("mdcField1", "a value");
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("fieldValue1", gelfMessage.getField("fieldName1"));
-        assertEquals("fieldValue2", gelfMessage.getField("fieldName2"));
-        assertEquals("a value", gelfMessage.getField("mdcField1"));
-        assertNull(gelfMessage.getField("mdcField2"));
+        assertThat(gelfMessage.getField("fieldName1")).isEqualTo("fieldValue1");
+        assertThat(gelfMessage.getField("fieldName2")).isEqualTo("fieldValue2");
+        assertThat(gelfMessage.getField("mdcField1")).isEqualTo("a value");
+        assertThat(gelfMessage.getField("mdcField2")).isNull();
 
     }
 

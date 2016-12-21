@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.logback;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThat;
 
 import java.net.URL;
@@ -46,7 +46,7 @@ public class GelfLogbackAppenderHostnameTests {
         Logger logger = lc.getLogger(getClass());
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
@@ -60,7 +60,7 @@ public class GelfLogbackAppenderHostnameTests {
         Logger logger = lc.getLogger(getClass());
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 

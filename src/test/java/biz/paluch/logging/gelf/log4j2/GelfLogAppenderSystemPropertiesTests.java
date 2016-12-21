@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.ThreadContext;
@@ -61,14 +61,14 @@ public class GelfLogAppenderSystemPropertiesTests {
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(System.getProperty("user.language"), gelfMessage.getField("propertyField1"));
-        assertEquals("${sys:myproperty}", gelfMessage.getField("propertyField2"));
-        assertEquals("${sys:otherproperty:fallback}", gelfMessage.getField("propertyField3"));
-        assertEquals("embedded${sys:myproperty}property", gelfMessage.getField("propertyField4"));
+        assertThat(gelfMessage.getField("propertyField1")).isEqualTo(System.getProperty("user.language"));
+        assertThat(gelfMessage.getField("propertyField2")).isEqualTo("${sys:myproperty}");
+        assertThat(gelfMessage.getField("propertyField3")).isEqualTo("${sys:otherproperty:fallback}");
+        assertThat(gelfMessage.getField("propertyField4")).isEqualTo("embedded${sys:myproperty}property");
     }
 
     @Test
@@ -81,14 +81,14 @@ public class GelfLogAppenderSystemPropertiesTests {
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(System.getProperty("user.language"), gelfMessage.getField("propertyField1"));
-        assertEquals(PROPERTY1_VALUE, gelfMessage.getField("propertyField2"));
-        assertEquals("${sys:otherproperty:fallback}", gelfMessage.getField("propertyField3"));
-        assertEquals("embedded" + PROPERTY1_VALUE + "property", gelfMessage.getField("propertyField4"));
+        assertThat(gelfMessage.getField("propertyField1")).isEqualTo(System.getProperty("user.language"));
+        assertThat(gelfMessage.getField("propertyField2")).isEqualTo(PROPERTY1_VALUE);
+        assertThat(gelfMessage.getField("propertyField3")).isEqualTo("${sys:otherproperty:fallback}");
+        assertThat(gelfMessage.getField("propertyField4")).isEqualTo("embedded" + PROPERTY1_VALUE + "property");
     }
 
 }

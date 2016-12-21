@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.wildfly;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 import java.io.File;
 
@@ -39,10 +39,8 @@ public class WildFlyFormatterIntegrationTests {
             commandContext.bindClient(managementClient.getControllerClient());
             commandContext
                     .handle("/subsystem=logging/custom-formatter=JsonFormatter/:add(module=biz.paluch.logging,class=biz.paluch.logging.gelf.wildfly.WildFlyJsonFormatter,properties={ \\\n"
-                            + "\t\t   version=\"1.0\", \\\n"
-                            + "\t\t   facility=\"java-test\", \\\n"
-                            + "\t\t   extractStackTrace=true, \\\n"
-                            + "\t\t   filterStackTrace=true, \\\n"
+                            + "\t\t   version=\"1.0\", \\\n" + "\t\t   facility=\"java-test\", \\\n"
+                            + "\t\t   extractStackTrace=true, \\\n" + "\t\t   filterStackTrace=true, \\\n"
                             + "\t\t   mdcProfiling=true, \\\n"
                             + "\t\t   additionalFields=\"fieldName1=fieldValue1,fieldName2=fieldValue2\", \\\n"
                             + "\t\t   mdcFields=\"mdcField1,mdcField2\"})");
@@ -51,8 +49,8 @@ public class WildFlyFormatterIntegrationTests {
                     .handle("/subsystem=logging/file-handler=JsonLog/:add(file={\"relative-to\"=>\"jboss.server.log.dir\" ,path=server.json}, \\\n"
                             + "            level=ALL,named-formatter=JsonFormatter)");
 
-            commandContext
-                    .handle("/subsystem=logging/root-logger=ROOT/:write-attribute(name=handlers,value=[\"FILE\",\"CONSOLE\",\"JsonLog\"])");
+            commandContext.handle(
+                    "/subsystem=logging/root-logger=ROOT/:write-attribute(name=handlers,value=[\"FILE\",\"CONSOLE\",\"JsonLog\"])");
         }
 
         @Override
@@ -68,8 +66,8 @@ public class WildFlyFormatterIntegrationTests {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-        File[] files = Maven.resolver().loadPomFromFile("pom.xml").resolve("commons-io:commons-io:2.2").withoutTransitivity()
-                .asFile();
+        File[] files = Maven.resolver().loadPomFromFile("pom.xml")
+                .resolve("commons-io:commons-io:2.2", "org.assertj:assertj-core").withoutTransitivity().asFile();
         return ShrinkWrap.create(WebArchive.class, "logstash-gelf.war").addAsLibraries(files);
     }
 
@@ -80,10 +78,10 @@ public class WildFlyFormatterIntegrationTests {
 
         File logDir = new File(System.getProperty("jboss.server.log.dir"));
         File logFile = new File(logDir, "server.json");
-        assertTrue(logFile.exists());
+        assertThat(logFile.exists()).isTrue();
 
         String fileContents = FileUtils.readFileToString(logFile);
 
-        assertTrue(fileContents.contains("\"full_message\":\"some message\""));
+        assertThat(fileContents.contains("\"full_message\":\"some message\"")).isTrue();
     }
 }

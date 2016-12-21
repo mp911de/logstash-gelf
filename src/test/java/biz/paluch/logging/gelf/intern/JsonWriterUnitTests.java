@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.intern;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public class JsonWriterUnitTests {
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map parsedByJackson = objectMapper.readValue(buffer.toByteArray(), Map.class);
-        assertEquals(map, parsedByJackson);
+        assertThat(parsedByJackson).isEqualTo(map);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class JsonWriterUnitTests {
         ObjectMapper objectMapper = new ObjectMapper();
         Map parsedByJackson = objectMapper.readValue(objectMapper.writeValueAsBytes(map), Map.class);
 
-        assertEquals(map, parsedByJackson);
+        assertThat(parsedByJackson).isEqualTo(map);
     }
 
     @Test
@@ -76,6 +76,6 @@ public class JsonWriterUnitTests {
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map parsedByJackson = objectMapper.readValue(buffer.toByteArray(), Map.class);
-        assertEquals(expected, parsedByJackson);
+        assertThat(parsedByJackson).isEqualTo(expected);
     }
 }

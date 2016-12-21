@@ -20,9 +20,7 @@ public class GelfLogAppenderPropagateExceptionsTests {
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     @ClassRule
-    public static final InitialLoggerContext loggerContext = new InitialLoggerContext(
-            "log4j2/log4j2-propagate-exceptions.xml");
-
+    public static final InitialLoggerContext loggerContext = new InitialLoggerContext("log4j2/log4j2-propagate-exceptions.xml");
 
     @Before
     public void before() throws Exception {
