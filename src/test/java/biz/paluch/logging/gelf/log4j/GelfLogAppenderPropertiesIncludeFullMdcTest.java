@@ -11,8 +11,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.log4j.PropertyConfigurator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -29,7 +29,7 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
     public static final String VALUE_1 = "value1";
     public static final String VALUE_2 = "value2";
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         assumeTrue(Log4jUtil.isLog4jMDCAvailable());

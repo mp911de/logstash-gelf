@@ -6,12 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.common.beans.property.ByteEditor;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class StackTraceFilterUnitTests {
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         StackTraceFilter.loadSetttings(StackTraceFilter.FILTER_SETTINGS);
     }

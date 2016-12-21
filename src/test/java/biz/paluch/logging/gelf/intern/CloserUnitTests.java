@@ -8,15 +8,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+
+import external.MockitoExtension;
 
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CloserUnitTests {
 
     @Mock

@@ -7,8 +7,8 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.apache.log4j.MDC;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -18,7 +18,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @since 27.09.13 08:25
  */
 public class GelfLogHandlerTests {
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         GelfTestSender.getMessages().clear();

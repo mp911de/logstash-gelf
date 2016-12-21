@@ -1,15 +1,17 @@
 package biz.paluch.logging.gelf.log4j2;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.appender.AppenderLoggingException;
 import org.apache.logging.log4j.junit.InitialLoggerContext;
 import org.apache.logging.log4j.test.appender.ListAppender;
-import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 /**
  * @author Mark Paluch
@@ -22,16 +24,22 @@ public class GelfLogAppenderPropagateExceptionsTests {
     @ClassRule
     public static final InitialLoggerContext loggerContext = new InitialLoggerContext("log4j2/log4j2-propagate-exceptions.xml");
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         ThreadContext.clearAll();
     }
 
-    @Test(expected = AppenderLoggingException.class)
+    @Test
     public void shouldPropagateException() throws Exception {
 
-        Logger logger = loggerContext.getLogger("biz.exception");
-        logger.info(LOG_MESSAGE);
+        assertThrows(AppenderLoggingException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                Logger logger = loggerContext.getLogger("biz.exception");
+                logger.info(LOG_MESSAGE);
+            }
+        });
     }
 
     @Test

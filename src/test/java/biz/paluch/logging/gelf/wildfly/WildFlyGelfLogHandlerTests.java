@@ -2,6 +2,7 @@ package biz.paluch.logging.gelf.wildfly;
 
 import static biz.paluch.logging.gelf.wildfly.WildFlyLogTestUtil.getWildFlyGelfLogHandler;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -9,8 +10,9 @@ import java.util.logging.Logger;
 
 import org.jboss.logmanager.MDC;
 import org.jboss.logmanager.NDC;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.LogMessageField;
@@ -26,7 +28,7 @@ public class WildFlyGelfLogHandlerTests {
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager().reset();
@@ -196,12 +198,19 @@ public class WildFlyGelfLogHandlerTests {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testWrongConfig() throws Exception {
-        JBoss7GelfLogHandler handler = new JBoss7GelfLogHandler();
 
-        handler.setGraylogHost(null);
-        handler.setGraylogPort(0);
+        assertThrows(IllegalArgumentException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                JBoss7GelfLogHandler handler = new JBoss7GelfLogHandler();
+
+                handler.setGraylogHost(null);
+                handler.setGraylogPort(0);
+            }
+        });
 
     }
 }

@@ -10,26 +10,25 @@ import static org.mockito.Mockito.verify;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.util.Random;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
+import external.MockitoExtension;
 
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GelfTCPSenderUnitTests {
 
     @Mock
@@ -77,9 +76,11 @@ public class GelfTCPSenderUnitTests {
         assertThat(duration > 500).isTrue();
     }
 
-    @Test(expected = UnknownHostException.class)
+    @Test
     public void unknownHostShouldThrowException() throws Exception {
+
         new GelfTCPSender("unknown.host.unknown", 65534, 100, 100, errorReporter);
+
     }
 
     @Test

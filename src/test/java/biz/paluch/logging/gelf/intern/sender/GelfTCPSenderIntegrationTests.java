@@ -13,7 +13,7 @@ import java.util.concurrent.CountDownLatch;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -25,7 +25,7 @@ public class GelfTCPSenderIntegrationTests {
 
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-    @Test(timeout = 10000)
+    @Test
     public void name() throws Exception {
 
         final ServerSocket serverSocket = new ServerSocket(1234);

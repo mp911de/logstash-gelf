@@ -11,9 +11,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.JsonUtil;
 import biz.paluch.logging.gelf.LogMessageField;
@@ -25,12 +25,12 @@ public class GelfLayoutTest {
 
     private Logger logger;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         DOMConfigurator.configure(GelfLayoutTest.class.getResource("/log4j/log4j-gelf-layout.xml"));
     }
 
-    @Before
+    @BeforeEach
     public void before() {
         TestAppender.clearLoggedLines();
         logger = Logger.getLogger(GelfLayoutTest.class);

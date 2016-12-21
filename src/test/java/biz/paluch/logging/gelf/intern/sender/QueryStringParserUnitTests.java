@@ -6,7 +6,7 @@ import java.net.URI;
 import java.util.Map;
 
 import org.fest.assertions.MapAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mark Paluch

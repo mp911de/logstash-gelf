@@ -5,15 +5,12 @@ import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import biz.paluch.logging.gelf.GelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 import ch.qos.logback.classic.Level;
@@ -22,8 +19,9 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Context;
 import ch.qos.logback.core.status.Status;
 import ch.qos.logback.core.status.StatusManager;
+import external.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GelfLogbackAppenderErrorsUnitTests {
 
     public static final String THE_HOST = "the host";
@@ -32,13 +30,7 @@ public class GelfLogbackAppenderErrorsUnitTests {
             Level.INFO, "message", null, null);
 
     @Mock
-    private GelfSender sender;
-
-    @Mock
     private GelfSenderProvider senderProvider;
-
-    @Mock
-    private GelfMessageAssembler assembler;
 
     @Mock
     private Context context;
@@ -48,7 +40,7 @@ public class GelfLogbackAppenderErrorsUnitTests {
 
     private GelfLogbackAppender sut = new GelfLogbackAppender();
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
 
@@ -59,7 +51,7 @@ public class GelfLogbackAppenderErrorsUnitTests {
 
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
         GelfSenderFactory.removeAllAddedSenderProviders();

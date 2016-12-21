@@ -11,10 +11,10 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.google.code.tempusfugit.temporal.Condition;
 import com.google.code.tempusfugit.temporal.Duration;
@@ -38,7 +38,7 @@ public class GelfLogAppenderAsyncNettyTcpIntegrationTests {
     private static LoggerContext loggerContext;
     private static NettyLocalServer server = new NettyLocalServer(NioServerSocketChannel.class);
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() throws Exception {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-async-netty-tcp.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
@@ -46,14 +46,14 @@ public class GelfLogAppenderAsyncNettyTcpIntegrationTests {
         server.run();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
         loggerContext.reconfigure();
         server.close();
     }
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();

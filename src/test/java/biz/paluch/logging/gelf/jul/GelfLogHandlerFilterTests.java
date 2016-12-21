@@ -6,9 +6,9 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.apache.log4j.MDC;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 
@@ -18,7 +18,7 @@ import biz.paluch.logging.gelf.GelfTestSender;
  */
 public class GelfLogHandlerFilterTests {
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         GelfTestSender.getMessages().clear();
@@ -27,7 +27,7 @@ public class GelfLogHandlerFilterTests {
         MDC.remove("mdcField1");
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         LogManager.getLogManager().reset();
 

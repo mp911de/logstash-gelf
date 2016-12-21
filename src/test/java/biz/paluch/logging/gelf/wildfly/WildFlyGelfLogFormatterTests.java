@@ -1,6 +1,7 @@
 package biz.paluch.logging.gelf.wildfly;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.StringWriter;
 import java.util.Map;
@@ -11,8 +12,9 @@ import java.util.logging.Logger;
 import org.jboss.logmanager.MDC;
 import org.jboss.logmanager.NDC;
 import org.jboss.logmanager.handlers.WriterHandler;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.JsonUtil;
@@ -28,7 +30,7 @@ public class WildFlyGelfLogFormatterTests {
     private WriterHandler handler = new WriterHandler();
     private StringWriter stringWriter = new StringWriter();
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager().reset();
@@ -116,18 +118,30 @@ public class WildFlyGelfLogFormatterTests {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testUnknownField() throws Exception {
 
-        WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
-        formatter.setFields("dummy");
+        assertThrows(IllegalArgumentException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
+                formatter.setFields("dummy");
+            }
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNotSupportedField() throws Exception {
 
-        WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
-        formatter.setFields("Marker");
+        assertThrows(IllegalArgumentException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
+                formatter.setFields("Marker");
+            }
+        });
     }
 
     @Test

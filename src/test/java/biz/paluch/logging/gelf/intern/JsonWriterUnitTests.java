@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,7 +19,7 @@ public class JsonWriterUnitTests {
 
     private String content;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         byte[] bytes = IOUtils.toByteArray(getClass().getResourceAsStream("/utf8.txt"));

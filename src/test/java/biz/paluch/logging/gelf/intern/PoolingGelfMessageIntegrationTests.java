@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import org.jboss.as.protocol.StreamUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.StackTraceFilter;
 

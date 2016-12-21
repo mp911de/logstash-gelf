@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf.intern.sender;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -9,20 +10,21 @@ import java.net.DatagramSocket;
 import java.net.UnknownHostException;
 import java.util.Random;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
+import external.MockitoExtension;
 
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GelfUDPSenderUnitTests {
 
     @Mock
@@ -41,9 +43,15 @@ public class GelfUDPSenderUnitTests {
         verifyZeroInteractions(errorReporter);
     }
 
-    @Test(expected = UnknownHostException.class)
+    @Test
     public void unknownHostShouldThrowException() throws Exception {
-        new GelfUDPSender("unknown.host.unknown", 65534, errorReporter);
+
+        assertThrows(UnknownHostException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new GelfUDPSender("unknown.host.unknown", 65534, errorReporter);
+            }
+        });
     }
 
     @Test

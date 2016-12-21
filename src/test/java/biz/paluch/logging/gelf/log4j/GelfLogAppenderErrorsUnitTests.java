@@ -10,23 +10,23 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.spi.ErrorHandler;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
+import external.MockitoExtension;
 
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GelfLogAppenderErrorsUnitTests {
 
     public static final String THE_HOST = "the host";
@@ -45,7 +45,7 @@ public class GelfLogAppenderErrorsUnitTests {
 
     private GelfLogAppender sut = new GelfLogAppender();
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
@@ -53,7 +53,7 @@ public class GelfLogAppenderErrorsUnitTests {
         sut.setErrorHandler(errorHandler);
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
         GelfSenderFactory.removeAllAddedSenderProviders();
@@ -84,7 +84,7 @@ public class GelfLogAppenderErrorsUnitTests {
         verify(errorHandler, atLeast(1)).error(anyString(), ArgumentMatchers.<Exception> isNull(), anyInt());
     }
 
-    @Test(timeout = 500)
+    @Test
     @Ignore("Flakey during to execution environment")
     public void gelfPortNotReachable() throws Exception {
 

@@ -2,8 +2,8 @@ package biz.paluch.logging.gelf.standalone;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -13,7 +13,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  */
 public class DatenpumpeImplUnitTests {
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
     }

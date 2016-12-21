@@ -6,8 +6,8 @@ import static org.junit.Assert.assertThat;
 import java.net.URL;
 
 import org.hamcrest.core.StringContains;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
 
 import biz.paluch.logging.gelf.GelfTestSender;
@@ -25,7 +25,7 @@ public class GelfLogbackAppenderDynamicHostnameTests {
     public static final String LOG_MESSAGE = "foo bar test log message";
     LoggerContext lc = null;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();

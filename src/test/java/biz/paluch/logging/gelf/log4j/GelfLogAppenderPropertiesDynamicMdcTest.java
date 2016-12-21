@@ -11,8 +11,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.log4j.PropertyConfigurator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -33,7 +33,7 @@ public class GelfLogAppenderPropertiesDynamicMdcTest {
     public static final String SOME_FIELD = "someField";
     public static final String SOME_OTHER_FIELD = "someOtherField";
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();

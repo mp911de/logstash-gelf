@@ -2,7 +2,7 @@ package biz.paluch.logging.gelf.jboss7;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mark Paluch

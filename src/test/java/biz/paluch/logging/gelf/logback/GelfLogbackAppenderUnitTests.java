@@ -1,8 +1,10 @@
 package biz.paluch.logging.gelf.logback;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import biz.paluch.logging.RuntimeContainer;
 
@@ -48,24 +50,42 @@ public class GelfLogbackAppenderUnitTests {
         assertThat(sut.isMdcProfiling()).isTrue();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInvalidPort() throws Exception {
 
-        GelfLogbackAppender sut = new GelfLogbackAppender();
-        sut.setPort(-1);
+        assertThrows(IllegalArgumentException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                GelfLogbackAppender sut = new GelfLogbackAppender();
+                sut.setPort(-1);
+            }
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInvalidMaximumMessageSize() throws Exception {
 
-        GelfLogbackAppender sut = new GelfLogbackAppender();
-        sut.setMaximumMessageSize(-1);
+        assertThrows(IllegalArgumentException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                GelfLogbackAppender sut = new GelfLogbackAppender();
+                sut.setMaximumMessageSize(-1);
+            }
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInvalidVersion() throws Exception {
 
-        GelfLogbackAppender sut = new GelfLogbackAppender();
-        sut.setVersion("7");
+        assertThrows(IllegalArgumentException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                GelfLogbackAppender sut = new GelfLogbackAppender();
+                sut.setVersion("7");
+            }
+        });
     }
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.jboss.logmanager.ExtLogRecord;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;

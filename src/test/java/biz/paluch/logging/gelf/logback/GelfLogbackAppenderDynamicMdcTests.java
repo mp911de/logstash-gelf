@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.net.URL;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
 
 import biz.paluch.logging.gelf.GelfTestSender;
@@ -33,7 +33,7 @@ public class GelfLogbackAppenderDynamicMdcTests {
     public static final String SOME_OTHER_FIELD = "someOtherField";
     LoggerContext lc = null;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();

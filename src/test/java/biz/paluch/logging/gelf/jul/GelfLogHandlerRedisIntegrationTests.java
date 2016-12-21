@@ -2,6 +2,7 @@ package biz.paluch.logging.gelf.jul;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,9 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.apache.log4j.MDC;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.JsonUtil;
@@ -30,7 +32,7 @@ public class GelfLogHandlerRedisIntegrationTests {
 
     private Jedis jedis;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         // enable the test with -Dtest.withRedis=true
         assumeTrue(Sockets.isOpen("localhost", 6479));
@@ -117,48 +119,76 @@ public class GelfLogHandlerRedisIntegrationTests {
         gelfSender.close();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void uriWithoutHost() throws Exception {
 
         String uri = "redis:///#list";
 
-        DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
+        final DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
         configuration.setHost(uri);
-        new RedisGelfSenderProvider().create(configuration);
+
+        assertThrows(IllegalArgumentException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                new RedisGelfSenderProvider().create(configuration);
+            }
+        });
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void uriWithoutFragment() throws Exception {
 
         String uri = "redis://host/";
 
-        DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
+        final DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
         configuration.setHost(uri);
-        new RedisGelfSenderProvider().create(configuration);
+
+        assertThrows(IllegalArgumentException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                new RedisGelfSenderProvider().create(configuration);
+            }
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void uriWithoutFragment2() throws Exception {
 
         String uri = "redis://host";
 
-        DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
+        final DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
         configuration.setHost(uri);
-        new RedisGelfSenderProvider().create(configuration);
+
+        assertThrows(IllegalArgumentException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                new RedisGelfSenderProvider().create(configuration);
+            }
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void uriWithoutFragment3() throws Exception {
 
         String uri = "redis://host#";
 
-        DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
+        final DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
         configuration.setHost(uri);
-        new RedisGelfSenderProvider().create(configuration);
+
+        assertThrows(IllegalArgumentException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                new RedisGelfSenderProvider().create(configuration);
+            }
+        });
     }
 
-    @Test(timeout = 5000)
+    @Test
     public void testRedisNotAvailable() throws Exception {
 
         LogManager.getLogManager()

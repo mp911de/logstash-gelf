@@ -8,7 +8,7 @@ import static org.junit.Assume.assumeTrue;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.GelfUtil;

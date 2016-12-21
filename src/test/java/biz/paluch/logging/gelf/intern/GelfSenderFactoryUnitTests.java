@@ -13,19 +13,19 @@ import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import biz.paluch.logging.gelf.GelfMessageAssembler;
+import external.MockitoExtension;
 
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GelfSenderFactoryUnitTests {
 
     public static final String THE_HOST = "thehost";
@@ -44,14 +44,14 @@ public class GelfSenderFactoryUnitTests {
 
     private GelfSenderFactory sut = new GelfSenderFactory();
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
 
         when(assembler.getHost()).thenReturn(THE_HOST);
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
         GelfSenderFactory.removeAllAddedSenderProviders();
@@ -124,7 +124,7 @@ public class GelfSenderFactoryUnitTests {
 
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testCreateSenderFailNPE() throws Exception {
 
         mockSupports();

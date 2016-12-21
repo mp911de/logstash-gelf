@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -24,7 +24,7 @@ public class GelfLogHandlerSystemPropertiesTests {
     public static final String PROPERTY2 = "otherproperty";
     public static final String PROPERTY2_VALUE = "value of otherproperty";
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         System.clearProperty(PROPERTY1);

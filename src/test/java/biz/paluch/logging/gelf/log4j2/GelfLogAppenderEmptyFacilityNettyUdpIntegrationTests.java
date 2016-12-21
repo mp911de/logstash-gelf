@@ -1,6 +1,7 @@
 package biz.paluch.logging.gelf.log4j2;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 import java.util.Map;
@@ -11,10 +12,11 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import com.google.code.tempusfugit.temporal.Condition;
 import com.google.code.tempusfugit.temporal.Duration;
@@ -36,7 +38,7 @@ public class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
     private static LoggerContext loggerContext;
     private static NettyLocalServer server = new NettyLocalServer(NioDatagramChannel.class);
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() throws Exception {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-empty-facility-netty-udp.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
@@ -44,14 +46,14 @@ public class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
         server.run();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
         loggerContext.reconfigure();
         server.close();
     }
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
@@ -77,14 +79,20 @@ public class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
 
     }
 
-    @Test(expected = TimeoutException.class)
+    @Test
     public void testEmptyMessage() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info("");
 
-        waitForGelf();
+        assertThrows(TimeoutException.class, new Executable() {
+
+            @Override
+            public void execute() throws Throwable {
+                waitForGelf();
+            }
+        });
 
     }
 

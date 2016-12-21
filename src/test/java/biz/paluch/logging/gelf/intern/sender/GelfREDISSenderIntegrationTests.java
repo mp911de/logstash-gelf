@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;
 

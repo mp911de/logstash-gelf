@@ -8,8 +8,8 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.jboss.logmanager.MDC;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.JsonUtil;
@@ -31,7 +31,7 @@ public class WildFlyGelfLogHandlerDynamicMdcTests {
     public static final String VALUE_3 = "value3";
     public static final String MDC_MY_MDC = "myMdc";
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager().reset();

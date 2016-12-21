@@ -11,13 +11,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -28,7 +26,6 @@ import io.netty.handler.codec.http.HttpResponseStatus;
  * @author Aleksandar Stojadinovic
  */
 @SuppressWarnings("unchecked")
-@RunWith(MockitoJUnitRunner.class)
 public class GelfHTTPSenderIntegrationTests {
 
     private static final GelfMessage GELF_MESSAGE = new GelfMessage("shortMessage", "fullMessage", 12121L, "WARNING");
@@ -38,7 +35,7 @@ public class GelfHTTPSenderIntegrationTests {
     @Mock
     ErrorReporter errorReporter;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         server = new NettyLocalHTTPServer();
         server.run();
@@ -57,7 +54,7 @@ public class GelfHTTPSenderIntegrationTests {
         });
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         server.close();
         sender.close();

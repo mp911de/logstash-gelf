@@ -11,23 +11,23 @@ import java.util.logging.ErrorManager;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
+import external.MockitoExtension;
 
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GelfLogHandlerErrorsTests {
 
     public static final String THE_HOST = "the host";
@@ -44,7 +44,7 @@ public class GelfLogHandlerErrorsTests {
 
     private GelfLogHandler sut = new GelfLogHandler();
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
 
@@ -53,7 +53,7 @@ public class GelfLogHandlerErrorsTests {
 
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
         GelfSenderFactory.removeAllAddedSenderProviders();

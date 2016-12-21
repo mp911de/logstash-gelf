@@ -2,7 +2,7 @@ package biz.paluch.logging.gelf.logback;
 
 import java.net.URL;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.MDC;
 
 import biz.paluch.logging.gelf.GelfTestSender;
@@ -15,7 +15,7 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
  */
 public class GelfLogbackAppenderTests extends AbstractGelfLogAppenderTests {
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();

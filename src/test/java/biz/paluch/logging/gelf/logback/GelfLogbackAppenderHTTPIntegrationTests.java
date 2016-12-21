@@ -6,9 +6,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
 
 import biz.paluch.logging.gelf.netty.NettyLocalHTTPServer;
@@ -25,7 +25,7 @@ public class GelfLogbackAppenderHTTPIntegrationTests {
 
     LoggerContext lc = null;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();
@@ -41,7 +41,7 @@ public class GelfLogbackAppenderHTTPIntegrationTests {
         MDC.remove("mdcField1");
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         server.close();
     }

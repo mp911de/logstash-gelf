@@ -12,9 +12,9 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -33,7 +33,7 @@ public class GelfTCPSSLSenderIntegrationTests {
     private static NettyLocalServer server = new NettyLocalServer(NioServerSocketChannel.class);
     private static SSLContext sslContext;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() throws Exception {
 
         File file = new File("work/keystore.jks");
@@ -94,7 +94,7 @@ public class GelfTCPSSLSenderIntegrationTests {
         tcpsslSender.close();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() throws Exception {
         server.close();
     }

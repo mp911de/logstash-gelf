@@ -7,10 +7,10 @@ import java.util.concurrent.TimeoutException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.google.code.tempusfugit.temporal.*;
 
@@ -24,17 +24,17 @@ public class GelfLogAppenderNettyIntegrationTests {
 
     private static NettyLocalServer server = new NettyLocalServer(NioDatagramChannel.class);
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() throws Exception {
         server.run();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() throws Exception {
         server.close();
     }
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         LogManager.getLoggerRepository().resetConfiguration();
         DOMConfigurator.configure(getClass().getResource("/log4j/log4j-netty-warn.xml"));
