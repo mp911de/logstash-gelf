@@ -1,11 +1,9 @@
 package biz.paluch.logging.gelf.log4j;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -17,11 +15,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import biz.paluch.logging.gelf.GelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.*;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
 /**
  * @author Mark Paluch
@@ -38,9 +38,6 @@ public class GelfLogAppenderErrorsUnitTests {
     private ErrorHandler errorHandler;
 
     @Mock
-    private GelfSender sender;
-
-    @Mock
     private GelfSenderProvider senderProvider;
 
     @Mock
@@ -50,12 +47,10 @@ public class GelfLogAppenderErrorsUnitTests {
 
     @Before
     public void before() throws Exception {
+
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
 
-        when(assembler.getHost()).thenReturn(THE_HOST);
-        when(senderProvider.supports(anyString())).thenReturn(true);
         sut.setErrorHandler(errorHandler);
-
     }
 
     @After
@@ -67,34 +62,26 @@ public class GelfLogAppenderErrorsUnitTests {
     @Test
     public void testRuntimeExceptionOnCreateSender() throws Exception {
         sut.setGraylogHost(THE_HOST);
-        when(assembler.getHost()).thenReturn(THE_HOST);
-        when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new IllegalStateException());
 
         sut.append(LOGGING_EVENT);
 
-        verify(errorHandler, atLeast(1)).error(anyString(), any(IllegalStateException.class), anyInt());
+        verify(errorHandler, atLeast(1)).error(anyString(), ArgumentMatchers.<Exception> isNull(), anyInt());
     }
 
     @Test
     public void testInvalidMessage() throws Exception {
 
-        when(senderProvider.create(any(GelfSenderConfiguration.class))).thenReturn(sender);
-        when(sender.sendMessage(any(GelfMessage.class))).thenReturn(false);
-
         sut.append(LOGGING_EVENT);
 
-        verify(errorHandler, atLeast(1)).error(anyString(), any(IllegalStateException.class), anyInt());
+        verify(errorHandler, atLeast(1)).error(anyString(), ArgumentMatchers.<Exception> isNull(), anyInt());
     }
 
     @Test
     public void testErrorOnSend() throws Exception {
 
-        when(senderProvider.create(any(GelfSenderConfiguration.class))).thenReturn(sender);
-        when(sender.sendMessage(any(GelfMessage.class))).thenThrow(new IllegalStateException());
-
         sut.append(LOGGING_EVENT);
 
-        verify(errorHandler, atLeast(1)).error(anyString(), any(IllegalStateException.class), anyInt());
+        verify(errorHandler, atLeast(1)).error(anyString(), ArgumentMatchers.<Exception> isNull(), anyInt());
     }
 
     @Test(timeout = 500)

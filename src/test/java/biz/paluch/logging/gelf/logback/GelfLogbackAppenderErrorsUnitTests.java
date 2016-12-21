@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.logback;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,10 +10,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import biz.paluch.logging.gelf.GelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.*;
+import biz.paluch.logging.gelf.intern.GelfSender;
+import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.LoggingEvent;
@@ -51,8 +52,6 @@ public class GelfLogbackAppenderErrorsUnitTests {
     public void before() throws Exception {
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
 
-        when(assembler.getHost()).thenReturn(THE_HOST);
-        when(senderProvider.supports(anyString())).thenReturn(true);
         sut.setContext(context);
         when(context.getStatusManager()).thenReturn(statusManager);
 
@@ -68,9 +67,8 @@ public class GelfLogbackAppenderErrorsUnitTests {
 
     @Test
     public void testRuntimeExceptionOnCreateSender() throws Exception {
+
         sut.setGraylogHost(THE_HOST);
-        when(assembler.getHost()).thenReturn(THE_HOST);
-        when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new IllegalStateException());
 
         sut.append(LOGGING_EVENT);
 
@@ -80,9 +78,6 @@ public class GelfLogbackAppenderErrorsUnitTests {
     @Test
     public void testInvalidMessage() throws Exception {
 
-        when(senderProvider.create(any(GelfSenderConfiguration.class))).thenReturn(sender);
-        when(sender.sendMessage(any(GelfMessage.class))).thenReturn(false);
-
         sut.append(LOGGING_EVENT);
 
         verify(statusManager, atLeast(1)).add(any(Status.class));
@@ -90,9 +85,6 @@ public class GelfLogbackAppenderErrorsUnitTests {
 
     @Test
     public void testErrorOnSend() throws Exception {
-
-        when(senderProvider.create(any(GelfSenderConfiguration.class))).thenReturn(sender);
-        when(sender.sendMessage(any(GelfMessage.class))).thenThrow(new IllegalStateException());
 
         sut.append(LOGGING_EVENT);
 
