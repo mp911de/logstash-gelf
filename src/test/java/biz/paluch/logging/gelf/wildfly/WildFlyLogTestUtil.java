@@ -8,7 +8,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  * @since 11.08.14 08:36
  */
-public class WildFlyLogTestUtil {
+class WildFlyLogTestUtil {
 
     public static WildFlyGelfLogHandler getWildFlyGelfLogHandler() {
 

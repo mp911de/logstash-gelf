@@ -412,8 +412,7 @@ public class StackTraceFilter {
         boolean first = true;
         int indentationLevel;
 
-        private final String lineSeparator = java.security.AccessController
-                .doPrivileged(new sun.security.action.GetPropertyAction("line.separator"));
+        private final String lineSeparator = System.getProperty("line.separator");
 
         public StackTraceFilterWriter(Writer s) {
             super(s);

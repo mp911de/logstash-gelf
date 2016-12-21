@@ -16,7 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import biz.paluch.logging.gelf.JsonUtil;
-import biz.paluch.logging.gelf.Log4jUtil;
 import biz.paluch.logging.gelf.LogMessageField;
 
 /**

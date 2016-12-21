@@ -8,7 +8,8 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  * @since 28.02.14 11:29
  */
-public class JBoss7LogTestUtil {
+class JBoss7LogTestUtil {
+
     public static JBoss7GelfLogHandler getJBoss7GelfLogHandler() {
         JBoss7GelfLogHandler handler = new JBoss7GelfLogHandler();
 

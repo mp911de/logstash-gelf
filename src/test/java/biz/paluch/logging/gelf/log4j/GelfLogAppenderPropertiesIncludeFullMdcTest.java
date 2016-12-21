@@ -1,8 +1,12 @@
 package biz.paluch.logging.gelf.log4j;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.Log4jUtil;
-import biz.paluch.logging.gelf.intern.GelfMessage;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assume.assumeTrue;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -10,12 +14,8 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assume.assumeTrue;
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author Mark Paluch
