@@ -1,6 +1,7 @@
 package biz.paluch.logging.gelf.intern;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.reset;
@@ -42,8 +43,6 @@ public class GelfSenderFactoryUnitTests {
     @Mock
     private GelfMessageAssembler assembler;
 
-    private GelfSenderFactory sut = new GelfSenderFactory();
-
     @BeforeEach
     public void before() throws Exception {
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
@@ -64,7 +63,7 @@ public class GelfSenderFactoryUnitTests {
         mockSupports();
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenReturn(sender);
 
-        GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
+        GelfSender result = GelfSenderFactory.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
 
         assertThat(result).isSameAs(sender);
     }
@@ -72,7 +71,7 @@ public class GelfSenderFactoryUnitTests {
     @Test
     public void testCreateSenderFailUdp() throws Exception {
 
-        GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
+        GelfSender result = GelfSenderFactory.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
         assertThat(result).isNull();
     }
 
@@ -81,7 +80,7 @@ public class GelfSenderFactoryUnitTests {
 
         reset(assembler);
         when(assembler.getHost()).thenReturn("tcp:" + THE_HOST);
-        GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
+        GelfSender result = GelfSenderFactory.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
         assertThat(result).isNull();
     }
 
@@ -91,7 +90,7 @@ public class GelfSenderFactoryUnitTests {
         mockSupports();
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new UnknownHostException());
 
-        GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
+        GelfSender result = GelfSenderFactory.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
         assertThat(result).isNull();
 
         verify(errorReporter).reportError(anyString(), any(UnknownHostException.class));
@@ -104,7 +103,7 @@ public class GelfSenderFactoryUnitTests {
         mockSupports();
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new SocketException());
 
-        GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
+        GelfSender result = GelfSenderFactory.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
         assertThat(result).isNull();
 
         verify(errorReporter).reportError(anyString(), any(SocketException.class));
@@ -117,7 +116,7 @@ public class GelfSenderFactoryUnitTests {
         mockSupports();
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new IOException());
 
-        GelfSender result = sut.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
+        GelfSender result = GelfSenderFactory.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
         assertThat(result).isNull();
 
         verify(errorReporter).reportError(anyString(), any(IOException.class));
@@ -130,8 +129,12 @@ public class GelfSenderFactoryUnitTests {
         mockSupports();
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new NullPointerException());
 
-        sut.createSender(assembler, errorReporter, new HashMap<String, Object>());
-
+        try {
+            GelfSenderFactory.createSender(assembler, errorReporter, new HashMap<String, Object>());
+            fail("Missing NullPointerException");
+        } catch (Exception e) {
+            assertThat(e).isInstanceOf(NullPointerException.class);
+        }
     }
 
     private void mockSupports() {

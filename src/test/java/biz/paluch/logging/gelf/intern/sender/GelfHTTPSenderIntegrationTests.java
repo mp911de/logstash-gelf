@@ -14,18 +14,21 @@ import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.netty.NettyLocalHTTPServer;
+import external.MockitoExtension;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
 /**
  * @author Aleksandar Stojadinovic
  */
 @SuppressWarnings("unchecked")
+@ExtendWith(MockitoExtension.class)
 public class GelfHTTPSenderIntegrationTests {
 
     private static final GelfMessage GELF_MESSAGE = new GelfMessage("shortMessage", "fullMessage", 12121L, "WARNING");

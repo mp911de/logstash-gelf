@@ -1,6 +1,7 @@
 package biz.paluch.logging.gelf.intern.sender;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.util.Random;
@@ -79,8 +81,12 @@ public class GelfTCPSenderUnitTests {
     @Test
     public void unknownHostShouldThrowException() throws Exception {
 
-        new GelfTCPSender("unknown.host.unknown", 65534, 100, 100, errorReporter);
-
+        try {
+            new GelfTCPSender("unknown.host.unknown", 65534, 100, 100, errorReporter);
+            fail("Missing UnknownHostException");
+        } catch (UnknownHostException e) {
+            assertThat(e).isInstanceOf(UnknownHostException.class);
+        }
     }
 
     @Test

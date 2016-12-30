@@ -4,12 +4,12 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.AppenderLoggingException;
-import org.apache.logging.log4j.junit.InitialLoggerContext;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.test.appender.ListAppender;
-import org.junit.ClassRule;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -21,12 +21,17 @@ public class GelfLogAppenderPropagateExceptionsTests {
     public static final String LOG_MESSAGE = "foo bar test log message";
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
-    @ClassRule
-    public static final InitialLoggerContext loggerContext = new InitialLoggerContext("log4j2/log4j2-propagate-exceptions.xml");
+    private static LoggerContext loggerContext;
 
-    @BeforeEach
-    public void before() throws Exception {
-        ThreadContext.clearAll();
+    @BeforeAll
+    public static void beforeAll() throws Exception {
+        loggerContext = Configurator.initialize("GelfLogAppenderPropagateExceptionsTests",
+                GelfLogAppenderPropagateExceptionsTests.class.getClassLoader(), "log4j2/log4j2-propagate-exceptions.xml");
+    }
+
+    @AfterAll
+    public static void afterAll() throws Exception {
+        Configurator.shutdown(loggerContext);
     }
 
     @Test
@@ -48,7 +53,7 @@ public class GelfLogAppenderPropagateExceptionsTests {
         Logger logger = loggerContext.getLogger("biz.failover");
         logger.info(LOG_MESSAGE);
 
-        ListAppender failoverList = loggerContext.getListAppender("failoverList");
+        ListAppender failoverList = getListAppender("failoverList");
         assertThat(failoverList.getEvents()).hasSize(1);
     }
 
@@ -58,8 +63,12 @@ public class GelfLogAppenderPropagateExceptionsTests {
         Logger logger = loggerContext.getLogger("biz.ignore");
         logger.info(LOG_MESSAGE);
 
-        ListAppender ignoreList = loggerContext.getListAppender("ignoreList");
+        ListAppender ignoreList = getListAppender("ignoreList");
         assertThat(ignoreList.getEvents()).hasSize(1);
+    }
+
+    public ListAppender getListAppender(String name) {
+        return (ListAppender) loggerContext.getConfiguration().getAppenders().get(name);
     }
 
 }
