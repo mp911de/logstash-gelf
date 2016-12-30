@@ -1,11 +1,9 @@
 package biz.paluch.logging.gelf.logback;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThat;
 
 import java.net.URL;
 
-import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
@@ -51,7 +49,7 @@ public class GelfLogbackAppenderHostnameTests {
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         String json = gelfMessage.toJson();
-        assertThat(json, StringContains.containsString("\"host\":\"1.2.3.4\""));
+        assertThat(json).contains("\"host\":\"1.2.3.4\"");
     }
 
     @Test
@@ -65,7 +63,7 @@ public class GelfLogbackAppenderHostnameTests {
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         String json = gelfMessage.toJson();
-        assertThat(json, StringContains.containsString("\"_myOriginHost\":\""));
+        assertThat(json).contains("\"_myOriginHost\":\"");
     }
 
 }

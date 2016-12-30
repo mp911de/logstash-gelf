@@ -1,11 +1,10 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URI;
 import java.util.Map;
 
-import org.fest.assertions.MapAssert;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -16,8 +15,8 @@ public class QueryStringParserUnitTests {
     @Test
     public void testParse() throws Exception {
         Map<String, String> result = QueryStringParser.parse(URI.create("tcp:12345?KeY=value"));
-        assertThat(result).includes(MapAssert.entry("key", "value"));
-        assertThat(result).excludes(MapAssert.entry("KeY", "value"));
+        assertThat(result).containsEntry("key", "value");
+        assertThat(result).doesNotContainEntry("KeY", "value");
     }
 
     @Test

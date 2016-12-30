@@ -1,8 +1,7 @@
 package biz.paluch.logging.gelf.log4j;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assume.assumeTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -54,12 +53,12 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
         Logger logger = Logger.getLogger(getClass());
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertNull(gelfMessage.getField(MDC_MY_MDC1));
-        assertNull(gelfMessage.getField(MDC_MY_MDC2));
+        assertThat(gelfMessage.getField(MDC_MY_MDC1)).isNull();
+        assertThat(gelfMessage.getField(MDC_MY_MDC2)).isNull();
     }
 
     @Test
@@ -70,13 +69,12 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
         MDC.put(MDC_MY_MDC2, VALUE_2);
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(VALUE_1, gelfMessage.getField(MDC_MY_MDC1));
-        assertEquals(VALUE_2, gelfMessage.getField(MDC_MY_MDC2));
-
+        assertThat(gelfMessage.getField(MDC_MY_MDC1)).isEqualTo(VALUE_1);
+        assertThat(gelfMessage.getField(MDC_MY_MDC2)).isEqualTo(VALUE_2);
     }
 
     @Test
@@ -84,8 +82,6 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
 
         Logger logger = Logger.getLogger(getClass());
         logger.info("");
-        assertEquals(0, GelfTestSender.getMessages().size());
-
+        assertThat(GelfTestSender.getMessages()).isEmpty();
     }
-
 }

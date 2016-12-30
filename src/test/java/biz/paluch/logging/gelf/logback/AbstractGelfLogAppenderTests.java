@@ -1,8 +1,6 @@
 package biz.paluch.logging.gelf.logback;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
@@ -120,7 +118,7 @@ public abstract class AbstractGelfLogAppenderTests {
         assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.getFieldName()))
                 .isEqualTo("testException");
 
-        assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("this is an exception"));
+        assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE)).contains("this is an exception");
 
     }
 

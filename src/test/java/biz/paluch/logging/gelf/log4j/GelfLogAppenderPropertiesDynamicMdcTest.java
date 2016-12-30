@@ -1,8 +1,7 @@
 package biz.paluch.logging.gelf.log4j;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assume.assumeTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -55,12 +54,11 @@ public class GelfLogAppenderPropertiesDynamicMdcTest {
         Logger logger = Logger.getLogger(getClass());
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        String myMdc = gelfMessage.getField(MDC_MY_MDC);
-        assertNull(myMdc);
+        assertThat(gelfMessage.getField(MDC_MY_MDC)).isNull();
     }
 
     @Test
@@ -74,13 +72,13 @@ public class GelfLogAppenderPropertiesDynamicMdcTest {
         MDC.put(MY_MDC_WITH_SUFFIX2, VALUE_3);
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals(VALUE_1, gelfMessage.getField(MDC_MY_MDC));
-        assertEquals(VALUE_2, gelfMessage.getField(MY_MDC_WITH_SUFFIX1));
-        assertEquals(VALUE_3, gelfMessage.getField(MY_MDC_WITH_SUFFIX2));
+        assertThat(gelfMessage.getField(MDC_MY_MDC)).isEqualTo(VALUE_1);
+        assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX1)).isEqualTo(VALUE_2);
+        assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX2)).isEqualTo(VALUE_3);
 
     }
 
@@ -94,12 +92,11 @@ public class GelfLogAppenderPropertiesDynamicMdcTest {
         MDC.put(SOME_OTHER_FIELD, "excluded");
 
         logger.info(LOG_MESSAGE);
-        assertEquals(1, GelfTestSender.getMessages().size());
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertEquals("included", gelfMessage.getField(SOME_FIELD));
-        assertNull(gelfMessage.getField(SOME_OTHER_FIELD));
-
+        assertThat(gelfMessage.getField(SOME_FIELD)).isEqualTo("included");
+        assertThat(gelfMessage.getField(SOME_OTHER_FIELD)).isNull();
     }
 }

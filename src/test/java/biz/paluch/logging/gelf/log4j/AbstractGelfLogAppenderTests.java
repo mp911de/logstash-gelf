@@ -1,9 +1,8 @@
 package biz.paluch.logging.gelf.log4j;
 
+import static biz.paluch.logging.gelf.GelfMessageAssembler.FIELD_STACK_TRACE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.GelfUtil;
 import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
@@ -98,9 +96,9 @@ public abstract class AbstractGelfLogAppenderTests {
         assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.getFieldName()))
                 .isEqualTo("testException");
 
-        assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("this is an exception"));
-        assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("skipped"));
-        assertThat(gelfMessage.getField(MdcGelfMessageAssembler.FIELD_STACK_TRACE), containsString("skipped"));
+        assertThat(gelfMessage.getField(FIELD_STACK_TRACE)).contains("this is an exception");
+        assertThat(gelfMessage.getField(FIELD_STACK_TRACE)).contains("skipped");
+        assertThat(gelfMessage.getField(FIELD_STACK_TRACE)).contains("skipped");
 
     }
 

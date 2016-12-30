@@ -2,9 +2,6 @@ package biz.paluch.logging.gelf.intern;
 
 import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -79,9 +76,9 @@ public class GelfMessageUnitTests {
         assertThat(gelfMessage.getVersion()).isEqualTo(VERSION);
         assertThat(gelfMessage.getMaximumMessageSize()).isEqualTo(MESSAGE_SIZE);
 
-        assertThat(gelfMessage.toJson(), containsString("\"_int\":2"));
-        assertThat(gelfMessage.toJson(), containsString("\"_doubleNoDecimals\":2.0"));
-        assertThat(gelfMessage.toJson(), containsString("\"_doubleWithDecimals\":2.1"));
+        assertThat(gelfMessage.toJson()).contains("\"_int\":2");
+        assertThat(gelfMessage.toJson()).contains("\"_doubleNoDecimals\":2.0");
+        assertThat(gelfMessage.toJson()).contains("\"_doubleWithDecimals\":2.1");
     }
 
     @Test
@@ -213,8 +210,8 @@ public class GelfMessageUnitTests {
         gelfMessage.setJavaTimestamp(123456L);
 
         assertThat(gelfMessage.getVersion()).isEqualTo(GelfMessage.GELF_VERSION_1_0);
-        assertThat(gelfMessage.toJson(), containsString("\"level\":\"6\""));
-        assertThat(gelfMessage.toJson(), containsString("\"timestamp\":\"123.456"));
+        assertThat(gelfMessage.toJson()).contains("\"level\":\"6\"");
+        assertThat(gelfMessage.toJson()).contains("\"timestamp\":\"123.456");
     }
 
     @Test
@@ -226,8 +223,8 @@ public class GelfMessageUnitTests {
         gelfMessage.setVersion(GelfMessage.GELF_VERSION_1_1);
 
         assertThat(gelfMessage.getVersion()).isEqualTo(GelfMessage.GELF_VERSION_1_1);
-        assertThat(gelfMessage.toJson(), containsString("\"level\":6"));
-        assertThat(gelfMessage.toJson(), containsString("\"timestamp\":123.456"));
+        assertThat(gelfMessage.toJson()).contains("\"level\":6");
+        assertThat(gelfMessage.toJson()).contains("\"timestamp\":123.456");
 
     }
 
@@ -241,8 +238,7 @@ public class GelfMessageUnitTests {
         assertThat(build.hashCode()).isEqualTo(created.hashCode());
 
         build.setFacility("other");
-        assertThat(created.equals(build)).isFalse();
-        assertNotEquals(created, build);
+        assertThat(created).isNotEqualTo(build);
     }
 
     @Test

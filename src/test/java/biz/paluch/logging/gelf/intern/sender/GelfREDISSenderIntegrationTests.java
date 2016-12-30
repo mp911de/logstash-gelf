@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

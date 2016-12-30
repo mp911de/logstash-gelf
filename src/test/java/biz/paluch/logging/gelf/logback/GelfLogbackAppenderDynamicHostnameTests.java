@@ -1,11 +1,9 @@
 package biz.paluch.logging.gelf.logback;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThat;
 
 import java.net.URL;
 
-import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
@@ -23,7 +21,7 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 public class GelfLogbackAppenderDynamicHostnameTests {
 
     public static final String LOG_MESSAGE = "foo bar test log message";
-    LoggerContext lc = null;
+    private LoggerContext lc;
 
     @BeforeEach
     public void before() throws Exception {
@@ -53,8 +51,7 @@ public class GelfLogbackAppenderDynamicHostnameTests {
         String crossCheckHostName = gelfMessage.getAdditonalFields().get("crossCheckHostName");
 
         String json = gelfMessage.toJson();
-        assertThat(json, StringContains.containsString("\"_crossCheckHostName\":\"" + crossCheckHostName + "\""));
-        assertThat(json, StringContains.containsString("\"host\":\"" + crossCheckHostName + "\""));
+        assertThat(json).contains("\"_crossCheckHostName\":\"" + crossCheckHostName + "\"");
+        assertThat(json).contains("\"host\":\"" + crossCheckHostName + "\"");
     }
-
 }

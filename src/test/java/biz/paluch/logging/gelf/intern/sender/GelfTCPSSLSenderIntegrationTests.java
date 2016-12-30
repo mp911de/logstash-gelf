@@ -1,7 +1,7 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assume.assumeTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
 import java.io.FileInputStream;

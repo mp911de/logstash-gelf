@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.logging.log4j.Logger;
