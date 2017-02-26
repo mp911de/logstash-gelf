@@ -1,10 +1,7 @@
 package biz.paluch.logging.gelf.intern.sender;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 
 import java.net.DatagramSocket;
 import java.net.UnknownHostException;
@@ -95,6 +92,7 @@ public class GelfUDPSenderUnitTests {
         udpSender.sendMessage(gelfMessage);
 
         GelfUDPSender spy = spy(udpSender);
+        doReturn(true).when(spy).isConnected();
 
         spy.sendMessage(gelfMessage);
 

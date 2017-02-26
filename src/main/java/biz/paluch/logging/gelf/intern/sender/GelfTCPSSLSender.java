@@ -15,7 +15,7 @@ import biz.paluch.logging.gelf.intern.ErrorReporter;
 
 /**
  * TCP with SSL {@link biz.paluch.logging.gelf.intern.GelfSender}.
- * 
+ *
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  * @since 1.11
  */
@@ -23,9 +23,9 @@ public class GelfTCPSSLSender extends GelfTCPSender {
 
     private final SSLContext sslContext;
     private final ThreadLocal<ByteBuffer> sslNetworkBuffers = new ThreadLocal<ByteBuffer>();
-	private final ThreadLocal<ByteBuffer> tempBuffers = new ThreadLocal<ByteBuffer>();
+    private final ThreadLocal<ByteBuffer> tempBuffers = new ThreadLocal<ByteBuffer>();
 
-	private volatile SSLEngine sslEngine;
+    private volatile SSLEngine sslEngine;
 
     private volatile SSLSession sslSession;
 
@@ -51,8 +51,8 @@ public class GelfTCPSSLSender extends GelfTCPSender {
     @Override
     protected boolean connect() throws IOException {
 
-		this.sslEngine = sslContext.createSSLEngine();
-		this.sslEngine.setUseClientMode(true);
+        this.sslEngine = sslContext.createSSLEngine();
+        this.sslEngine.setUseClientMode(true);
         this.sslSession = sslEngine.getSession();
 
         if (super.connect()) {
@@ -66,11 +66,9 @@ public class GelfTCPSSLSender extends GelfTCPSender {
 
     protected boolean isConnected() throws IOException {
 
-        if (channel() != null && channel().isOpen() && isConnected(channel())) {
-            return true;
-        }
+        SocketChannel socketChannel = channel();
 
-        return false;
+        return socketChannel != null && socketChannel.isOpen() && isConnected(socketChannel);
     }
 
     @Override
@@ -147,7 +145,6 @@ public class GelfTCPSSLSender extends GelfTCPSender {
         dst.flip();
         buffer.put(dst);
         return buffer;
-
     }
 
     private void doHandshake(SocketChannel socketChannel, SSLEngine sslEngine, ByteBuffer myNetData, ByteBuffer peerNetData)

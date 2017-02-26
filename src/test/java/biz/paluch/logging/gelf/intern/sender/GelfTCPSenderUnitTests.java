@@ -106,7 +106,7 @@ public class GelfTCPSenderUnitTests {
 
         spy.sendMessage(gelfMessage);
 
-        verify(spy, times(2)).isConnected();
+        verify(spy, times(3)).isConnected();
         verify(spy).connect();
 
         listener.close();
@@ -132,7 +132,7 @@ public class GelfTCPSenderUnitTests {
 
         spy.sendMessage(gelfMessage);
 
-        verify(spy).isConnected();
+        verify(spy, times(2)).isConnected();
         verify(spy, never()).connect();
 
         listener.close();

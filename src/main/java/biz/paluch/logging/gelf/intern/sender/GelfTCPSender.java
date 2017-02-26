@@ -134,7 +134,7 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
         while (buffer.hasRemaining()) {
             int written = channel().write(buffer);
 
-            if (written < 0) {
+            if (written < 0 || !isConnected()) {
                 // indicator the socket was closed
                 Closer.close(channel());
                 throw new SocketException("Cannot write buffer to channel");
@@ -148,10 +148,8 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
             return false;
         }
 
-        if (!channel().isOpen()) {
-            Closer.close(channel());
-            setChannel(createSocketChannel(readTimeoutMs, keepAlive));
-        }
+        Closer.close(channel());
+        setChannel(createSocketChannel(readTimeoutMs, keepAlive));
 
         InetSocketAddress inetSocketAddress = new InetSocketAddress(getHost(), getPort());
         if (channel().connect(inetSocketAddress)) {
