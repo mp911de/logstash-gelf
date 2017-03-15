@@ -12,36 +12,19 @@ import java.nio.ByteBuffer;
  */
 class PoolingGelfMessage extends GelfMessage {
 
-    private static final ThreadLocal<byte[]> BYTE_ARRAY_POOL = new ThreadLocal<byte[]>() {
-        @Override
-        protected byte[] initialValue() {
-            return new byte[8192 * 2];
-        }
-    };
+    private final PoolHolder poolHolder;
 
-    private static final ThreadLocal<ReusableGzipOutputStream> STREAM_POOL = new ThreadLocal<ReusableGzipOutputStream>() {
-        @Override
-        protected ReusableGzipOutputStream initialValue() {
-            try {
-                return new ReusableGzipOutputStream(OutputAccessor.pooledStream());
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-    };
-
-    private static final ThreadLocal<ByteBuffer[]> SINGLE_BUFFER = new ThreadLocal<ByteBuffer[]>() {
-        @Override
-        protected ByteBuffer[] initialValue() {
-            return new ByteBuffer[1];
-        }
-    };
-
-    public PoolingGelfMessage() {
+    public PoolingGelfMessage(PoolHolder poolHolder) {
+        this.poolHolder = poolHolder;
     }
 
-    public PoolingGelfMessage(String shortMessage, String fullMessage, long timestamp, String level) {
+    public PoolingGelfMessage(String shortMessage, String fullMessage, long timestamp, String level, PoolHolder poolHolder) {
         super(shortMessage, fullMessage, timestamp, level);
+        this.poolHolder = poolHolder;
+    }
+
+    public void toJson(ByteBuffer byteBuffer, String additionalFieldPrefix) {
+        toJson(OutputAccessor.from(poolHolder.getOutputAccessorPoolHolder(), byteBuffer), additionalFieldPrefix);
     }
 
     public ByteBuffer[] toUDPBuffers(ByteBuffer buffer, ByteBuffer tempBuffer) {
@@ -49,9 +32,9 @@ class PoolingGelfMessage extends GelfMessage {
         try {
             toJson(buffer, "_");
 
-            OutputAccessor.asStream(tempBuffer);
+            OutputAccessor.asStream(poolHolder.getOutputAccessorPoolHolder(), tempBuffer);
 
-            ReusableGzipOutputStream gz = STREAM_POOL.get();
+            ReusableGzipOutputStream gz = poolHolder.getReusableGzipOutputStream();
             gz.reset();
             gz.writeHeader();
 
@@ -78,7 +61,7 @@ class PoolingGelfMessage extends GelfMessage {
             buffer.clear();
             return sliceDatagrams((ByteBuffer) tempBuffer.flip(), diagrams_length, buffer);
         } else {
-            ByteBuffer[] byteBuffers = SINGLE_BUFFER.get();
+            ByteBuffer[] byteBuffers = poolHolder.getSingleBuffer();
             byteBuffers[0] = (ByteBuffer) tempBuffer.flip();
             return byteBuffers;
         }
@@ -92,7 +75,7 @@ class PoolingGelfMessage extends GelfMessage {
             int read = 0;
             source.position(0);
 
-            byte[] bytes = BYTE_ARRAY_POOL.get();
+            byte[] bytes = poolHolder.getByteArray();
             while (size > read) {
 
                 if ((size - read) > bytes.length) {

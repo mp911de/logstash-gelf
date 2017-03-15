@@ -9,20 +9,6 @@ import java.nio.ByteBuffer;
  */
 abstract class OutputAccessor {
 
-    private static final ThreadLocal<ByteBufferOutputAccessor> accessors = new ThreadLocal<ByteBufferOutputAccessor>() {
-        @Override
-        protected ByteBufferOutputAccessor initialValue() {
-            return new ByteBufferOutputAccessor();
-        }
-    };
-
-    private static final ThreadLocal<ByteBufferOutputStream> streams = new ThreadLocal<ByteBufferOutputStream>() {
-        @Override
-        protected ByteBufferOutputStream initialValue() {
-            return new ByteBufferOutputStream(null);
-        }
-    };
-
     public abstract void write(int b);
 
     public abstract void write(byte[] b);
@@ -31,7 +17,7 @@ abstract class OutputAccessor {
 
     /**
      * Create an {@link OutputAccessor} for the given {@link OutputStream}.
-     * 
+     *
      * @param outputStream
      * @return
      */
@@ -47,7 +33,22 @@ abstract class OutputAccessor {
      */
     public static OutputAccessor from(ByteBuffer byteBuffer) {
 
-        ByteBufferOutputAccessor accessor = accessors.get();
+        ByteBufferOutputAccessor accessor = new ByteBufferOutputAccessor();
+        accessor.byteBuffer = byteBuffer;
+
+        return accessor;
+    }
+
+    /**
+     * Create an {@link OutputAccessor} for the given {@link ByteBuffer}. Instances are pooled within the thread scope.
+     *
+     * @param poolHolder
+     * @param byteBuffer
+     * @return
+     */
+    public static OutputAccessor from(OutputAccessorPoolHolder poolHolder, ByteBuffer byteBuffer) {
+
+        ByteBufferOutputAccessor accessor = poolHolder.getByteBufferOutputAccessor();
         accessor.byteBuffer = byteBuffer;
 
         return accessor;
@@ -56,21 +57,24 @@ abstract class OutputAccessor {
     /**
      * Retrieve a pooled {@link OutputStream}.
      *
+     * @param poolHolder
      * @return
      */
-    public static OutputStream pooledStream() {
-        return streams.get();
+    public static OutputStream pooledStream(OutputAccessorPoolHolder poolHolder) {
+        return poolHolder.getByteBufferOutputStream();
     }
 
     /**
-     * Retrieved a pooled an {@link OutputStream} for the given {@link ByteBuffer}. Instances are pooled within the thread scope.
+     * Retrieved a pooled an {@link OutputStream} for the given {@link ByteBuffer}. Instances are pooled within the thread
+     * scope.
      *
+     * @param poolHolder
      * @param byteBuffer
      * @return
      */
-    public static OutputStream asStream(ByteBuffer byteBuffer) {
+    public static OutputStream asStream(OutputAccessorPoolHolder poolHolder, ByteBuffer byteBuffer) {
 
-        ByteBufferOutputStream accessor = streams.get();
+        ByteBufferOutputStream accessor = poolHolder.getByteBufferOutputStream();
         accessor.byteBuffer = byteBuffer;
 
         return accessor;
@@ -150,6 +154,40 @@ abstract class OutputAccessor {
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
+        }
+    }
+
+    /**
+     * Holder for {@link ThreadLocal} pools.
+     */
+    static class OutputAccessorPoolHolder {
+
+        private final ThreadLocal<ByteBufferOutputAccessor> accessorPool = new ThreadLocal<ByteBufferOutputAccessor>() {
+            @Override
+            protected ByteBufferOutputAccessor initialValue() {
+                return new ByteBufferOutputAccessor();
+            }
+        };
+
+        private final ThreadLocal<ByteBufferOutputStream> streamPool = new ThreadLocal<ByteBufferOutputStream>() {
+            @Override
+            protected ByteBufferOutputStream initialValue() {
+                return new ByteBufferOutputStream(null);
+            }
+        };
+
+        /**
+         * @return a pooled {@link ByteBufferOutputAccessor} instance.
+         */
+        public ByteBufferOutputAccessor getByteBufferOutputAccessor() {
+            return accessorPool.get();
+        }
+
+        /**
+         * @return a pooled {@link ByteBufferOutputStream} instance.
+         */
+        public ByteBufferOutputStream getByteBufferOutputStream() {
+            return streamPool.get();
         }
     }
 }

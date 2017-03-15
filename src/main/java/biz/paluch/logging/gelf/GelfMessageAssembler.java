@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.RuntimeContainerProperties;
 import biz.paluch.logging.StackTraceFilter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.HostAndPortProvider;
@@ -23,9 +22,11 @@ import biz.paluch.logging.gelf.intern.PoolingGelfMessageBuilder;
  */
 public class GelfMessageAssembler implements HostAndPortProvider {
 
+    /**
+     * @deprecated see {@link PoolingGelfMessageBuilder#PROPERTY_USE_POOLING}.
+     */
+    @Deprecated
     public static final String PROPERTY_USE_POOLING = "logstash-gelf.message.pooling";
-    private static final boolean USE_POOLING = Boolean
-            .valueOf(RuntimeContainerProperties.getProperty(PROPERTY_USE_POOLING, "true"));
 
     private static final int MAX_SHORT_MESSAGE_LENGTH = 250;
     private static final int MAX_PORT_NUMBER = 65535;
@@ -48,17 +49,22 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
     private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSSS";
 
-    private boolean usePooling = USE_POOLING;
-
-    private ThreadLocal<PoolingGelfMessageBuilder> builders = new ThreadLocal<PoolingGelfMessageBuilder>() {
-
-        @Override
-        protected PoolingGelfMessageBuilder initialValue() {
-            return PoolingGelfMessageBuilder.newInstance();
-        }
-    };
+    private final ThreadLocal<PoolingGelfMessageBuilder> builders;
 
     public GelfMessageAssembler() {
+
+        if (PoolingGelfMessageBuilder.usePooling()) {
+
+            builders = new ThreadLocal<PoolingGelfMessageBuilder>() {
+
+                @Override
+                protected PoolingGelfMessageBuilder initialValue() {
+                    return PoolingGelfMessageBuilder.newInstance();
+                }
+            };
+        } else {
+            builders = null;
+        }
     }
 
     /**
@@ -84,8 +90,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
         originHost = propertyProvider.getProperty(PropertyProvider.PROPERTY_ORIGIN_HOST);
         setExtractStackTrace(propertyProvider.getProperty(PropertyProvider.PROPERTY_EXTRACT_STACKTRACE));
-        setFilterStackTrace(
-                "true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE)));
+        setFilterStackTrace("true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE)));
 
         String includeLogMessageParameters = propertyProvider
                 .getProperty(PropertyProvider.PROPERTY_INCLUDE_LOG_MESSAGE_PARAMETERS);
@@ -116,7 +121,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
      */
     public GelfMessage createGelfMessage(LogEvent logEvent) {
 
-        GelfMessageBuilder builder = usePooling ? builders.get().recycle() : newInstance();
+        GelfMessageBuilder builder = builders != null ? builders.get().recycle() : newInstance();
 
         Throwable throwable = logEvent.getThrowable();
         String message = logEvent.getMessage();
@@ -352,8 +357,8 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     public void setMaximumMessageSize(int maximumMessageSize) {
 
         if (maximumMessageSize > MAX_MESSAGE_SIZE || maximumMessageSize < 1) {
-            throw new IllegalArgumentException(
-                    "Invalid maximum message size: " + maximumMessageSize + ", supported range: 1-" + MAX_MESSAGE_SIZE);
+            throw new IllegalArgumentException("Invalid maximum message size: " + maximumMessageSize + ", supported range: 1-"
+                    + MAX_MESSAGE_SIZE);
         }
 
         this.maximumMessageSize = maximumMessageSize;
@@ -390,7 +395,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
         /**
          * Parse the stack trace filtering value.
-         * 
+         *
          * @param value
          * @return
          */
