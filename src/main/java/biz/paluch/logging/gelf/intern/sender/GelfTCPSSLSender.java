@@ -261,11 +261,15 @@ public class GelfTCPSSLSender extends GelfTCPSender {
     }
 
     private void closeSocketChannel() throws IOException {
-    	
-    	if(sslEngine != null){
-    		sslEngine.closeOutbound();
-    		doHandshake(channel(), sslEngine, ByteBuffer.allocate(sslSession.getPacketBufferSize()),
-    				ByteBuffer.allocate(sslSession.getPacketBufferSize()));
-    	}
+
+        if (sslEngine != null) {
+
+            sslEngine.closeOutbound();
+
+            if (sslSession != null) {
+                doHandshake(channel(), sslEngine, ByteBuffer.allocate(sslSession.getPacketBufferSize()),
+                        ByteBuffer.allocate(sslSession.getPacketBufferSize()));
+            }
+        }
     }
 }
