@@ -11,8 +11,9 @@ import biz.paluch.logging.gelf.intern.GelfSender;
 
 /**
  * HTTP-based Gelf sender. This sender uses Java's HTTP client to {@code POST} JSON Gelf messages to an endpoint.
- * 
+ *
  * @author Aleksandar Stojadinovic
+ * @author Patrick Brueckner
  * @since 1.9
  */
 public class GelfHTTPSender implements GelfSender {
@@ -28,7 +29,7 @@ public class GelfHTTPSender implements GelfSender {
     /**
      * Create a new {@link GelfHTTPSender} given {@code url}, {@code connectTimeoutMs}, {@code readTimeoutMs} and
      * {@link ErrorReporter}.
-     * 
+     *
      * @param url
      * @param connectTimeoutMs
      * @param readTimeoutMs
@@ -63,9 +64,9 @@ public class GelfHTTPSender implements GelfSender {
             int responseCode = connection.getResponseCode();
             if (responseCode >= HTTP_SUCCESSFUL_LOWER_BOUND && responseCode <= HTTP_SUCCESSFUL_UPPER_BOUND) {
                 return true;
-            } else {
-                errorReporter.reportError("Server responded with unexpected status code: " + responseCode, null);
             }
+
+            errorReporter.reportError("Server responded with unexpected status code: " + responseCode, null);
 
         } catch (IOException e) {
             errorReporter.reportError("Cannot send data to " + url, e);

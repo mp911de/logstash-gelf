@@ -26,6 +26,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 
 /**
  * @author Aleksandar Stojadinovic
+ * @author Patrick Brueckner
  */
 @SuppressWarnings("unchecked")
 @ExtendWith(MockitoExtension.class)
@@ -127,7 +128,6 @@ public class GelfHTTPSenderIntegrationTests {
 
         assertThat(success).isTrue();
         assertThat(server.getLastHttpHeaders().get("Content-type")).isEqualTo("application/json");
-
     }
 
     @Test
