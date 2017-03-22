@@ -17,7 +17,8 @@ import biz.paluch.logging.gelf.intern.GelfSender;
  */
 public class GelfHTTPSender implements GelfSender {
 
-    private static final int HTTP_ACCEPTED_STATUS = 202;
+    private static final int HTTP_SUCCESSFUL_LOWER_BOUND = 200;
+    private static final int HTTP_SUCCESSFUL_UPPER_BOUND = 299;
 
     private final int connectTimeoutMs;
     private final int readTimeoutMs;
@@ -60,7 +61,7 @@ public class GelfHTTPSender implements GelfSender {
             outputStream.close();
 
             int responseCode = connection.getResponseCode();
-            if (responseCode == HTTP_ACCEPTED_STATUS) {
+            if (responseCode >= HTTP_SUCCESSFUL_LOWER_BOUND && responseCode <= HTTP_SUCCESSFUL_UPPER_BOUND) {
                 return true;
             } else {
                 errorReporter.reportError("Server responded with unexpected status code: " + responseCode, null);

@@ -64,9 +64,31 @@ public class GelfHTTPSenderIntegrationTests {
     }
 
     @Test
-    public void sendMessageTest() throws IOException {
+    public void sendMessageTestWithAcceptedResponse() throws IOException {
 
         server.setReturnStatus(HttpResponseStatus.ACCEPTED);
+
+        GelfMessage gelfMessage = new GelfMessage("shortMessage", "fullMessage", 12121L, "WARNING");
+
+        boolean success = sender.sendMessage(gelfMessage);
+
+        assertThat(success).isTrue();
+        verifyZeroInteractions(errorReporter);
+
+        List<Object> jsonValues = server.getJsonValues();
+        assertThat(jsonValues).hasSize(1);
+
+        Map<String, Object> messageJson = (Map<String, Object>) jsonValues.get(0);
+        assertThat(messageJson.get("short_message")).isEqualTo(gelfMessage.getShortMessage());
+        assertThat(messageJson.get("full_message")).isEqualTo(gelfMessage.getFullMessage());
+        assertThat(messageJson.get("timestamp")).isEqualTo(gelfMessage.getTimestamp());
+        assertThat(messageJson.get("level")).isEqualTo(gelfMessage.getLevel());
+    }
+
+    @Test
+    public void sendMessageTestWithCreatedResponse() throws IOException {
+
+        server.setReturnStatus(HttpResponseStatus.CREATED);
 
         GelfMessage gelfMessage = new GelfMessage("shortMessage", "fullMessage", 12121L, "WARNING");
 
