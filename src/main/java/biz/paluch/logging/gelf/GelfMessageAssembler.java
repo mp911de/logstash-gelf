@@ -42,6 +42,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private String facility;
     private boolean includeLogMessageParameters = true;
     private StackTraceExtraction stackTraceExtraction = StackTraceExtraction.OFF;
+
     private int maximumMessageSize = 8192;
 
     private List<MessageField> fields = new ArrayList<MessageField>();
@@ -203,13 +204,20 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     }
 
     private void addStackTrace(Throwable thrown, GelfMessageBuilder builder) {
+        String stackTrace;
         if (stackTraceExtraction.isFilter()) {
-            builder.withField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown, stackTraceExtraction.getRef()));
+            stackTrace = StackTraceFilter.getFilteredStackTrace(thrown, stackTraceExtraction.getRef());
         } else {
             final StringWriter sw = new StringWriter();
             StackTraceFilter.getThrowable(thrown, stackTraceExtraction.getRef()).printStackTrace(new PrintWriter(sw));
-            builder.withField(FIELD_STACK_TRACE, sw.toString());
+            stackTrace = sw.toString();
         }
+        if (stackTraceExtraction.isAppend()) {
+            builder.withFullMessage(builder.getFullMessage() + System.getProperty("line.separator") + stackTrace);
+        } else {
+            builder.withField(FIELD_STACK_TRACE, stackTrace);
+        }
+
     }
 
     private void setupStaticFields(PropertyProvider propertyProvider) {
@@ -326,6 +334,23 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         this.stackTraceExtraction = stackTraceExtraction.applyExtaction(value);
     }
 
+    public String getAppendStackTraceToFullMessage() {
+        return stackTraceExtraction.isAppend() == true ? "true" : "false";
+    }
+
+    public boolean isAppendStackTraceToFullMessage() {
+        return stackTraceExtraction.isAppend();
+    }
+
+    public void setAppendStackTraceToFullMessage(boolean appendStackTraceToFullMessage) {
+        this.stackTraceExtraction = stackTraceExtraction.applyAppend(appendStackTraceToFullMessage);
+        System.out.println(stackTraceExtraction);
+    }
+
+    public void setAppendStackTraceToFullMessage(String value) {
+        this.stackTraceExtraction = stackTraceExtraction.applyAppend(value);
+    }
+
     public boolean isFilterStackTrace() {
         return stackTraceExtraction.isEnabled();
     }
@@ -380,17 +405,19 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
     static class StackTraceExtraction {
 
-        private static final StackTraceExtraction OFF = new StackTraceExtraction(false, false, 0);
-        private static final StackTraceExtraction ON = new StackTraceExtraction(true, false, 0);
-        private static final StackTraceExtraction FILTERED = new StackTraceExtraction(true, true, 0);
+        private static final StackTraceExtraction OFF = new StackTraceExtraction(false, false, 0, false);
+        private static final StackTraceExtraction ON = new StackTraceExtraction(true, false, 0, false);
+        private static final StackTraceExtraction FILTERED = new StackTraceExtraction(true, true, 0, false);
         private final boolean enabled;
         private final boolean filter;
         private final int ref;
+        private boolean append;
 
-        private StackTraceExtraction(boolean enabled, boolean filter, int ref) {
+        private StackTraceExtraction(boolean enabled, boolean filter, int ref, boolean append) {
             this.enabled = enabled;
             this.filter = filter;
             this.ref = ref;
+            this.append = append && enabled;
         }
 
         /**
@@ -406,7 +433,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
             }
 
             boolean enabled = Boolean.parseBoolean(value);
-
+            boolean append = false;
             int ref = 0;
             if (!value.equalsIgnoreCase("false") && !value.trim().isEmpty()) {
                 try {
@@ -417,17 +444,25 @@ public class GelfMessageAssembler implements HostAndPortProvider {
                 }
             }
 
-            return new StackTraceExtraction(enabled, filter, ref);
+            return new StackTraceExtraction(enabled, filter, ref, append);
         }
 
         public StackTraceExtraction applyExtaction(String value) {
 
             StackTraceExtraction parsed = from(value, isFilter());
-            return new StackTraceExtraction(parsed.isEnabled(), parsed.isFilter(), parsed.getRef());
+            return new StackTraceExtraction(parsed.isEnabled(), parsed.isFilter(), parsed.getRef(), parsed.isAppend());
+        }
+
+        public StackTraceExtraction applyAppend(boolean append) {
+            return new StackTraceExtraction(isEnabled(), isFilter(), getRef(), append);
+        }
+
+        public StackTraceExtraction applyAppend(String value) {
+            return new StackTraceExtraction(isEnabled(), isFilter(), getRef(), Boolean.parseBoolean(value));
         }
 
         public StackTraceExtraction applyFilter(boolean filterStackTrace) {
-            return new StackTraceExtraction(isEnabled(), filterStackTrace, getRef());
+            return new StackTraceExtraction(isEnabled(), filterStackTrace, getRef(), isAppend());
         }
 
         public boolean isEnabled() {
@@ -440,6 +475,14 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
         public int getRef() {
             return ref;
+        }
+
+        public boolean isAppend() {
+            return append;
+        }
+
+        public void setAppend(boolean append) {
+            this.append = append;
         }
     }
 }
