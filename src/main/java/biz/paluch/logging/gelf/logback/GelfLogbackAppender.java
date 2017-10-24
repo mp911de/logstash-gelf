@@ -121,7 +121,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
     @Override
     public void stop() {
 
-        if (null != gelfSender) {
+        if(null != gelfSender) {
             Closer.close(gelfSender);
             gelfSender = null;
         }
@@ -211,14 +211,6 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
 
     public void setExtractStackTrace(String extractStacktrace) {
         gelfMessageAssembler.setExtractStackTrace(extractStacktrace);
-    }
-
-    public String getAppendStackTraceToFullMessage() {
-        return gelfMessageAssembler.getAppendStackTraceToFullMessage();
-    }
-
-    public void setAppendStackTraceToFullMessage(String appendStackTraceToFullMessage) {
-        gelfMessageAssembler.setAppendStackTraceToFullMessage(appendStackTraceToFullMessage);
     }
 
     public boolean isFilterStackTrace() {

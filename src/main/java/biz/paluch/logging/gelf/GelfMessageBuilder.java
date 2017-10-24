@@ -7,7 +7,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * Builder to create a GelfMessage.
- *
+ * 
  * @author Mark Paluch
  * @since 18.07.14 20:52
  */
@@ -29,7 +29,7 @@ public class GelfMessageBuilder {
 
     /**
      * Creates a new instance of the GelfMessageBuilder.
-     *
+     * 
      * @return GelfMessageBuilder
      */
     public static GelfMessageBuilder newInstance() {
@@ -38,7 +38,7 @@ public class GelfMessageBuilder {
 
     /**
      * Set the version.
-     *
+     * 
      * @param version the version
      * @return GelfMessageBuilder
      */
@@ -49,7 +49,7 @@ public class GelfMessageBuilder {
 
     /**
      * Set the host.
-     *
+     * 
      * @param host the host
      * @return GelfMessageBuilder
      */
@@ -60,7 +60,7 @@ public class GelfMessageBuilder {
 
     /**
      * Set the short_message.
-     *
+     * 
      * @param shortMessage the short_message
      * @return GelfMessageBuilder
      */
@@ -71,7 +71,7 @@ public class GelfMessageBuilder {
 
     /**
      * Set the full_message.
-     *
+     * 
      * @param fullMessage the fullMessage
      * @return GelfMessageBuilder
      */
@@ -81,17 +81,8 @@ public class GelfMessageBuilder {
     }
 
     /**
-     * Get the fullMessage
-     * 
-     * @return fullMessage
-     */
-    public String getFullMessage() {
-        return fullMessage;
-    }
-
-    /**
      * Set the level (severity).
-     *
+     * 
      * @param level the level
      * @return GelfMessageBuilder
      */
@@ -102,7 +93,7 @@ public class GelfMessageBuilder {
 
     /**
      * Set the facility.
-     *
+     * 
      * @param facility the facility
      * @return GelfMessageBuilder
      */
@@ -113,7 +104,7 @@ public class GelfMessageBuilder {
 
     /**
      * Set the max message size.
-     *
+     * 
      * @param maximumMessageSize the maximumMessageSize
      * @return GelfMessageBuilder
      */
@@ -124,7 +115,7 @@ public class GelfMessageBuilder {
 
     /**
      * Set the java timestamp (millis).
-     *
+     * 
      * @param javaTimestamp the javaTimestamp
      * @return GelfMessageBuilder
      */
@@ -135,7 +126,7 @@ public class GelfMessageBuilder {
 
     /**
      * Add additional fields.
-     *
+     * 
      * @param additionalFields the additionalFields
      * @return GelfMessageBuilder
      */
@@ -146,7 +137,7 @@ public class GelfMessageBuilder {
 
     /**
      * Add an additional field.
-     *
+     * 
      * @param key the key
      * @param value the value
      * @return GelfMessageBuilder
@@ -158,7 +149,7 @@ public class GelfMessageBuilder {
 
     /**
      * Set additional field types
-     *
+     * 
      * @param additionalFieldTypes the type map
      * @return GelfMessageBuilder
      */
@@ -169,7 +160,7 @@ public class GelfMessageBuilder {
 
     /**
      * Build a new Gelf message based on the builder settings.
-     *
+     * 
      * @return GelfMessage
      */
     public GelfMessage build() {
