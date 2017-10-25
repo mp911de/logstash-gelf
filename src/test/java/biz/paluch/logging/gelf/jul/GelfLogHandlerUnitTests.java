@@ -22,6 +22,7 @@ public class GelfLogHandlerUnitTests {
         GelfLogHandler sut = new GelfLogHandler();
         sut.setAdditionalFields("");
         sut.setExtractStackTrace("true");
+        sut.setAppendStackTraceToFullMessage("true");
         sut.setFacility(FACILITY);
         sut.setFilterStackTrace(true);
         sut.setGraylogHost(HOST);
@@ -40,6 +41,7 @@ public class GelfLogHandlerUnitTests {
         assertThat(sut.getOriginHost()).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
 
         assertThat(sut.getExtractStackTrace()).isEqualTo("true");
+        assertThat(sut.getAppendStackTraceToFullMessage()).isEqualTo("true");
         assertThat(sut.isFilterStackTrace()).isTrue();
     }
 }

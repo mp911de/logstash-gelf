@@ -225,6 +225,14 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         gelfMessageAssembler.setExtractStackTrace(extractStacktrace);
     }
 
+    public String getAppendStackTraceToFullMessage() {
+        return gelfMessageAssembler.getAppendStackTraceToFullMessage();
+    }
+
+    public void setAppendStackTraceToFullMessage(String appendStackTraceToFullMessage) {
+        gelfMessageAssembler.setAppendStackTraceToFullMessage(appendStackTraceToFullMessage);
+    }
+
     public boolean isFilterStackTrace() {
         return gelfMessageAssembler.isFilterStackTrace();
     }
