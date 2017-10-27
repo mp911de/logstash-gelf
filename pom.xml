@@ -99,6 +99,13 @@
         </developer>
     </developers>
 
+    <repositories>
+        <repository>
+            <id>public-jboss</id>
+            <url>https://repository.jboss.org/nexus/content/groups/public-jboss</url>
+        </repository>
+    </repositories>
+
     <build>
         <resources>
             <resource>
@@ -705,7 +712,7 @@
                                     <classpathScope>test</classpathScope>
                                     <arguments>
                                         <argument>-classpath</argument>
-                                        <classpath />
+                                        <classpath/>
                                         <argument>org.openjdk.jmh.Main</argument>
                                         <argument>-f</argument>
                                         <argument>1</argument>
