@@ -15,7 +15,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-public class GelfMessageAssemblerPerf {
+public class GelfMessageAssemblerBenchmark {
 
     @State(Scope.Thread)
     public static class Input {
@@ -156,7 +156,7 @@ public class GelfMessageAssemblerPerf {
 
     public static void main(String[] args) {
 
-        GelfMessageAssemblerPerf perf = new GelfMessageAssemblerPerf();
+        GelfMessageAssemblerBenchmark perf = new GelfMessageAssemblerBenchmark();
         Input input = new Input();
         input.setup(null);
 
