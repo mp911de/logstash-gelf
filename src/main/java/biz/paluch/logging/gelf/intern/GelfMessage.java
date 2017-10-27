@@ -1,7 +1,6 @@
 package biz.paluch.logging.gelf.intern;
 
-import static biz.paluch.logging.gelf.intern.JsonWriter.writeKeyValueSeparator;
-import static biz.paluch.logging.gelf.intern.JsonWriter.writeMapEntry;
+import static biz.paluch.logging.gelf.intern.JsonWriter.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
+
+import biz.paluch.logging.gelf.intern.ValueDiscovery.Result;
 
 /**
  * Represents a Gelf message. A Gelf message contains all required Fields according to the Gelf Spec.
@@ -115,7 +116,7 @@ public class GelfMessage {
     /**
      * Create a JSON representation for this {@link GelfMessage}. Additional fields are prefixed with
      * {@code additionalFieldPrefix}.
-     * 
+     *
      * @param additionalFieldPrefix must not be {@literal null}
      * @return the JSON string.
      */
@@ -134,7 +135,7 @@ public class GelfMessage {
     /**
      * Create a JSON representation for this {@link GelfMessage} and write it to the {@link ByteBuffer}. Additional fields are
      * prefixed with {@code additionalFieldPrefix}.
-     * 
+     *
      * @param byteBuffer must not be {@literal null}
      * @param additionalFieldPrefix must not be {@literal null}
      */
@@ -238,21 +239,32 @@ public class GelfMessage {
      * @param fieldType see field types
      * @return the field value in the appropriate data type or {@literal null}.
      */
-    private Object getAdditionalFieldValue(String value, String fieldType) {
+    static Object getAdditionalFieldValue(String value, String fieldType) {
 
         Object result = null;
         if (fieldType.equalsIgnoreCase(FIELD_TYPE_DISCOVER)) {
-            try {
+
+            Result discoveredType = ValueDiscovery.discover(value);
+
+            if (discoveredType == Result.STRING) {
+                return value;
+            }
+
+            if (discoveredType == Result.LONG) {
                 try {
                     // try adding the value as a long
-                    result = Long.parseLong(value);
+                    return Long.parseLong(value);
                 } catch (NumberFormatException ex) {
                     // fallback on the double value
-                    result = Double.parseDouble(value);
+                    return value;
                 }
+            }
+
+            try {
+                return Double.parseDouble(value);
             } catch (NumberFormatException ex) {
                 // fallback on the string value
-                result = value;
+                return value;
             }
         }
 

@@ -1,11 +1,16 @@
 package biz.paluch.logging.gelf;
 
-import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
+import static biz.paluch.logging.gelf.GelfMessageBuilder.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.StackTraceFilter;
@@ -357,8 +362,8 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     public void setMaximumMessageSize(int maximumMessageSize) {
 
         if (maximumMessageSize > MAX_MESSAGE_SIZE || maximumMessageSize < 1) {
-            throw new IllegalArgumentException("Invalid maximum message size: " + maximumMessageSize + ", supported range: 1-"
-                    + MAX_MESSAGE_SIZE);
+            throw new IllegalArgumentException(
+                    "Invalid maximum message size: " + maximumMessageSize + ", supported range: 1-" + MAX_MESSAGE_SIZE);
         }
 
         this.maximumMessageSize = maximumMessageSize;
