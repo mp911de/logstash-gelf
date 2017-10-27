@@ -61,7 +61,7 @@
         <log4j.version>1.2.14</log4j.version>
         <log4j2.version>2.3</log4j2.version>
         <junit.version>4.12</junit.version>
-        <junit5.version>5.0.0-M3</junit5.version>
+        <junit5.version>5.0.1</junit5.version>
         <assertj.version>3.6.1</assertj.version>
         <mockito.version>2.7.17</mockito.version>
         <jackson.version>2.7.5</jackson.version>
@@ -172,12 +172,12 @@
                     <dependency>
                         <groupId>org.junit.platform</groupId>
                         <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>1.0.0-M3</version>
+                        <version>1.0.1</version>
                     </dependency>
                     <dependency>
                         <groupId>org.junit.jupiter</groupId>
                         <artifactId>junit-jupiter-engine</artifactId>
-                        <version>5.0.0-M3</version>
+                        <version>5.0.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -608,12 +608,12 @@
                             <dependency>
                                 <groupId>org.junit.platform</groupId>
                                 <artifactId>junit-platform-surefire-provider</artifactId>
-                                <version>1.0.0-M3</version>
+                                <version>1.0.0</version>
                             </dependency>
                             <dependency>
                                 <groupId>org.junit.jupiter</groupId>
                                 <artifactId>junit-jupiter-engine</artifactId>
-                                <version>5.0.0-M3</version>
+                                <version>5.0.1</version>
                             </dependency>
                         </dependencies>
                     </plugin>

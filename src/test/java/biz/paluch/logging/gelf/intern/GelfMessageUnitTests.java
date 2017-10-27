@@ -39,10 +39,6 @@ public class GelfMessageUnitTests {
             put("exception1", StackTraceFilter.getFilteredStackTrace(new IOException(new Exception(new Exception()))));
             put("exception2",
                     StackTraceFilter.getFilteredStackTrace(new IllegalStateException(new Exception(new Exception()))));
-            put("exception3", StackTraceFilter
-                    .getFilteredStackTrace(new IllegalArgumentException(new Exception(new IllegalArgumentException()))));
-            put("exception4", StackTraceFilter.getFilteredStackTrace(new Exception(new Exception(new Exception()))));
-            put("exception5", StackTraceFilter.getFilteredStackTrace(new Exception(new Exception(new ConnectException()))));
         }
     };
 
