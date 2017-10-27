@@ -38,8 +38,6 @@ public class PoolingGelfMessageIntegrationTests {
             put("exception2", StackTraceFilter.getFilteredStackTrace(new IllegalStateException(new Exception(new Exception()))));
             put("exception3", StackTraceFilter.getFilteredStackTrace(new IllegalArgumentException(new Exception(
                     new IllegalArgumentException()))));
-            put("exception4", StackTraceFilter.getFilteredStackTrace(new Exception(new Exception(new Exception()))));
-            put("exception5", StackTraceFilter.getFilteredStackTrace(new Exception(new Exception(new ConnectException()))));
         }
     };
 
