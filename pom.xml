@@ -9,7 +9,7 @@
 	</parent>
 
 	<groupId>ch.migros.mdds</groupId>
-    <version>1.11.2</version>
+    <version>1.11.3</version>
 	<artifactId>logstash-gelf</artifactId>
 
 	<name>logstash logging connectors</name>
