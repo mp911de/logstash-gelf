@@ -1,6 +1,6 @@
 language: java
 
-sudo: required
+sudo: false
 
 dist: trusty
 
@@ -14,9 +14,17 @@ cache:
     - '$HOME/.m2/repository'
     - '$HOME/.m2/wrapper'
 
-jdk:
-  - oraclejdk9
-  - oraclejdk8
+matrix:
+  include:
+    - jdk: oraclejdk8
+# Java 9 (openjdk-9.0.1 fails with java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty)
+    - jdk: oraclejdk9
+      env: JDK_RELEASE='JDK 9'
+# Java 10
+    - env: JDK_RELEASE='JDK 10 Early-Access'
+      install: . ./src/test/bash/install-jdk-10.sh
+  allow_failures:
+    - env: JDK_RELEASE='JDK 10 Early-Access'
 
 before_install:
   - src/test/bash/create_certificates.sh
@@ -26,10 +34,6 @@ script: make test
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-
-matrix:
-  allow_failures:
-     - jdk: oraclejdk9
 
 notifications:
   webhooks:
