@@ -221,8 +221,8 @@ public class GelfLogAppenderTests {
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
-        assertThat(gelfMessage.getFullMessage()).isEqualTo("java.lang.IllegalStateException");
-        assertThat(gelfMessage.getShortMessage()).isEqualTo("java.lang.IllegalStateException");
+        assertThat(gelfMessage.getFullMessage()).isEqualTo("null");
+        assertThat(gelfMessage.getShortMessage()).isEqualTo("null");
     }
 
     @Test
