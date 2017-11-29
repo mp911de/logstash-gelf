@@ -302,12 +302,23 @@ standalone.xml
 
 ...
 
+<!-- log asynchronously, otherwise network lag will slow down JBoss considerably -->
+<async-handler name="AsyncGelfLogger">
+	<queue-length value="512"/>
+	<overflow-action value="block"/>
+	<subhandlers>
+		<handler name="GelfLogger"/>
+	</subhandlers>
+</async-handler>
+
+...
+
 <root-logger>
     <level name="INFO"/>
     <handlers>
         <handler name="FILE"/>
         <handler name="CONSOLE"/>
-        <handler name="GelfLogger"/>
+        <handler name="AsyncGelfLogger"/>
     </handlers>
 </root-logger>
 ```
