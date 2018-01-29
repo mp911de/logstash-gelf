@@ -1,4 +1,4 @@
-Introduction [![Build Status](https://snap-ci.com/mp911de/logstash-gelf/branch/master/build_image)](https://snap-ci.com/mp911de/logstash-gelf/branch/master)
+Introduction [![Build Status](https://travis-ci.org/mp911de/logstash-gelf.svg?branch=master)](https://travis-ci.org/mp911de/logstash-gelf)
 =============
 
 ${project.name} (${project.artifactId})
@@ -24,8 +24,8 @@ Maven:
         <artifactId>${project.artifactId}</artifactId>
         <version>${logstash-gelf-release-version}</version>
     </dependency>
-    
-Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${logstash-gelf-release-version}/${project.artifactId}-${logstash-gelf-release-version}.jar)    
+
+Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/${project.artifactId}/${logstash-gelf-release-version}/${project.artifactId}-${logstash-gelf-release-version}.jar)
 
 
 JBoss AS/WildFly Module Download:
