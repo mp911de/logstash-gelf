@@ -2,6 +2,7 @@ package biz.paluch.logging.gelf.intern.sender;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.PortUnreachableException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
@@ -74,8 +75,11 @@ public abstract class AbstractNioSender<T extends AbstractSelectableChannel & By
 
             try {
                 return channel.read(byteBuffer) >= 0;
+            } catch (PortUnreachableException e) {
+                errorReporter.reportError("Port " + getHost() + ":" + getPort() + " not reachable", e);
             } catch (IOException e) {
-                errorReporter.reportError(e.getMessage(), e);
+                errorReporter.reportError("Cannot verify whether channel to " + getHost() + ":" + getPort() + " is connected: "
+                        + e.getMessage(), e);
             }
         }
 
