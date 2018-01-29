@@ -191,11 +191,13 @@ public class GelfLogAppender extends AbstractAppender {
         super(name, filter, null, ignoreExceptions);
         this.gelfMessageAssembler = gelfMessageAssembler;
 
-        if (ignoreExceptions) {
-            errorReporter = ERROR_REPORTER;
-        } else {
-            errorReporter = PROPAGATING_ERROR_REPORTER;
-        }
+        ErrorReporter errorReporter = getErrorReporter(ignoreExceptions);
+
+        this.errorReporter = new MessagePostprocessingErrorReporter(errorReporter);
+    }
+
+    private ErrorReporter getErrorReporter(boolean ignoreExceptions) {
+        return ignoreExceptions ? ERROR_REPORTER : PROPAGATING_ERROR_REPORTER;
     }
 
     @PluginFactory

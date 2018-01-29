@@ -65,11 +65,12 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
 
     protected GelfSender gelfSender;
     protected MdcGelfMessageAssembler gelfMessageAssembler;
+    private final ErrorReporter errorReporter = new MessagePostprocessingErrorReporter(this);
 
     public GelfLogAppender() {
         super();
 
-        RuntimeContainer.initialize(this);
+        RuntimeContainer.initialize(errorReporter);
         gelfMessageAssembler = new MdcGelfMessageAssembler();
         gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName,
                 SourceClassName, SourceMethodName, SourceLineNumber, SourceSimpleClassName, LoggerName, NDC, Server));
@@ -98,9 +99,10 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
     }
 
     protected GelfSender createGelfSender() {
-        return GelfSenderFactory.createSender(gelfMessageAssembler, this, Collections.EMPTY_MAP);
+        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.EMPTY_MAP);
     }
 
+    @Override
     public void reportError(String message, Exception exception) {
         errorHandler.error(message, exception, 0);
     }

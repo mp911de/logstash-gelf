@@ -1,26 +1,13 @@
 package biz.paluch.logging.gelf.logback;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Marker;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceLineNumber;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 
 import java.util.Collections;
 
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.gelf.LogMessageField;
 import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.Closer;
-import biz.paluch.logging.gelf.intern.ConfigurationSupport;
-import biz.paluch.logging.gelf.intern.ErrorReporter;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.intern.GelfSender;
-import biz.paluch.logging.gelf.intern.GelfSenderFactory;
+import biz.paluch.logging.gelf.intern.*;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 
@@ -77,6 +64,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
 
     protected GelfSender gelfSender;
     protected MdcGelfMessageAssembler gelfMessageAssembler;
+    private final ErrorReporter errorReporter = new MessagePostprocessingErrorReporter(this);
 
     public GelfLogbackAppender() {
         super();
@@ -111,7 +99,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
     public void start() {
 
         if (null == gelfSender) {
-            RuntimeContainer.initialize(this);
+            RuntimeContainer.initialize(errorReporter);
             gelfSender = createGelfSender();
         }
 
@@ -130,9 +118,10 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
     }
 
     protected GelfSender createGelfSender() {
-        return GelfSenderFactory.createSender(gelfMessageAssembler, this, Collections.EMPTY_MAP);
+        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.EMPTY_MAP);
     }
 
+    @Override
     public void reportError(String message, Exception exception) {
         addError(message, exception);
     }

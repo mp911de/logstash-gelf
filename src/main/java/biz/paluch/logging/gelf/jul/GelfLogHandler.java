@@ -45,11 +45,12 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
 
     protected volatile GelfSender gelfSender;
     protected GelfMessageAssembler gelfMessageAssembler;
+    private final ErrorReporter errorReporter = new MessagePostprocessingErrorReporter(this);
 
     public GelfLogHandler() {
         super();
 
-        RuntimeContainer.initialize(this);
+        RuntimeContainer.initialize(errorReporter);
         gelfMessageAssembler = createGelfMessageAssembler();
 
         initializeDefaultFields();
@@ -133,7 +134,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
     }
 
     protected GelfSender createGelfSender() {
-        return GelfSenderFactory.createSender(gelfMessageAssembler, this, Collections.EMPTY_MAP);
+        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.EMPTY_MAP);
     }
 
     @Override

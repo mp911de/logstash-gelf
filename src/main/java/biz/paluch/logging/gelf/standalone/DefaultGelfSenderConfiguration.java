@@ -5,10 +5,11 @@ import java.util.Map;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
+import biz.paluch.logging.gelf.intern.MessagePostprocessingErrorReporter;
 
 /**
  * Default Gelf sender configuration for standalone use.
- * 
+ *
  * @author Mark Paluch
  * @since 21.07.14 17:34
  */
@@ -20,7 +21,7 @@ public class DefaultGelfSenderConfiguration implements GelfSenderConfiguration {
     protected Map<String, Object> specificConfigurations = new HashMap<String, Object>();
 
     public DefaultGelfSenderConfiguration() {
-        errorReporter = new Slf4jErrorReporter();
+        errorReporter = new MessagePostprocessingErrorReporter(new Slf4jErrorReporter());
     }
 
     public DefaultGelfSenderConfiguration(ErrorReporter errorReporter) {
