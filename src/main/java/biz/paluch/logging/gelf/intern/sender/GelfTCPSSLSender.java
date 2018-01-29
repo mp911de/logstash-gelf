@@ -2,6 +2,7 @@ package biz.paluch.logging.gelf.intern.sender;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +22,7 @@ import biz.paluch.logging.gelf.intern.ErrorReporter;
  */
 public class GelfTCPSSLSender extends GelfTCPSender {
 
+    private final int connectTimeoutMs;
     private final SSLContext sslContext;
     private final ThreadLocal<ByteBuffer> sslNetworkBuffers = new ThreadLocal<ByteBuffer>();
     private final ThreadLocal<ByteBuffer> tempBuffers = new ThreadLocal<ByteBuffer>();
@@ -45,6 +47,7 @@ public class GelfTCPSSLSender extends GelfTCPSender {
 
         super(host, port, connectTimeoutMs, readTimeoutMs, deliveryAttempts, keepAlive, errorReporter);
 
+        this.connectTimeoutMs = connectTimeoutMs;
         this.sslContext = sslContext;
     }
 
@@ -154,11 +157,22 @@ public class GelfTCPSSLSender extends GelfTCPSender {
         int appBufferSize = sslEngine.getSession().getApplicationBufferSize();
         ByteBuffer myAppData = ByteBuffer.allocate(appBufferSize);
         ByteBuffer peerAppData = ByteBuffer.allocate(appBufferSize);
+        long handshakeBegin = System.currentTimeMillis();
 
         SSLEngineResult.HandshakeStatus hs = sslEngine.getHandshakeStatus();
 
         // Process handshaking message
         while (hs != SSLEngineResult.HandshakeStatus.FINISHED && hs != SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING) {
+
+            long handshakeDuration = System.currentTimeMillis() - handshakeBegin;
+
+            if (handshakeDuration > connectTimeoutMs) {
+                throw new SocketTimeoutException("SSL handshake timeout exceeded");
+            }
+
+            if (!isConnected(socketChannel)) {
+                throw new SocketException("Channel closed");
+            }
 
             switch (hs) {
 
@@ -258,6 +272,11 @@ public class GelfTCPSSLSender extends GelfTCPSender {
         }
 
         super.close();
+    }
+
+    @Override
+    protected boolean isConnected(SocketChannel channel) {
+        return super.isConnected(channel) && channel.isOpen();
     }
 
     private void closeSocketChannel() throws IOException {
