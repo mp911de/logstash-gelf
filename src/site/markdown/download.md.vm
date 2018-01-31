@@ -34,18 +34,18 @@ in many unix distributions.
 Previous Releases
 -----------------
 
-  All previous releases of logstash-gelf can be found in 
+  All previous releases of logstash-gelf can be found in
   [Maven Central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22biz.paluch.logging%22%20AND%20a%3A%22logstash-gelf%22).
 
 
 Using logstash-gelf on your classpath
 -----------------
 
-  To use logstasg-gelf in your application make sure that the jars are in the application's classpath. Add
+  To use logstash-gelf in your application make sure that the jars are in the application's classpath. Add
   the dependencies listed below to your classpath.
 
     logstash-gelf-${logstash-gelf-release-version}.jar
-    jedis-2.8.1.jar (optional for Redis usage)
-    commons-pool2-2.4.2.jar (optional for Redis usage)
+    jedis-2.9.0.jar (optional for Redis usage)
+    commons-pool2-2.4.3.jar (optional for Redis usage)
 
 You can do this from the command line or a manifest file.
