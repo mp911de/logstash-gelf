@@ -67,7 +67,7 @@ host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, th
 
 XML:
     
-    <Configuration>
+    <Configuration packages="biz.paluch.logging.gelf.log4j2">
         <Appenders>
             <Gelf name="gelf" host="udp:localhost" port="12201" version="1.0" extractStackTrace="true"
                   filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
