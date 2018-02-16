@@ -11,6 +11,7 @@ logstash-gelf
 Provides logging to logstash using the Graylog Extended Logging Format ([GELF](http://www.graylog2.org/resources/gelf/specification) 1.0 and 1.1) for using with:
 
 * [Java Util Logging](#jul)
+* [Glassfish/Payara](#payara)
 * [log4j 1.2.x](#log4j)
 * [log4j 2.x](#log4j2)
 * [JBoss AS7](#jbossas7)
@@ -46,7 +47,9 @@ JBoss AS/WildFly Module Download:
 Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.11.1/logstash-gelf-1.11.1-logging-module.zip)
 
 
-<a name="jul"/>Java Util Logging GELF configuration
+<a name="jul"/>
+
+Java Util Logging GELF configuration
 --------------
 
 **Properties**
@@ -75,12 +78,11 @@ biz.paluch.logging.gelf.jul.GelfLogHandler.level=INFO
 
 Glassfish/Payara configuration
 -------------
-You need to install the library with its dependencies (see download above) in Glassfish. Place it below the `$GFHOME/glassfish/domains/$YOURDOMAIN/lib/ext/` path, then add the [Java Util Logging](#jul) to your `logging.properties` file.
+Install the library with its dependencies (see download above) in Glassfish. Place it below the `$GFHOME/glassfish/domains/$YOURDOMAIN/lib/ext/` path, then add the [Java Util Logging](#jul) to your `logging.properties` file.
 
 
-<a name="log4j"/>
-log4j GELF configuration
---------------
+<a name="payara"/>
+
 
 **Properties**
 
@@ -137,8 +139,9 @@ log4j.appender.gelf.IncludeFullMdc=true
 ```
 
 <a name="log4j2"/>
+
 log4j2 GELF configuration
---------------
+-------------------------
 
 ### Fields
 
@@ -194,7 +197,7 @@ host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, th
 **XML**
 
 ```xml    
-<Configuration>
+<Configuration packages="biz.paluch.logging.gelf.log4j2">
     <Appenders>
         <Gelf name="gelf" host="udp:localhost" port="12201" version="1.1" extractStackTrace="true"
               filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192"
@@ -224,9 +227,10 @@ host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, th
 ```    
 
 <a name="jbossas7"/>
+
 JBoss AS7 configuration
---------------
-You need to include the library as module (see download above), then add following lines to your configuration:
+-----------------------
+Include the library as module (see download above), then add following lines to your configuration:
 
 **standalone.xml**
 
@@ -269,9 +273,10 @@ You need to include the library as module (see download above), then add followi
 ```
 
 <a name="wildfly"/>
+
 WildFly 8/WildFly 9/WildFly 10 configuration
---------------
-You need to include the library as module (see download above). Place it below the `$JBOSS_HOME/modules/system/layers/base` path, then add following lines to your configuration:
+--------------------------------------------
+Include the library as module (see download above). Place it below the `$JBOSS_HOME/modules/system/layers/base` path, then add following lines to your configuration:
 
 standalone.xml
 ```xml
@@ -313,8 +318,9 @@ standalone.xml
 ```
 
 <a name="logback"/>
+
 Logback GELF configuration
---------------
+--------------------------
 logback.xml Example:
 
 ```xml
@@ -356,7 +362,7 @@ logback.xml Example:
 ```
 
 Versions/Dependencies
---------------
+---------------------
 This project is built against following dependencies/versions:
 
 * log4j 1.2.14
@@ -372,8 +378,6 @@ License
 * Contains also code from https://github.com/t0xa/gelfj
 
 Contributing
--------
+------------
 Github is for social coding: if you want to write code, I encourage contributions through pull requests from forks of this repository. 
 Create Github tickets for bugs and new features and comment on the ones that you are interested in and take a look into [CONTRIBUTING.md](https://github.com/mp911de/logstash-gelf/blob/master/.github/CONTRIBUTING.md)
-
-
