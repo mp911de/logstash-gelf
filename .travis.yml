@@ -19,12 +19,15 @@ matrix:
     - jdk: oraclejdk8
 # Java 9 (openjdk-9.0.1 fails with java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty)
     - jdk: oraclejdk9
-      env: JDK_RELEASE='JDK 9'
+      env: JDK_RELEASE='Oracle JDK 9'
 # Java 10
-    - env: JDK_RELEASE='JDK 10 Early-Access'
-      install: . ./src/test/bash/install-jdk-10.sh
+    - env: JDK_RELEASE='Oracle JDK 10'
+      install: . ./src/test/bash/install-jdk.sh -F 10 -L BCL
+# Java 11
+    - env: JDK_RELEASE='Oracle JDK 11'
+      install: . ./src/test/bash/install-jdk.sh -F 11 -L BCL
   allow_failures:
-    - env: JDK_RELEASE='JDK 10 Early-Access'
+    - env: JDK_RELEASE='Oracle JDK 11'
 
 before_install:
   - src/test/bash/create_certificates.sh
@@ -33,7 +36,7 @@ install: make travis-install
 script: make test
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - test "${JDK_RELEASE}" = "Oracle JDK 9" && bash <(curl -s https://codecov.io/bash) || true
 
 notifications:
   webhooks:
