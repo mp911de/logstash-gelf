@@ -3,13 +3,11 @@ package biz.paluch.logging.gelf.intern.sender;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
-import com.sun.xml.internal.messaging.saaj.util.Base64;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 /**
  * HTTP-based Gelf sender. This sender uses Java's HTTP client to {@code POST} JSON Gelf messages to an endpoint.
  *
@@ -53,7 +51,7 @@ public class GelfHTTPSender implements GelfSender {
 
             connection = (HttpURLConnection) url.openConnection();
             if (url.getUserInfo() != null) {
-                String basicAuth = "Basic " + new String(Base64.encode(url.getUserInfo().getBytes()));
+                String basicAuth = "Basic " + org.apache.commons.codec.binary.Base64.encodeBase64String(url.getUserInfo().getBytes());
                 connection.setRequestProperty("Authorization", basicAuth);
             }
             connection.setConnectTimeout(connectTimeoutMs);
