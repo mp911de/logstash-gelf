@@ -33,6 +33,7 @@ public interface PropertyProvider {
     String PROPERTY_ADDITIONAL_FIELD_TYPE = "additionalFieldType.";
     String PROPERTY_ADDITIONAL_FIELDS = "additionalFields";
     String PROPERTY_ADDITIONAL_FIELD_TYPES = "additionalFieldTypes";
+    String PROPERTY_TIMESTAMP_PATTERN = "timestampPattern";
 
     String PROPERTY_FILTER = "filter";
     String PROPERTY_LEVEL = "level";

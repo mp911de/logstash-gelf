@@ -116,6 +116,11 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         if (messageSize != null) {
             maximumMessageSize = Integer.parseInt(messageSize);
         }
+
+        String timestampPattern = propertyProvider.getProperty(PropertyProvider.PROPERTY_TIMESTAMP_PATTERN);
+        if (timestampPattern != null && !"".equals(timestampPattern)) {
+            this.timestampPattern = timestampPattern;
+        }
     }
 
     /**
