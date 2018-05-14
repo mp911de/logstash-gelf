@@ -15,7 +15,7 @@ public class GelfLogHandlerUnitTests {
     private static final String HOST = "host";
     private static final int GRAYLOG_PORT = 1;
     private static final int MAXIMUM_MESSAGE_SIZE = 1234;
-    private static final String TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss,SSSS";
+    private static final String TIMESTAMP_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
     @Test
     public void testSameFieldsGelfLogHandler() {
@@ -27,6 +27,7 @@ public class GelfLogHandlerUnitTests {
         sut.setGraylogHost(HOST);
         sut.setGraylogPort(GRAYLOG_PORT);
         sut.setMaximumMessageSize(MAXIMUM_MESSAGE_SIZE);
+        sut.setTimestampPattern(TIMESTAMP_PATTERN);
 
         sut.flush();
 
