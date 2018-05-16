@@ -57,10 +57,10 @@
         <log4j.version>1.2.14</log4j.version>
         <log4j2.version>2.9.1</log4j2.version>
         <junit.version>4.12</junit.version>
-        <junit5.version>5.0.3</junit5.version>
-        <assertj.version>3.9.0</assertj.version>
-        <mockito.version>2.13.0</mockito.version>
-        <jackson.version>2.9.4</jackson.version>
+        <junit5.version>5.2.0</junit5.version>
+        <assertj.version>3.10.0</assertj.version>
+        <mockito.version>2.18.3</mockito.version>
+        <jackson.version>2.9.5</jackson.version>
         <jedis.version>2.9.0</jedis.version>
         <jedis-commons-pool2.version>2.4.3</jedis-commons-pool2.version>
         <slf4j-api.version>1.7.13</slf4j-api.version>
@@ -76,7 +76,7 @@
         <doxia-module-markdown.version>1.7</doxia-module-markdown.version>
         <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <netty-all.version>4.1.20.Final</netty-all.version>
+        <netty-all.version>4.1.25.Final</netty-all.version>
         <maven-scm-publish-plugin.version>1.1</maven-scm-publish-plugin.version>
         <tempus-fugit.version>1.1</tempus-fugit.version>
         <maven-dependency-plugin.version>3.0.2</maven-dependency-plugin.version>
