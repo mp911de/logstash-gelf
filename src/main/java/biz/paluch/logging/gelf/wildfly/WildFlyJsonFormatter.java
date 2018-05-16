@@ -1,21 +1,8 @@
 package biz.paluch.logging.gelf.wildfly;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.LoggerName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.NDC;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Server;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Severity;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceMethodName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.SourceSimpleClassName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.ThreadName;
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.Time;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.jboss.logmanager.ExtFormatter;
 import org.jboss.logmanager.ExtLogRecord;
@@ -54,10 +41,11 @@ import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
  * <li>fields (Optional): Comma-separated list of log event fields that should be included in the JSON. Defaults to
  * {@code Time, Severity, ThreadName, SourceClassName, SourceMethodName, SourceSimpleClassName, LoggerName, NDC}</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
- * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 = throwable.cause, -1 = root cause]), default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 =
+ * throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>includeLogMessageParameters (Optional): Include message parameters from the log event (see
- * {@link LogRecord#getParameters()}, default true</li>
+ * {@link ExtLogRecord#getParameters()}, default true</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
@@ -86,6 +74,7 @@ import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
  * </ul>
  *
  * @author Mark Paluch
+ * @author André Krüger
  */
 public class WildFlyJsonFormatter extends ExtFormatter {
 

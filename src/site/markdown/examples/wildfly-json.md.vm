@@ -51,7 +51,7 @@ If you want to get started with the logstash-gelf support for WildFly, you will 
 the server. It is possible to create the module manually, but it's easier to use the prepackaged binary. Please
 follow the steps to integrate the module:
 
-1. Obtain the logging module from [Maven](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip) or [Github](https://github.com/mp911de/logstash-gelf/releases/download/logstash-gelf-${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip) 
+1. Obtain the logging module from [Maven](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip) or [Github](https://github.com/mp911de/logstash-gelf/releases/download/logstash-gelf-${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip)
 2. Extract the module to `<WildFly Home>/modules/system/layers/base`.
 3. Configure the logging subsystem by either adopting the changes in the XML files or by using the CLI
 
@@ -99,22 +99,22 @@ CLI Configuration:
 
     /subsystem=logging/custom-formatter=JsonFormatter/:add(module=biz.paluch.logging,class=biz.paluch.logging.gelf.wildfly.WildFlyJsonFormatter,properties={ \
            version="1.0", \
-		   facility="java-test", \
-		   fields="Time,Severity,ThreadName,SourceClassName,SourceMethodName,SourceSimpleClassName,LoggerName,NDC", \
-		   extractStackTrace=true, \
-		   filterStackTrace=true, \
+           facility="java-test", \
+           fields="Time,Severity,ThreadName,SourceClassName,SourceMethodName,SourceSimpleClassName,LoggerName,NDC", \
+           extractStackTrace=true, \
+           filterStackTrace=true, \
            includeLogMessageParameters=true, \
-		   mdcProfiling=true, \
-		   timestampPattern="yyyy-MM-dd HH:mm:ss,SSSS", \
-		   additionalFields="fieldName1=fieldValue1,fieldName2=fieldValue2", \
-		   additionalFieldTypes="fieldName1=String,fieldName2=Double,fieldName3=Long", \
-		   mdcFields="mdcField1,mdcField2" \
-		   dynamicMdcFields="mdc.*,(mdc|MDC)fields" \
-		   includeFullMdc=true \
+           mdcProfiling=true, \
+           timestampPattern="yyyy-MM-dd HH:mm:ss,SSSS", \
+           additionalFields="fieldName1=fieldValue1,fieldName2=fieldValue2", \
+           additionalFieldTypes="fieldName1=String,fieldName2=Double,fieldName3=Long", \
+           mdcFields="mdcField1,mdcField2" \
+           dynamicMdcFields="mdc.*,(mdc|MDC)fields" \
+           includeFullMdc=true \
     })
-    
+
     /subsystem=logging/file-handler=JsonLog/:add(file={"relative-to"=>"jboss.server.log.dir", path=server.json}, \
             level=ALL,named-formatter=JsonFormatter)
 
     /subsystem=logging/root-logger=ROOT/:add-handler(name=JsonLog)
-    
+
