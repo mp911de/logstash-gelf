@@ -25,27 +25,49 @@ Including it in your project
 --------------
 
 Maven:
-
-    <dependency>
-        <groupId>biz.paluch.logging</groupId>
-        <artifactId>logstash-gelf</artifactId>
-        <version>x.y.z</version>
-    </dependency>
+```xml
+<dependency>
+    <groupId>biz.paluch.logging</groupId>
+    <artifactId>logstash-gelf</artifactId>
+    <version>x.y.z</version>
+</dependency>
+```
     
 Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.11.2/logstash-gelf-1.11.2.jar)    
 
 
 JBoss AS/WildFly Module Download:
 
-    <dependency>
-        <groupId>biz.paluch.logging</groupId>
-        <artifactId>logstash-gelf</artifactId>
-        <version>x.y.z</version>
-        <classifier>logging-module</classifier>
-    </dependency>
+```xml
+<dependency>
+    <groupId>biz.paluch.logging</groupId>
+    <artifactId>logstash-gelf</artifactId>
+    <version>x.y.z</version>
+    <classifier>logging-module</classifier>
+</dependency>
+```
 
 Direct download from [Maven Central](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/1.11.2/logstash-gelf-1.11.2-logging-module.zip)
 
+Using snapshot builds:
+
+```xml
+<dependency>
+    <groupId>biz.paluch.logging</groupId>
+    <artifactId>logstash-gelf</artifactId>
+    <version>x.y.z-SNAPSHOT</version>
+</dependency>
+
+<repositories>
+    <repository>
+        <id>sonatype-nexus-snapshots</id>
+        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+```
 
 <a name="jul"/>
 
