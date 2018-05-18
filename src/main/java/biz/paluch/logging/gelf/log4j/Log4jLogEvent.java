@@ -1,23 +1,17 @@
 package biz.paluch.logging.gelf.log4j;
 
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.MDC;
-import org.apache.log4j.NDC;
 import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.LogEvent;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.MessageField;
-import biz.paluch.logging.gelf.Values;
+import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
@@ -26,10 +20,30 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  */
 class Log4jLogEvent implements LogEvent {
 
-    private LoggingEvent loggingEvent;
+    private static final Field mdcCopy = getMdcCopyField();
+
+    private final LoggingEvent loggingEvent;
+    private final Map mdc;
 
     public Log4jLogEvent(LoggingEvent loggingEvent) {
         this.loggingEvent = loggingEvent;
+        this.mdc = getMdc(loggingEvent);
+    }
+
+    private Map getMdc(LoggingEvent loggingEvent) {
+        Map mdc = null;
+
+        try {
+            if (mdcCopy != null) {
+                mdc = (Map) mdcCopy.get(loggingEvent);
+            }
+        } catch (IllegalAccessException e) {
+        }
+
+        if (mdc == null) {
+            mdc = MDC.getContext();
+        }
+        return mdc;
     }
 
     @Override
@@ -129,7 +143,7 @@ class Log4jLogEvent implements LogEvent {
             case LoggerName:
                 return loggingEvent.getLoggerName();
             case NDC:
-                String ndc = NDC.get();
+                String ndc = loggingEvent.getNDC();
                 if (ndc != null && !"".equals(ndc)) {
                     return ndc;
                 }
@@ -170,9 +184,12 @@ class Log4jLogEvent implements LogEvent {
 
     @Override
     public String getMdcValue(String mdcName) {
-        Object value = MDC.get(mdcName);
-        if (value != null) {
-            return value.toString();
+
+        if (mdc != null) {
+            Object value = mdc.get(mdcName);
+            if (value != null) {
+                return value.toString();
+            }
         }
         return null;
     }
@@ -195,9 +212,9 @@ class Log4jLogEvent implements LogEvent {
 
     private Set<String> getAllMdcNames() {
         Set<String> mdcNames = new HashSet<String>();
-        Map context = MDC.getContext();
-        if (context != null) {
-            mdcNames.addAll(context.keySet());
+
+        if (mdc != null) {
+            mdcNames.addAll(mdc.keySet());
         }
         return mdcNames;
     }
@@ -216,5 +233,17 @@ class Log4jLogEvent implements LogEvent {
     @Override
     public Set<String> getMdcNames() {
         return getAllMdcNames();
+    }
+
+    private static Field getMdcCopyField() {
+
+        try {
+            Field mdcCopy = LoggingEvent.class.getDeclaredField("mdcCopy");
+            mdcCopy.setAccessible(true);
+
+            return mdcCopy;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
