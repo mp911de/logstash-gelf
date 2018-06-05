@@ -17,12 +17,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
-import external.MockitoExtension;
 
 /**
  * @author Mark Paluch
@@ -46,22 +46,23 @@ public class GelfLogHandlerErrorsTests {
 
     @BeforeEach
     public void before() throws Exception {
+
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
-
-        when(senderProvider.supports(anyString())).thenReturn(true);
         sut.setErrorManager(errorManager);
-
     }
 
     @AfterEach
-    public void after() throws Exception {
+    public void after() {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
         GelfSenderFactory.removeAllAddedSenderProviders();
     }
 
     @Test
     public void testRuntimeExceptionOnCreateSender() throws Exception {
+
         sut.setGraylogHost(THE_HOST);
+
+        when(senderProvider.supports(anyString())).thenReturn(true);
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new IllegalStateException());
 
         sut.publish(MESSAGE);
@@ -70,7 +71,7 @@ public class GelfLogHandlerErrorsTests {
     }
 
     @Test
-    public void testInvalidMessage() throws Exception {
+    public void testInvalidMessage() {
 
         sut.publish(MESSAGE);
 
@@ -78,7 +79,7 @@ public class GelfLogHandlerErrorsTests {
     }
 
     @Test
-    public void testErrorOnSend() throws Exception {
+    public void testErrorOnSend() {
 
         sut.publish(MESSAGE);
 

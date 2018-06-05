@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
@@ -19,7 +20,6 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Context;
 import ch.qos.logback.core.status.Status;
 import ch.qos.logback.core.status.StatusManager;
-import external.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class GelfLogbackAppenderErrorsUnitTests {
