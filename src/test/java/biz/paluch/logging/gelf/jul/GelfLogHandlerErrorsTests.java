@@ -47,6 +47,7 @@ public class GelfLogHandlerErrorsTests {
     @BeforeEach
     public void before() throws Exception {
 
+        GelfSenderFactory.removeAllAddedSenderProviders();
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
         sut.setErrorManager(errorManager);
     }
