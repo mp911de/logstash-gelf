@@ -15,7 +15,7 @@ Provides logging to logstash using the Graylog Extended Logging Format ([GELF](h
 * [log4j 1.2.x](#log4j)
 * [log4j 2.x](#log4j2)
 * [JBoss AS7](#jbossas7)
-* [WildFly 8/WildFly /WildFly 10](#wildfly)
+* [WildFly](#wildfly)
 * [Logback](#logback)
 
 See also http://logging.paluch.biz/ or http://www.graylog2.org/resources/gelf/specification for further documentation.
@@ -296,7 +296,7 @@ Include the library as module (see download above), then add following lines to 
 
 <a name="wildfly"/>
 
-WildFly 8/WildFly 9/WildFly 10 configuration
+WildFly configuration
 --------------------------------------------
 Include the library as module (see download above). Place it below the `$JBOSS_HOME/modules/system/layers/base` path, then add following lines to your configuration:
 

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jboss.common.beans.property.ByteEditor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +45,6 @@ public class StackTraceFilterUnitTests {
 
         assertThat(lines).contains("\tSuppressed: java.lang.RuntimeException: suppressed");
         assertThat(lines).contains("\t\tCaused by: java.lang.NumberFormatException: For input string: \"text\"");
-        assertThat(lines).contains("\t\t\t\t\t1 line skipped for [org.jboss]");
     }
 
     @Test
@@ -105,8 +103,7 @@ public class StackTraceFilterUnitTests {
         suppressed1.addSuppressed(suppressed2);
 
         try {
-            new ByteEditor().setAsText("text");
-
+            throw new IllegalArgumentException(new NumberFormatException("For input string: \"text\""));
         } catch (Exception e) {
             suppressed1.addSuppressed(e);
         }

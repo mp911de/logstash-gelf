@@ -55,7 +55,7 @@ follow the steps to integrate the module:
 2. Extract the module to `<WildFly Home>/modules/system/layers/base`.
 3. Configure the logging subsystem by either adopting the changes in the XML files or by using the CLI
 
-WildFly 8/WildFly 9/WildFly 10 Logging configuration
+WildFly Logging configuration
 --------------
 
 XML Configuration:
