@@ -49,9 +49,9 @@ public abstract class AbstractNioSender<T extends AbstractSelectableChannel & By
      * Create a new {@link AbstractNioSender} given {@link ErrorReporter}, {@code host} and {@code port}. Object creation
      * triggers hostname lookup for early failure.
      *
-     * @param errorReporter
-     * @param host
-     * @param port
+     * @param errorReporter the error reporter.
+     * @param host hostname.
+     * @param port port number.
      * @throws UnknownHostException
      */
     protected AbstractNioSender(ErrorReporter errorReporter, String host, int port) throws UnknownHostException {

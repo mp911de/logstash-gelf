@@ -30,10 +30,10 @@ public class GelfHTTPSender implements GelfSender {
      * Create a new {@link GelfHTTPSender} given {@code url}, {@code connectTimeoutMs}, {@code readTimeoutMs} and
      * {@link ErrorReporter}.
      *
-     * @param url
-     * @param connectTimeoutMs
-     * @param readTimeoutMs
-     * @param errorReporter
+     * @param url target URL
+     * @param connectTimeoutMs connection timeout in milliseconds.
+     * @param readTimeoutMs read timeout in milliseconds.
+     * @param errorReporter the error reporter.
      */
     public GelfHTTPSender(URL url, int connectTimeoutMs, int readTimeoutMs, ErrorReporter errorReporter) {
 
