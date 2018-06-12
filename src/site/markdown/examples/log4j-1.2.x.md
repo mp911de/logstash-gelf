@@ -11,8 +11,9 @@ Following settings can be used:
 | originHost        | Originating Hostname  | FQDN Hostname |
 | extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
 | filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
-| facility          | Name of the Facility  | `logstash-gelf` |
+| includeLocation   | Include source code location | `true` |
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
+| facility          | Name of the Facility  | `logstash-gelf` |
 | threshold         | Log-Level threshold | `INFO` |
 | filter            | Class-Name of a Log-Filter  | none |
 | additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `additionalFields=fieldName=Value,fieldName2=Value2` | none |
@@ -38,6 +39,7 @@ Properties:
     log4j.appender.gelf.Facility=java-test
     log4j.appender.gelf.ExtractStackTrace=true
     log4j.appender.gelf.FilterStackTrace=true
+    log4j.appender.gelf.IncludeLocation=true
     log4j.appender.gelf.MdcProfiling=true
     log4j.appender.gelf.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
     log4j.appender.gelf.MaximumMessageSize=8192
@@ -57,6 +59,7 @@ XML:
         <param name="Facility" value="java-test" />
         <param name="ExtractStackTrace" value="true" />
         <param name="FilterStackTrace" value="true" />
+        <param name="IncludeLocation" value="true" />
         <param name="MdcProfiling" value="true" />
         <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
         <param name="MaximumMessageSize" value="8192" />
@@ -66,4 +69,3 @@ XML:
         <param name="DynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
         <param name="IncludeFullMdc" value="true" />
     </appender>
-    

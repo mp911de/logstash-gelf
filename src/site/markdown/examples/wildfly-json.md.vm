@@ -12,6 +12,7 @@ Following settings can be used:
 | extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
 | filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
 | includeLogMessageParameters | Include message parameters from the log event | `true` |
+| includeLocation   | Include source code location | `true` |
 | facility          | Name of the Facility  | `logstash-gelf` |
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
 | additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `additionalFields=fieldName=Value,fieldName2=Value2` | none |
@@ -69,6 +70,7 @@ XML Configuration:
                 <property name="extractStackTrace" value="true" />
                 <property name="filterStackTrace" value="true" />
                 <property name="includeLogMessageParameters" value="true" />
+                <property name="includeLocation" value="true" />
                 <property name="mdcProfiling" value="true" />
                 <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
                 <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
@@ -104,6 +106,7 @@ CLI Configuration:
            extractStackTrace=true, \
            filterStackTrace=true, \
            includeLogMessageParameters=true, \
+           includeLocation=true, \
            mdcProfiling=true, \
            timestampPattern="yyyy-MM-dd HH:mm:ss,SSSS", \
            additionalFields="fieldName1=fieldValue1,fieldName2=fieldValue2", \

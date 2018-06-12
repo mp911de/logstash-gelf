@@ -229,6 +229,23 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
+    public void testIncludeLocation() {
+
+        WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
+        formatter.setIncludeLocation(false);
+
+        handler.setFormatter(formatter);
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        logger.log(Level.INFO, "Foo {0}", "bar");
+
+        Map<String, Object> message = popMessage();
+        assertThat(message).doesNotContainKeys("SourceClassName", "SourceSimpleClassName", "SourceMethodName",
+                "SourceLineNumber");
+    }
+
+    @Test
     public void testException() {
 
         WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();

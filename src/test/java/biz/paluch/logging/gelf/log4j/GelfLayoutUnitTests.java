@@ -89,6 +89,8 @@ public class GelfLayoutUnitTests {
         assertThat(message).containsEntry("NDC", "ndc message");
         assertThat(message).containsEntry("facility", "test");
         assertThat(message).containsEntry("level", "6");
+        assertThat(message).doesNotContainKeys("SourceLineNumber", "SourceMethodName", "SourceSimpleClassName",
+                "SourceClassName");
 
         assertThat(message).containsEntry("fieldName1", "fieldValue1");
         assertThat(message).containsEntry("LoggerName", "biz.paluch.logging.gelf.log4j.configured");

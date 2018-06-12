@@ -11,8 +11,9 @@ Following settings can be used:
 | originHost        | Originating Hostname  | FQDN Hostname |
 | extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
 | filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
-| facility          | Name of the Facility  | `logstash-gelf` |
+| includeLocation   | Include source code location | `true` |
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
+| facility          | Name of the Facility  | `logstash-gelf` |
 | additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `GelfLogHandler.additionalFields=fieldName=Value,fieldName2=Value2` | none |
 | additionalFieldTypes | Type specification for additional and MDC fields. Supported types: `String`, `long`, `Long`, `double`, `Double` and `discover` (default if not specified, discover field type on parseability). Eg. field=String,field2=double | `discover` for all additional fields |
 | mdcFields         | Send additional fields whose values are obtained from MDC. Name of the Fields are comma-separated. Example: `mdcFields=Application,Version,SomeOtherFieldName` | none |
@@ -80,4 +81,3 @@ XML:
             <param name="IncludeFullMdc" value="true" />
         </layout>
     </appender>
-    

@@ -18,6 +18,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @since 27.09.13 08:25
  */
 public class GelfLogHandlerTests {
+
     @BeforeEach
     public void before() throws Exception {
 
@@ -61,8 +62,8 @@ public class GelfLogHandlerTests {
     @Test
     public void testWithoutMessageParameters() throws Exception {
 
-        LogManager.getLogManager()
-                .readConfiguration(getClass().getResourceAsStream("/jul/test-logging-without-message-parameters.properties"));
+        LogManager.getLogManager().readConfiguration(
+                getClass().getResourceAsStream("/jul/test-logging-without-message-parameters.properties"));
 
         Logger logger = Logger.getLogger(getClass().getName());
         String expectedMessage = "message1";
@@ -76,6 +77,28 @@ public class GelfLogHandlerTests {
 
         assertThat(gelfMessage.getField("MessageParam0")).isNull();
         assertThat(gelfMessage.getField("MessageParam1")).isNull();
+    }
+
+    @Test
+    public void testWithoutSourceLocation() throws Exception {
+
+        LogManager.getLogManager().readConfiguration(
+                getClass().getResourceAsStream("/jul/test-logging-without-location.properties"));
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        String expectedMessage = "message1";
+
+        Object[] params = new Object[] { "a", "b", "c" };
+        logger.log(Level.INFO, expectedMessage, params);
+
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertThat(gelfMessage.getField("SourceClassName")).isNull();
+        assertThat(gelfMessage.getField("SourceSimpleClassName")).isNull();
+        assertThat(gelfMessage.getField("SourceMethodName")).isNull();
+        assertThat(gelfMessage.getField("SourceLineNumber")).isNull();
     }
 
     @Test

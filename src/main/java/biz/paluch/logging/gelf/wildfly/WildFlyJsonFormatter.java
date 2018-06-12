@@ -46,6 +46,7 @@ import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>includeLogMessageParameters (Optional): Include message parameters from the log event (see
  * {@link ExtLogRecord#getParameters()}, default true</li>
+ * <li>includeLocation (Optional): Include source code location, default true</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
@@ -163,6 +164,14 @@ public class WildFlyJsonFormatter extends ExtFormatter {
 
     public void setDynamicMdcFields(String spec) {
         ConfigurationSupport.setDynamicMdcFields(spec, gelfMessageAssembler);
+    }
+
+    public boolean isIncludeLocation() {
+        return gelfMessageAssembler.isIncludeLocation();
+    }
+
+    public void setIncludeLocation(boolean includeLocation) {
+        gelfMessageAssembler.setIncludeLocation(includeLocation);
     }
 
     public boolean isMdcProfiling() {

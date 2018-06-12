@@ -12,6 +12,7 @@ Following settings can be used:
 | extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
 | filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
 | includeLogMessageParameters | Include message parameters from the log event | `true` |
+| includeLocation   | Include source code location | `true` |
 | facility          | Name of the Facility  | `logstash-gelf` |
 | level             | Log-Level threshold | `INFO` |
 | filter            | Class-Name of a Log-Filter  | none |
@@ -58,6 +59,7 @@ Extended Properties:
     biz.paluch.logging.gelf.jul.GelfLogHandler.extractStackTrace=true
     biz.paluch.logging.gelf.jul.GelfLogHandler.filterStackTrace=true
     biz.paluch.logging.gelf.jul.GelfLogHandler.includeLogMessageParameters=true
+    biz.paluch.logging.gelf.jul.GelfLogHandler.includeLocation=true
     biz.paluch.logging.gelf.jul.GelfLogHandler.timestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
     biz.paluch.logging.gelf.jul.GelfLogHandler.maximumMessageSize=8192
     biz.paluch.logging.gelf.jul.GelfLogHandler.additionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2

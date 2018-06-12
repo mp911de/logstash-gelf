@@ -16,6 +16,7 @@
             <param name="fields" value="Severity, Time, LoggerName, NDC"/>
             <param name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2"/>
             <param name="mdcFields" value="mdcField1,mdcField2"/>
+            <param name="includeLocation" value="false"/>
             <param name="mdcProfiling" value="false"/>
             <param name="includeFullMdc" value="false"/>
             <param name="originHost" value="localhost"/>

@@ -11,6 +11,7 @@ Following settings can be used:
 | originHost        | Originating Hostname  | FQDN Hostname |
 | extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
 | filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
+| includeLocation   | Include source code location | `true` |
 | facility          | Name of the Facility  | `logstash-gelf` |
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
 | additionalFields  | Send additional static fields. The fields are specified as key-value pairs are comma-separated. Example: `additionalFields=fieldName=Value,fieldName2=Value2` | none |
@@ -46,6 +47,7 @@ logback.xml Example:
             <facility>java-test</facility>
             <extractStackTrace>true</extractStackTrace>
             <filterStackTrace>true</filterStackTrace>
+            <includeLocation>true</includeLocation>
             <mdcProfiling>true</mdcProfiling>
             <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
             <maximumMessageSize>8192</maximumMessageSize>
@@ -63,4 +65,3 @@ logback.xml Example:
             <appender-ref ref="gelf" />
         </root>
     </configuration>
-        

@@ -24,8 +24,10 @@ import ch.qos.logback.core.AppenderBase;
  * <li>port (Optional): Port, default 12201</li>
  * <li>version (Optional): GELF Version 1.0 or 1.1, default 1.0</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
- * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 = throwable.cause, -1 = root cause]), default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 =
+ * throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
+ * <li>includeLocation (Optional): Include source code location, default true</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
@@ -208,6 +210,14 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
 
     public void setFilterStackTrace(boolean filterStackTrace) {
         gelfMessageAssembler.setFilterStackTrace(filterStackTrace);
+    }
+
+    public boolean isIncludeLocation() {
+        return gelfMessageAssembler.isIncludeLocation();
+    }
+
+    public void setIncludeLocation(boolean includeLocation) {
+        gelfMessageAssembler.setIncludeLocation(includeLocation);
     }
 
     public boolean isMdcProfiling() {

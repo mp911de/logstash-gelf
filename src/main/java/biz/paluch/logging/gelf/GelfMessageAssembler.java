@@ -1,19 +1,15 @@
 package biz.paluch.logging.gelf;
 
-import static biz.paluch.logging.gelf.GelfMessageBuilder.*;
+import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.StackTraceFilter;
+import biz.paluch.logging.gelf.LogMessageField.NamedLogField;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.HostAndPortProvider;
 import biz.paluch.logging.gelf.intern.PoolingGelfMessageBuilder;
@@ -33,12 +29,14 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     @Deprecated
     public static final String PROPERTY_USE_POOLING = "logstash-gelf.message.pooling";
 
+    public static final String FIELD_MESSAGE_PARAM = "MessageParam";
+    public static final String FIELD_STACK_TRACE = "StackTrace";
+
     private static final int MAX_SHORT_MESSAGE_LENGTH = 250;
     private static final int MAX_PORT_NUMBER = 65535;
     private static final int MAX_MESSAGE_SIZE = Integer.MAX_VALUE;
-
-    public static final String FIELD_MESSAGE_PARAM = "MessageParam";
-    public static final String FIELD_STACK_TRACE = "StackTrace";
+    private static final Set<NamedLogField> SOURCE_FIELDS = EnumSet.of(NamedLogField.SourceClassName,
+            NamedLogField.SourceSimpleClassName, NamedLogField.SourceMethodName, NamedLogField.SourceLineNumber);
 
     private String host;
     private String version = GelfMessage.GELF_VERSION;
@@ -46,6 +44,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private int port;
     private String facility;
     private boolean includeLogMessageParameters = true;
+    private boolean includeLocation = true;
     private StackTraceExtraction stackTraceExtraction = StackTraceExtraction.OFF;
     private int maximumMessageSize = 8192;
 
@@ -151,6 +150,15 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         builder.withAdditionalFieldTypes(additionalFieldTypes);
 
         for (MessageField field : fields) {
+
+            if (!isIncludeLocation() && field instanceof LogMessageField) {
+
+                LogMessageField messageField = (LogMessageField) field;
+                if (SOURCE_FIELDS.contains(messageField.getNamedLogField())) {
+                    continue;
+                }
+            }
+
             Values values = getValues(logEvent, field);
             if (values == null || !values.hasValues()) {
                 continue;
@@ -195,12 +203,12 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
         if (field instanceof LogMessageField) {
             LogMessageField logMessageField = (LogMessageField) field;
-            if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Time) {
+            if (logMessageField.getNamedLogField() == NamedLogField.Time) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(timestampPattern);
                 return new Values(field.getName(), dateFormat.format(new Date(logEvent.getLogTimestamp())));
             }
 
-            if (logMessageField.getNamedLogField() == LogMessageField.NamedLogField.Server) {
+            if (logMessageField.getNamedLogField() == NamedLogField.Server) {
                 return new Values(field.getName(), getOriginHost());
             }
         }
@@ -350,6 +358,14 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
     public void setIncludeLogMessageParameters(boolean includeLogMessageParameters) {
         this.includeLogMessageParameters = includeLogMessageParameters;
+    }
+
+    public boolean isIncludeLocation() {
+        return includeLocation;
+    }
+
+    public void setIncludeLocation(boolean includeLocation) {
+        this.includeLocation = includeLocation;
     }
 
     public String getTimestampPattern() {

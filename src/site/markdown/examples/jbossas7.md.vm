@@ -5,13 +5,14 @@ Following settings can be used:
 
 | Attribute Name    | Description                          | Default |
 | ----------------- |:------------------------------------:|:-------:|
-| host              | Hostname/IP-Address of the Logstash host. The `host` field accepts following forms: <ul><li>`tcp:hostname` for TCP transport, e. g. `tcp:127.0.0.1` or `tcp:some.host.com` </li><li>`udp:hostname` for UDP transport, e. g. `udp:127.0.0.1`, `udp:some.host.com` or just `some.host.com`  </li><li>`redis://[:password@]hostname:port/db-number#listname` for Redis transport. See [Redis transport for logstash-gelf](../redis.html) for details. </li><li>`redis-sentinel://[:password@]hostname:port/db-number?masterId=masterId#listname` for Redis transport with Sentinel lookup. See [Redis transport for logstash-gelf](../redis.html) for details. </li></ul> | none | 
+| host              | Hostname/IP-Address of the Logstash host. The `host` field accepts following forms: <ul><li>`tcp:hostname` for TCP transport, e. g. `tcp:127.0.0.1` or `tcp:some.host.com` </li><li>`udp:hostname` for UDP transport, e. g. `udp:127.0.0.1`, `udp:some.host.com` or just `some.host.com`  </li><li>`redis://[:password@]hostname:port/db-number#listname` for Redis transport. See [Redis transport for logstash-gelf](../redis.html) for details. </li><li>`redis-sentinel://[:password@]hostname:port/db-number?masterId=masterId#listname` for Redis transport with Sentinel lookup. See [Redis transport for logstash-gelf](../redis.html) for details. </li></ul> | none |
 | port              | Port of the Logstash host  | `12201` |
 | version           | GELF Version `1.0` or `1.1` | `1.0` |
 | originHost        | Originating Hostname  | FQDN Hostname |
 | extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
 | filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
 | includeLogMessageParameters | Include message parameters from the log event | `true` |
+| includeLocation   | Include source code location | `true` |
 | facility          | Name of the Facility  | `logstash-gelf` |
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
 | level             | Log-Level threshold | `INFO` |
@@ -33,7 +34,7 @@ If you want to get started with the logstash-gelf support for JBoss AS, you will
 the server. It is possible to create the module manually, but it's easier to use the prepackaged binary. Please
 follow the steps to integrate the module:
 
-1. Obtain the logging module from [Maven](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip) or [Github](https://github.com/mp911de/logstash-gelf/releases/download/logstash-gelf-${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip) 
+1. Obtain the logging module from [Maven](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip) or [Github](https://github.com/mp911de/logstash-gelf/releases/download/logstash-gelf-${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip)
 2. Extract the module to `<JBoss AS Home>/modules/system/layers/base`.
 3. Configure the logging subsystem by either adopting the changes in the XML files or by using the CLI
 
@@ -52,6 +53,7 @@ XML Configuration:
             <property name="extractStackTrace" value="true" />
             <property name="filterStackTrace" value="true" />
             <property name="includeLogMessageParameters" value="true" />
+            <property name="includeLocation" value="true" />
             <property name="mdcProfiling" value="true" />
             <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
             <property name="maximumMessageSize" value="8192" />
@@ -85,6 +87,7 @@ CLI Configuration:
 		   extractStackTrace=true, \
 		   filterStackTrace=true, \
 		   includeLogMessageParameters=true, \
+		   includeLocation=true, \
 		   mdcProfiling=true, \
 		   timestampPattern="yyyy-MM-dd HH:mm:ss,SSSS", \
 		   maximumMessageSize=8192, \
@@ -96,4 +99,4 @@ CLI Configuration:
     })
 
     /subsystem=logging/root-logger=ROOT/:write-attribute(name=handlers,value=["FILE","CONSOLE","GelfLogger"])
-    
+

@@ -29,6 +29,7 @@ import biz.paluch.logging.gelf.intern.*;
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>includeLogMessageParameters (Optional): Include message parameters from the log event (see
  * {@link LogRecord#getParameters()}, default true</li>
+ * <li>includeLocation (Optional): Include source code location, default true</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
@@ -73,6 +74,11 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         String additionalFieldTypes = propertyProvider.getProperty(PropertyProvider.PROPERTY_ADDITIONAL_FIELD_TYPES);
         if (null != additionalFieldTypes) {
             setAdditionalFieldTypes(additionalFieldTypes);
+        }
+
+        String includeLocation = propertyProvider.getProperty(PropertyProvider.PROPERTY_INCLUDE_LOCATION);
+        if (null != includeLocation) {
+            setIncludeLocation(Boolean.valueOf(includeLocation));
         }
 
         String filter = propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER);
@@ -240,6 +246,14 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
 
     public void setIncludeLogMessageParameters(boolean includeLogMessageParameters) {
         gelfMessageAssembler.setIncludeLogMessageParameters(includeLogMessageParameters);
+    }
+
+    public boolean isIncludeLocation() {
+        return gelfMessageAssembler.isIncludeLocation();
+    }
+
+    public void setIncludeLocation(boolean includeLocation) {
+        gelfMessageAssembler.setIncludeLocation(includeLocation);
     }
 
     public String getTimestampPattern() {

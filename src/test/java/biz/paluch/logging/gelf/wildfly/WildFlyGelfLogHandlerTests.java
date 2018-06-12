@@ -199,7 +199,27 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testWrongConfig() throws Exception {
+    public void testIncludeLocation() {
+
+        WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
+        handler.setIncludeLocation(false);
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        logger.info(LOG_MESSAGE);
+        assertThat(GelfTestSender.getMessages()).hasSize(1);
+
+        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
+
+        assertThat(gelfMessage.getField("SourceClassName")).isNull();
+        assertThat(gelfMessage.getField("SourceSimpleClassName")).isNull();
+        assertThat(gelfMessage.getField("SourceMethodName")).isNull();
+        assertThat(gelfMessage.getField("SourceLineNumber")).isNull();
+    }
+
+    @Test
+    public void testWrongConfig() {
 
         assertThrows(IllegalArgumentException.class, new Executable() {
 
@@ -211,6 +231,5 @@ public class WildFlyGelfLogHandlerTests {
                 handler.setGraylogPort(0);
             }
         });
-
     }
 }

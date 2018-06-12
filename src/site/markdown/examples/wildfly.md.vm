@@ -11,6 +11,7 @@ Following settings can be used:
 | originHost        | Originating Hostname  | FQDN Hostname |
 | extractStackTrace | Send the Stack-Trace to the StackTrace field (`true`/`false`)  | `false` |
 | filterStackTrace  | Perform Stack-Trace filtering (`true`/`false`)| `false` |
+| includeLocation   | Include source code location | `true` |
 | includeLogMessageParameters | Include message parameters from the log event | `true` |
 | facility          | Name of the Facility  | `logstash-gelf` |
 | mdcProfiling      | Perform Profiling (Call-Duration) based on MDC Data. See [MDC Profiling](../mdcprofiling.html) for details  | `false` |
@@ -53,6 +54,7 @@ XML Configuration:
             <property name="extractStackTrace" value="true" />
             <property name="filterStackTrace" value="true" />
             <property name="includeLogMessageParameters" value="true" />
+            <property name="includeLocation" value="true" />
             <property name="mdcProfiling" value="true" />
             <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
             <property name="maximumMessageSize" value="8192" />
