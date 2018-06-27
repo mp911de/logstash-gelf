@@ -72,6 +72,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * </ul>
  *
  * @author <a href="mailto:kai.geisselhardt@kaufland.com">Kai Geisselhardt</a>
+ * @author Mark Paluch
  */
 public class GelfLayout extends Layout {
 
@@ -215,6 +216,14 @@ public class GelfLayout extends Layout {
 
     public void setFilterStackTrace(boolean filterStackTrace) {
         gelfMessageAssembler.setFilterStackTrace(filterStackTrace);
+    }
+
+    public boolean isIncludeLocation() {
+        return gelfMessageAssembler.isIncludeLocation();
+    }
+
+    public void setIncludeLocation(boolean includeLocation) {
+        gelfMessageAssembler.setIncludeLocation(includeLocation);
     }
 
     public String getTimestampPattern() {

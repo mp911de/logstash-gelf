@@ -17,6 +17,7 @@ import biz.paluch.logging.gelf.LogMessageField;
 
 /**
  * @author <a href="mailto:kai.geisselhardt@kaufland.com">Kai Geisselhardt</a>
+ * @author Mark Paluch
  */
 public class GelfLayoutUnitTests {
 
@@ -48,7 +49,7 @@ public class GelfLayoutUnitTests {
     }
 
     @Test
-    public void testDefaults() throws Exception {
+    public void testDefaults() {
 
         NDC.push("ndc message");
         logger.info("test1");
@@ -70,7 +71,7 @@ public class GelfLayoutUnitTests {
     }
 
     @Test
-    public void testConfiguration() throws Exception {
+    public void testConfiguration() {
 
         logger = Logger.getLogger("biz.paluch.logging.gelf.log4j.configured");
 
