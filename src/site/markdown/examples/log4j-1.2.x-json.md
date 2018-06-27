@@ -55,6 +55,7 @@ Properties:
     log4j.appender.file.layout.Facility=java-test
     log4j.appender.file.layout.ExtractStackTrace=true
     log4j.appender.file.layout.FilterStackTrace=true
+    log4j.appender.file.layout.IncludeLocation=true
     log4j.appender.file.layout.MdcProfiling=true
     log4j.appender.file.layout.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
     log4j.appender.file.layout.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
@@ -73,6 +74,7 @@ XML:
             <param name="ExtractStackTrace" value="true" />
             <param name="FilterStackTrace" value="true" />
             <param name="MdcProfiling" value="true" />
+            <param name="IncludeLocation" value="true" />
             <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
             <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
             <param name="AdditionalFieldTypes" value="fieldName1=String,fieldName2=Double,fieldName3=Long" />

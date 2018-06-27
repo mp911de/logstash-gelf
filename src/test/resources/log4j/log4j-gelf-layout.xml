@@ -13,7 +13,8 @@
 
     <appender name="configured" class="biz.paluch.logging.gelf.log4j.TestAppender">
         <layout class="biz.paluch.logging.gelf.log4j.GelfLayout">
-            <param name="fields" value="Severity, Time, LoggerName, NDC"/>
+            <param name="fields"
+                   value="Severity, Time, LoggerName, NDC, SourceClassName, SourceSimpleClassName, SourceMethodName, SourceLineNumber"/>
             <param name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2"/>
             <param name="mdcFields" value="mdcField1,mdcField2"/>
             <param name="includeLocation" value="false"/>
