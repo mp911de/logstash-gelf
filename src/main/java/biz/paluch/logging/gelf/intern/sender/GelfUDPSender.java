@@ -17,21 +17,21 @@ import biz.paluch.logging.gelf.intern.GelfSender;
  */
 public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements GelfSender {
 
+    private static final ThreadLocal<ByteBuffer> WRITE_BUFFERS = new ThreadLocal<ByteBuffer>() {
+        @Override
+        protected ByteBuffer initialValue() {
+            return ByteBuffer.allocateDirect(INITIAL_BUFFER_SIZE);
+        }
+    };
+
+    private static final ThreadLocal<ByteBuffer> TEMP_BUFFERS = new ThreadLocal<ByteBuffer>() {
+        @Override
+        protected ByteBuffer initialValue() {
+            return ByteBuffer.allocateDirect(INITIAL_BUFFER_SIZE);
+        }
+    };
+
     private final Object ioLock = new Object();
-
-    private final ThreadLocal<ByteBuffer> writeBuffers = new ThreadLocal<ByteBuffer>() {
-        @Override
-        protected ByteBuffer initialValue() {
-            return ByteBuffer.allocateDirect(INITIAL_BUFFER_SIZE);
-        }
-    };
-
-    private final ThreadLocal<ByteBuffer> tempBuffers = new ThreadLocal<ByteBuffer>() {
-        @Override
-        protected ByteBuffer initialValue() {
-            return ByteBuffer.allocateDirect(INITIAL_BUFFER_SIZE);
-        }
-    };
 
     public GelfUDPSender(String host, int port, ErrorReporter errorReporter) throws IOException {
         super(errorReporter, host, port);
@@ -44,7 +44,7 @@ public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements
             return sendDatagrams(message.toUDPBuffers());
         }
 
-        return sendDatagrams(GelfBuffers.toUDPBuffers(message, writeBuffers, tempBuffers));
+        return sendDatagrams(GelfBuffers.toUDPBuffers(message, WRITE_BUFFERS, TEMP_BUFFERS));
     }
 
     private boolean sendDatagrams(ByteBuffer[] bytesList) {
