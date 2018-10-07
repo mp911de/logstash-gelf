@@ -12,6 +12,7 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF) 1.
 * [JBoss 7](examples/jbossas7.html)
 * [WildFly](examples/wildfly.html)
 * [WildFly JSON Formatter](examples/wildfly-json.html)
+* [Thorntail (WildFly Swarm 2.x)](examples/wildfly-swarm-thorntail.html)
 * [Logback](examples/logback.html)
 
 How to get

@@ -19,6 +19,7 @@
             <item name="WildFly" href="examples/wildfly.html" />
             <item name="WildFly JSON Formatter"
                   href="examples/wildfly-json.html"/>
+            <item name="Thorntail (WildFly Swarm)" href="examples/wildfly-swarm-thorntail.html" />
             <item name="Logback" href="examples/logback.html" />
         </menu>
 
@@ -42,7 +43,6 @@
 
         <menu ref="reports" />
     </body>
-
 
     <custom>
         <fluidoSkin>
