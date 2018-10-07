@@ -432,7 +432,7 @@ This project is built against following dependencies/versions:
 
 License
 -------
-* [The MIT License (MIT)] (http://opensource.org/licenses/MIT)
+* [The MIT License (MIT)](http://opensource.org/licenses/MIT)
 * Contains also code from https://github.com/t0xa/gelfj
 
 Contributing
