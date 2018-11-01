@@ -181,7 +181,7 @@ class LogbackLogEvent implements LogEvent {
 
         for (String mdcName : matchingMdcNames) {
             String mdcValue = getMdcValue(mdcName);
-            if (mdcName != null) {
+            if (mdcValue != null) {
                 result.setValue(mdcName, mdcValue);
             }
         }
