@@ -79,26 +79,25 @@ public class GelfLogbackAppenderDynamicMdcTests {
         assertThat(gelfMessage.getAdditonalFields()).doesNotContainKey(MY_MDC_WITH_SUFFIX2);
 
     }
-    
+
     @Test
     public void testWithMdcPrefix() throws Exception {
-        
+
         Logger logger = lc.getLogger(getClass());
         MDC.put(MDC_MY_MDC, VALUE_1);
         MDC.put(MY_MDC_WITH_SUFFIX1, VALUE_2);
         MDC.put(MY_MDC_WITH_SUFFIX2, VALUE_3);
-        
+
         logger.info(LOG_MESSAGE);
         assertThat(GelfTestSender.getMessages()).hasSize(1);
-        
+
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-        
+
         assertThat(gelfMessage.getField(MDC_MY_MDC)).isEqualTo(VALUE_1);
         assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX1)).isEqualTo(VALUE_2);
         assertThat(gelfMessage.getField(MY_MDC_WITH_SUFFIX2)).isEqualTo(VALUE_3);
-        
+
     }
-    
 
     @Test
     public void testWithMdcRegex() throws Exception {
