@@ -178,7 +178,6 @@ class Log4jLogEvent implements LogEvent {
     }
 
     private String getValue(MdcMessageField field) {
-
         return getMdcValue(field.getMdcName());
     }
 

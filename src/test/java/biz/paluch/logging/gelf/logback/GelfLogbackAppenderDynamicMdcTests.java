@@ -18,6 +18,7 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 
 /**
  * @author <a href="mailto:tobiassebastian.kaefer@1und1.de">Tobias Kaefer</a>
+ * @author Jörn Horstmann
  * @since 2013-10-07
  */
 public class GelfLogbackAppenderDynamicMdcTests {

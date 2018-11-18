@@ -70,7 +70,7 @@ public class JBoss7JulLogEvent extends JulLogEvent {
 
         for (String mdcName : matchingMdcNames) {
             String mdcValue = getMdcValue(mdcName);
-            if (mdcName != null) {
+            if (mdcValue != null) {
                 result.setValue(mdcName, mdcValue);
             }
         }

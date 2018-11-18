@@ -152,7 +152,7 @@ class Log4j2LogEvent implements LogEvent {
 
         for (String mdcName : matchingMdcNames) {
             String mdcValue = getMdcValue(mdcName);
-            if (mdcName != null) {
+            if (mdcValue != null) {
                 result.setValue(mdcName, mdcValue);
             }
         }
@@ -172,7 +172,6 @@ class Log4j2LogEvent implements LogEvent {
     }
 
     private String getValue(MdcMessageField field) {
-
         return getMdcValue(field.getMdcName());
     }
 

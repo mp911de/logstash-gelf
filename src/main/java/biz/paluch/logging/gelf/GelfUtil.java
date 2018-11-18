@@ -27,13 +27,13 @@ public class GelfUtil {
     public static final String MDC_REQUEST_DURATION = "profiling.requestDuration";
 
     public static final String MDC_REQUEST_DURATION_MILLIS = "profiling.requestDuration.millis";
-    
+
     private GelfUtil() {
 
     }
 
     public static void addMdcProfiling(LogEvent logEvent, GelfMessage gelfMessage) {
-        
+
 		String requestStartMs = logEvent.getMdcValue(MDC_REQUEST_START_MS);
         long timestamp;
 
@@ -79,12 +79,9 @@ public class GelfUtil {
 
         for (String mdcName : mdcNames) {
             if (field.getPattern().matcher(mdcName).matches()) {
-
                 matchingMdcNames.add(mdcName);
-
             }
         }
         return matchingMdcNames;
     }
-
 }
