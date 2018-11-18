@@ -200,7 +200,6 @@ public class JBoss7GelfLogHandlerTests {
         assertThat(gelfMessage.getField("fieldName2")).isEqualTo("fieldValue2");
         assertThat(gelfMessage.getField("mdcField1")).isEqualTo("a value");
         assertThat(gelfMessage.getField("mdcField2")).isNull();
-
     }
 
     @Test

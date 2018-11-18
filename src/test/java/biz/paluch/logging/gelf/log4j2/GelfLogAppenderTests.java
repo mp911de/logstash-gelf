@@ -53,7 +53,6 @@ public class GelfLogAppenderTests {
         assertThat(GelfTestSender.getMessages()).isEmpty();
         logger.debug(LOG_MESSAGE);
         assertThat(GelfTestSender.getMessages()).isEmpty();
-
     }
 
     @Test
@@ -77,7 +76,6 @@ public class GelfLogAppenderTests {
         assertThat(gelfMessage.getField("server.addr")).isEqualTo(RuntimeContainer.ADDRESS);
 
         assertThat(gelfMessage.getField("simpleClassName")).isEqualTo(GelfLogAppenderTests.class.getSimpleName());
-
     }
 
     @Test
@@ -141,7 +139,6 @@ public class GelfLogAppenderTests {
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
         assertThat(gelfMessage.getLevel()).isEqualTo("4");
-
     }
 
     @Test
@@ -153,7 +150,6 @@ public class GelfLogAppenderTests {
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
         assertThat(gelfMessage.getLevel()).isEqualTo("3");
-
     }
 
     @Test
@@ -165,7 +161,6 @@ public class GelfLogAppenderTests {
 
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
         assertThat(gelfMessage.getLevel()).isEqualTo("2");
-
     }
 
     @Test
@@ -174,6 +169,7 @@ public class GelfLogAppenderTests {
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         ThreadContext.put("mdcField1", "my mdc value");
+        ThreadContext.put("mdcField2", null);
         ThreadContext.put(GelfUtil.MDC_REQUEST_START_MS, "" + System.currentTimeMillis());
 
         logger.info(LOG_MESSAGE);
@@ -182,10 +178,10 @@ public class GelfLogAppenderTests {
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         assertThat(gelfMessage.getField("mdcField1")).isEqualTo("my mdc value");
+        assertThat(gelfMessage.getAdditonalFields()).doesNotContainKeys("mdcField2");
 
         assertThat(gelfMessage.getField(GelfUtil.MDC_REQUEST_DURATION)).isNotNull();
         assertThat(gelfMessage.getField(GelfUtil.MDC_REQUEST_END)).isNotNull();
-
     }
 
     @Test
