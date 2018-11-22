@@ -17,7 +17,7 @@
         <param name="ExtractStackTrace" value="true" />
         <param name="FilterStackTrace" value="true" />
         <param name="MdcProfiling" value="true" />
-        <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+        <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSS" />
         <param name="MaximumMessageSize" value="8192" />
         <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
         <param name="MdcFields" value="mdcField1,mdcField2" />

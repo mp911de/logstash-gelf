@@ -23,14 +23,14 @@ Following settings can be used:
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
 | maximumMessageSize| Maximum message size (in bytes). If the message size is exceeded, the appender will submit the message in multiple chunks. | `8192` |
-| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSSS` |
+| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSS` |
 
 The only mandatory field is `host`. All other fields are optional.
 
 Preliminary Steps
 --------------
 
-If you want to get started with the logstash-gelf support for WildFly Swarm/Thorntail, you will need to integrate logstash-gelf as a module within the server. It is possible to create the module manually, but it's easier to use the prepackaged binary and extract the `module.xml` file. 
+If you want to get started with the logstash-gelf support for WildFly Swarm/Thorntail, you will need to integrate logstash-gelf as a module within the server. It is possible to create the module manually, but it's easier to use the prepackaged binary and extract the `module.xml` file.
 Please follow the steps to integrate the module:
 
 1. Obtain the logging module from [Maven](http://search.maven.org/remotecontent?filepath=biz/paluch/logging/logstash-gelf/${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip) or [Github](https://github.com/mp911de/logstash-gelf/releases/download/logstash-gelf-${logstash-gelf-release-version}/logstash-gelf-${logstash-gelf-release-version}-logging-module.zip)
@@ -58,7 +58,7 @@ swarm:
             filterStackTrace=true
             includeLocation=true
             mdcProfiling=true
-            timestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
+            timestampPattern=yyyy-MM-dd HH:mm:ss,SSS
             maximumMessageSize=8192
             additionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
             additionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long

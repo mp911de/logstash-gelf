@@ -23,7 +23,7 @@ Following settings can be used:
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
 | maximumMessageSize| Maximum message size (in bytes). If the message size is exceeded, the appender will submit the message in multiple chunks. | `8192` |
-| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSSS` |
+| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSS` |
 
 The only mandatory field is `host`. All other fields are optional.
 
@@ -56,7 +56,7 @@ XML Configuration:
             <property name="includeLogMessageParameters" value="true" />
             <property name="includeLocation" value="true" />
             <property name="mdcProfiling" value="true" />
-            <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+            <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSS" />
             <property name="maximumMessageSize" value="8192" />
             <property name="additionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
             <property name="additionalFieldTypes" value="fieldName1=String,fieldName2=Double,fieldName3=Long" />
@@ -89,7 +89,7 @@ CLI Configuration:
 		   filterStackTrace=true, \
 		   includeLogMessageParameters=true, \
 		   mdcProfiling=true, \
-		   timestampPattern="yyyy-MM-dd HH:mm:ss,SSSS", \
+		   timestampPattern="yyyy-MM-dd HH:mm:ss,SSS", \
 		   maximumMessageSize=8192, \
 		   additionalFields="fieldName1=fieldValue1,fieldName2=fieldValue2", \
 		   additionalFieldTypes="fieldName1=String,fieldName2=Double,fieldName3=Long", \

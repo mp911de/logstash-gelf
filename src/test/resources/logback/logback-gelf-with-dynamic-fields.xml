@@ -12,7 +12,7 @@
         <extractStackTrace>true</extractStackTrace>
         <filterStackTrace>true</filterStackTrace>
         <mdcProfiling>true</mdcProfiling>
-        <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
+        <timestampPattern>yyyy-MM-dd HH:mm:ss,SSS</timestampPattern>
         <maximumMessageSize>8192</maximumMessageSize>
         <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
         <additionalFieldTypes>myMdcs=String,myMdci=long,myMdcl=Long,myMdcf=double,myMdcd=Double</additionalFieldTypes>

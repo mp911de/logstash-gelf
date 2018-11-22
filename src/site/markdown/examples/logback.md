@@ -20,7 +20,7 @@ Following settings can be used:
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
 | maximumMessageSize| Maximum message size (in bytes). If the message size is exceeded, the appender will submit the message in multiple chunks. | `8192` |
-| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSSS` |
+| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSS` |
 
 
 The only mandatory field is `host`. All other fields are optional.
@@ -49,7 +49,7 @@ logback.xml Example:
             <filterStackTrace>true</filterStackTrace>
             <includeLocation>true</includeLocation>
             <mdcProfiling>true</mdcProfiling>
-            <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
+            <timestampPattern>yyyy-MM-dd HH:mm:ss,SSS</timestampPattern>
             <maximumMessageSize>8192</maximumMessageSize>
             <additionalFields>fieldName1=fieldValue1,fieldName2=fieldValue2</additionalFields>
             <additionalFieldTypes>fieldName1=String,fieldName2=Double,fieldName3=Long</additionalFieldTypes>
