@@ -17,7 +17,7 @@ public class GelfLogbackAppenderUnitTests {
     private static final String HOST = "host";
     private static final int GRAYLOG_PORT = 1;
     private static final int MAXIMUM_MESSAGE_SIZE = 1234;
-    private static final String TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss,SSSS";
+    private static final String TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss,SSS";
 
     @Test
     public void testSameFieldsGelfLogbackAppender() {
