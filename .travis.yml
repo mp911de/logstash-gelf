@@ -20,14 +20,9 @@ matrix:
 # Java 9 (openjdk-9.0.1 fails with java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty)
     - jdk: oraclejdk9
       env: JDK_RELEASE='Oracle JDK 9'
-# Java 10
-    - env: JDK_RELEASE='Oracle JDK 10'
-      install: . ./src/test/bash/install-jdk.sh -F 10 -L BCL
 # Java 11
     - env: JDK_RELEASE='Oracle JDK 11'
       install: . ./src/test/bash/install-jdk.sh -F 11 -L BCL
-  allow_failures:
-    - env: JDK_RELEASE='Oracle JDK 11'
 
 before_install:
   - src/test/bash/create_certificates.sh
