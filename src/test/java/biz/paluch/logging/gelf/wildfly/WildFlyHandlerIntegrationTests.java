@@ -45,7 +45,7 @@ public class WildFlyHandlerIntegrationTests {
                             + "           host=\"udp:localhost\", \\\n" + "           port=\"19392\", \\\n"
                             + "           version=\"1.0\", \\\n" + "\t\t   facility=\"java-test\", \\\n"
                             + "\t\t   extractStackTrace=true, \\\n" + "\t\t   filterStackTrace=true, \\\n"
-                            + "\t\t   mdcProfiling=true, \\\n" + "\t\t   timestampPattern=\"yyyy-MM-dd HH:mm:ss,SSSS\", \\\n"
+                            + "\t\t   mdcProfiling=true, \\\n" + "\t\t   timestampPattern=\"yyyy-MM-dd HH:mm:ss,SSS\", \\\n"
                             + "\t\t   maximumMessageSize=8192, \\\n"
                             + "\t\t   additionalFields=\"fieldName1=fieldValue1,fieldName2=fieldValue2\", \\\n"
                             + "\t\t   mdcFields=\"mdcField1,mdcField2\" \\\n"

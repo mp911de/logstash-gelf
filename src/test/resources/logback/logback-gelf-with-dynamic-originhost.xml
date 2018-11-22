@@ -15,7 +15,7 @@
         <graylogHost>test:localhost</graylogHost>
         <graylogPort>12201</graylogPort>
         <facility>java-test</facility>
-        <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
+        <timestampPattern>yyyy-MM-dd HH:mm:ss,SSS</timestampPattern>
         <additionalFields>crossCheckHostName=${HOSTNAME}</additionalFields>
         <originHost>${HOSTNAME}</originHost>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">

@@ -24,7 +24,7 @@ class WildFlyLogTestUtil {
         handler.setFacility("java-test");
         handler.setExtractStackTrace("0");
         handler.setFilterStackTrace(true);
-        handler.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSSS");
+        handler.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSS");
         handler.setMaximumMessageSize(8192);
         handler.setAdditionalFields("fieldName1=fieldValue1,fieldName2=fieldValue2");
         handler.setLevel(Level.INFO);

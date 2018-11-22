@@ -19,7 +19,7 @@ Following settings can be used:
 | mdcFields         | Send additional fields whose values are obtained from MDC. Name of the Fields are comma-separated. Example: `mdcFields=Application,Version,SomeOtherFieldName` | none |
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
-| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSSS` |
+| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSS` |
 
 The JSON formatter creates then messages like:
 
@@ -57,7 +57,7 @@ Properties:
     log4j.appender.file.layout.FilterStackTrace=true
     log4j.appender.file.layout.IncludeLocation=true
     log4j.appender.file.layout.MdcProfiling=true
-    log4j.appender.file.layout.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
+    log4j.appender.file.layout.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSS
     log4j.appender.file.layout.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
     log4j.appender.file.layout.AdditionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long
     log4j.appender.file.layout.MdcFields=mdcField1,mdcField2
@@ -75,7 +75,7 @@ XML:
             <param name="FilterStackTrace" value="true" />
             <param name="MdcProfiling" value="true" />
             <param name="IncludeLocation" value="true" />
-            <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+            <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSS" />
             <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
             <param name="AdditionalFieldTypes" value="fieldName1=String,fieldName2=Double,fieldName3=Long" />
             <param name="MdcFields" value="mdcField1,mdcField2" />

@@ -22,7 +22,7 @@ Following settings can be used:
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
 | maximumMessageSize| Maximum message size (in bytes). If the message size is exceeded, the appender will submit the message in multiple chunks. | `8192` |
-| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSSS` |
+| timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSS` |
 
 The only mandatory field is `host`. All other fields are optional.
 
@@ -41,7 +41,7 @@ Properties:
     log4j.appender.gelf.FilterStackTrace=true
     log4j.appender.gelf.IncludeLocation=true
     log4j.appender.gelf.MdcProfiling=true
-    log4j.appender.gelf.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
+    log4j.appender.gelf.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSS
     log4j.appender.gelf.MaximumMessageSize=8192
     log4j.appender.gelf.AdditionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
     log4j.appender.gelf.AdditionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long
@@ -61,7 +61,7 @@ XML:
         <param name="FilterStackTrace" value="true" />
         <param name="IncludeLocation" value="true" />
         <param name="MdcProfiling" value="true" />
-        <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+        <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSS" />
         <param name="MaximumMessageSize" value="8192" />
         <param name="AdditionalFields" value="fieldName1=fieldValue1,fieldName2=fieldValue2" />
         <param name="AdditionalFieldTypes" value="fieldName1=String,fieldName2=Double,fieldName3=Long" />
