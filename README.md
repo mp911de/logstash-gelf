@@ -88,7 +88,7 @@ biz.paluch.logging.gelf.jul.GelfLogHandler.version=1.1
 biz.paluch.logging.gelf.jul.GelfLogHandler.facility=java-test
 biz.paluch.logging.gelf.jul.GelfLogHandler.extractStackTrace=true
 biz.paluch.logging.gelf.jul.GelfLogHandler.filterStackTrace=true
-biz.paluch.logging.gelf.jul.GelfLogHandler.timestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
+biz.paluch.logging.gelf.jul.GelfLogHandler.timestampPattern=yyyy-MM-dd HH:mm:ss,SSS
 biz.paluch.logging.gelf.jul.GelfLogHandler.maximumMessageSize=8192
 
 # This are static fields
@@ -118,7 +118,7 @@ log4j.appender.gelf.Facility=java-test
 log4j.appender.gelf.ExtractStackTrace=true
 log4j.appender.gelf.FilterStackTrace=true
 log4j.appender.gelf.MdcProfiling=true
-log4j.appender.gelf.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
+log4j.appender.gelf.TimestampPattern=yyyy-MM-dd HH:mm:ss,SSS
 log4j.appender.gelf.MaximumMessageSize=8192
 
 # This are static fields
@@ -145,7 +145,7 @@ log4j.appender.gelf.IncludeFullMdc=true
     <param name="ExtractStackTrace" value="true" />
     <param name="FilterStackTrace" value="true" />
     <param name="MdcProfiling" value="true" />
-    <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+    <param name="TimestampPattern" value="yyyy-MM-dd HH:mm:ss,SSS" />
     <param name="MaximumMessageSize" value="8192" />
     
     <!-- This are static fields -->
@@ -267,7 +267,7 @@ Include the library as module (see download above), then add following lines to 
         <property name="extractStackTrace" value="true" />
         <property name="filterStackTrace" value="true" />
         <property name="mdcProfiling" value="true" />
-        <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+        <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSS" />
         <property name="maximumMessageSize" value="8192" />
         
         <!-- This are static fields -->
@@ -312,7 +312,7 @@ standalone.xml
         <property name="extractStackTrace" value="true" />
         <property name="filterStackTrace" value="true" />
         <property name="mdcProfiling" value="true" />
-        <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSSS" />
+        <property name="timestampPattern" value="yyyy-MM-dd HH:mm:ss,SSS" />
         <property name="maximumMessageSize" value="8192" />
         
         <!-- This are static fields -->
@@ -362,7 +362,7 @@ swarm:
             filterStackTrace=true
             includeLocation=true
             mdcProfiling=true
-            timestampPattern=yyyy-MM-dd HH:mm:ss,SSSS
+            timestampPattern=yyyy-MM-dd HH:mm:ss,SSS
             maximumMessageSize=8192
             additionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
             additionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long
@@ -396,7 +396,7 @@ logback.xml Example:
         <extractStackTrace>true</extractStackTrace>
         <filterStackTrace>true</filterStackTrace>
         <mdcProfiling>true</mdcProfiling>
-        <timestampPattern>yyyy-MM-dd HH:mm:ss,SSSS</timestampPattern>
+        <timestampPattern>yyyy-MM-dd HH:mm:ss,SSS</timestampPattern>
         <maximumMessageSize>8192</maximumMessageSize>
         
         <!-- This are static fields -->
