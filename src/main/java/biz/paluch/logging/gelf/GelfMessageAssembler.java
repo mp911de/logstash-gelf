@@ -51,7 +51,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private List<MessageField> fields = new ArrayList<MessageField>();
     private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
 
-    private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSSS";
+    private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSS";
 
     private final ThreadLocal<PoolingGelfMessageBuilder> builders;
 
