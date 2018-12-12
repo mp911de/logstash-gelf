@@ -232,4 +232,20 @@ public class WildFlyGelfLogHandlerTests {
             }
         });
     }
+
+    @Test
+    public void testDisabled() {
+        WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
+        handler.setEnabled(false);
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        logger.info(LOG_MESSAGE);
+
+        assertThat(handler.isEnabled()).isFalse();
+        assertThat(GelfTestSender.getMessages()).isEmpty();
+
+
+    }
 }
