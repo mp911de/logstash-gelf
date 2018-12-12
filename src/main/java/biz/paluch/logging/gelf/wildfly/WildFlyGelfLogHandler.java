@@ -78,7 +78,10 @@ public class WildFlyGelfLogHandler extends GelfLogHandler {
         return enabled;
     }
 
-    // called by wildfly logger setup routines with the value of the "enabled" attribute of <custom-handler>
+    /**
+     * Manually enable/disable the handler. This is also called by wildfly logger setup routines on server-startup with the
+     * value of the "enabled" attribute of <custom-handler>
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
