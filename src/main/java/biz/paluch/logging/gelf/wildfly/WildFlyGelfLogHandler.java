@@ -67,15 +67,33 @@ import biz.paluch.logging.gelf.jul.GelfLogHandler;
  */
 public class WildFlyGelfLogHandler extends GelfLogHandler {
     private static final ErrorManager DEFAULT_ERROR_MANAGER = new OnlyOnceErrorManager();
+    private boolean enabled = true;
 
     public WildFlyGelfLogHandler() {
         super();
         super.setErrorManager(DEFAULT_ERROR_MANAGER);
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Manually enable/disable the handler. This is also called by wildfly logger setup routines on server-startup with the
+     * value of the "enabled" attribute of <custom-handler>
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     protected void initializeDefaultFields() {
         gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
                 SourceMethodName, SourceSimpleClassName, LoggerName, NDC));
+    }
+
+    @Override
+    public boolean isLoggable(LogRecord record) {
+        return enabled && super.isLoggable(record);
     }
 
     @Override
