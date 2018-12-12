@@ -30,8 +30,8 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  * @since 11.08.14 08:36
  */
 @RunWith(Arquillian.class)
-@ServerSetup({ WildFlyHandlerIntegrationTests.LoggerSetup.class })
-public class WildFlyHandlerIntegrationTests {
+@ServerSetup({ WildFlyHandlerDisabledIntegrationTests.LoggerSetup.class })
+public class WildFlyHandlerDisabledIntegrationTests {
 
     static class LoggerSetup implements ServerSetupTask {
 
@@ -41,7 +41,7 @@ public class WildFlyHandlerIntegrationTests {
             CommandContext commandContext = CommandContextFactory.getInstance().newCommandContext();
             commandContext.bindClient(managementClient.getControllerClient());
             commandContext
-                    .handle("/subsystem=logging/custom-handler=GelfLogger/:add(module=biz.paluch.logging,class=biz.paluch.logging.gelf.wildfly.WildFlyGelfLogHandler,properties={ \\\n"
+                    .handle("/subsystem=logging/custom-handler=GelfLogger/:add(module=biz.paluch.logging,class=biz.paluch.logging.gelf.wildfly.WildFlyGelfLogHandler,enabled=false,properties={ \\\n"
                             + "           host=\"udp:localhost\", \\\n"
                             + "           port=\"19392\", \\\n"
                             + "           version=\"1.0\", \\\n"
@@ -84,7 +84,7 @@ public class WildFlyHandlerIntegrationTests {
     public void testGelfSubmissionToEmbeddedNettyGelfServer() throws Exception {
         NettyLocalServer nettyLocalServer = new NettyLocalServer(NioDatagramChannel.class);
         nettyLocalServer.run();
-        String logMessage = "some log event";
+        String logMessage = "some log event, console/file only, gelf disabled";
 
         int iterations = 0;
         while (nettyLocalServer.getJsonValues().isEmpty() && iterations < 10) {
@@ -93,7 +93,7 @@ public class WildFlyHandlerIntegrationTests {
             iterations++;
         }
 
-        assertThat(nettyLocalServer.getJsonValues()).isNotEmpty();
+        assertThat(nettyLocalServer.getJsonValues()).isEmpty();
 
         boolean foundSomeLogEvent = false;
 
@@ -102,7 +102,7 @@ public class WildFlyHandlerIntegrationTests {
                 foundSomeLogEvent = true;
             }
         }
-        assertThat(foundSomeLogEvent).isTrue();
+        assertThat(foundSomeLogEvent).isFalse();
         nettyLocalServer.close();
     }
 }
