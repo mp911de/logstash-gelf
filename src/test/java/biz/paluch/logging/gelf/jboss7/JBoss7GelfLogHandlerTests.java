@@ -59,7 +59,6 @@ public class JBoss7GelfLogHandlerTests {
         assertThat(gelfMessage.getMaximumMessageSize()).isEqualTo(8192);
         assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name())).isEqualTo("testSimple");
         assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name())).isEqualTo(getClass().getName());
-
     }
 
     @Test
@@ -102,7 +101,6 @@ public class JBoss7GelfLogHandlerTests {
         logger.severe(LOG_MESSAGE);
         assertThat(GelfTestSender.getMessages().get(0).getLevel()).isEqualTo("3");
         GelfTestSender.getMessages().clear();
-
     }
 
     @Test
@@ -122,7 +120,6 @@ public class JBoss7GelfLogHandlerTests {
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         assertThat(gelfMessage.getLevel()).isEqualTo("3");
-
     }
 
     @Test
@@ -135,7 +132,6 @@ public class JBoss7GelfLogHandlerTests {
 
         logger.info("");
         assertThat(GelfTestSender.getMessages()).isEmpty();
-
     }
 
     @Test
@@ -157,7 +153,6 @@ public class JBoss7GelfLogHandlerTests {
         assertThat(gelfMessage.getShortMessage()).isEqualTo(expectedMessage);
         assertThat(gelfMessage.getLevel()).isEqualTo("6");
         assertThat(gelfMessage.getMaximumMessageSize()).isEqualTo(8192);
-
     }
 
     @Test
@@ -178,7 +173,6 @@ public class JBoss7GelfLogHandlerTests {
 
         assertThat(gelfMessage.getFullMessage()).isEqualTo(expectedMessage);
         assertThat(gelfMessage.getShortMessage()).isEqualTo(expectedMessage);
-
     }
 
     @Test
@@ -214,6 +208,20 @@ public class JBoss7GelfLogHandlerTests {
                 handler.setGraylogPort(0);
             }
         });
+    }
 
+    @Test
+    public void testDisabled() {
+
+        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
+        handler.setEnabled(false);
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.addHandler(handler);
+
+        logger.info(LOG_MESSAGE);
+
+        assertThat(handler.isEnabled()).isFalse();
+        assertThat(GelfTestSender.getMessages()).isEmpty();
     }
 }

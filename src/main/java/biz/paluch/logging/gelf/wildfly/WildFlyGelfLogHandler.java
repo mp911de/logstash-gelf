@@ -25,6 +25,7 @@ import biz.paluch.logging.gelf.jul.GelfLogHandler;
  * <li>See docs for more details</li>
  * </ul>
  * </li>
+ * <li>enabled (Optional): Whether this handler is enabled, default true</li>
  * <li>port (Optional): Port, default 12201</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStacktrace (Optional): Post Stack-Trace to StackTrace field, default false</li>
@@ -64,6 +65,7 @@ import biz.paluch.logging.gelf.jul.GelfLogHandler;
  * The {@link #publish(LogRecord)} method is thread-safe and may be called by different threads at any time.
  *
  * @author Mark Paluch
+ * @author Christoph Linder
  */
 public class WildFlyGelfLogHandler extends GelfLogHandler {
     private static final ErrorManager DEFAULT_ERROR_MANAGER = new OnlyOnceErrorManager();

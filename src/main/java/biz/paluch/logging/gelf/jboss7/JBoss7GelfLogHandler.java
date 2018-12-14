@@ -23,6 +23,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * <li>See docs for more details</li>
  * </ul>
  * </li>
+ * <li>enabled (Optional): Whether this handler is enabled, default true</li>
  * <li>port (Optional): Port, default 12201</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
  * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 =
@@ -38,8 +39,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * <li>additionalFields(number) (Optional): Post additional fields. Eg.
  * .GelfLogHandler.additionalFields=fieldName=Value,field2=value2</li>
  * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
- * double, Double and discover (default if not specified, discover field type on parseability). Eg.
- * field=String,field2=double</li>
+ * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
  * <li>mdcFields (Optional): Post additional fields, pull Values from MDC. Name of the Fields are comma-separated
  * .JBoss7GelfLogHandler.mdcFields=Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
@@ -47,8 +47,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * .JBoss7GelfLogHandler.dynamicMdcFields=mdc.*,[mdc|MDC]fields</li>
  * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
- * <a name="mdcProfiling"></a>
- * <h2>MDC Profiling</h2>
+ * <a name="mdcProfiling"></a> <h2>MDC Profiling</h2>
  * <p>
  * MDC Profiling allows to calculate the runtime from request start up to the time until the log message was generated. You must
  * set one value in the MDC:
@@ -70,14 +69,33 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHandler {
 
     private static final ErrorManager DEFAULT_ERROR_MANAGER = new OnlyOnceErrorManager();
+    private boolean enabled = true;
+
     public JBoss7GelfLogHandler() {
         super();
         super.setErrorManager(DEFAULT_ERROR_MANAGER);
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Manually enable/disable the handler. This is also called by wildfly logger setup routines on server-startup with the
+     * value of the "enabled" attribute of <custom-handler>
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     protected void initializeDefaultFields() {
         gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
                 SourceMethodName, SourceSimpleClassName, LoggerName, NDC));
+    }
+
+    @Override
+    public boolean isLoggable(LogRecord record) {
+        return enabled && super.isLoggable(record);
     }
 
     @Override
