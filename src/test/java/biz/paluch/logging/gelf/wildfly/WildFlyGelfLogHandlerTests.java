@@ -21,6 +21,7 @@ import biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler;
 
 /**
  * @author Mark Paluch
+ * @author Christoph Linder
  * @since 11.08.14 08:36
  */
 public class WildFlyGelfLogHandlerTests {
@@ -60,7 +61,6 @@ public class WildFlyGelfLogHandlerTests {
         assertThat(gelfMessage.getMaximumMessageSize()).isEqualTo(8192);
         assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceMethodName.name())).isEqualTo("testSimple");
         assertThat(gelfMessage.getField(LogMessageField.NamedLogField.SourceClassName.name())).isEqualTo(getClass().getName());
-
     }
 
     @Test
@@ -102,7 +102,6 @@ public class WildFlyGelfLogHandlerTests {
         logger.severe(LOG_MESSAGE);
         assertThat(GelfTestSender.getMessages().get(0).getLevel()).isEqualTo("3");
         GelfTestSender.getMessages().clear();
-
     }
 
     @Test
@@ -121,7 +120,6 @@ public class WildFlyGelfLogHandlerTests {
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         assertThat(gelfMessage.getLevel()).isEqualTo("3");
-
     }
 
     @Test
@@ -133,7 +131,6 @@ public class WildFlyGelfLogHandlerTests {
 
         logger.info("");
         assertThat(GelfTestSender.getMessages()).isEmpty();
-
     }
 
     @Test
@@ -154,7 +151,6 @@ public class WildFlyGelfLogHandlerTests {
         assertThat(gelfMessage.getShortMessage()).isEqualTo(expectedMessage);
         assertThat(gelfMessage.getLevel()).isEqualTo("6");
         assertThat(gelfMessage.getMaximumMessageSize()).isEqualTo(8192);
-
     }
 
     @Test
@@ -174,7 +170,6 @@ public class WildFlyGelfLogHandlerTests {
 
         assertThat(gelfMessage.getFullMessage()).isEqualTo(expectedMessage);
         assertThat(gelfMessage.getShortMessage()).isEqualTo(expectedMessage);
-
     }
 
     @Test
@@ -195,7 +190,6 @@ public class WildFlyGelfLogHandlerTests {
         assertThat(gelfMessage.getField("fieldName2")).isEqualTo("fieldValue2");
         assertThat(gelfMessage.getField("mdcField1")).isEqualTo("a value");
         assertThat(gelfMessage.getField("mdcField2")).isNull();
-
     }
 
     @Test
@@ -235,6 +229,7 @@ public class WildFlyGelfLogHandlerTests {
 
     @Test
     public void testDisabled() {
+
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         handler.setEnabled(false);
 
@@ -245,7 +240,5 @@ public class WildFlyGelfLogHandlerTests {
 
         assertThat(handler.isEnabled()).isFalse();
         assertThat(GelfTestSender.getMessages()).isEmpty();
-
-
     }
 }

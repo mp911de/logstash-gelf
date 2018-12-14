@@ -5,6 +5,7 @@ Following settings can be used:
 
 | Attribute Name    | Description                          | Default |
 | ----------------- |:------------------------------------:|:-------:|
+| enabled           | Whether this handler is enabled  | `true` |
 | host              | Hostname/IP-Address of the Logstash host. The `host` field accepts following forms: <ul><li>`tcp:hostname` for TCP transport, e. g. `tcp:127.0.0.1` or `tcp:some.host.com` </li><li>`udp:hostname` for UDP transport, e. g. `udp:127.0.0.1`, `udp:some.host.com` or just `some.host.com`  </li><li>`redis://[:password@]hostname:port/db-number#listname` for Redis transport. See [Redis transport for logstash-gelf](../redis.html) for details. </li><li>`redis-sentinel://[:password@]hostname:port/db-number?masterId=masterId#listname` for Redis transport with Sentinel lookup. See [Redis transport for logstash-gelf](../redis.html) for details. </li></ul> | none |
 | port              | Port of the Logstash host  | `12201` |
 | version           | GELF Version `1.0` or `1.1` | `1.0` |
@@ -43,7 +44,7 @@ JBoss AS7 Logging Configuration
 
 XML Configuration:
 
-     <custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler" module="biz.paluch.logging">
+     <custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler" module="biz.paluch.logging" enabled="true">
         <level name="INFO" />
         <properties>
             <property name="host" value="udp:localhost" />
