@@ -1,16 +1,13 @@
 package biz.paluch.logging.gelf.intern;
 
+import biz.paluch.logging.gelf.intern.sender.DefaultGelfSenderProvider;
+import biz.paluch.logging.gelf.intern.sender.KafkaGelfSenderProvider;
+import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
+
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
-
-import biz.paluch.logging.gelf.intern.sender.DefaultGelfSenderProvider;
-import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
+import java.util.*;
 
 /**
  * Factory to create a {@link GelfSender} based on the host and protocol details. This factory uses Java's {@link ServiceLoader}
@@ -118,6 +115,7 @@ public final class GelfSenderFactory {
                 providerList.add(iter.next());
             }
             providerList.add(new RedisGelfSenderProvider());
+            providerList.add(new KafkaGelfSenderProvider());
             providerList.add(new DefaultGelfSenderProvider());
         }
 
