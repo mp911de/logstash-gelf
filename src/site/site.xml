@@ -34,6 +34,7 @@
             <item name="UDP Transport" href="udp.html" />
             <item name="Redis Transport" href="redis.html" />
             <item name="HTTP Transport" href="http.html" />
+            <item name="Kafka Transport" href="kafka.html" />
             <item name="Datenpumpe" href="datenpumpe.html" />
         </menu>
 
