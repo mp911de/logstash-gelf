@@ -3,16 +3,16 @@ package biz.paluch.logging.gelf.intern.sender;
 import java.io.IOException;
 import java.net.URI;
 
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Protocol;
+import redis.clients.jedis.util.Pool;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderProvider;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Protocol;
-import redis.clients.util.Pool;
 
 /**
  * {@link GelfSenderProvider} to provide {@link GelfREDISSender}.
- * 
+ *
  * @author https://github.com/Batigoal/logstash-gelf.git
  * @since 1.4
  */

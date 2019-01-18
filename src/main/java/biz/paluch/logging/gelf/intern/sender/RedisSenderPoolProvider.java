@@ -8,12 +8,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.JedisSentinelPool;
-import redis.clients.jedis.Protocol;
-import redis.clients.util.Pool;
+import redis.clients.jedis.*;
+import redis.clients.jedis.util.Pool;
 
 /**
  * Singleton for administration of commonly used jedis pools
@@ -22,7 +18,7 @@ import redis.clients.util.Pool;
  * @author Mark Paluch
  */
 enum RedisSenderPoolProvider {
-    
+
     STANDALONE {
         private Map<String, JedisPool> standalonePools = new HashMap<String, JedisPool>();
 

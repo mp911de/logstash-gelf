@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.util.Pool;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
-import redis.clients.jedis.Jedis;
-import redis.clients.util.Pool;
 
 /**
  * @author https://github.com/strima/logstash-gelf.git
@@ -54,7 +54,7 @@ public class GelfREDISSender<T> implements GelfSender {
             return false;
         } finally {
             if (jedisClient != null) {
-                jedisPool.returnResource(jedisClient);
+                jedisClient.close();
             }
         }
     }
