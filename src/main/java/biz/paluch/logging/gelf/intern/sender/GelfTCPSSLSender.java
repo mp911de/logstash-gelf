@@ -53,10 +53,6 @@ public class GelfTCPSSLSender extends GelfTCPSender {
 
     @Override
     protected boolean connect() throws IOException {
-        if (isConnected()) {
-            return false;
-        }
-
         if (super.connect()) {
             this.sslEngine = sslContext.createSSLEngine();
             this.sslEngine.setUseClientMode(true);
