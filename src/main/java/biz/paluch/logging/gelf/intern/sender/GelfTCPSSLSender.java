@@ -18,6 +18,7 @@ import biz.paluch.logging.gelf.intern.ErrorReporter;
  * TCP with SSL {@link biz.paluch.logging.gelf.intern.GelfSender}.
  *
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Alexander Katanov
  * @since 1.11
  */
 public class GelfTCPSSLSender extends GelfTCPSender {
