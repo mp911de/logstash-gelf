@@ -57,11 +57,11 @@ public class GelfTCPSSLSender extends GelfTCPSender {
             return false;
         }
 
-        this.sslEngine = sslContext.createSSLEngine();
-        this.sslEngine.setUseClientMode(true);
-        this.sslSession = sslEngine.getSession();
-
         if (super.connect()) {
+            this.sslEngine = sslContext.createSSLEngine();
+            this.sslEngine.setUseClientMode(true);
+            this.sslSession = sslEngine.getSession();
+
             // Begin handshake
             sslEngine.beginHandshake();
             doHandshake(channel(), sslEngine, ByteBuffer.allocate(sslSession.getPacketBufferSize()),
