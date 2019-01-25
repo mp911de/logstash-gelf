@@ -1,7 +1,7 @@
 # Redis transport for logstash-gelf 
 
 
-logstash-gelf can be used together with (Redis)[http://redis.io] for shipping log events. (Redis)[http://redis.io] Standalone and [Redis Sentinel](http://redis.io/topics/sentinel) can be used. logstash-gelf uses [jedis](https://github.com/xetorthio/jedis)
+logstash-gelf can be used together with [Redis](http://redis.io) for shipping log events. [Redis](http://redis.io) Standalone and [Redis Sentinel](http://redis.io/topics/sentinel) can be used. logstash-gelf uses [jedis](https://github.com/xetorthio/jedis)
 as Redis Client. logstash-gelf uses Redis Lists (`LPUSH`) for storing. channel/pattern_channel (`SUBSCRIBE`/`PSUBSCRIBE`) are not supported.
 
 ## Redis Standalone

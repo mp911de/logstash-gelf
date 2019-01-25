@@ -82,7 +82,9 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
 
     /**
      * Manually enable/disable the handler. This is also called by wildfly logger setup routines on server-startup with the
-     * value of the "enabled" attribute of <custom-handler>
+     * value of the "enabled" attribute of {@code <custom-handler>}.
+     *
+     * @param enabled {@literal false} to disable this handler.
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
