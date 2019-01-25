@@ -1,8 +1,9 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import com.github.charithe.kafka.EphemeralKafkaBroker;
-import com.github.charithe.kafka.KafkaHelper;
-import com.google.common.collect.Lists;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.concurrent.TimeUnit;
+
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.github.charithe.kafka.EphemeralKafkaBroker;
+import com.github.charithe.kafka.KafkaHelper;
+import com.google.common.collect.Lists;
 
 /**
  * @author Rifat Döver
@@ -25,15 +28,12 @@ public class GelfLogAppenderKafkaIntegrationTests {
 
     @Test
     public void testKafkaSender() throws Exception {
+
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-gelf-with-kafka.xml");
 
         EphemeralKafkaBroker broker = EphemeralKafkaBroker.create(9092);
         KafkaHelper helper = KafkaHelper.createFor(broker);
-        broker.start();
-
-        while (!broker.isRunning()) {
-            Thread.sleep(1000);
-        }
+        broker.start().get(30, TimeUnit.SECONDS);
 
         LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
@@ -44,8 +44,11 @@ public class GelfLogAppenderKafkaIntegrationTests {
         KafkaConsumer<String, String> consumer = helper.createStringConsumer();
         consumer.subscribe(Lists.newArrayList(KAFKA_LOG_TOPIC));
         ConsumerRecords<String, String> records = consumer.poll(10000);
+
         assertThat(records).isNotNull();
         assertThat(records.isEmpty()).isFalse();
         assertThat(records.count()).isEqualTo(1);
+
+        broker.stop();
     }
 }

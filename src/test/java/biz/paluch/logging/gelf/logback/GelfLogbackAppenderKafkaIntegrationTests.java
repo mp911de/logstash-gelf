@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,13 +27,10 @@ public class GelfLogbackAppenderKafkaIntegrationTests {
 
     @Test
     public void testKafkaSender() throws Exception {
+
         EphemeralKafkaBroker broker = EphemeralKafkaBroker.create(19092);
         KafkaHelper helper = KafkaHelper.createFor(broker);
-        broker.start();
-
-        while (!broker.isRunning()) {
-            Thread.sleep(1000);
-        }
+        broker.start().get(30, TimeUnit.SECONDS);
 
         LoggerContext lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();
