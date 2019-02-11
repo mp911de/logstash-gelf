@@ -1,4 +1,4 @@
-name-template: "logstash-gelf-$NEXT_MINOR_VERSION"
+name-template: "$NEXT_MINOR_VERSION"
 tag-template: "logstash-gelf-$NEXT_MINOR_VERSION"
 template: |
     # What's New

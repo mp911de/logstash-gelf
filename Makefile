@@ -61,7 +61,7 @@ release:
 	mvn release:clean
 	mvn release:prepare -Psonatype-oss-release
 	mvn release:perform -Psonatype-oss-release
-	mvn site:site
+	mvn -o site:site
 	mvn -o scm-publish:publish-scm -Dgithub.site.upload.skip=false
 
 .PHONY: test
