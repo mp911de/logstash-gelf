@@ -281,19 +281,19 @@
                 <artifactId>bnd-maven-plugin</artifactId>
                 <version>${bnd-maven-plugin.version}</version>
                 <configuration>
-                    <bnd><![CDATA[
-						Export-Package: biz.paluch.logging.*
-						Import-Package: org.apache.logging.log4j.*;resolution:=optional,\
-                            org.apache.log4j.*;resolution:=optional,\
-                            ch.qos.logback.*;resolution:=optional,\
-                            org.jboss.logmanager.*;resolution:=optional,\
-                            redis.clients.*;resolution:=optional,\
-                            org.apache.commons.pool2.impl;resolution:=optional,\
-                            org.apache.kafka.*;resolution:=optional,\
-                            *
-						Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
-						-snapshot: SNAPSHOT
-					]]></bnd>
+                <bnd><![CDATA[
+                    Export-Package: biz.paluch.logging.*
+                    Import-Package: org.apache.logging.log4j.*;resolution:=optional,\
+                        org.apache.log4j.*;resolution:=optional,\
+                        ch.qos.logback.*;resolution:=optional,\
+                        org.jboss.logmanager.*;resolution:=optional,\
+                        redis.clients.*;resolution:=optional,\
+                        org.apache.commons.pool2.impl;resolution:=optional,\
+                        org.apache.kafka.*;resolution:=optional,\
+                        *
+                    Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
+                    -snapshot: SNAPSHOT
+                ]]></bnd>
                 </configuration>
             </plugin>
         </plugins>
