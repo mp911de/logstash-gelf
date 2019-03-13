@@ -96,6 +96,7 @@
 
     <developers>
         <developer>
+            <id>mp911de</id>
             <email>mpaluch@paluch.biz</email>
             <name>Mark Paluch</name>
             <timezone>Europe/Berlin</timezone>
@@ -540,6 +541,29 @@
 
     <profiles>
         <profile>
+            <id>bundle</id>
+            <activation>
+                <property>
+                    <name>!skipBundleMetadata</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>biz.aQute.bnd</groupId>
+                        <artifactId>bnd-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>bnd-process</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>coverage</id>
             <activation>
                 <jdk>[1.7,1.8]</jdk>
@@ -682,18 +706,6 @@
                                     </resources>
 
                                 </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>biz.aQute.bnd</groupId>
-                        <artifactId>bnd-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>bnd-process</goal>
-                                </goals>
                             </execution>
                         </executions>
                     </plugin>
