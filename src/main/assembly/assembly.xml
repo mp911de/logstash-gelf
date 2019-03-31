@@ -39,5 +39,10 @@
             <filtered>true</filtered>
             <outputDirectory>biz/paluch/logging/main</outputDirectory>
         </file>
+        <file>
+            <source>src/main/assembly/module-thorntail.xml</source>
+            <filtered>true</filtered>
+            <outputDirectory>biz/paluch/logging/main</outputDirectory>
+        </file>
     </files>
 </assembly>
