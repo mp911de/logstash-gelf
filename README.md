@@ -343,7 +343,7 @@ standalone.xml
 
 Thorntail (WildFly Swarm 2.x) configuration
 --------------------------------------------
-Include `module.xml` from the logging module zip (see download above). Place it below the `src/main/resources/modules/biz/paluch/logging/main` path, then add following lines to your `project-stages.yml`:
+Include `module-thorntail.xml` from the logging module zip (see download above). Place it below the `src/main/resources/modules/biz/paluch/logging/main` path as `module.xml`, then add following lines to your `project-stages.yml`:
 
 `project-stages.yml`:
 ```yaml
@@ -354,21 +354,21 @@ swarm:
         attribute-class: biz.paluch.logging.gelf.wildfly.WildFlyGelfLogHandler
         module: biz.paluch.logging
         properties:
-            host=udp:localhost
-            port=12201
-            version=1.0
-            facility=java-test
-            extractStackTrace=true
-            filterStackTrace=true
-            includeLocation=true
-            mdcProfiling=true
-            timestampPattern=yyyy-MM-dd HH:mm:ss,SSS
-            maximumMessageSize=8192
-            additionalFields=fieldName1=fieldValue1,fieldName2=fieldValue2
-            additionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long
-            MdcFields=mdcField1,mdcField2
-            dynamicMdcFields=mdc.*,(mdc|MDC)fields
-            includeFullMdc=true
+            host: "udp:localhost"
+            port: 12201
+            version: "1.0"
+            facility: "java-test"
+            extractStackTrace: true
+            filterStackTrace: true
+            includeLocation: true
+            mdcProfiling: true
+            timestampPattern: "yyyy-MM-dd HH:mm:ss,SSS"
+            maximumMessageSize: 8192
+            additionalFields: "fieldName1=fieldValue1,fieldName2=fieldValue2"
+            additionalFieldTypes: "fieldName1=String,fieldName2=Double,fieldName3=Long"
+            MdcFields: "mdcField1,mdcField2"
+            dynamicMdcFields: "mdc.*,(mdc|MDC)fields"
+            includeFullMdc: true
     root-logger:
       level: INFO
       handlers:
