@@ -1,20 +1,20 @@
 package biz.paluch.logging.gelf.jul;
 
-import biz.paluch.logging.gelf.JsonUtil;
-import biz.paluch.logging.gelf.LogMessageField;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import biz.paluch.logging.gelf.JsonUtil;
+import biz.paluch.logging.gelf.LogMessageField;
 
 /**
  * @author Greg Peterson
- * @author Mark Paluch
  */
 public class GelfFormatterUnitTests {
 
@@ -28,7 +28,8 @@ public class GelfFormatterUnitTests {
     @BeforeEach
     public void before() throws Exception {
         TestHandler.clear();
-        LogManager.getLogManager().readConfiguration(GelfFormatterUnitTests.class.getResourceAsStream("/jul/test-gelf-formatter.properties"));
+        LogManager.getLogManager().readConfiguration(
+                GelfFormatterUnitTests.class.getResourceAsStream("/jul/test-gelf-formatter.properties"));
         logger = Logger.getLogger(GelfFormatterUnitTests.class.getName());
     }
 
@@ -66,7 +67,8 @@ public class GelfFormatterUnitTests {
 
     @Test
     public void testConfigured() throws Exception {
-        LogManager.getLogManager().readConfiguration(GelfFormatterUnitTests.class.getResourceAsStream("/jul/test-gelf-formatter-configured.properties"));
+        LogManager.getLogManager().readConfiguration(
+                GelfFormatterUnitTests.class.getResourceAsStream("/jul/test-gelf-formatter-configured.properties"));
 
         logger.info("test1");
         logger.info("test2");
@@ -91,7 +93,7 @@ public class GelfFormatterUnitTests {
     public Map<String, Object> getMessage() {
         String s = TestHandler.getLoggedLines()[0];
         try {
-            return (Map) JsonUtil.parseToMap(s);
+            return JsonUtil.parseToMap(s);
         } catch (RuntimeException e) {
             System.out.println("Trying to parse: " + s);
             throw e;

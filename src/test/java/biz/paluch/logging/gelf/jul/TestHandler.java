@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.*;
 
+/**
+ * @author Greg Peterson
+ */
 public class TestHandler extends Handler {
 
     static List<String> messages = new ArrayList<String>();
@@ -15,11 +18,11 @@ public class TestHandler extends Handler {
 
     private void configure() {
         LogManager manager = LogManager.getLogManager();
-        String cn = manager.getProperty(getClass().getName() + ".formatter");
+        String formatterClassName = manager.getProperty(getClass().getName() + ".formatter");
         Formatter f;
-        if (cn != null) {
+        if (formatterClassName != null) {
             try {
-                f = (Formatter) Class.forName(cn).newInstance();
+                f = (Formatter) Class.forName(formatterClassName).newInstance();
             } catch (Exception e) {
                 f = new SimpleFormatter();
             }
@@ -36,12 +39,10 @@ public class TestHandler extends Handler {
 
     @Override
     public void flush() {
-
     }
 
     @Override
     public void close() throws SecurityException {
-
     }
 
     public static String[] getLoggedLines() {

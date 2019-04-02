@@ -144,7 +144,6 @@ public class GelfLayout extends Layout {
         }
 
         addFields(fields);
-
     }
 
     private void addFields(Collection<LogMessageField.NamedLogField> fields) {

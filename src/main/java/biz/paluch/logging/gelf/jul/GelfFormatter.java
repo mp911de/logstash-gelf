@@ -1,16 +1,16 @@
 package biz.paluch.logging.gelf.jul;
 
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
-import biz.paluch.logging.gelf.intern.ConfigurationSupport;
-import biz.paluch.logging.gelf.intern.GelfMessage;
+import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 
 import java.util.*;
 import java.util.logging.Formatter;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 
-import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.MdcGelfMessageAssembler;
+import biz.paluch.logging.gelf.intern.ConfigurationSupport;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * Log-Formatter for JSON using fields specified within GELF. This formatter will produce a JSON object for each log event.
@@ -18,18 +18,18 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
  *
  * <code>
  {
-     "timestamp": "1439319236.722",
-     "SourceClassName": "biz.paluch.logging.gelf.wildfly.WildFlyGelfLogFormatterTest",
-     "SourceMethodName": "testDefaults",
-     "level": "6",
-     "SourceSimpleClassName": "WildFlyGelfLogFormatterTest",
-     "facility": "logstash-gelf",
-     "full_message": "foo bar test log message",
-     "short_message": "foo bar test log message",
-     "MySeverity": "INFO",
-     "LoggerName": "biz.paluch.logging.gelf.wildfly.WildFlyGelfLogFormatterTest",
-     "Thread": "main",
-     "Time": "2015-08-11 20:53:56,0722"
+    "timestamp": "1439319236.722",
+    "SourceClassName": "biz.paluch.logging.gelf.wildfly.WildFlyGelfLogFormatterTest",
+    "SourceMethodName": "testDefaults",
+    "level": "6",
+    "SourceSimpleClassName": "WildFlyGelfLogFormatterTest",
+    "facility": "logstash-gelf",
+    "full_message": "foo bar test log message",
+    "short_message": "foo bar test log message",
+    "MySeverity": "INFO",
+    "LoggerName": "biz.paluch.logging.gelf.wildfly.WildFlyGelfLogFormatterTest",
+    "Thread": "main",
+    "Time": "2015-08-11 20:53:56,0722"
  }
  * </code>
  *
@@ -43,8 +43,8 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
  * throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>includeLocation (Optional): Include source code location, default true</li>
- * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
- * Profiling</a>, default false</li>
+ * <li>includeLogMessageParameters (Optional): Include message parameters from the log event (see
+ * {@link LogRecord#getParameters()}, default true</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>additionalFields(number) (Optional): Post additional fields. Eg. fieldName=Value,field2=value2</li>
  * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
@@ -52,12 +52,16 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
  * </ul>
  *
  * @author Greg Peterson
- * @author Mark Paluch
+ * @since 1.14.0
  */
 public class GelfFormatter extends Formatter {
 
     public static final String MULTI_VALUE_DELIMITTER = ",";
     public static final Set<LogMessageField.NamedLogField> SUPPORTED_FIELDS;
+
+    private final MdcGelfMessageAssembler gelfMessageAssembler = new MdcGelfMessageAssembler();
+    private String lineBreak = System.getProperty("line.separator");
+    private boolean wasSetFieldsCalled = false;
 
     static {
         Set<LogMessageField.NamedLogField> supportedFields = new LinkedHashSet<LogMessageField.NamedLogField>();
@@ -74,10 +78,6 @@ public class GelfFormatter extends Formatter {
         SUPPORTED_FIELDS = Collections.unmodifiableSet(supportedFields);
     }
 
-    private final MdcGelfMessageAssembler gelfMessageAssembler = new MdcGelfMessageAssembler();
-    private String lineBreak = System.getProperty("line.separator");
-    private boolean wasSetFieldsCalled = false;
-
     public GelfFormatter() {
         super();
         configure();
@@ -86,47 +86,66 @@ public class GelfFormatter extends Formatter {
     private void configure() {
         String cname = getClass().getName();
         LogManager manager = LogManager.getLogManager();
-        String val = manager.getProperty(cname + ".version");
-        if (val != null) {
-            setVersion(val);
-        }
-        val = manager.getProperty(cname + ".fields");
+
+        String val = manager.getProperty(cname + ".fields");
         if (val != null) {
             setFields(val);
         }
-        val = manager.getProperty(cname + ".additionalFields");
+
+        val = manager.getProperty(cname + ".version");
         if (val != null) {
-            setAdditionalFields(val);
+            setVersion(val);
         }
-        val = manager.getProperty(cname + ".originHost");
-        if (val != null) {
-            setOriginHost(val);
-        }
+
         val = manager.getProperty(cname + ".facility");
         if (val != null) {
             setFacility(val);
         }
+
         val = manager.getProperty(cname + ".extractStackTrace");
         if (val != null) {
             setExtractStackTrace(val);
         }
+
         val = manager.getProperty(cname + ".filterStackTrace");
         if (val != null) {
             setFilterStackTrace(Boolean.valueOf(val));
         }
+
+        val = manager.getProperty(cname + ".includeLogMessageParameters");
+        if (val != null) {
+            setIncludeLogMessageParameters(Boolean.valueOf(val));
+        }
+
         val = manager.getProperty(cname + ".includeLocation");
         if (val != null) {
             setIncludeLocation(Boolean.valueOf(val));
         }
+
         val = manager.getProperty(cname + ".timestampPattern");
         if (val != null) {
             setTimestampPattern(val);
         }
+
+        val = manager.getProperty(cname + ".additionalFields");
+        if (val != null) {
+            setAdditionalFields(val);
+        }
+
+        val = manager.getProperty(cname + ".additionalFieldTypes");
+        if (val != null) {
+            setAdditionalFieldTypes(val);
+        }
+
+        val = manager.getProperty(cname + ".originHost");
+        if (val != null) {
+            setOriginHost(val);
+        }
+
         val = manager.getProperty(cname + ".linebreak");
         if (val != null) {
             setLineBreak(val);
         }
-
     }
 
     @Override
@@ -159,7 +178,6 @@ public class GelfFormatter extends Formatter {
         }
 
         addFields(fields);
-
     }
 
     private void addFields(Collection<LogMessageField.NamedLogField> fields) {
@@ -207,6 +225,14 @@ public class GelfFormatter extends Formatter {
 
     public void setFilterStackTrace(boolean filterStackTrace) {
         gelfMessageAssembler.setFilterStackTrace(filterStackTrace);
+    }
+
+    public boolean isIncludeLogMessageParameters() {
+        return gelfMessageAssembler.isIncludeLogMessageParameters();
+    }
+
+    public void setIncludeLogMessageParameters(boolean includeLogMessageParameters) {
+        gelfMessageAssembler.setIncludeLogMessageParameters(includeLogMessageParameters);
     }
 
     public boolean isIncludeLocation() {

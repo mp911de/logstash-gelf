@@ -6,6 +6,7 @@ ${project.name} (${project.artifactId})
 Provides logging to logstash using the Graylog Extended Logging Format (GELF) 1.0 and 1.1. Following log frameworks/integrations are supported:
 
 * [Java Util Logging](examples/jul.html)
+* [Java Util Logging JSON Formatter](examples/jul-json.html)
 * [log4j 1.2.x](examples/log4j-1.2.x.html)
 * [log4j 1.2.x JSON Layout](examples/log4j-1.2.x-json.html)
 * [log4j 2.x](examples/log4j-2.x.html)
