@@ -18,37 +18,37 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderIncludeFullMdcTests {
+class GelfLogAppenderIncludeFullMdcTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String MDC_MY_MDC1 = "aMdcValue";
-    public static final String MDC_MY_MDC2 = "differentMdc";
-    public static final String VALUE_1 = "value1";
-    public static final String VALUE_2 = "value2";
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String MDC_MY_MDC1 = "aMdcValue";
+    private static final String MDC_MY_MDC2 = "differentMdc";
+    private static final String VALUE_1 = "value1";
+    private static final String VALUE_2 = "value2";
 
     private static LoggerContext loggerContext;
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-include-full-mdc.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
     }
 
     @AfterAll
-    public static void afterClass() throws Exception {
+    static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
         loggerContext.reconfigure();
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
     }
 
     @Test
-    public void testWithoutFields() throws Exception {
+    void testWithoutFields() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
@@ -62,7 +62,7 @@ public class GelfLogAppenderIncludeFullMdcTests {
     }
 
     @Test
-    public void testWithMdc() throws Exception {
+    void testWithMdc() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
         ThreadContext.put(MDC_MY_MDC1, VALUE_1);

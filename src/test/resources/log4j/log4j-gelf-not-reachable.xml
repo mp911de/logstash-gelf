@@ -13,7 +13,7 @@
         <param name="GraylogHost" value="udp:8.8.8.8" />
         <param name="GraylogPort" value="12201" />
         <param name="Version" value="1.1" />
-        <param name="Facility" value="java-test" />
+        <param name="Facility" value="logstash-gelf"/>
         <param name="ExtractStackTrace" value="true" />
         <param name="FilterStackTrace" value="true" />
         <param name="MdcProfiling" value="true" />

@@ -12,7 +12,7 @@ import io.netty.handler.codec.http.HttpResponseEncoder;
  */
 public class GelfInboundHTTPInitializer extends ChannelInitializer<SocketChannel> {
 
-    protected GelfInboundHTTPHandler handler;
+    private GelfInboundHTTPHandler handler;
 
     public GelfInboundHTTPInitializer() {
         handler = new GelfInboundHTTPHandler();

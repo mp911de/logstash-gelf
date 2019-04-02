@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class GelfTCPSSLSenderUnitTests {
+class GelfTCPSSLSenderUnitTests {
 
     @Test
     void shouldNotFailOnCloseWithoutConnect() throws IOException {

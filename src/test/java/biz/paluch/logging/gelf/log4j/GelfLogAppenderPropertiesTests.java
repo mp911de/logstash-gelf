@@ -11,10 +11,10 @@ import biz.paluch.logging.gelf.GelfTestSender;
  * @author Mark Paluch
  * @since 27.09.13 07:47
  */
-public class GelfLogAppenderPropertiesTests extends AbstractGelfLogAppenderTests {
+class GelfLogAppenderPropertiesTests extends AbstractGelfLogAppenderTests {
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();
         PropertyConfigurator.configure(getClass().getResource("/log4j/log4j-test.properties"));

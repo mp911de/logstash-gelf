@@ -22,12 +22,12 @@ import com.google.common.collect.Lists;
  * @author Rifat Döver
  */
 @ExtendWith({ MockitoExtension.class })
-public class GelfLogAppenderKafkaIntegrationTests {
+class GelfLogAppenderKafkaIntegrationTests {
 
-    public static final String KAFKA_LOG_TOPIC = "kafka-log-topic";
+    private static final String KAFKA_LOG_TOPIC = "kafka-log-topic";
 
     @Test
-    public void testKafkaSender() throws Exception {
+    void testKafkaSender() throws Exception {
 
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-gelf-with-kafka.xml");
 

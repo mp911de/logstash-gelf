@@ -15,10 +15,10 @@ import biz.paluch.logging.gelf.jboss7.JBoss7JulLogEvent;
 /**
  * @author Mark Paluch
  */
-public class GelfUtilUnitTests {
+class GelfUtilUnitTests {
 
     @Test
-    public void testProfilingString() throws Exception {
+    void testProfilingString() throws Exception {
 
         Map mdcMap = new HashMap();
         mdcMap.put(GelfUtil.MDC_REQUEST_START_MS, "" + (System.currentTimeMillis() - 12000));
@@ -32,7 +32,7 @@ public class GelfUtilUnitTests {
     }
 
     @Test
-    public void testProfilingLong() throws Exception {
+    void testProfilingLong() throws Exception {
 
         Map mdcMap = new HashMap();
         mdcMap.put(GelfUtil.MDC_REQUEST_START_MS, (System.currentTimeMillis() - 12000));

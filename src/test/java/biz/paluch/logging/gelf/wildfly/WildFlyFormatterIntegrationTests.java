@@ -39,7 +39,8 @@ public class WildFlyFormatterIntegrationTests {
             commandContext.bindClient(managementClient.getControllerClient());
             commandContext
                     .handle("/subsystem=logging/custom-formatter=JsonFormatter/:add(module=biz.paluch.logging,class=biz.paluch.logging.gelf.wildfly.WildFlyJsonFormatter,properties={ \\\n"
-                            + "\t\t   version=\"1.0\", \\\n" + "\t\t   facility=\"java-test\", \\\n"
+                            + "\t\t   version=\"1.0\", \\\n"
+                            + "\t\t   facility=\"logstash-gelf\", \\\n"
                             + "\t\t   extractStackTrace=true, \\\n" + "\t\t   filterStackTrace=true, \\\n"
                             + "\t\t   mdcProfiling=true, \\\n"
                             + "\t\t   additionalFields=\"fieldName1=fieldValue1,fieldName2=fieldValue2\", \\\n"

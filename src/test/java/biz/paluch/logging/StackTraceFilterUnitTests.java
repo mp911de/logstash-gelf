@@ -8,25 +8,25 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class StackTraceFilterUnitTests {
+class StackTraceFilterUnitTests {
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         StackTraceFilter.loadSetttings(StackTraceFilter.FILTER_SETTINGS);
     }
 
     @Test
-    public void testNull() throws Exception {
+    void testNull() throws Exception {
         StackTraceFilter.loadSetttings("nonexistent");
     }
 
     @Test
-    public void testOwnProperties() throws Exception {
+    void testOwnProperties() throws Exception {
         StackTraceFilter.loadSetttings("StackTraceFilterTest.properties");
     }
 
     @Test
-    public void testFindThrowable() {
+    void testFindThrowable() {
 
         assertThat(StackTraceFilter.getThrowable(entryMethod(), 0)).isExactlyInstanceOf(RuntimeException.class);
         assertThat(StackTraceFilter.getThrowable(entryMethod(), 1)).isExactlyInstanceOf(MyException.class);
@@ -38,7 +38,7 @@ public class StackTraceFilterUnitTests {
     }
 
     @Test
-    public void filterWholeStackTrace() {
+    void filterWholeStackTrace() {
 
         String filteredStackTrace = StackTraceFilter.getFilteredStackTrace(entryMethod(), true);
         List<String> lines = Arrays.asList(filteredStackTrace.split(System.getProperty("line.separator")));
@@ -48,7 +48,7 @@ public class StackTraceFilterUnitTests {
     }
 
     @Test
-    public void getStackTrace() {
+    void getStackTrace() {
 
         String plainStackTrace = StackTraceFilter.getStackTrace(entryMethod());
         List<String> lines = Arrays.asList(plainStackTrace.split(System.getProperty("line.separator")));
@@ -59,7 +59,7 @@ public class StackTraceFilterUnitTests {
     }
 
     @Test
-    public void printStackTraceRef2() {
+    void printStackTraceRef2() {
 
         String plainStackTrace = StackTraceFilter.getStackTrace(entryMethod(), 2);
         List<String> lines = Arrays.asList(plainStackTrace.split(System.getProperty("line.separator")));
@@ -73,7 +73,7 @@ public class StackTraceFilterUnitTests {
     }
 
     @Test
-    public void filterRootCause() {
+    void filterRootCause() {
 
         String filteredStackTrace = StackTraceFilter.getFilteredStackTrace(entryMethod(), -1);
         List<String> lines = Arrays.asList(filteredStackTrace.split(System.getProperty("line.separator")));
@@ -125,7 +125,7 @@ public class StackTraceFilterUnitTests {
     }
 
     static class MyException extends RuntimeException {
-        public MyException(String message, Throwable cause) {
+        MyException(String message, Throwable cause) {
             super(message, cause);
         }
     }

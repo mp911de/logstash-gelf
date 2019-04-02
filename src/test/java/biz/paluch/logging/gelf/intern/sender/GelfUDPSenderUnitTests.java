@@ -22,7 +22,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class GelfUDPSenderUnitTests {
+class GelfUDPSenderUnitTests {
 
     @Mock
     private ErrorReporter errorReporter;
@@ -31,7 +31,7 @@ public class GelfUDPSenderUnitTests {
     private ArgumentCaptor<Exception> captor;
 
     @Test
-    public void unreachablePacketsShouldBeDiscardedSilently() throws Exception {
+    void unreachablePacketsShouldBeDiscardedSilently() throws Exception {
 
         GelfUDPSender udpSender = new GelfUDPSender("127.0.0.1", 65534, errorReporter);
 
@@ -41,7 +41,7 @@ public class GelfUDPSenderUnitTests {
     }
 
     @Test
-    public void unknownHostShouldThrowException() throws Exception {
+    void unknownHostShouldThrowException() throws Exception {
 
         assertThrows(UnknownHostException.class, new Executable() {
             @Override
@@ -52,7 +52,7 @@ public class GelfUDPSenderUnitTests {
     }
 
     @Test
-    public void shouldSendDataToOpenPort() throws Exception {
+    void shouldSendDataToOpenPort() throws Exception {
 
         int port = randomPort();
 
@@ -77,7 +77,7 @@ public class GelfUDPSenderUnitTests {
     }
 
     @Test
-    public void shouldSendDataToClosedPort() throws Exception {
+    void shouldSendDataToClosedPort() throws Exception {
 
         int port = randomPort();
 
@@ -102,7 +102,7 @@ public class GelfUDPSenderUnitTests {
         spy.close();
     }
 
-    protected int randomPort() {
+    int randomPort() {
         Random random = new Random();
         return random.nextInt(50000) + 1024;
     }

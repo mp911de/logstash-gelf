@@ -24,20 +24,20 @@ import biz.paluch.logging.gelf.jboss7.JBoss7GelfLogHandler;
  * @author Christoph Linder
  * @since 11.08.14 08:36
  */
-public class WildFlyGelfLogHandlerTests {
+class WildFlyGelfLogHandlerTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager().reset();
         MDC.remove("mdcField1");
     }
 
     @Test
-    public void testSimple() throws Exception {
+    void testSimple() throws Exception {
 
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
 
@@ -64,7 +64,7 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testWarning() throws Exception {
+    void testWarning() throws Exception {
 
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         Logger logger = Logger.getLogger(getClass().getName());
@@ -78,7 +78,7 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testFine() throws Exception {
+    void testFine() throws Exception {
 
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         handler.setLevel(Level.ALL);
@@ -105,7 +105,7 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testSevere() throws Exception {
+    void testSevere() throws Exception {
 
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         NDC.clear();
@@ -123,7 +123,7 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testEmptyMessage() throws Exception {
+    void testEmptyMessage() throws Exception {
 
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         Logger logger = Logger.getLogger(getClass().getName());
@@ -134,7 +134,7 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testSimpleWithMsgFormatSubstitution() throws Exception {
+    void testSimpleWithMsgFormatSubstitution() throws Exception {
 
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         Logger logger = Logger.getLogger(getClass().getName());
@@ -154,7 +154,7 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testSimpleWithStringFormatSubstitution() throws Exception {
+    void testSimpleWithStringFormatSubstitution() throws Exception {
 
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         Logger logger = Logger.getLogger(getClass().getName());
@@ -173,7 +173,7 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testFields() throws Exception {
+    void testFields() throws Exception {
 
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         Logger logger = Logger.getLogger(getClass().getName());
@@ -193,7 +193,7 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testIncludeLocation() {
+    void testIncludeLocation() {
 
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         handler.setIncludeLocation(false);
@@ -213,7 +213,7 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testWrongConfig() {
+    void testWrongConfig() {
 
         assertThrows(IllegalArgumentException.class, new Executable() {
 
@@ -228,7 +228,7 @@ public class WildFlyGelfLogHandlerTests {
     }
 
     @Test
-    public void testDisabled() {
+    void testDisabled() {
 
         WildFlyGelfLogHandler handler = getWildFlyGelfLogHandler();
         handler.setEnabled(false);

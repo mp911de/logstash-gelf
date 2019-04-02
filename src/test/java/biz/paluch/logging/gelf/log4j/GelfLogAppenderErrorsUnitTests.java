@@ -27,11 +27,11 @@ import biz.paluch.logging.gelf.intern.GelfSenderProvider;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class GelfLogAppenderErrorsUnitTests {
+class GelfLogAppenderErrorsUnitTests {
 
-    public static final String THE_HOST = "the host";
+    private static final String THE_HOST = "the host";
 
-    public static final LoggingEvent LOGGING_EVENT = new LoggingEvent("my.class", Logger.getLogger("my.class"),
+    private static final LoggingEvent LOGGING_EVENT = new LoggingEvent("my.class", Logger.getLogger("my.class"),
             org.apache.log4j.Level.INFO, "message", null);
 
     @Mock
@@ -46,7 +46,7 @@ public class GelfLogAppenderErrorsUnitTests {
     private GelfLogAppender sut = new GelfLogAppender();
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
 
@@ -54,13 +54,13 @@ public class GelfLogAppenderErrorsUnitTests {
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
         GelfSenderFactory.removeAllAddedSenderProviders();
     }
 
     @Test
-    public void testRuntimeExceptionOnCreateSender() throws Exception {
+    void testRuntimeExceptionOnCreateSender() throws Exception {
         sut.setGraylogHost(THE_HOST);
 
         sut.append(LOGGING_EVENT);
@@ -69,7 +69,7 @@ public class GelfLogAppenderErrorsUnitTests {
     }
 
     @Test
-    public void testInvalidMessage() throws Exception {
+    void testInvalidMessage() throws Exception {
 
         sut.append(LOGGING_EVENT);
 
@@ -77,7 +77,7 @@ public class GelfLogAppenderErrorsUnitTests {
     }
 
     @Test
-    public void testErrorOnSend() throws Exception {
+    void testErrorOnSend() throws Exception {
 
         sut.append(LOGGING_EVENT);
 
@@ -86,7 +86,7 @@ public class GelfLogAppenderErrorsUnitTests {
 
     @Test
     @Ignore("Flakey during to execution environment")
-    public void gelfPortNotReachable() throws Exception {
+    void gelfPortNotReachable() throws Exception {
 
         LogManager.getLoggerRepository().resetConfiguration();
         DOMConfigurator.configure(getClass().getResource("/log4j/log4j-gelf-not-reachable.xml"));

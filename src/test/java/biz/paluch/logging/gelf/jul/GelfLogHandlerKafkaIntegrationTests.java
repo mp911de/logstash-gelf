@@ -21,12 +21,12 @@ import com.google.common.collect.Lists;
  * @author Rifat Döver
  */
 @ExtendWith({ MockitoExtension.class })
-public class GelfLogHandlerKafkaIntegrationTests {
+class GelfLogHandlerKafkaIntegrationTests {
 
-    public static final String KAFKA_LOG_TOPIC = "kafka-log-topic";
+    private static final String KAFKA_LOG_TOPIC = "kafka-log-topic";
 
     @Test
-    public void testKafkaSender() throws Exception {
+    void testKafkaSender() throws Exception {
 
         EphemeralKafkaBroker broker = EphemeralKafkaBroker.create(19092);
         KafkaHelper helper = KafkaHelper.createFor(broker);

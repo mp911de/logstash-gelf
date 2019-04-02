@@ -16,30 +16,31 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import biz.paluch.logging.RuntimeContainer;
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
+import biz.paluch.logging.gelf.netty.NettyLocalServer;
+
 import com.google.code.tempusfugit.temporal.Condition;
 import com.google.code.tempusfugit.temporal.Duration;
 import com.google.code.tempusfugit.temporal.Timeout;
 import com.google.code.tempusfugit.temporal.WaitFor;
 
-import biz.paluch.logging.RuntimeContainer;
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import biz.paluch.logging.gelf.netty.NettyLocalServer;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderAsyncNettyTcpIntegrationTests {
+class GelfLogAppenderAsyncNettyTcpIntegrationTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     private static LoggerContext loggerContext;
     private static NettyLocalServer server = new NettyLocalServer(NioServerSocketChannel.class);
 
     @BeforeAll
-    public static void setupClass() throws Exception {
+    static void setupClass() throws Exception {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-async-netty-tcp.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
@@ -47,14 +48,14 @@ public class GelfLogAppenderAsyncNettyTcpIntegrationTests {
     }
 
     @AfterAll
-    public static void afterClass() throws Exception {
+    static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
         loggerContext.reconfigure();
         server.close();
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
         server.clear();
@@ -62,7 +63,7 @@ public class GelfLogAppenderAsyncNettyTcpIntegrationTests {
     }
 
     @Test
-    public void testWithLocation() throws Exception {
+    void testWithLocation() throws Exception {
 
         Logger logger = loggerContext.getLogger("async.location");
 
@@ -97,7 +98,7 @@ public class GelfLogAppenderAsyncNettyTcpIntegrationTests {
     }
 
     @Test
-    public void testWithoutLocation() throws Exception {
+    void testWithoutLocation() throws Exception {
 
         Logger logger = loggerContext.getLogger("async.nolocation");
 

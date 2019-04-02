@@ -15,19 +15,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * @author Mark Paluch
  */
-public class JsonWriterUnitTests {
+class JsonWriterUnitTests {
 
     private String content;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         byte[] bytes = IOUtils.toByteArray(getClass().getResourceAsStream("/utf8.txt"));
         content = new String(bytes, "UTF-8");
     }
 
     @Test
-    public void testUtf8Encoding() throws Exception {
+    void testUtf8Encoding() throws Exception {
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("key", content);
@@ -41,7 +41,7 @@ public class JsonWriterUnitTests {
     }
 
     @Test
-    public void testUtf8EncodingWithJacksonEncoding() throws Exception {
+    void testUtf8EncodingWithJacksonEncoding() throws Exception {
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("key", content);
@@ -53,7 +53,7 @@ public class JsonWriterUnitTests {
     }
 
     @Test
-    public void testTypeEncoding() throws Exception {
+    void testTypeEncoding() throws Exception {
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("key", "string");

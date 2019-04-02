@@ -25,9 +25,9 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
-public class GelfTCPSenderIntegrationTests {
+class GelfTCPSenderIntegrationTests {
 
-    public static final int PORT = 1234;
+    private static final int PORT = 1234;
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
     private final CountDownLatch latch = new CountDownLatch(1);
@@ -92,7 +92,7 @@ public class GelfTCPSenderIntegrationTests {
     }
 
     @Test
-    public void simpleTransport() throws Exception {
+    void simpleTransport() throws Exception {
 
         thread.start();
 
@@ -118,7 +118,7 @@ public class GelfTCPSenderIntegrationTests {
     }
 
     @Test
-    public void shouldRecoverFromBrokenPipe() throws Exception {
+    void shouldRecoverFromBrokenPipe() throws Exception {
 
         thread.start();
 
@@ -141,7 +141,7 @@ public class GelfTCPSenderIntegrationTests {
     }
 
     @Test
-    public void shouldRecoverFromClosedPort() throws Exception {
+    void shouldRecoverFromClosedPort() throws Exception {
 
         thread.start();
 
@@ -170,7 +170,7 @@ public class GelfTCPSenderIntegrationTests {
 
     static class SmallBufferTCPSender extends GelfTCPSender {
 
-        public SmallBufferTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, ErrorReporter errorReporter)
+        SmallBufferTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, ErrorReporter errorReporter)
                 throws IOException {
             super(host, port, connectTimeoutMs, readTimeoutMs, errorReporter);
         }

@@ -51,7 +51,7 @@ Extended Properties:
 
     biz.paluch.logging.gelf.jul.GelfFormatter.fields=Severity, Time, LoggerName
     biz.paluch.logging.gelf.jul.GelfFormatter.version=1.0
-    biz.paluch.logging.gelf.jul.GelfFormatter.facility=java-test
+    biz.paluch.logging.gelf.jul.GelfFormatter.facility=logstash-gelf
     biz.paluch.logging.gelf.jul.GelfFormatter.extractStackTrace=true
     biz.paluch.logging.gelf.jul.GelfFormatter.filterStackTrace=true
     biz.paluch.logging.gelf.jul.GelfFormatter.includeLogMessageParameters=true

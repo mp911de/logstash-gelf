@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import redis.clients.jedis.Jedis;
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.JsonUtil;
 import biz.paluch.logging.gelf.Sockets;
@@ -22,18 +23,17 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
 import biz.paluch.logging.gelf.standalone.DefaultGelfSenderConfiguration;
-import redis.clients.jedis.Jedis;
 
 /**
  * @author Mark Paluch
  * @since 27.09.13 08:25
  */
-public class GelfLogHandlerRedisIntegrationTests {
+class GelfLogHandlerRedisIntegrationTests {
 
     private Jedis jedis;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         // enable the test with -Dtest.withRedis=true
         assumeTrue(Sockets.isOpen("localhost", 6479));
 
@@ -46,7 +46,7 @@ public class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    public void testStandalone() throws Exception {
+    void testStandalone() throws Exception {
 
         LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/jul/test-redis-logging.properties"));
 
@@ -67,7 +67,7 @@ public class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    public void testSentinel() throws Exception {
+    void testSentinel() throws Exception {
 
         assumeTrue(Sockets.isOpen("localhost", 26379));
 
@@ -91,7 +91,7 @@ public class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    public void testMinimalRedisUri() throws Exception {
+    void testMinimalRedisUri() throws Exception {
 
         assumeTrue(Sockets.isOpen("localhost", 6379));
 
@@ -106,7 +106,7 @@ public class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    public void testRedisWithPortUri() throws Exception {
+    void testRedisWithPortUri() throws Exception {
 
         String uri = "redis://localhost:6479/#list";
 
@@ -120,7 +120,7 @@ public class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    public void uriWithoutHost() throws Exception {
+    void uriWithoutHost() throws Exception {
 
         String uri = "redis:///#list";
 
@@ -138,7 +138,7 @@ public class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    public void uriWithoutFragment() throws Exception {
+    void uriWithoutFragment() throws Exception {
 
         String uri = "redis://host/";
 
@@ -155,7 +155,7 @@ public class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    public void uriWithoutFragment2() throws Exception {
+    void uriWithoutFragment2() throws Exception {
 
         String uri = "redis://host";
 
@@ -172,7 +172,7 @@ public class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    public void uriWithoutFragment3() throws Exception {
+    void uriWithoutFragment3() throws Exception {
 
         String uri = "redis://host#";
 
@@ -189,7 +189,7 @@ public class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    public void testRedisNotAvailable() throws Exception {
+    void testRedisNotAvailable() throws Exception {
 
         LogManager.getLogManager()
                 .readConfiguration(getClass().getResourceAsStream("/jul/test-redis-not-available.properties"));

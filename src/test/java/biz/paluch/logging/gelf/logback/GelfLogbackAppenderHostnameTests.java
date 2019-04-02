@@ -18,13 +18,13 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
  * @author <a href="mailto:tobiassebastian.kaefer@1und1.de">Tobias Kaefer</a>
  * @since 2013-10-07
  */
-public class GelfLogbackAppenderHostnameTests {
+class GelfLogbackAppenderHostnameTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    LoggerContext lc = null;
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private LoggerContext lc = null;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
@@ -39,7 +39,7 @@ public class GelfLogbackAppenderHostnameTests {
     }
 
     @Test
-    public void testHost() throws Exception {
+    void testHost() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
 
@@ -53,7 +53,7 @@ public class GelfLogbackAppenderHostnameTests {
     }
 
     @Test
-    public void testOriginHost() throws Exception {
+    void testOriginHost() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
 

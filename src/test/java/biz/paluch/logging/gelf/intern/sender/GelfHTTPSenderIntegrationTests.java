@@ -30,7 +30,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
  */
 @SuppressWarnings("unchecked")
 @ExtendWith(MockitoExtension.class)
-public class GelfHTTPSenderIntegrationTests {
+class GelfHTTPSenderIntegrationTests {
 
     private static final GelfMessage GELF_MESSAGE = new GelfMessage("shortMessage", "fullMessage", 12121L, "WARNING");
     private NettyLocalHTTPServer server;
@@ -40,7 +40,7 @@ public class GelfHTTPSenderIntegrationTests {
     ErrorReporter errorReporter;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         server = new NettyLocalHTTPServer();
         server.run();
 
@@ -59,13 +59,13 @@ public class GelfHTTPSenderIntegrationTests {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         server.close();
         sender.close();
     }
 
     @Test
-    public void sendMessageTestWithAcceptedResponse() throws IOException {
+    void sendMessageTestWithAcceptedResponse() throws IOException {
 
         server.setReturnStatus(HttpResponseStatus.ACCEPTED);
 
@@ -87,7 +87,7 @@ public class GelfHTTPSenderIntegrationTests {
     }
 
     @Test
-    public void sendMessageTestWithCreatedResponse() throws IOException {
+    void sendMessageTestWithCreatedResponse() throws IOException {
 
         server.setReturnStatus(HttpResponseStatus.CREATED);
 
@@ -109,7 +109,7 @@ public class GelfHTTPSenderIntegrationTests {
     }
 
     @Test
-    public void shouldUsePostHttpMethod() throws IOException {
+    void shouldUsePostHttpMethod() throws IOException {
 
         server.setReturnStatus(HttpResponseStatus.ACCEPTED);
 
@@ -120,7 +120,7 @@ public class GelfHTTPSenderIntegrationTests {
     }
 
     @Test
-    public void shouldUseJsonContentType() throws IOException {
+    void shouldUseJsonContentType() throws IOException {
 
         server.setReturnStatus(HttpResponseStatus.ACCEPTED);
 
@@ -131,7 +131,7 @@ public class GelfHTTPSenderIntegrationTests {
     }
 
     @Test
-    public void sendMessageFailureTest() throws IOException {
+    void sendMessageFailureTest() throws IOException {
 
         server.setReturnStatus(HttpResponseStatus.INTERNAL_SERVER_ERROR);
 

@@ -14,10 +14,11 @@ public class JsonUtil {
 
     /**
      * Parse a JSON string to a {@link Map}
-     * 
-     * @param jsonAsString
-     * @return
+     *
+     * @param jsonAsString JSON value as {@link String}.
+     * @return object as {@link Map}.
      */
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> parseToMap(String jsonAsString) {
         try {
             return objectMapper.readValue(jsonAsString, Map.class);

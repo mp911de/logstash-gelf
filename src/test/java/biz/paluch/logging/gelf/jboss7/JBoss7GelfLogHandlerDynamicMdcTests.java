@@ -17,26 +17,26 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  * @since 27.09.13 08:36
  */
-public class JBoss7GelfLogHandlerDynamicMdcTests {
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
-    public static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
-    public static final String MDC_SOME_FIELD = "someField";
-    public static final String MDC_SOME_OTHER_FIELD = "someOtherField";
-    public static final String VALUE_1 = "value1";
-    public static final String VALUE_2 = "value2";
-    public static final String VALUE_3 = "value3";
-    public static final String MDC_MY_MDC = "myMdc";
+class JBoss7GelfLogHandlerDynamicMdcTests {
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
+    private static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
+    private static final String MDC_SOME_FIELD = "someField";
+    private static final String MDC_SOME_OTHER_FIELD = "someOtherField";
+    private static final String VALUE_1 = "value1";
+    private static final String VALUE_2 = "value2";
+    private static final String VALUE_3 = "value3";
+    private static final String MDC_MY_MDC = "myMdc";
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager().reset();
         MDC.clear();
     }
 
     @Test
-    public void testWithoutFields() throws Exception {
+    void testWithoutFields() throws Exception {
 
         JBoss7GelfLogHandler handler = getLogHandler();
 
@@ -53,7 +53,7 @@ public class JBoss7GelfLogHandlerDynamicMdcTests {
     }
 
     @Test
-    public void testWithMdcPrefix() throws Exception {
+    void testWithMdcPrefix() throws Exception {
 
         JBoss7GelfLogHandler handler = getLogHandler();
 
@@ -75,7 +75,7 @@ public class JBoss7GelfLogHandlerDynamicMdcTests {
     }
 
     @Test
-    public void testWithMdcRegex() throws Exception {
+    void testWithMdcRegex() throws Exception {
 
         JBoss7GelfLogHandler handler = getLogHandler();
 
@@ -95,7 +95,7 @@ public class JBoss7GelfLogHandlerDynamicMdcTests {
     }
 
     @Test
-    public void testWithDifferentMDCsPrefix() throws Exception {
+    void testWithDifferentMDCsPrefix() throws Exception {
 
         JBoss7GelfLogHandler handler = getLogHandler();
 

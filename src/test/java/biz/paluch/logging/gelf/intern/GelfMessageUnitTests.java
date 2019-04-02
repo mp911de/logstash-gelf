@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import biz.paluch.logging.StackTraceFilter;
 import biz.paluch.logging.gelf.GelfMessageBuilder;
 
-public class GelfMessageUnitTests {
+class GelfMessageUnitTests {
 
     private static final String FACILITY = "facility";
     private static final String VERSION = "2.0";
@@ -43,7 +42,7 @@ public class GelfMessageUnitTests {
     };
 
     @Test
-    public void testBuilder() throws Exception {
+    void testBuilder() throws Exception {
         GelfMessage gelfMessage = buildGelfMessage();
 
         assertThat(gelfMessage.getFacility()).isEqualTo(FACILITY);
@@ -59,7 +58,7 @@ public class GelfMessageUnitTests {
     }
 
     @Test
-    public void testGelfMessage() throws Exception {
+    void testGelfMessage() throws Exception {
         GelfMessage gelfMessage = createGelfMessage();
 
         assertThat(gelfMessage.getFacility()).isEqualTo(FACILITY);
@@ -78,7 +77,7 @@ public class GelfMessageUnitTests {
     }
 
     @Test
-    public void testEncoded() throws Exception {
+    void testEncoded() throws Exception {
 
         GelfMessage gelfMessage = createGelfMessage();
 
@@ -93,7 +92,7 @@ public class GelfMessageUnitTests {
     }
 
     @Test
-    public void testTcp() throws Exception {
+    void testTcp() throws Exception {
 
         GelfMessage gelfMessage = createGelfMessage();
 
@@ -114,7 +113,7 @@ public class GelfMessageUnitTests {
     }
 
     @Test
-    public void testUdp() throws Exception {
+    void testUdp() throws Exception {
 
         GelfMessage gelfMessage = createGelfMessage();
 
@@ -145,7 +144,7 @@ public class GelfMessageUnitTests {
     }
 
     @Test
-    public void testUdpChunked() throws Exception {
+    void testUdpChunked() throws Exception {
 
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < 20000; i++) {
@@ -179,7 +178,7 @@ public class GelfMessageUnitTests {
         }
     }
 
-    protected String toString(ByteBuffer allocate) {
+    String toString(ByteBuffer allocate) {
         if (allocate.hasArray()) {
             return new String(allocate.array(), 0, allocate.arrayOffset() + allocate.position());
         } else {
@@ -190,7 +189,7 @@ public class GelfMessageUnitTests {
     }
 
     @Test
-    public void testGelfMessageEmptyField() throws Exception {
+    void testGelfMessageEmptyField() throws Exception {
         GelfMessage gelfMessage = new GelfMessage();
         gelfMessage.addField("something", null);
 
@@ -199,7 +198,7 @@ public class GelfMessageUnitTests {
     }
 
     @Test
-    public void testGelf_v1_0() throws Exception {
+    void testGelf_v1_0() throws Exception {
 
         GelfMessage gelfMessage = new GelfMessage();
         gelfMessage.setLevel("6");
@@ -211,7 +210,7 @@ public class GelfMessageUnitTests {
     }
 
     @Test
-    public void testGelf_v1_1() throws Exception {
+    void testGelf_v1_1() throws Exception {
 
         GelfMessage gelfMessage = new GelfMessage();
         gelfMessage.setLevel("6");
@@ -225,7 +224,7 @@ public class GelfMessageUnitTests {
     }
 
     @Test
-    public void testGelfMessageEquality() throws Exception {
+    void testGelfMessageEquality() throws Exception {
         GelfMessage created = createGelfMessage();
         GelfMessage build = buildGelfMessage();
 
@@ -238,7 +237,7 @@ public class GelfMessageUnitTests {
     }
 
     @Test
-    public void testGelfMessageDefaults() throws Exception {
+    void testGelfMessageDefaults() throws Exception {
         GelfMessage created = new GelfMessage();
         GelfMessage build = newInstance().build();
 

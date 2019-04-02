@@ -21,40 +21,40 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderDynamicMdcTests {
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String MDC_MY_MDC = "myMdc";
-    public static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
-    public static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
-    public static final String VALUE_1 = "value";
-    public static final String VALUE_2 = "value1";
-    public static final String VALUE_3 = "value2";
-    public static final String SOME_FIELD = "someField";
-    public static final String SOME_OTHER_FIELD = "someOtherField";
+class GelfLogAppenderDynamicMdcTests {
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String MDC_MY_MDC = "myMdc";
+    private static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
+    private static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
+    private static final String VALUE_1 = "value";
+    private static final String VALUE_2 = "value1";
+    private static final String VALUE_3 = "value2";
+    private static final String SOME_FIELD = "someField";
+    private static final String SOME_OTHER_FIELD = "someOtherField";
 
     private static LoggerContext loggerContext;
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-dynamic-mdc.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
     }
 
     @AfterAll
-    public static void afterClass() throws Exception {
+    static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
         loggerContext.reconfigure();
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
     }
 
     @Test
-    public void testWithoutFields() throws Exception {
+    void testWithoutFields() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
@@ -68,7 +68,7 @@ public class GelfLogAppenderDynamicMdcTests {
     }
 
     @Test
-    public void testWithMdcPrefix() throws Exception {
+    void testWithMdcPrefix() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
         ThreadContext.put(MDC_MY_MDC, VALUE_1);
@@ -86,7 +86,7 @@ public class GelfLogAppenderDynamicMdcTests {
     }
 
     @Test
-    public void testWithMdcRegex() throws Exception {
+    void testWithMdcRegex() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
         ThreadContext.put(SOME_FIELD, "included");
@@ -102,7 +102,7 @@ public class GelfLogAppenderDynamicMdcTests {
     }
 
     @Test
-    public void testWithMdcFieldTypes() throws Exception {
+    void testWithMdcFieldTypes() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
         ThreadContext.put("myMdcs", "String");

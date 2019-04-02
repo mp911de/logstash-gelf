@@ -21,7 +21,7 @@ class WildFlyLogTestUtil {
         handler.setPort(12201);
         handler.setVersion(GelfMessage.GELF_VERSION_1_1);
 
-        handler.setFacility("java-test");
+        handler.setFacility("logstash-gelf");
         handler.setExtractStackTrace("0");
         handler.setFilterStackTrace(true);
         handler.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSS");

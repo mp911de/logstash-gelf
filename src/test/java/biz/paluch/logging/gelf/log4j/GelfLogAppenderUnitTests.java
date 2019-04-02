@@ -9,7 +9,7 @@ import biz.paluch.logging.RuntimeContainer;
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderUnitTests {
+class GelfLogAppenderUnitTests {
 
     private static final String FACILITY = "facility";
     private static final String HOST = "host";
@@ -18,7 +18,7 @@ public class GelfLogAppenderUnitTests {
     private static final String TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss,SSS";
 
     @Test
-    public void testSameFieldsGelfLogAppender12x() {
+    void testSameFieldsGelfLogAppender12x() {
         GelfLogAppender sut = new GelfLogAppender();
         sut.setAdditionalFields("");
         sut.setExtractStackTrace("true");

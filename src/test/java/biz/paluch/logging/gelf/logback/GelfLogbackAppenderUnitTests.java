@@ -11,7 +11,7 @@ import biz.paluch.logging.RuntimeContainer;
 /**
  * @author Mark Paluch
  */
-public class GelfLogbackAppenderUnitTests {
+class GelfLogbackAppenderUnitTests {
 
     private static final String FACILITY = "facility";
     private static final String HOST = "host";
@@ -20,7 +20,7 @@ public class GelfLogbackAppenderUnitTests {
     private static final String TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss,SSS";
 
     @Test
-    public void testSameFieldsGelfLogbackAppender() {
+    void testSameFieldsGelfLogbackAppender() {
         GelfLogbackAppender sut = new GelfLogbackAppender();
 
         sut.setAdditionalFields("");
@@ -51,7 +51,7 @@ public class GelfLogbackAppenderUnitTests {
     }
 
     @Test
-    public void testInvalidPort() throws Exception {
+    void testInvalidPort() throws Exception {
 
         assertThrows(IllegalArgumentException.class, new Executable() {
 
@@ -64,7 +64,7 @@ public class GelfLogbackAppenderUnitTests {
     }
 
     @Test
-    public void testInvalidMaximumMessageSize() throws Exception {
+    void testInvalidMaximumMessageSize() throws Exception {
 
         assertThrows(IllegalArgumentException.class, new Executable() {
 
@@ -77,7 +77,7 @@ public class GelfLogbackAppenderUnitTests {
     }
 
     @Test
-    public void testInvalidVersion() throws Exception {
+    void testInvalidVersion() throws Exception {
 
         assertThrows(IllegalArgumentException.class, new Executable() {
 

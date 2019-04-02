@@ -44,7 +44,7 @@ logback.xml Example:
             <host>udp:localhost</host>
             <port>12201</port>
             <version>1.0</version>
-            <facility>java-test</facility>
+            <facility>logstash-gelf</facility>
             <extractStackTrace>true</extractStackTrace>
             <filterStackTrace>true</filterStackTrace>
             <includeLocation>true</includeLocation>

@@ -17,10 +17,10 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  * @since 27.09.13 08:25
  */
-public class GelfLogHandlerTests {
+class GelfLogHandlerTests {
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/jul/test-logging.properties"));
@@ -41,7 +41,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testWithoutResourceBundle() throws Exception {
+    void testWithoutResourceBundle() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
         String expectedMessage = "message1";
 
@@ -60,7 +60,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testWithoutMessageParameters() throws Exception {
+    void testWithoutMessageParameters() throws Exception {
 
         LogManager.getLogManager().readConfiguration(
                 getClass().getResourceAsStream("/jul/test-logging-without-message-parameters.properties"));
@@ -80,7 +80,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testWithoutSourceLocation() throws Exception {
+    void testWithoutSourceLocation() throws Exception {
 
         LogManager.getLogManager().readConfiguration(
                 getClass().getResourceAsStream("/jul/test-logging-without-location.properties"));
@@ -102,7 +102,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testWithResourceBundleFormattingWithCurlyBrackets() throws Exception {
+    void testWithResourceBundleFormattingWithCurlyBrackets() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName(), "messages");
         String expectedMessage = "params a and b";
 
@@ -113,7 +113,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testWithResourceBundleFormattingWithoutParameters() throws Exception {
+    void testWithResourceBundleFormattingWithoutParameters() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName(), "messages");
         String expectedMessage = "no parameter supplied";
 
@@ -123,7 +123,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testWithResourceBundleFormattingMalformed1() throws Exception {
+    void testWithResourceBundleFormattingMalformed1() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName(), "messages");
         String expectedMessage = "message.format.fail1";
 
@@ -134,7 +134,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testWithResourceBundleFormattingMalformed2() throws Exception {
+    void testWithResourceBundleFormattingMalformed2() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName(), "messages");
         String expectedMessage = "message.format.fail2";
 
@@ -145,7 +145,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testWithResourceBundleFormattingWithPercentages() throws Exception {
+    void testWithResourceBundleFormattingWithPercentages() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName(), "messages");
         String expectedMessage = "params a and 1";
 
@@ -156,7 +156,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testSimpleInfo() throws Exception {
+    void testSimpleInfo() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
         String expectedMessage = "foo bar test log message";
@@ -166,7 +166,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testSimpleNull() throws Exception {
+    void testSimpleNull() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
         String expectedMessage = null;
@@ -176,7 +176,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testSimpleWarning() throws Exception {
+    void testSimpleWarning() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
         String expectedMessage = "foo bar test log message";
@@ -188,7 +188,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testSimpleSevere() throws Exception {
+    void testSimpleSevere() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
         String expectedMessage = "foo bar test log message";
@@ -200,7 +200,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testNullMessageAndExceptionFallback() throws Exception {
+    void testNullMessageAndExceptionFallback() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
         logger.log(Level.INFO, null, new IllegalStateException());
@@ -214,7 +214,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testEmptyMessageAndExceptionFallback() throws Exception {
+    void testEmptyMessageAndExceptionFallback() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
         logger.log(Level.INFO, "", new IllegalStateException("Help!"));
@@ -228,7 +228,7 @@ public class GelfLogHandlerTests {
     }
 
     @Test
-    public void testEmptyMessage() throws Exception {
+    void testEmptyMessage() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
         logger.info("");

@@ -30,7 +30,7 @@ class KafkaGelfSenderProviderIntegrationTest {
     GelfSenderConfiguration gelfSenderConfiguration;
 
     @Test
-    public void testKafkaGelfSenderProvider(KafkaHelper helper) {
+    void testKafkaGelfSenderProvider(KafkaHelper helper) {
 
         StringBuilder builder = new StringBuilder();
         builder.append("kafka://");

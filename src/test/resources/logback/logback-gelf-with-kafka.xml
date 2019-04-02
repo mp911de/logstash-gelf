@@ -14,7 +14,7 @@
         <host>kafka://localhost#log-topic</host>
         <port>19092</port>
         <version>1.1</version>
-        <facility>java-test</facility>
+        <facility>logstash-gelf</facility>
         <extractStackTrace>true</extractStackTrace>
         <filterStackTrace>true</filterStackTrace>
         <mdcProfiling>false</mdcProfiling>

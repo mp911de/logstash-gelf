@@ -14,15 +14,15 @@ import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 /**
  * @author Mark Paluch
  */
-public class StandaloneGelfSenderTests {
+class StandaloneGelfSenderTests {
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfTestSender.getMessages().clear();
     }
 
     @Test
-    public void testStandalone() throws Exception {
+    void testStandalone() throws Exception {
         DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration(new Slf4jErrorReporter());
 
         configuration.setHost("test:standalone");

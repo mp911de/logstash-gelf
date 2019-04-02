@@ -31,7 +31,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class GelfTCPSenderUnitTests {
+class GelfTCPSenderUnitTests {
 
     @Mock
     private ErrorReporter errorReporter;
@@ -40,7 +40,7 @@ public class GelfTCPSenderUnitTests {
     private ArgumentCaptor<Exception> captor;
 
     @Test
-    public void connectionRefusedShouldReportException() throws Exception {
+    void connectionRefusedShouldReportException() throws Exception {
 
         GelfTCPSender tcpSender = new GelfTCPSender("127.0.0.1", 65534, 100, 100, errorReporter);
 
@@ -54,7 +54,7 @@ public class GelfTCPSenderUnitTests {
     }
 
     @Test
-    public void connectionTimeoutShouldReportException() throws Exception {
+    void connectionTimeoutShouldReportException() throws Exception {
 
         GelfTCPSender tcpSender = new GelfTCPSender("8.8.8.8", 65534, 100, 100, errorReporter);
 
@@ -68,7 +68,7 @@ public class GelfTCPSenderUnitTests {
     }
 
     @Test
-    public void connectionTimeoutShouldApply() throws Exception {
+    void connectionTimeoutShouldApply() throws Exception {
 
         long now = System.currentTimeMillis();
         GelfTCPSender tcpSender = new GelfTCPSender("8.8.8.8", 65534, 1000, 1000, errorReporter);
@@ -79,7 +79,7 @@ public class GelfTCPSenderUnitTests {
     }
 
     @Test
-    public void unknownHostShouldThrowException() throws Exception {
+    void unknownHostShouldThrowException() throws Exception {
 
         try {
             new GelfTCPSender("unknown.host.unknown", 65534, 100, 100, errorReporter);
@@ -90,7 +90,7 @@ public class GelfTCPSenderUnitTests {
     }
 
     @Test
-    public void shouldOpenConnection() throws Exception {
+    void shouldOpenConnection() throws Exception {
 
         int port = randomPort();
 
@@ -114,7 +114,7 @@ public class GelfTCPSenderUnitTests {
     }
 
     @Test
-    public void shouldSendDataToOpenPort() throws Exception {
+    void shouldSendDataToOpenPort() throws Exception {
 
         int port = randomPort();
 
@@ -140,7 +140,7 @@ public class GelfTCPSenderUnitTests {
     }
 
     @Test
-    public void shouldSendDataToClosedPort() throws Exception {
+    void shouldSendDataToClosedPort() throws Exception {
 
         int port = randomPort();
 
@@ -167,7 +167,7 @@ public class GelfTCPSenderUnitTests {
     }
 
     @Test
-    public void shouldSendHugeMessage() throws Exception {
+    void shouldSendHugeMessage() throws Exception {
 
         NoopGelfTCPSender tcpSender = new NoopGelfTCPSender("127.0.0.1", 1234, 1000, 1000, errorReporter);
 
@@ -187,7 +187,7 @@ public class GelfTCPSenderUnitTests {
         assertThat(buffer.get()).isEqualTo((byte) 0);
     }
 
-    protected int randomPort() {
+    int randomPort() {
         Random random = new Random();
         return random.nextInt(50000) + 1024;
     }
@@ -196,7 +196,7 @@ public class GelfTCPSenderUnitTests {
 
         ByteBuffer buffer;
 
-        public NoopGelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, ErrorReporter errorReporter)
+        NoopGelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, ErrorReporter errorReporter)
                 throws IOException {
             super(host, port, connectTimeoutMs, readTimeoutMs, errorReporter);
         }

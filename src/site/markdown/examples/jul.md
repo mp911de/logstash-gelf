@@ -55,7 +55,7 @@ Extended Properties:
     biz.paluch.logging.gelf.jul.GelfLogHandler.host=udp:localhost
     biz.paluch.logging.gelf.jul.GelfLogHandler.port=12201
     biz.paluch.logging.gelf.jul.GelfLogHandler.version=1.0
-    biz.paluch.logging.gelf.jul.GelfLogHandler.facility=java-test
+    biz.paluch.logging.gelf.jul.GelfLogHandler.facility=logstash-gelf
     biz.paluch.logging.gelf.jul.GelfLogHandler.extractStackTrace=true
     biz.paluch.logging.gelf.jul.GelfLogHandler.filterStackTrace=true
     biz.paluch.logging.gelf.jul.GelfLogHandler.includeLogMessageParameters=true

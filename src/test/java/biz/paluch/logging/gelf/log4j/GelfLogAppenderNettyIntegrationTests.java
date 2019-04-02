@@ -12,30 +12,31 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import biz.paluch.logging.gelf.netty.NettyLocalServer;
+
 import com.google.code.tempusfugit.temporal.*;
 
-import biz.paluch.logging.gelf.netty.NettyLocalServer;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderNettyIntegrationTests {
+class GelfLogAppenderNettyIntegrationTests {
 
     private static NettyLocalServer server = new NettyLocalServer(NioDatagramChannel.class);
 
     @BeforeAll
-    public static void setupClass() throws Exception {
+    static void setupClass() throws Exception {
         server.run();
     }
 
     @AfterAll
-    public static void afterClass() throws Exception {
+    static void afterClass() throws Exception {
         server.close();
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         LogManager.getLoggerRepository().resetConfiguration();
         DOMConfigurator.configure(getClass().getResource("/log4j/log4j-netty-warn.xml"));
         server.clear();
@@ -51,7 +52,7 @@ public class GelfLogAppenderNettyIntegrationTests {
     }
 
     @Test
-    public void testLogInfoLimitedCategory() throws Exception {
+    void testLogInfoLimitedCategory() throws Exception {
         Logger logger = Logger.getLogger("org.something.else");
         logger.info("info1");
         logger.info("info2");
@@ -64,7 +65,7 @@ public class GelfLogAppenderNettyIntegrationTests {
     }
 
     @Test
-    public void testLogWarnLimitedCategory() throws Exception {
+    void testLogWarnLimitedCategory() throws Exception {
         Logger logger = Logger.getLogger("org.something.else");
         logger.warn("warn1");
         logger.warn("warn2");
@@ -77,7 +78,7 @@ public class GelfLogAppenderNettyIntegrationTests {
     }
 
     @Test
-    public void testLogInfo() throws Exception {
+    void testLogInfo() throws Exception {
         Logger logger = Logger.getLogger("mylog");
         logger.info("info1");
         logger.info("info2");
@@ -90,7 +91,7 @@ public class GelfLogAppenderNettyIntegrationTests {
     }
 
     @Test
-    public void testLogWarn() throws Exception {
+    void testLogWarn() throws Exception {
         Logger logger = Logger.getLogger("mylog");
         logger.warn("warn1");
         logger.warn("warn2");

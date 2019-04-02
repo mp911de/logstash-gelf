@@ -23,15 +23,15 @@ import biz.paluch.logging.gelf.LogMessageField;
 /**
  * @author Mark Paluch
  */
-public class WildFlyGelfLogFormatterTests {
+class WildFlyGelfLogFormatterTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
     private WriterHandler handler = new WriterHandler();
     private StringWriter stringWriter = new StringWriter();
 
     @BeforeEach
-    public void before() {
+    void before() {
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager().reset();
         MDC.remove("mdcField1");
@@ -41,7 +41,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testDefaults() {
+    void testDefaults() {
 
         handler.setFormatter(new WildFlyJsonFormatter());
         Logger logger = Logger.getLogger(getClass().getName());
@@ -68,7 +68,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testEmptyMessage() {
+    void testEmptyMessage() {
 
         handler.setFormatter(new WildFlyJsonFormatter());
         Logger logger = Logger.getLogger(getClass().getName());
@@ -83,7 +83,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testSimpleWithMsgFormatSubstitution() {
+    void testSimpleWithMsgFormatSubstitution() {
 
         handler.setFormatter(new WildFlyJsonFormatter());
         Logger logger = Logger.getLogger(getClass().getName());
@@ -100,7 +100,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testSimpleWithStringFormatSubstitution() {
+    void testSimpleWithStringFormatSubstitution() {
 
         handler.setFormatter(new WildFlyJsonFormatter());
         Logger logger = Logger.getLogger(getClass().getName());
@@ -119,7 +119,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testUnknownField() {
+    void testUnknownField() {
 
         assertThrows(IllegalArgumentException.class, new Executable() {
 
@@ -132,7 +132,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testNotSupportedField() {
+    void testNotSupportedField() {
 
         assertThrows(IllegalArgumentException.class, new Executable() {
 
@@ -145,7 +145,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testFields() {
+    void testFields() {
 
         WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
         formatter.setFields("Time,Severity,ThreadName,SourceSimpleClassName,NDC");
@@ -163,7 +163,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testLineBreak() {
+    void testLineBreak() {
 
         WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
         formatter.setLineBreak("XxX");
@@ -178,7 +178,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testMdcFields() {
+    void testMdcFields() {
 
         WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
         formatter.setOriginHost("myhost");
@@ -203,7 +203,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testIncludeLogMessageParameters() {
+    void testIncludeLogMessageParameters() {
 
         WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
         formatter.setOriginHost("myhost");
@@ -229,7 +229,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testIncludeLocation() {
+    void testIncludeLocation() {
 
         WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
         formatter.setIncludeLocation(false);
@@ -246,7 +246,7 @@ public class WildFlyGelfLogFormatterTests {
     }
 
     @Test
-    public void testException() {
+    void testException() {
 
         WildFlyJsonFormatter formatter = new WildFlyJsonFormatter();
         formatter.setOriginHost("myhost");
@@ -263,7 +263,7 @@ public class WildFlyGelfLogFormatterTests {
         assertThat(message.get("StackTrace").toString()).contains("boom!");
     }
 
-    public Map<String, Object> popMessage() {
+    Map<String, Object> popMessage() {
         try {
             return JsonUtil.parseToMap(stringWriter.getBuffer().toString());
         } finally {

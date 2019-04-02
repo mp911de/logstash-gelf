@@ -15,17 +15,17 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  * @since 16.07.14 17:30
  */
-public class GelfLogAppenderSystemPropertiesTests {
+class GelfLogAppenderSystemPropertiesTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String PROPERTY1 = "myproperty";
-    public static final String PROPERTY1_VALUE = "value of myproperty";
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String PROPERTY1 = "myproperty";
+    private static final String PROPERTY1_VALUE = "value of myproperty";
 
-    public static final String PROPERTY2 = "otherproperty";
-    public static final String PROPERTY2_VALUE = "value of otherproperty";
+    private static final String PROPERTY2 = "otherproperty";
+    private static final String PROPERTY2_VALUE = "value of otherproperty";
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         System.clearProperty(PROPERTY1);
         System.clearProperty(PROPERTY2);
 
@@ -33,14 +33,14 @@ public class GelfLogAppenderSystemPropertiesTests {
 
     }
 
-    protected void setup() {
+    void setup() {
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();
         DOMConfigurator.configure(getClass().getResource("/log4j/log4j-with-system-properties.xml"));
     }
 
     @Test
-    public void testDefaults() throws Exception {
+    void testDefaults() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
 
@@ -56,7 +56,7 @@ public class GelfLogAppenderSystemPropertiesTests {
     }
 
     @Test
-    public void testAfterSetProperties() throws Exception {
+    void testAfterSetProperties() throws Exception {
 
         System.setProperty(PROPERTY1, PROPERTY1_VALUE);
         System.setProperty(PROPERTY2, PROPERTY2_VALUE);

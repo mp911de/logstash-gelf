@@ -22,11 +22,11 @@ import ch.qos.logback.core.status.Status;
 import ch.qos.logback.core.status.StatusManager;
 
 @ExtendWith(MockitoExtension.class)
-public class GelfLogbackAppenderErrorsUnitTests {
+class GelfLogbackAppenderErrorsUnitTests {
 
-    public static final String THE_HOST = "the host";
+    private static final String THE_HOST = "the host";
 
-    public static final LoggingEvent LOGGING_EVENT = new LoggingEvent("my.class", new LoggerContext().getLogger("my.class"),
+    private static final LoggingEvent LOGGING_EVENT = new LoggingEvent("my.class", new LoggerContext().getLogger("my.class"),
             Level.INFO, "message", null, null);
 
     @Mock
@@ -41,7 +41,7 @@ public class GelfLogbackAppenderErrorsUnitTests {
     private GelfLogbackAppender sut = new GelfLogbackAppender();
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
 
         sut.setContext(context);
@@ -52,13 +52,13 @@ public class GelfLogbackAppenderErrorsUnitTests {
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
         GelfSenderFactory.removeAllAddedSenderProviders();
     }
 
     @Test
-    public void testRuntimeExceptionOnCreateSender() throws Exception {
+    void testRuntimeExceptionOnCreateSender() throws Exception {
 
         sut.setGraylogHost(THE_HOST);
 
@@ -68,7 +68,7 @@ public class GelfLogbackAppenderErrorsUnitTests {
     }
 
     @Test
-    public void testInvalidMessage() throws Exception {
+    void testInvalidMessage() throws Exception {
 
         sut.append(LOGGING_EVENT);
 
@@ -76,7 +76,7 @@ public class GelfLogbackAppenderErrorsUnitTests {
     }
 
     @Test
-    public void testErrorOnSend() throws Exception {
+    void testErrorOnSend() throws Exception {
 
         sut.append(LOGGING_EVENT);
 

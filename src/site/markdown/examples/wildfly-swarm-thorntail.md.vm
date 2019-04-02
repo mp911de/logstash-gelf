@@ -54,7 +54,7 @@ swarm:
             host: "udp:localhost"
             port: 12201
             version: "1.0"
-            facility: "java-test"
+            facility: "logstash-gelf"
             extractStackTrace: true
             filterStackTrace: true
             includeLocation: true

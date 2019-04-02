@@ -16,26 +16,26 @@ import org.junit.jupiter.api.function.Executable;
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderPropagateExceptionsTests {
+class GelfLogAppenderPropagateExceptionsTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String LOG_MESSAGE = "foo bar test log message";
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     private static LoggerContext loggerContext;
 
     @BeforeAll
-    public static void beforeAll() throws Exception {
+    static void beforeAll() throws Exception {
         loggerContext = Configurator.initialize("GelfLogAppenderPropagateExceptionsTests",
                 GelfLogAppenderPropagateExceptionsTests.class.getClassLoader(), "log4j2/log4j2-propagate-exceptions.xml");
     }
 
     @AfterAll
-    public static void afterAll() throws Exception {
+    static void afterAll() throws Exception {
         Configurator.shutdown(loggerContext);
     }
 
     @Test
-    public void shouldPropagateException() throws Exception {
+    void shouldPropagateException() throws Exception {
 
         assertThrows(AppenderLoggingException.class, new Executable() {
 
@@ -48,7 +48,7 @@ public class GelfLogAppenderPropagateExceptionsTests {
     }
 
     @Test
-    public void shouldUseFailoverAppender() throws Exception {
+    void shouldUseFailoverAppender() throws Exception {
 
         Logger logger = loggerContext.getLogger("biz.failover");
         logger.info(LOG_MESSAGE);
@@ -58,7 +58,7 @@ public class GelfLogAppenderPropagateExceptionsTests {
     }
 
     @Test
-    public void shouldIgnoreException() throws Exception {
+    void shouldIgnoreException() throws Exception {
 
         Logger logger = loggerContext.getLogger("biz.ignore");
         logger.info(LOG_MESSAGE);
@@ -67,7 +67,7 @@ public class GelfLogAppenderPropagateExceptionsTests {
         assertThat(ignoreList.getEvents()).hasSize(1);
     }
 
-    public ListAppender getListAppender(String name) {
+    ListAppender getListAppender(String name) {
         return (ListAppender) loggerContext.getConfiguration().getAppenders().get(name);
     }
 

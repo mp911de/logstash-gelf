@@ -1,6 +1,6 @@
 package biz.paluch.logging.gelf.intern;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +9,7 @@ import biz.paluch.logging.gelf.intern.ValueDiscovery.Result;
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
-public class ValueDiscoveryUnitTests {
+class ValueDiscoveryUnitTests {
 
     @Test
     void emptyString() {

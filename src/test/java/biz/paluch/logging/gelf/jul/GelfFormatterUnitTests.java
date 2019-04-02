@@ -16,17 +16,17 @@ import biz.paluch.logging.gelf.LogMessageField;
 /**
  * @author Greg Peterson
  */
-public class GelfFormatterUnitTests {
+class GelfFormatterUnitTests {
 
     private Logger logger;
 
     @AfterAll
-    public static void afterClass() {
+    static void afterClass() {
         LogManager.getLogManager().reset();
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         TestHandler.clear();
         LogManager.getLogManager().readConfiguration(
                 GelfFormatterUnitTests.class.getResourceAsStream("/jul/test-gelf-formatter.properties"));
@@ -34,7 +34,7 @@ public class GelfFormatterUnitTests {
     }
 
     @Test
-    public void test() {
+    void test() {
         logger.info("test1");
         logger.info("test2");
         logger.info("test3");
@@ -47,7 +47,7 @@ public class GelfFormatterUnitTests {
     }
 
     @Test
-    public void testDefaults() {
+    void testDefaults() {
 
         logger.info("test1");
         logger.info("test2");
@@ -66,7 +66,7 @@ public class GelfFormatterUnitTests {
     }
 
     @Test
-    public void testConfigured() throws Exception {
+    void testConfigured() throws Exception {
         LogManager.getLogManager().readConfiguration(
                 GelfFormatterUnitTests.class.getResourceAsStream("/jul/test-gelf-formatter-configured.properties"));
 
@@ -90,7 +90,7 @@ public class GelfFormatterUnitTests {
         assertThat(message).containsKeys("timestamp", "MyTime");
     }
 
-    public Map<String, Object> getMessage() {
+    Map<String, Object> getMessage() {
         String s = TestHandler.getLoggedLines()[0];
         try {
             return JsonUtil.parseToMap(s);
