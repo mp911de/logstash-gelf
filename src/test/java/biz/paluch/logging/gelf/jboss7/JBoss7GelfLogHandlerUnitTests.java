@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class JBoss7GelfLogHandlerUnitTests {
+class JBoss7GelfLogHandlerUnitTests {
 
     @Test
-    public void testSameFieldsJBoss7GelfLogHandler() {
+    void testSameFieldsJBoss7GelfLogHandler() {
         JBoss7GelfLogHandler sut = new JBoss7GelfLogHandler();
 
         sut.setDynamicMdcFields(".*");

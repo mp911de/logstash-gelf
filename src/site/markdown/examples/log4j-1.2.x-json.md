@@ -37,7 +37,7 @@ The JSON formatter creates then messages like:
     "full_message": "WFLYUT0008: Undertow HTTP listener default suspending",
     "SourceSimpleClassName": "HttpListenerService",
     "SourceClassName": "org.wildfly.extension.undertow.HttpListenerService",
-    "facility": "java-test",
+    "facility": "logstash-gelf",
     "timestamp": "1439321132.734"
 }
 ```
@@ -52,7 +52,7 @@ Properties:
 
     log4j.appender.file.layout=biz.paluch.logging.gelf.log4j.GelfLayout
     log4j.appender.file.layout.Version=1.0
-    log4j.appender.file.layout.Facility=java-test
+    log4j.appender.file.layout.Facility=logstash-gelf
     log4j.appender.file.layout.ExtractStackTrace=true
     log4j.appender.file.layout.FilterStackTrace=true
     log4j.appender.file.layout.IncludeLocation=true
@@ -70,7 +70,7 @@ XML:
     <appender name="file" class="org.apache.log4j.FileAppender">
         <param name="file" value="logfile.log" />
         <layout class="biz.paluch.logging.gelf.log4j.GelfLayout">
-            <param name="Facility" value="java-test" />
+            <param name="Facility" value="logstash-gelf" />
             <param name="ExtractStackTrace" value="true" />
             <param name="FilterStackTrace" value="true" />
             <param name="MdcProfiling" value="true" />

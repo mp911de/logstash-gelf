@@ -19,14 +19,14 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 /**
  * @author Mark Paluch
  */
-public class GelfLogbackAppenderHTTPIntegrationTests {
+class GelfLogbackAppenderHTTPIntegrationTests {
 
     private NettyLocalHTTPServer server;
 
-    LoggerContext lc = null;
+    private LoggerContext lc = null;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
@@ -42,12 +42,12 @@ public class GelfLogbackAppenderHTTPIntegrationTests {
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         server.close();
     }
 
     @Test
-    public void testHttpSender() {
+    void testHttpSender() {
 
         Logger testLogger = lc.getLogger("testLogger");
 

@@ -20,16 +20,16 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  * @since 16.07.14 17:30
  */
-public class GelfLogAppenderPropertiesIncludeFullMdcTest {
+class GelfLogAppenderPropertiesIncludeFullMdcTest {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String MDC_MY_MDC1 = "aMdcValue";
-    public static final String MDC_MY_MDC2 = "differentMdc";
-    public static final String VALUE_1 = "value1";
-    public static final String VALUE_2 = "value2";
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String MDC_MY_MDC1 = "aMdcValue";
+    private static final String MDC_MY_MDC2 = "differentMdc";
+    private static final String VALUE_1 = "value1";
+    private static final String VALUE_2 = "value2";
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         assumeTrue(Log4jUtil.isLog4jMDCAvailable());
 
@@ -48,7 +48,7 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
     }
 
     @Test
-    public void testWithoutFields() throws Exception {
+    void testWithoutFields() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
 
@@ -62,7 +62,7 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
     }
 
     @Test
-    public void testWithMdc() throws Exception {
+    void testWithMdc() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
         MDC.put(MDC_MY_MDC1, VALUE_1);
@@ -78,7 +78,7 @@ public class GelfLogAppenderPropertiesIncludeFullMdcTest {
     }
 
     @Test
-    public void testEmptyMessage() throws Exception {
+    void testEmptyMessage() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
         logger.info("");

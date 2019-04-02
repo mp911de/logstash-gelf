@@ -14,19 +14,19 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderIncludeLocationTest {
+class GelfLogAppenderIncludeLocationTest {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String LOG_MESSAGE = "foo bar test log message";
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();
         DOMConfigurator.configure(getClass().getResource("/log4j/log4j-without-location.xml"));
     }
 
     @Test
-    public void testWithoutLocation() throws Exception {
+    void testWithoutLocation() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
 

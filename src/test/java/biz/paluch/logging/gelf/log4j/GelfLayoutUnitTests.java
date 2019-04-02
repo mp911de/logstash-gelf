@@ -19,23 +19,23 @@ import biz.paluch.logging.gelf.LogMessageField;
  * @author <a href="mailto:kai.geisselhardt@kaufland.com">Kai Geisselhardt</a>
  * @author Mark Paluch
  */
-public class GelfLayoutUnitTests {
+class GelfLayoutUnitTests {
 
     private Logger logger;
 
     @BeforeAll
-    public static void beforeClass() {
+    static void beforeClass() {
         DOMConfigurator.configure(GelfLayoutUnitTests.class.getResource("/log4j/log4j-gelf-layout.xml"));
     }
 
     @BeforeEach
-    public void before() {
+    void before() {
         TestAppender.clearLoggedLines();
         logger = Logger.getLogger(GelfLayoutUnitTests.class);
     }
 
     @Test
-    public void test() {
+    void test() {
 
         logger.info("test1");
         logger.info("test2");
@@ -49,7 +49,7 @@ public class GelfLayoutUnitTests {
     }
 
     @Test
-    public void testDefaults() {
+    void testDefaults() {
 
         NDC.push("ndc message");
         logger.info("test1");
@@ -71,7 +71,7 @@ public class GelfLayoutUnitTests {
     }
 
     @Test
-    public void testConfiguration() {
+    void testConfiguration() {
 
         logger = Logger.getLogger("biz.paluch.logging.gelf.log4j.configured");
 
@@ -102,7 +102,7 @@ public class GelfLayoutUnitTests {
         assertThat(message).containsKeys("timestamp", "MyTime");
     }
 
-    public Map<String, Object> getMessage() {
+    Map<String, Object> getMessage() {
         String s = TestAppender.getLoggedLines()[0];
         try {
             return (Map) JsonUtil.parseToMap(s);

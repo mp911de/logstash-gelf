@@ -45,7 +45,7 @@ public class WildFlyHandlerIntegrationTests {
                             + "           host=\"udp:localhost\", \\\n"
                             + "           port=\"19392\", \\\n"
                             + "           version=\"1.0\", \\\n"
-                            + "           facility=\"java-test\", \\\n"
+                            + "           facility=\"logstash-gelf\", \\\n"
                             + "           extractStackTrace=true, \\\n"
                             + "           filterStackTrace=true, \\\n"
                             + "           mdcProfiling=true, \\\n"

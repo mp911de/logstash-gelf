@@ -27,7 +27,7 @@ class KafkaGelfSenderProviderUnitTest {
     private KafkaGelfSenderProvider kafkaSenderProvider = new KafkaGelfSenderProvider();
 
     @Test
-    public void testSupports() {
+    void testSupports() {
 
         List<String> prefixes = Arrays.asList(null, "", "tcp", "kafka");
 

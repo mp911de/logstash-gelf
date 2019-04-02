@@ -20,14 +20,14 @@ public class GelfMessageAssemblerBenchmark {
     @State(Scope.Thread)
     public static class Input {
 
-        public Blackhole bh;
-        public ByteBuffer heap = ByteBuffer.allocate(1000 * 1000);
-        public ByteBuffer heap1 = ByteBuffer.allocate(1000 * 1000);
-        public ByteBuffer direct = ByteBuffer.allocateDirect(1000 * 1000);
-        public ByteBuffer direct1 = ByteBuffer.allocateDirect(1000 * 1000);
-        public GelfMessageAssembler assembler = new GelfMessageAssembler();
+        Blackhole bh;
+        ByteBuffer heap = ByteBuffer.allocate(1000 * 1000);
+        ByteBuffer heap1 = ByteBuffer.allocate(1000 * 1000);
+        ByteBuffer direct = ByteBuffer.allocateDirect(1000 * 1000);
+        ByteBuffer direct1 = ByteBuffer.allocateDirect(1000 * 1000);
+        GelfMessageAssembler assembler = new GelfMessageAssembler();
 
-        public LogEvent logEvent = new LogEvent() {
+        LogEvent logEvent = new LogEvent() {
             @Override
             public String getMessage() {
                 return "hello";

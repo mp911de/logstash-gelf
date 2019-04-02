@@ -24,16 +24,16 @@ import com.google.common.collect.Lists;
  */
 @ExtendWith({ KafkaJunitExtension.class, MockitoExtension.class })
 @KafkaJunitExtensionConfig(startupMode = StartupMode.WAIT_FOR_STARTUP)
-public class KafkaGelfSenderIntegrationTest {
+class KafkaGelfSenderIntegrationTest {
 
-    public static final String LOG_TOPIC = "test-log-topic";
+    private static final String LOG_TOPIC = "test-log-topic";
 
     @Mock
     ErrorReporter errorReporter;
     private KafkaGelfSender kafkaGelfSender;
 
     @Test
-    public void testSend(EphemeralKafkaBroker kafkaBroker) {
+    void testSend(EphemeralKafkaBroker kafkaBroker) {
 
         GelfMessage gelfMessage = new GelfMessage("shortMessage", "fullMessage", 12121L, "WARNING");
 

@@ -11,15 +11,15 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  * @author Mark Paluch
  */
-public class DatenpumpeImplUnitTests {
+class DatenpumpeImplUnitTests {
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfTestSender.getMessages().clear();
     }
 
     @Test
-    public void testBean() throws Exception {
+    void testBean() throws Exception {
         MyBean bean = new MyBean();
 
         DefaultGelfSenderConfiguration configuration = new DefaultGelfSenderConfiguration();
@@ -47,7 +47,7 @@ public class DatenpumpeImplUnitTests {
     }
 
     @Test
-    public void testShoppingCart() throws Exception {
+    void testShoppingCart() throws Exception {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setCartId("the cart id");
         shoppingCart.setAmount(9.27);

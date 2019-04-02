@@ -28,13 +28,13 @@ import io.netty.handler.ssl.SslContextBuilder;
 /**
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
  */
-public class GelfTCPSSLSenderIntegrationTests {
+class GelfTCPSSLSenderIntegrationTests {
 
     private static NettyLocalServer server = new NettyLocalServer(NioServerSocketChannel.class);
     private static SSLContext sslContext;
 
     @BeforeAll
-    public static void setupClass() throws Exception {
+    static void setupClass() throws Exception {
 
         File file = new File("work/keystore.jks");
         assumeTrue(file.exists());
@@ -63,7 +63,7 @@ public class GelfTCPSSLSenderIntegrationTests {
     }
 
     @Test
-    public void shouldSendTCPMessagesViaSsl() throws Exception {
+    void shouldSendTCPMessagesViaSsl() throws Exception {
 
         GelfTCPSSLSender tcpsslSender = new GelfTCPSSLSender("localhost", server.getPort(), 1000, 1000, 1, true,
                 new ErrorReporter() {
@@ -95,7 +95,7 @@ public class GelfTCPSSLSenderIntegrationTests {
     }
 
     @AfterAll
-    public static void afterClass() throws Exception {
+    static void afterClass() throws Exception {
         server.close();
     }
 }

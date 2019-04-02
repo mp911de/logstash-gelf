@@ -13,10 +13,10 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
  * @author <a href="mailto:tobiassebastian.kaefer@1und1.de">Tobias Kaefer</a>
  * @since 2013-10-07
  */
-public class GelfLogbackAppenderTests extends AbstractGelfLogAppenderTests {
+class GelfLogbackAppenderTests extends AbstractGelfLogAppenderTests {
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);

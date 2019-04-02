@@ -18,28 +18,29 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.netty.NettyLocalServer;
+
 import com.google.code.tempusfugit.temporal.Condition;
 import com.google.code.tempusfugit.temporal.Duration;
 import com.google.code.tempusfugit.temporal.Timeout;
 import com.google.code.tempusfugit.temporal.WaitFor;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.netty.NettyLocalServer;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
+class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String LOG_MESSAGE = "foo bar test log message";
     public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     private static LoggerContext loggerContext;
     private static NettyLocalServer server = new NettyLocalServer(NioDatagramChannel.class);
 
     @BeforeAll
-    public static void setupClass() throws Exception {
+    static void setupClass() throws Exception {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-empty-facility-netty-udp.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
@@ -47,14 +48,14 @@ public class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
     }
 
     @AfterAll
-    public static void afterClass() throws Exception {
+    static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
         loggerContext.reconfigure();
         server.close();
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
         server.clear();
@@ -62,7 +63,7 @@ public class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
     }
 
     @Test
-    public void testSimpleInfo() throws Exception {
+    void testSimpleInfo() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
@@ -80,7 +81,7 @@ public class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
     }
 
     @Test
-    public void testEmptyMessage() throws Exception {
+    void testEmptyMessage() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
@@ -106,7 +107,7 @@ public class GelfLogAppenderEmptyFacilityNettyUdpIntegrationTests {
     }
 
     @Test
-    public void testVeryLargeMessage() throws Exception {
+    void testVeryLargeMessage() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 

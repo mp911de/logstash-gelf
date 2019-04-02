@@ -18,13 +18,13 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  * @since 27.09.13 08:16
  */
-public abstract class AbstractGelfLogAppenderTests {
+abstract class AbstractGelfLogAppenderTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     @Test
-    public void testSimpleInfo() throws Exception {
+    void testSimpleInfo() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
 
@@ -50,7 +50,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testLevels() throws Exception {
+    void testLevels() throws Exception {
         Logger logger = Logger.getLogger(getClass());
 
         String expectedMessage = "foo bar test log message";
@@ -81,7 +81,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testException() throws Exception {
+    void testException() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
 
@@ -103,7 +103,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testFields() throws Exception {
+    void testFields() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
         MDC.put("mdcField1", "a value");
@@ -132,7 +132,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testProfiling() throws Exception {
+    void testProfiling() throws Exception {
 
         assumeTrue(Log4jUtil.isLog4jMDCAvailable());
 
@@ -149,7 +149,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testLongProfiling() throws Exception {
+    void testLongProfiling() throws Exception {
 
         assumeTrue(Log4jUtil.isLog4jMDCAvailable());
 
@@ -166,7 +166,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testProfilingWrongStart() throws Exception {
+    void testProfilingWrongStart() throws Exception {
 
         assumeTrue(Log4jUtil.isLog4jMDCAvailable());
 
@@ -184,7 +184,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testNullMessageAndExceptionFallback() throws Exception {
+    void testNullMessageAndExceptionFallback() throws Exception {
         Logger logger = Logger.getLogger(getClass());
 
         logger.info(null, new IllegalStateException());
@@ -198,7 +198,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testEmptyMessageAndExceptionFallback() throws Exception {
+    void testEmptyMessageAndExceptionFallback() throws Exception {
         Logger logger = Logger.getLogger(getClass());
 
         logger.info("", new IllegalStateException("Help!"));
@@ -212,7 +212,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testEmptyMessage() throws Exception {
+    void testEmptyMessage() throws Exception {
         Logger logger = Logger.getLogger(getClass());
 
         logger.info("");

@@ -19,35 +19,35 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderTests {
+class GelfLogAppenderTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
-    public static final String CONFIG_XML = "log4j2/log4j2.xml";
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+    private static final String CONFIG_XML = "log4j2/log4j2.xml";
 
     private static LoggerContext loggerContext;
 
-    protected static void reconfigure(String configXml) {
+    static void reconfigure(String configXml) {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, configXml);
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
     }
 
     @AfterAll
-    public static void afterClass() throws Exception {
+    static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
         loggerContext.reconfigure();
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         reconfigure(CONFIG_XML);
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
     }
 
     @Test
-    public void testSimpleDebug() throws Exception {
+    void testSimpleDebug() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
         assertThat(GelfTestSender.getMessages()).isEmpty();
@@ -56,7 +56,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testSimpleInfo() throws Exception {
+    void testSimpleInfo() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
@@ -79,7 +79,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testFqdnHost() throws Exception {
+    void testFqdnHost() throws Exception {
 
         reconfigure("log4j2/log4j2-origin-host-fqdn.xml");
         Logger logger = loggerContext.getLogger(getClass().getName());
@@ -92,7 +92,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testSimpleHost() throws Exception {
+    void testSimpleHost() throws Exception {
 
         reconfigure("log4j2/log4j2-origin-host-simple.xml");
         Logger logger = loggerContext.getLogger(getClass().getName());
@@ -105,7 +105,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testCustomHost() throws Exception {
+    void testCustomHost() throws Exception {
 
         reconfigure("log4j2/log4j2-origin-host-custom.xml");
         Logger logger = loggerContext.getLogger(getClass().getName());
@@ -118,7 +118,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testEmptyFacility() throws Exception {
+    void testEmptyFacility() throws Exception {
 
         reconfigure("log4j2/log4j2-empty-facility.xml");
         Logger logger = loggerContext.getLogger(getClass().getName());
@@ -131,7 +131,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testSimpleWarn() throws Exception {
+    void testSimpleWarn() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
@@ -142,7 +142,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testSimpleError() throws Exception {
+    void testSimpleError() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
@@ -153,7 +153,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testSimpleFatal() throws Exception {
+    void testSimpleFatal() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
@@ -164,7 +164,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testMDC() throws Exception {
+    void testMDC() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
@@ -185,7 +185,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testFactory() throws Exception {
+    void testFactory() throws Exception {
         GelfLogAppender result = GelfLogAppender.createAppender(null, null, null, null, null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, false);
 
@@ -208,7 +208,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testNullMessageAndExceptionFallback() throws Exception {
+    void testNullMessageAndExceptionFallback() throws Exception {
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info((String) null, new IllegalStateException());
@@ -222,7 +222,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testEmptyMessageAndExceptionFallback() throws Exception {
+    void testEmptyMessageAndExceptionFallback() throws Exception {
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info("", new IllegalStateException("Help!"));
@@ -236,7 +236,7 @@ public class GelfLogAppenderTests {
     }
 
     @Test
-    public void testEmptyMessage() throws Exception {
+    void testEmptyMessage() throws Exception {
         Logger logger = loggerContext.getLogger(getClass().getName());
 
         logger.info("");

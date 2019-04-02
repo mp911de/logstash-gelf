@@ -4,15 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-public class RuntimeContainerUnitTests {
+class RuntimeContainerUnitTests {
 
     @Test
-    public void testMain() throws Exception {
+    void testMain() throws Exception {
         RuntimeContainer.main(new String[0]);
     }
 
     @Test
-    public void testDifferentOrder() throws Exception {
+    void testDifferentOrder() throws Exception {
 
         System.setProperty(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_HOSTNAME_RESOLUTION_ORDER,
                 RuntimeContainerProperties.RESOLUTION_ORDER_LOCALHOST_NETWORK_FALLBACK);
@@ -27,7 +27,7 @@ public class RuntimeContainerUnitTests {
     }
 
     @Test
-    public void testNoLookup() throws Exception {
+    void testNoLookup() throws Exception {
 
         System.setProperty(RuntimeContainerProperties.PROPERTY_LOGSTASH_GELF_SKIP_HOSTNAME_RESOLUTION, "true");
         RuntimeContainer.lookupHostname(null);

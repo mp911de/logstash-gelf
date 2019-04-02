@@ -1,32 +1,34 @@
 package biz.paluch.logging.gelf.logback;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import com.github.charithe.kafka.EphemeralKafkaBroker;
-import com.github.charithe.kafka.KafkaHelper;
-import com.google.common.collect.Lists;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.github.charithe.kafka.EphemeralKafkaBroker;
+import com.github.charithe.kafka.KafkaHelper;
+import com.google.common.collect.Lists;
 
 /**
  * @author Rifat Döver
  */
 @ExtendWith({ MockitoExtension.class })
-public class GelfLogbackAppenderKafkaIntegrationTests {
+class GelfLogbackAppenderKafkaIntegrationTests {
 
-    public static final String KAFKA_LOG_TOPIC = "log-topic";
+    private static final String KAFKA_LOG_TOPIC = "log-topic";
 
     @Test
-    public void testKafkaSender() throws Exception {
+    void testKafkaSender() throws Exception {
 
         EphemeralKafkaBroker broker = EphemeralKafkaBroker.create(19092);
         KafkaHelper helper = KafkaHelper.createFor(broker);

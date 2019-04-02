@@ -29,10 +29,10 @@ import biz.paluch.logging.gelf.intern.GelfSenderProvider;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class GelfLogHandlerErrorsTests {
+class GelfLogHandlerErrorsTests {
 
-    public static final String THE_HOST = "the host";
-    public static final LogRecord MESSAGE = new LogRecord(Level.INFO, "message");
+    private static final String THE_HOST = "the host";
+    private static final LogRecord MESSAGE = new LogRecord(Level.INFO, "message");
 
     @Mock
     private ErrorManager errorManager;
@@ -46,7 +46,7 @@ public class GelfLogHandlerErrorsTests {
     private GelfLogHandler sut = new GelfLogHandler();
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         GelfSenderFactory.removeAllAddedSenderProviders();
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
@@ -54,13 +54,13 @@ public class GelfLogHandlerErrorsTests {
     }
 
     @AfterEach
-    public void after() {
+    void after() {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
         GelfSenderFactory.removeAllAddedSenderProviders();
     }
 
     @Test
-    public void testRuntimeExceptionOnCreateSender() throws Exception {
+    void testRuntimeExceptionOnCreateSender() throws Exception {
 
         sut.setGraylogHost(THE_HOST);
 
@@ -74,7 +74,7 @@ public class GelfLogHandlerErrorsTests {
 
     @Test
     @Disabled("Fails on TravisCI for whatever reason...")
-    public void testInvalidMessage() {
+    void testInvalidMessage() {
 
         sut.publish(MESSAGE);
 
@@ -83,7 +83,7 @@ public class GelfLogHandlerErrorsTests {
 
     @Test
     @Disabled("Fails on TravisCI for whatever reason...")
-    public void testErrorOnSend() {
+    void testErrorOnSend() {
 
         sut.publish(MESSAGE);
 

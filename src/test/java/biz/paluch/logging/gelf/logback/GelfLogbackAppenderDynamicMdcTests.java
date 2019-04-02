@@ -21,21 +21,21 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
  * @author Jörn Horstmann
  * @since 2013-10-07
  */
-public class GelfLogbackAppenderDynamicMdcTests {
+class GelfLogbackAppenderDynamicMdcTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String MDC_MY_MDC = "myMdc";
-    public static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
-    public static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
-    public static final String VALUE_1 = "value1";
-    public static final String VALUE_2 = "value2";
-    public static final String VALUE_3 = "value3";
-    public static final String SOME_FIELD = "someField";
-    public static final String SOME_OTHER_FIELD = "someOtherField";
-    LoggerContext lc = null;
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String MDC_MY_MDC = "myMdc";
+    private static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
+    private static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
+    private static final String VALUE_1 = "value1";
+    private static final String VALUE_2 = "value2";
+    private static final String VALUE_3 = "value3";
+    private static final String SOME_FIELD = "someField";
+    private static final String SOME_OTHER_FIELD = "someOtherField";
+    private LoggerContext lc = null;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
@@ -50,7 +50,7 @@ public class GelfLogbackAppenderDynamicMdcTests {
     }
 
     @Test
-    public void testWithoutFields() throws Exception {
+    void testWithoutFields() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
 
@@ -64,7 +64,7 @@ public class GelfLogbackAppenderDynamicMdcTests {
     }
 
     @Test
-    public void testWithNullValue() throws Exception {
+    void testWithNullValue() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
         MDC.put(MDC_MY_MDC, VALUE_1);
@@ -82,7 +82,7 @@ public class GelfLogbackAppenderDynamicMdcTests {
     }
 
     @Test
-    public void testWithMdcPrefix() throws Exception {
+    void testWithMdcPrefix() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
         MDC.put(MDC_MY_MDC, VALUE_1);
@@ -101,7 +101,7 @@ public class GelfLogbackAppenderDynamicMdcTests {
     }
 
     @Test
-    public void testWithMdcRegex() throws Exception {
+    void testWithMdcRegex() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
         MDC.put(SOME_FIELD, "included");
@@ -117,7 +117,7 @@ public class GelfLogbackAppenderDynamicMdcTests {
     }
 
     @Test
-    public void testWithMdcFieldTypes() throws Exception {
+    void testWithMdcFieldTypes() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
         MDC.put("myMdcs", "String");

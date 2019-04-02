@@ -27,9 +27,9 @@ import biz.paluch.logging.gelf.GelfMessageAssembler;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class GelfSenderFactoryUnitTests {
+class GelfSenderFactoryUnitTests {
 
-    public static final String THE_HOST = "thehost";
+    private static final String THE_HOST = "thehost";
 
     @Mock
     private ErrorReporter errorReporter;
@@ -44,20 +44,20 @@ public class GelfSenderFactoryUnitTests {
     private GelfMessageAssembler assembler;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfSenderFactory.addGelfSenderProvider(senderProvider);
 
         when(assembler.getHost()).thenReturn(THE_HOST);
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         GelfSenderFactory.removeGelfSenderProvider(senderProvider);
         GelfSenderFactory.removeAllAddedSenderProviders();
     }
 
     @Test
-    public void testCreateSender() throws Exception {
+    void testCreateSender() throws Exception {
 
         when(assembler.getHost()).thenReturn(THE_HOST);
         mockSupports();
@@ -69,14 +69,14 @@ public class GelfSenderFactoryUnitTests {
     }
 
     @Test
-    public void testCreateSenderFailUdp() throws Exception {
+    void testCreateSenderFailUdp() throws Exception {
 
         GelfSender result = GelfSenderFactory.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
         assertThat(result).isNull();
     }
 
     @Test
-    public void testCreateSenderFailTcp() throws Exception {
+    void testCreateSenderFailTcp() throws Exception {
 
         reset(assembler);
         when(assembler.getHost()).thenReturn("tcp:" + THE_HOST);
@@ -85,7 +85,7 @@ public class GelfSenderFactoryUnitTests {
     }
 
     @Test
-    public void testCreateSenderFailUnknownHostException() throws Exception {
+    void testCreateSenderFailUnknownHostException() throws Exception {
 
         mockSupports();
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new UnknownHostException());
@@ -98,7 +98,7 @@ public class GelfSenderFactoryUnitTests {
     }
 
     @Test
-    public void testCreateSenderFailSocketException() throws Exception {
+    void testCreateSenderFailSocketException() throws Exception {
 
         mockSupports();
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new SocketException());
@@ -111,7 +111,7 @@ public class GelfSenderFactoryUnitTests {
     }
 
     @Test
-    public void testCreateSenderFailIOException() throws Exception {
+    void testCreateSenderFailIOException() throws Exception {
 
         mockSupports();
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new IOException());
@@ -124,7 +124,7 @@ public class GelfSenderFactoryUnitTests {
     }
 
     @Test
-    public void testCreateSenderFailNPE() throws Exception {
+    void testCreateSenderFailNPE() throws Exception {
 
         mockSupports();
         when(senderProvider.create(any(GelfSenderConfiguration.class))).thenThrow(new NullPointerException());

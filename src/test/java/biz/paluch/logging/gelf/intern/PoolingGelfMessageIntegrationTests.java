@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import biz.paluch.logging.StackTraceFilter;
 
-public class PoolingGelfMessageIntegrationTests {
+class PoolingGelfMessageIntegrationTests {
 
     private static final String FACILITY = "facility";
     private static final String VERSION = "2.0";
@@ -42,7 +41,7 @@ public class PoolingGelfMessageIntegrationTests {
     };
 
     @Test
-    public void testUdp() throws Exception {
+    void testUdp() throws Exception {
 
         GelfMessage gelfMessage = createGelfMessage();
         PoolingGelfMessage poolingGelfMessage = createPooledGelfMessage();
@@ -74,7 +73,7 @@ public class PoolingGelfMessageIntegrationTests {
     }
 
     @Test
-    public void testUdpChunked() throws Exception {
+    void testUdpChunked() throws Exception {
 
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < 20000; i++) {

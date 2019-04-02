@@ -18,45 +18,45 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderSystemPropertiesTests {
+class GelfLogAppenderSystemPropertiesTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String PROPERTY1 = "myproperty";
-    public static final String PROPERTY1_VALUE = "value of myproperty";
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String PROPERTY1 = "myproperty";
+    private static final String PROPERTY1_VALUE = "value of myproperty";
 
-    public static final String PROPERTY2 = "otherproperty";
-    public static final String PROPERTY2_VALUE = "value of otherproperty";
+    private static final String PROPERTY2 = "otherproperty";
+    private static final String PROPERTY2_VALUE = "value of otherproperty";
     private static LoggerContext loggerContext;
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-systemproperties.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
 
     }
 
     @AfterAll
-    public static void afterClass() throws Exception {
+    static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
         loggerContext.reconfigure();
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         System.clearProperty(PROPERTY1);
         System.clearProperty(PROPERTY2);
 
         setup();
     }
 
-    protected void setup() {
+    void setup() {
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
         loggerContext.reconfigure();
     }
 
     @Test
-    public void testDefaults() throws Exception {
+    void testDefaults() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 
@@ -72,7 +72,7 @@ public class GelfLogAppenderSystemPropertiesTests {
     }
 
     @Test
-    public void testAfterSetProperties() throws Exception {
+    void testAfterSetProperties() throws Exception {
 
         System.setProperty(PROPERTY1, PROPERTY1_VALUE);
         System.setProperty(PROPERTY2, PROPERTY2_VALUE);

@@ -36,7 +36,7 @@ Properties:
     log4j.appender.gelf.Host=udp:localhost
     log4j.appender.gelf.Port=12201
     log4j.appender.gelf.Version=1.0
-    log4j.appender.gelf.Facility=java-test
+    log4j.appender.gelf.Facility=logstash-gelf
     log4j.appender.gelf.ExtractStackTrace=true
     log4j.appender.gelf.FilterStackTrace=true
     log4j.appender.gelf.IncludeLocation=true
@@ -56,7 +56,7 @@ XML:
         <param name="Threshold" value="INFO" />
         <param name="Host" value="udp:localhost" />
         <param name="Port" value="12201" />
-        <param name="Facility" value="java-test" />
+        <param name="Facility" value="logstash-gelf" />
         <param name="ExtractStackTrace" value="true" />
         <param name="FilterStackTrace" value="true" />
         <param name="IncludeLocation" value="true" />

@@ -13,10 +13,10 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  * @author Mark Paluch
  */
-public class GelfREDISSenderIntegrationTests {
+class GelfREDISSenderIntegrationTests {
 
     @Test
-    public void recursiveCallIsBlocked() throws Exception {
+    void recursiveCallIsBlocked() throws Exception {
         TestGefRedisSender sut = new TestGefRedisSender();
         sut.sendMessage(new GelfMessage());
 
@@ -28,7 +28,7 @@ public class GelfREDISSenderIntegrationTests {
 
     static class TestGefRedisSender extends GelfREDISSender {
 
-        public TestGefRedisSender() throws IOException {
+        TestGefRedisSender() throws IOException {
             super(null, null, null);
         }
 

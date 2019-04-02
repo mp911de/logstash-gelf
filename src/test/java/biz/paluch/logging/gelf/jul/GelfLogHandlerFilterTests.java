@@ -16,10 +16,10 @@ import biz.paluch.logging.gelf.GelfTestSender;
  * @author Mark Paluch
  * @since 27.09.13 08:25
  */
-public class GelfLogHandlerFilterTests {
+class GelfLogHandlerFilterTests {
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager()
@@ -28,13 +28,13 @@ public class GelfLogHandlerFilterTests {
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         LogManager.getLogManager().reset();
 
     }
 
     @Test
-    public void testSimpleInfo() throws Exception {
+    void testSimpleInfo() throws Exception {
         Logger logger = Logger.getLogger(getClass().getName());
 
         String expectedMessage = "foo bar test log message";

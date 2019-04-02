@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class CloserUnitTests {
+class CloserUnitTests {
 
     @Mock
     private InputStream inputStream;
@@ -26,7 +26,7 @@ public class CloserUnitTests {
     private Socket socket;
 
     @Test
-    public void closeSocketShouldClose() throws Exception {
+    void closeSocketShouldClose() throws Exception {
 
         Closer.close(socket);
 
@@ -34,20 +34,20 @@ public class CloserUnitTests {
     }
 
     @Test
-    public void closeSocketDoesNotFailOnNull() throws Exception {
+    void closeSocketDoesNotFailOnNull() throws Exception {
 
         Closer.close((Socket) null);
     }
 
     @Test
-    public void closeSocketShouldNotPropagateExceptions() throws Exception {
+    void closeSocketShouldNotPropagateExceptions() throws Exception {
 
         doThrow(new IOException()).when(socket).close();
         Closer.close(socket);
     }
 
     @Test
-    public void closeCloseableShouldClose() throws Exception {
+    void closeCloseableShouldClose() throws Exception {
 
         Closer.close(inputStream);
 
@@ -55,14 +55,14 @@ public class CloserUnitTests {
     }
 
     @Test
-    public void closeCloseableShouldNotPropagateExceptions() throws Exception {
+    void closeCloseableShouldNotPropagateExceptions() throws Exception {
 
         doThrow(new IOException()).when(inputStream).close();
         Closer.close(inputStream);
     }
 
     @Test
-    public void closeCloseableDoesNotFailOnNull() throws Exception {
+    void closeCloseableDoesNotFailOnNull() throws Exception {
 
         Closer.close((Closeable) null);
     }

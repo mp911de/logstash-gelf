@@ -20,7 +20,7 @@ class JBoss7LogTestUtil {
         handler.setPort(12201);
         handler.setVersion(GelfMessage.GELF_VERSION_1_1);
 
-        handler.setFacility("java-test");
+        handler.setFacility("logstash-gelf");
         handler.setExtractStackTrace("true");
         handler.setFilterStackTrace(true);
         handler.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSS");

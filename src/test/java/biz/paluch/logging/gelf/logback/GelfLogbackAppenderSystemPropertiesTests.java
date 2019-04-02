@@ -14,19 +14,19 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 
-public class GelfLogbackAppenderSystemPropertiesTests {
+class GelfLogbackAppenderSystemPropertiesTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String PROPERTY1 = "myproperty";
-    public static final String PROPERTY1_VALUE = "value of myproperty";
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String PROPERTY1 = "myproperty";
+    private static final String PROPERTY1_VALUE = "value of myproperty";
 
-    public static final String PROPERTY2 = "otherproperty";
-    public static final String PROPERTY2_VALUE = "value of otherproperty";
+    private static final String PROPERTY2 = "otherproperty";
+    private static final String PROPERTY2_VALUE = "value of otherproperty";
 
     private LoggerContext lc = null;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         System.clearProperty(PROPERTY1);
         System.clearProperty(PROPERTY2);
@@ -35,7 +35,7 @@ public class GelfLogbackAppenderSystemPropertiesTests {
 
     }
 
-    protected void setup() throws JoranException {
+    void setup() throws JoranException {
         lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
@@ -48,7 +48,7 @@ public class GelfLogbackAppenderSystemPropertiesTests {
     }
 
     @Test
-    public void testDefaults() throws Exception {
+    void testDefaults() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
 
@@ -64,7 +64,7 @@ public class GelfLogbackAppenderSystemPropertiesTests {
     }
 
     @Test
-    public void testAfterSetProperties() throws Exception {
+    void testAfterSetProperties() throws Exception {
 
         System.setProperty(PROPERTY1, PROPERTY1_VALUE);
         System.setProperty(PROPERTY2, PROPERTY2_VALUE);

@@ -4,7 +4,7 @@ package biz.paluch.logging.gelf.standalone;
  * @author Mark Paluch
  * @since 31.07.14 09:02
  */
-public class MyBean {
+class MyBean {
     public String getValue() {
         return "value field";
     }

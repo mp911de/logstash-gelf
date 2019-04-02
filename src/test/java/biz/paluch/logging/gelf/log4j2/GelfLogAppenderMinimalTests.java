@@ -20,34 +20,34 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 /**
  * @author Mark Paluch
  */
-public class GelfLogAppenderMinimalTests {
+class GelfLogAppenderMinimalTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     private static LoggerContext loggerContext;
 
     @BeforeAll
-    public static void beforeClass() {
+    static void beforeClass() {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-minimal.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
     }
 
     @AfterAll
-    public static void afterClass() throws Exception {
+    static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
         loggerContext.reconfigure();
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
     }
 
     @Test
-    public void testSimpleDebug() throws Exception {
+    void testSimpleDebug() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
         assertThat(GelfTestSender.getMessages()).isEmpty();
@@ -57,7 +57,7 @@ public class GelfLogAppenderMinimalTests {
     }
 
     @Test
-    public void testSimpleInfo() throws Exception {
+    void testSimpleInfo() throws Exception {
 
         Logger logger = loggerContext.getLogger(getClass().getName());
 

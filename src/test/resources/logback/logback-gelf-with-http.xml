@@ -8,7 +8,7 @@
     <appender name="GELF" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">
         <graylogHost>http://localhost:19393/foo/bar</graylogHost>
         <graylogPort>19393</graylogPort>
-        <facility>java-test</facility>
+        <facility>logstash-gelf</facility>
         <extractStackTrace>true</extractStackTrace>
         <filterStackTrace>true</filterStackTrace>
         <mdcProfiling>true</mdcProfiling>

@@ -17,13 +17,13 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 /**
  * @author Mark Paluch
  */
-public class GelfLogbackAppenderWithoutLocationTests {
+class GelfLogbackAppenderWithoutLocationTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    LoggerContext lc = null;
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private LoggerContext lc = null;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         lc = new LoggerContext();
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
@@ -38,7 +38,7 @@ public class GelfLogbackAppenderWithoutLocationTests {
     }
 
     @Test
-    public void testWithoutLocation() {
+    void testWithoutLocation() {
 
         Logger logger = lc.getLogger(getClass());
 

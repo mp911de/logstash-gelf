@@ -38,7 +38,7 @@ The JSON formatter creates then messages like:
     "full_message": "WFLYUT0008: Undertow HTTP listener default suspending",
     "SourceSimpleClassName": "HttpListenerService",
     "SourceClassName": "org.wildfly.extension.undertow.HttpListenerService",
-    "facility": "java-test",
+    "facility": "logstash-gelf",
     "timestamp": "1439321132.734"
 }
 ```
@@ -65,7 +65,7 @@ XML Configuration:
         <custom-formatter module="biz.paluch.logging" class="biz.paluch.logging.gelf.wildfly.WildFlyJsonFormatter">
             <properties>
                 <property name="version" value="1.0" />
-                <property name="facility" value="java-test" />
+                <property name="facility" value="logstash-gelf" />
                 <property name="fields" value="Time,Severity,ThreadName,SourceClassName,SourceMethodName,SourceSimpleClassName,LoggerName,NDC" />
                 <property name="extractStackTrace" value="true" />
                 <property name="filterStackTrace" value="true" />
@@ -101,7 +101,7 @@ CLI Configuration:
 
     /subsystem=logging/custom-formatter=JsonFormatter/:add(module=biz.paluch.logging,class=biz.paluch.logging.gelf.wildfly.WildFlyJsonFormatter,properties={ \
            version="1.0", \
-           facility="java-test", \
+           facility="logstash-gelf", \
            fields="Time,Severity,ThreadName,SourceClassName,SourceMethodName,SourceSimpleClassName,LoggerName,NDC", \
            extractStackTrace=true, \
            filterStackTrace=true, \

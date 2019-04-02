@@ -3,7 +3,7 @@ package biz.paluch.logging.gelf.standalone;
 /**
  * @author Mark Paluch
  */
-public class ShoppingCart {
+class ShoppingCart {
 
     private String cartId;
     private double amount;

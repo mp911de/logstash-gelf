@@ -18,15 +18,15 @@ import ch.qos.logback.classic.LoggerContext;
  * @author <a href="mailto:tobiassebastian.kaefer@1und1.de">Tobias Kaefer</a>
  * @since 27.09.13 08:16
  */
-public abstract class AbstractGelfLogAppenderTests {
+abstract class AbstractGelfLogAppenderTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     LoggerContext lc = null;
 
     @Test
-    public void testLevels() throws Exception {
+    void testLevels() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
 
@@ -66,7 +66,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testSimpleInfo() throws Exception {
+    void testSimpleInfo() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
 
@@ -85,7 +85,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testMarker() throws Exception {
+    void testMarker() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
 
@@ -103,7 +103,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testException() throws Exception {
+    void testException() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
 
@@ -123,7 +123,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testFields() throws Exception {
+    void testFields() throws Exception {
 
         Logger logger = lc.getLogger(getClass());
         MDC.put("mdcField1", "a value");
@@ -146,7 +146,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testNullMessageAndExceptionFallback() throws Exception {
+    void testNullMessageAndExceptionFallback() throws Exception {
         Logger logger = lc.getLogger(getClass());
 
         logger.info(null, new IllegalStateException());
@@ -160,7 +160,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testEmptyMessageAndExceptionFallback() throws Exception {
+    void testEmptyMessageAndExceptionFallback() throws Exception {
         Logger logger = lc.getLogger(getClass());
 
         logger.info("", new IllegalStateException("Help!"));
@@ -174,7 +174,7 @@ public abstract class AbstractGelfLogAppenderTests {
     }
 
     @Test
-    public void testEmptyMessage() throws Exception {
+    void testEmptyMessage() throws Exception {
         Logger logger = lc.getLogger(getClass());
 
         logger.info("");

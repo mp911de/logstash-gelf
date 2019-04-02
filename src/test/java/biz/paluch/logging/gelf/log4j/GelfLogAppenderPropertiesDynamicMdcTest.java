@@ -20,20 +20,20 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  * @since 27.09.13 07:47
  */
-public class GelfLogAppenderPropertiesDynamicMdcTest {
+class GelfLogAppenderPropertiesDynamicMdcTest {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String MDC_MY_MDC = "myMdc";
-    public static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
-    public static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
-    public static final String VALUE_1 = "value1";
-    public static final String VALUE_2 = "value2";
-    public static final String VALUE_3 = "value3";
-    public static final String SOME_FIELD = "someField";
-    public static final String SOME_OTHER_FIELD = "someOtherField";
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String MDC_MY_MDC = "myMdc";
+    private static final String MY_MDC_WITH_SUFFIX1 = "myMdc-with-suffix1";
+    private static final String MY_MDC_WITH_SUFFIX2 = "myMdc-with-suffix2";
+    private static final String VALUE_1 = "value1";
+    private static final String VALUE_2 = "value2";
+    private static final String VALUE_3 = "value3";
+    private static final String SOME_FIELD = "someField";
+    private static final String SOME_OTHER_FIELD = "someOtherField";
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         LogManager.getLoggerRepository().resetConfiguration();
         GelfTestSender.getMessages().clear();
         PropertyConfigurator.configure(getClass().getResource("/log4j/log4j-test-with-mdcfields.properties"));
@@ -49,7 +49,7 @@ public class GelfLogAppenderPropertiesDynamicMdcTest {
     }
 
     @Test
-    public void testWithoutFields() throws Exception {
+    void testWithoutFields() throws Exception {
 
         Logger logger = Logger.getLogger(getClass());
 
@@ -62,7 +62,7 @@ public class GelfLogAppenderPropertiesDynamicMdcTest {
     }
 
     @Test
-    public void testWithMdcPrefix() throws Exception {
+    void testWithMdcPrefix() throws Exception {
 
         assumeTrue(Log4jUtil.isLog4jMDCAvailable());
 
@@ -83,7 +83,7 @@ public class GelfLogAppenderPropertiesDynamicMdcTest {
     }
 
     @Test
-    public void testWithMdcRegex() throws Exception {
+    void testWithMdcRegex() throws Exception {
 
         assumeTrue(Log4jUtil.isLog4jMDCAvailable());
 

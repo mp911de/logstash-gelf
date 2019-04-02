@@ -50,7 +50,7 @@ XML Configuration:
             <property name="host" value="udp:localhost" />
             <property name="port" value="12201" />
             <property name="version" value="1.0" />
-            <property name="facility" value="java-test" />
+            <property name="facility" value="logstash-gelf" />
             <property name="extractStackTrace" value="true" />
             <property name="filterStackTrace" value="true" />
             <property name="includeLogMessageParameters" value="true" />
@@ -84,7 +84,7 @@ CLI Configuration:
            host="udp:localhost", \
            port="12201", \
            version="1.0", \
-		   facility="java-test", \
+		   facility="logstash-gelf", \
 		   extractStackTrace=true, \
 		   filterStackTrace=true, \
 		   includeLogMessageParameters=true, \

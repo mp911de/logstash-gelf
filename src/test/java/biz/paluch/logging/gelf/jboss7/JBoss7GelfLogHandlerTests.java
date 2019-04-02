@@ -22,20 +22,20 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * @author Mark Paluch
  * @since 27.09.13 08:36
  */
-public class JBoss7GelfLogHandlerTests {
+class JBoss7GelfLogHandlerTests {
 
-    public static final String LOG_MESSAGE = "foo bar test log message";
-    public static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
+    private static final String LOG_MESSAGE = "foo bar test log message";
+    private static final String EXPECTED_LOG_MESSAGE = LOG_MESSAGE;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         GelfTestSender.getMessages().clear();
         LogManager.getLogManager().reset();
         MDC.remove("mdcField1");
     }
 
     @Test
-    public void testSimple() throws Exception {
+    void testSimple() throws Exception {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
@@ -62,7 +62,7 @@ public class JBoss7GelfLogHandlerTests {
     }
 
     @Test
-    public void testWarning() throws Exception {
+    void testWarning() throws Exception {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
@@ -77,7 +77,7 @@ public class JBoss7GelfLogHandlerTests {
     }
 
     @Test
-    public void testFine() throws Exception {
+    void testFine() throws Exception {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
         handler.setLevel(Level.ALL);
@@ -104,7 +104,7 @@ public class JBoss7GelfLogHandlerTests {
     }
 
     @Test
-    public void testSevere() throws Exception {
+    void testSevere() throws Exception {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
@@ -123,7 +123,7 @@ public class JBoss7GelfLogHandlerTests {
     }
 
     @Test
-    public void testEmptyMessage() throws Exception {
+    void testEmptyMessage() throws Exception {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
@@ -135,7 +135,7 @@ public class JBoss7GelfLogHandlerTests {
     }
 
     @Test
-    public void testSimpleWithMsgFormatSubstitution() throws Exception {
+    void testSimpleWithMsgFormatSubstitution() throws Exception {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
@@ -156,7 +156,7 @@ public class JBoss7GelfLogHandlerTests {
     }
 
     @Test
-    public void testSimpleWithStringFormatSubstitution() throws Exception {
+    void testSimpleWithStringFormatSubstitution() throws Exception {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
@@ -176,7 +176,7 @@ public class JBoss7GelfLogHandlerTests {
     }
 
     @Test
-    public void testFields() throws Exception {
+    void testFields() throws Exception {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
 
@@ -197,7 +197,7 @@ public class JBoss7GelfLogHandlerTests {
     }
 
     @Test
-    public void testWrongConfig() throws Exception {
+    void testWrongConfig() throws Exception {
 
         assertThrows(IllegalArgumentException.class, new Executable() {
             @Override
@@ -211,7 +211,7 @@ public class JBoss7GelfLogHandlerTests {
     }
 
     @Test
-    public void testDisabled() {
+    void testDisabled() {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
         handler.setEnabled(false);
