@@ -46,8 +46,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
         <logstash-gelf-release-version>1.13.0</logstash-gelf-release-version>
 
         <github.site.upload.skip>true</github.site.upload.skip>
@@ -69,18 +69,18 @@
         <arquillian.version>1.4.0.Final</arquillian.version>
         <version.org.wildfly.arquillian>2.1.0.Final</version.org.wildfly.arquillian>
 
-        <site-plugin.version>3.6</site-plugin.version>
+        <site-plugin.version>3.7.1</site-plugin.version>
         <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
         <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
-        <animal-sniffer-plugin.version>1.16</animal-sniffer-plugin.version>
-        <doxia-module-markdown.version>1.7</doxia-module-markdown.version>
+        <animal-sniffer-plugin.version>1.17</animal-sniffer-plugin.version>
+        <doxia-module-markdown.version>1.8</doxia-module-markdown.version>
         <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <netty-all.version>4.1.32.Final</netty-all.version>
-        <maven-scm-publish-plugin.version>1.1</maven-scm-publish-plugin.version>
+        <maven-scm-publish-plugin.version>3.0.0</maven-scm-publish-plugin.version>
         <tempus-fugit.version>1.1</tempus-fugit.version>
-        <maven-dependency-plugin.version>3.0.2</maven-dependency-plugin.version>
+        <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
         <maven-scm-provider-gitexe.version>1.9.5</maven-scm-provider-gitexe.version>
         <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
@@ -252,8 +252,8 @@
                         <configuration>
                             <signature>
                                 <groupId>org.codehaus.mojo.signature</groupId>
-                                <artifactId>java16</artifactId>
-                                <version>1.1</version>
+                                <artifactId>java18</artifactId>
+                                <version>1.0</version>
                             </signature>
                         </configuration>
                     </execution>

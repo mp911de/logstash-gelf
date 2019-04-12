@@ -32,89 +32,66 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
 
     private static final Map<String, GelfSenderProducer> factories;
 
-    private static final GelfSenderProducer tcpSenderFactory = new GelfSenderProducer() {
+    private static final GelfSenderProducer tcpSenderFactory = (configuration, host, port) -> {
 
-        @Override
-        public GelfSender create(GelfSenderConfiguration configuration, String host, int port) throws IOException {
+        int defaultTimeoutMs = (int) TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS);
 
-            int defaultTimeoutMs = (int) TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS);
+        URI uri = URI.create(host);
 
-            URI uri = URI.create(host);
+        Map<String, String> params = QueryStringParser.parse(uri);
+        int connectionTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.CONNECTION_TIMEOUT, defaultTimeoutMs);
+        int readTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.READ_TIMEOUT, defaultTimeoutMs);
+        int deliveryAttempts = QueryStringParser.getInt(params, GelfTCPSender.RETRIES, 1);
+        boolean keepAlive = QueryStringParser.getString(params, GelfTCPSender.KEEPALIVE, false);
 
-            Map<String, String> params = QueryStringParser.parse(uri);
-            int connectionTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.CONNECTION_TIMEOUT, defaultTimeoutMs);
-            int readTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.READ_TIMEOUT, defaultTimeoutMs);
-            int deliveryAttempts = QueryStringParser.getInt(params, GelfTCPSender.RETRIES, 1);
-            boolean keepAlive = QueryStringParser.getString(params, GelfTCPSender.KEEPALIVE, false);
+        String tcpGraylogHost = QueryStringParser.getHost(uri);
 
-            String tcpGraylogHost = QueryStringParser.getHost(uri);
-            SocketFactory socketFactory = SocketFactory.getDefault();
+        return new GelfTCPSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
+                configuration.getErrorReporter());
+    };
 
-            return new GelfTCPSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
-                    configuration.getErrorReporter());
+    private static final GelfSenderProducer tcpSslSenderFactory = (configuration, host, port) -> {
+
+        int defaultTimeoutMs = (int) TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS);
+
+        URI uri = URI.create(host);
+
+        Map<String, String> params = QueryStringParser.parse(uri);
+        int connectionTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.CONNECTION_TIMEOUT, defaultTimeoutMs);
+        int readTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.READ_TIMEOUT, defaultTimeoutMs);
+        int deliveryAttempts = QueryStringParser.getInt(params, GelfTCPSender.RETRIES, 1);
+        boolean keepAlive = QueryStringParser.getString(params, GelfTCPSender.KEEPALIVE, false);
+
+        String tcpGraylogHost = QueryStringParser.getHost(uri);
+
+        try {
+            return new GelfTCPSSLSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
+                    configuration.getErrorReporter(), SSLContext.getDefault());
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
         }
     };
 
-    private static final GelfSenderProducer tcpSslSenderFactory = new GelfSenderProducer() {
+    private static final GelfSenderProducer udpSenderFactory = (configuration, host, port) -> {
 
-        @Override
-        public GelfSender create(GelfSenderConfiguration configuration, String host, int port) throws IOException {
-
-            int defaultTimeoutMs = (int) TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS);
-
-            URI uri = URI.create(host);
-
-            Map<String, String> params = QueryStringParser.parse(uri);
-            int connectionTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.CONNECTION_TIMEOUT, defaultTimeoutMs);
-            int readTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.READ_TIMEOUT, defaultTimeoutMs);
-            int deliveryAttempts = QueryStringParser.getInt(params, GelfTCPSender.RETRIES, 1);
-            boolean keepAlive = QueryStringParser.getString(params, GelfTCPSender.KEEPALIVE, false);
-
-            String tcpGraylogHost = QueryStringParser.getHost(uri);
-
-            try {
-                return new GelfTCPSSLSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
-                        configuration.getErrorReporter(), SSLContext.getDefault());
-            } catch (NoSuchAlgorithmException e) {
-                throw new IllegalStateException(e);
-            }
-        }
+        URI uri = URI.create(host);
+        String udpGraylogHost = QueryStringParser.getHost(uri);
+        return new GelfUDPSender(udpGraylogHost, port, configuration.getErrorReporter());
     };
 
-    private static final GelfSenderProducer udpSenderFactory = new GelfSenderProducer() {
+    private static final GelfSenderProducer defaultSenderFactory = (configuration, host, port) -> new GelfUDPSender(host, port, configuration.getErrorReporter());
 
-        @Override
-        public GelfSender create(GelfSenderConfiguration configuration, String host, int port) throws IOException {
+    private static final GelfSenderProducer httpSenderFactory = (configuration, host, port) -> {
 
-            URI uri = URI.create(host);
-            String udpGraylogHost = QueryStringParser.getHost(uri);
-            return new GelfUDPSender(udpGraylogHost, port, configuration.getErrorReporter());
-        }
-    };
+        int defaultTimeoutMs = (int) TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS);
+        URL url = new URL(host);
 
-    private static final GelfSenderProducer defaultSenderFactory = new GelfSenderProducer() {
-
-        @Override
-        public GelfSender create(GelfSenderConfiguration configuration, String host, int port) throws IOException {
-            return new GelfUDPSender(host, port, configuration.getErrorReporter());
-        }
-    };
-
-    private static final GelfSenderProducer httpSenderFactory = new GelfSenderProducer() {
-
-        @Override
-        public GelfSender create(GelfSenderConfiguration configuration, String host, int port) throws IOException {
-
-            int defaultTimeoutMs = (int) TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS);
-            URL url = new URL(host);
-
-            return new GelfHTTPSender(url, defaultTimeoutMs, defaultTimeoutMs, configuration.getErrorReporter());
-        }
+        return new GelfHTTPSender(url, defaultTimeoutMs, defaultTimeoutMs, configuration.getErrorReporter());
     };
 
     static {
 
-    	Map<String, GelfSenderProducer> prefixToFactory = new HashMap<String, GelfSenderProducer>();
+    	Map<String, GelfSenderProducer> prefixToFactory = new HashMap<>();
         prefixToFactory.put("tcp:", tcpSenderFactory);
         prefixToFactory.put("ssl:", tcpSslSenderFactory);
         prefixToFactory.put("udp:", udpSenderFactory);

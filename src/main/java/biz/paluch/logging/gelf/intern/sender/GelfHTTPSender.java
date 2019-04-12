@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Base64;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -56,6 +57,10 @@ public class GelfHTTPSender implements GelfSender {
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.addRequestProperty("Content-type", "application/json");
+            if (url.getUserInfo() != null) {
+                String basicAuth = "Basic " + Base64.getEncoder().encodeToString(url.getUserInfo().getBytes());
+                connection.addRequestProperty("Authorization", basicAuth);
+            }
 
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(message.toJson().getBytes());
