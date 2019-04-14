@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG" packages="org.graylog2.log4j2">
+	<Appenders>
+		<Gelf name="gelf" graylogHost="test:localhost" graylogPort="12201" extractStackTrace="true"
+			  filterStackTrace="true" mdcProfiling="true" maximumMessageSize="8192" includeFullMdc="true" >
+			<Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
+			<Field name="level" pattern="%level" />
+			<Field name="simpleClassName" pattern="%C{1}" />
+			<Field name="className" pattern="%C" />
+			<Field name="server" pattern="%host" />
+			<Field name="server.simple" pattern="%host{simple}" />
+			<Field name="server.fqdn" pattern="%host{fqdn}" />
+			<Field name="server.addr" pattern="%host{address}" />
+			<Field name="fieldName1" literal="fieldValue1" />
+			<Field name="fieldName2" literal="fieldValue2" />
+			<DynamicMdcFieldTypes regex="myMdc.long.*" type="Long" />
+			<DynamicMdcFieldTypes regex="myMdc.double.*" type="Double" />
+			<DynamicMdcFieldTypes regex="myMdc.string.*" type="String" />
+			<DynamicMdcFields regex="myMdc.*" />
+		</Gelf>
+
+		<Console name="CONSOLE" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Root level="INFO">
+			<AppenderRef ref="CONSOLE" />
+			<AppenderRef ref="gelf" />
+		</Root>
+	</Loggers>
+</Configuration>

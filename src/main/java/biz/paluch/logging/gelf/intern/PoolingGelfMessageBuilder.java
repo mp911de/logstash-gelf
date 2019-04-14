@@ -81,6 +81,7 @@ public class PoolingGelfMessageBuilder extends GelfMessageBuilder {
         gelfMessage.setJavaTimestamp(javaTimestamp);
         gelfMessage.setFacility(facility);
         gelfMessage.setAdditionalFieldTypes(additionalFieldTypes);
+        gelfMessage.setDynamicMdcFieldTypes(dynamicMdcFieldTypes);
 
         return gelfMessage;
     }

@@ -150,6 +150,10 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
         ConfigurationSupport.setDynamicMdcFields(spec, gelfMessageAssembler);
     }
 
+    public void setDynamicMdcFieldTypes(String spec) {
+        ConfigurationSupport.setDynamicMdcFieldTypes(spec, gelfMessageAssembler);
+    }
+
     public String getGraylogHost() {
         return gelfMessageAssembler.getHost();
     }

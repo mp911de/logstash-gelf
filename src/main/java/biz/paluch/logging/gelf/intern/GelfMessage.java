@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
 import biz.paluch.logging.gelf.intern.ValueDiscovery.Result;
@@ -91,6 +92,7 @@ public class GelfMessage {
     private String facility = DEFAULT_FACILITY;
     private Map<String, String> additonalFields = new HashMap<String, String>();
     private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
+    private Map<Pattern, String> dynamicMdcFieldTypes = new HashMap<Pattern, String>();
     private int maximumMessageSize = DEFAULT_MESSAGE_SIZE;
 
     public GelfMessage() {
@@ -187,7 +189,10 @@ public class GelfMessage {
                 String value = additionalField.getValue();
                 String fieldType = additionalFieldTypes.get(additionalField.getKey());
                 if (fieldType == null) {
-                    fieldType = FIELD_TYPE_DEFAULT;
+                    fieldType = getMatchingDynamicMdcFieldType(additionalField.getKey());
+                    if (fieldType == null) {
+                        fieldType = FIELD_TYPE_DEFAULT;
+                    }
                 }
                 Object result = getAdditionalFieldValue(value, fieldType);
                 if (result != null) {
@@ -420,6 +425,18 @@ public class GelfMessage {
         return Charsets.ascii(shortHost);
     }
 
+    private String getMatchingDynamicMdcFieldType(String fieldName) {
+        String fieldType = null;
+        for (Map.Entry<Pattern, String> entry : dynamicMdcFieldTypes.entrySet()) {
+            if(entry.getKey().matcher(fieldName).matches()) {
+                fieldType = entry.getValue();
+                break;
+            }
+        }
+
+        return fieldType;
+    }
+
     public String getVersion() {
         return version;
     }
@@ -493,6 +510,14 @@ public class GelfMessage {
 
     public void setAdditionalFieldTypes(Map<String, String> additionalFieldTypes) {
         this.additionalFieldTypes.putAll(additionalFieldTypes);
+    }
+
+    public Map<Pattern, String> getDynamicMdcFieldTypes() {
+        return dynamicMdcFieldTypes;
+    }
+
+    public void setDynamicMdcFieldTypes(Map<Pattern, String> dynamicMdcFieldTypes) {
+        this.dynamicMdcFieldTypes.putAll(dynamicMdcFieldTypes);
     }
 
     /**
