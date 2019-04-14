@@ -126,6 +126,10 @@ public class WildFlyGelfLogHandler extends GelfLogHandler {
         super.setDynamicMdcFields(fieldSpec);
     }
 
+    public void setDynamicMdcFieldTypes(String fieldSpec) {
+        super.setDynamicMdcFieldTypes(fieldSpec);
+    }
+
     public boolean isMdcProfiling() {
         return getGelfMessageAssembler().isMdcProfiling();
     }

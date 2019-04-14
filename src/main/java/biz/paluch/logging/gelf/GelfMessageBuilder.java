@@ -2,6 +2,7 @@ package biz.paluch.logging.gelf;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
@@ -23,6 +24,7 @@ public class GelfMessageBuilder {
     protected int maximumMessageSize = GelfMessage.DEFAULT_MESSAGE_SIZE;
     protected Map<String, String> additionalFields = new HashMap<String, String>();
     protected Map<String, String> additionalFieldTypes = new HashMap<String, String>();
+    protected Map<Pattern, String> dynamicMdcFieldTypes = new HashMap<Pattern, String>();
 
     protected GelfMessageBuilder() {
     }
@@ -158,6 +160,18 @@ public class GelfMessageBuilder {
         return this;
     }
 
+
+    /**
+     * Set dynamic mdc field types
+     *
+     * @param dynamicMdcFiledTypes the type map
+     * @return GelfMessageBuilder
+     */
+    public GelfMessageBuilder withDynamicMdcFieldTypes(Map<Pattern, String> dynamicMdcFiledTypes) {
+        this.dynamicMdcFieldTypes.putAll(dynamicMdcFiledTypes);
+        return this;
+    }
+
     /**
      * Build a new Gelf message based on the builder settings.
      * 
@@ -173,6 +187,7 @@ public class GelfMessageBuilder {
         gelfMessage.setJavaTimestamp(javaTimestamp);
         gelfMessage.setFacility(facility);
         gelfMessage.setAdditionalFieldTypes(additionalFieldTypes);
+        gelfMessage.setDynamicMdcFieldTypes(dynamicMdcFieldTypes);
 
         return gelfMessage;
     }

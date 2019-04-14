@@ -126,6 +126,10 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
         super.setDynamicMdcFields(fieldSpec);
     }
 
+    public void setDynamicMdcFieldTypes(String fieldSpec) {
+        super.setDynamicMdcFieldTypes(fieldSpec);
+    }
+
     public boolean isMdcProfiling() {
         return getGelfMessageAssembler().isMdcProfiling();
     }

@@ -18,7 +18,7 @@ public class ConfigurationSupport {
 
     /**
      * Set the additional (static) fields.
-     * 
+     *
      * @param spec field=value,field1=value1, ...
      * @param gelfMessageAssembler the Gelf message assembler to apply the configuration
      */
@@ -38,7 +38,7 @@ public class ConfigurationSupport {
 
     /**
      * Set the MDC fields.
-     * 
+     *
      * @param spec field, field2, field3
      * @param gelfMessageAssembler the Gelf message assembler to apply the configuration
      */
@@ -54,7 +54,7 @@ public class ConfigurationSupport {
 
     /**
      * Set the dynamic MDC fields.
-     * 
+     *
      * @param spec field, .*FieldSuffix, fieldPrefix.*
      * @param gelfMessageAssembler the {@link GelfMessageAssembler}.
      */
@@ -70,7 +70,7 @@ public class ConfigurationSupport {
 
     /**
      * Set the additional field types.
-     * 
+     *
      * @param spec field=String,field1=Double, ... See {@link GelfMessage} for supported types.
      * @param gelfMessageAssembler the Gelf message assembler to apply the configuration
      */
@@ -87,4 +87,22 @@ public class ConfigurationSupport {
         }
     }
 
+    /**
+     * Set the dynamic mdc field types.
+     *
+     * @param spec field=String,field1=Double, ... See {@link GelfMessage} for supported types.
+     * @param gelfMessageAssembler the Gelf message assembler to apply the configuration
+     */
+    public static void setDynamicMdcFieldTypes(String spec, GelfMessageAssembler gelfMessageAssembler) {
+        if (null != spec) {
+            String[] properties = spec.split(MULTI_VALUE_DELIMITTER);
+
+            for (String field : properties) {
+                final int index = field.indexOf(EQ);
+                if (-1 != index) {
+                    gelfMessageAssembler.setDynamicMdcFieldType(field.substring(0, index), field.substring(index + 1));
+                }
+            }
+        }
+    }
 }

@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import biz.paluch.logging.RuntimeContainer;
 import biz.paluch.logging.StackTraceFilter;
@@ -50,6 +51,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
     private List<MessageField> fields = new ArrayList<MessageField>();
     private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
+    private Map<Pattern, String> dynamicMdcFieldTypes = new HashMap<Pattern, String>();
 
     private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSS";
 
@@ -104,6 +106,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
         setupStaticFields(propertyProvider);
         setupAdditionalFieldTypes(propertyProvider);
+        setupDynamicMdcFieldTypes(propertyProvider);
         facility = propertyProvider.getProperty(PropertyProvider.PROPERTY_FACILITY);
         String version = propertyProvider.getProperty(PropertyProvider.PROPERTY_VERSION);
 
@@ -148,6 +151,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         builder.withLevel(logEvent.getSyslogLevel());
         builder.withVersion(getVersion());
         builder.withAdditionalFieldTypes(additionalFieldTypes);
+        builder.withDynamicMdcFieldTypes(dynamicMdcFieldTypes);
 
         for (MessageField field : fields) {
 
@@ -267,8 +271,32 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         }
     }
 
+    private void setupDynamicMdcFieldTypes(PropertyProvider propertyProvider) {
+        int fieldNumber = 0;
+        while (true) {
+            final String property = propertyProvider.getProperty(PropertyProvider.PROPERTY_DYNAMIC_MDC_FIELD_TYPES + fieldNumber);
+            if (null == property) {
+                break;
+            }
+            final int index = property.indexOf('=');
+            if (-1 != index) {
+
+                String field = property.substring(0, index);
+                String type = property.substring(index + 1);
+                setDynamicMdcFieldType(field, type);
+            }
+
+            fieldNumber++;
+        }
+    }
+
     public void setAdditionalFieldType(String field, String type) {
         additionalFieldTypes.put(field, type);
+    }
+
+    public void setDynamicMdcFieldType(String fieldPattern, String type) {
+        final Pattern pattern = Pattern.compile(fieldPattern);
+        dynamicMdcFieldTypes.put(pattern, type);
     }
 
     public void addField(MessageField field) {
