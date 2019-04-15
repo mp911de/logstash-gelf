@@ -18,7 +18,7 @@ import biz.paluch.logging.gelf.intern.GelfSenderProvider;
 
 /**
  * Default provider for {@link GelfSender} that creates UDP, TCP and HTTP senders.
- * 
+ *
  * @author https://github.com/Batigoal/logstash-gelf.git
  * @author Mark Paluch
  * @author Aleksandar Stojadinovic
@@ -79,7 +79,8 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
         return new GelfUDPSender(udpGraylogHost, port, configuration.getErrorReporter());
     };
 
-    private static final GelfSenderProducer defaultSenderFactory = (configuration, host, port) -> new GelfUDPSender(host, port, configuration.getErrorReporter());
+    private static final GelfSenderProducer defaultSenderFactory = (configuration, host, port) -> new GelfUDPSender(host, port,
+            configuration.getErrorReporter());
 
     private static final GelfSenderProducer httpSenderFactory = (configuration, host, port) -> {
 
@@ -91,7 +92,7 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
 
     static {
 
-    	Map<String, GelfSenderProducer> prefixToFactory = new HashMap<>();
+        Map<String, GelfSenderProducer> prefixToFactory = new HashMap<>();
         prefixToFactory.put("tcp:", tcpSenderFactory);
         prefixToFactory.put("ssl:", tcpSslSenderFactory);
         prefixToFactory.put("udp:", udpSenderFactory);
@@ -130,7 +131,7 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
 
         /**
          * Produce a {@link GelfSender} using {@code configuration}, {@code host} and {@code port},
-         * 
+         *
          * @param configuration
          * @param host
          * @param port
