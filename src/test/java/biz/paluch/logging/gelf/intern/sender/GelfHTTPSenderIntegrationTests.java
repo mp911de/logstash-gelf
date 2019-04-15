@@ -44,16 +44,12 @@ class GelfHTTPSenderIntegrationTests {
         server = new NettyLocalHTTPServer();
         server.run();
 
-        sender = new GelfHTTPSender(new URL("http://127.0.0.1:19393"), 1000, 1000, new ErrorReporter() {
+        sender = new GelfHTTPSender(new URL("http://127.0.0.1:19393"), 1000, 1000, (message, e) -> {
 
-            @Override
-            public void reportError(String message, Exception e) {
+            System.out.println(message);
 
-                System.out.println(message);
-
-                if (e != null) {
-                    e.printStackTrace();
-                }
+            if (e != null) {
+                e.printStackTrace();
             }
         });
     }
@@ -131,12 +127,31 @@ class GelfHTTPSenderIntegrationTests {
     }
 
     @Test
+    void shouldUseBasicAuthentication() throws IOException {
+        sender = new GelfHTTPSender(new URL("http://foo:bar@127.0.0.1:19393"), 1000, 1000, (message, e) -> {
+
+            System.out.println(message);
+
+            if (e != null) {
+                e.printStackTrace();
+            }
+        });
+
+        server.setReturnStatus(HttpResponseStatus.ACCEPTED);
+
+        boolean success = sender.sendMessage(GELF_MESSAGE);
+
+        assertThat(success).isTrue();
+        assertThat(server.getLastHttpHeaders().get("Authorization")).isEqualTo("Basic Zm9vOmJhcg==");
+    }
+
+    @Test
     void sendMessageFailureTest() throws IOException {
 
         server.setReturnStatus(HttpResponseStatus.INTERNAL_SERVER_ERROR);
 
         String uri = "http://127.0.0.1:19393";
-        GelfHTTPSender sender = new GelfHTTPSender(new URL(uri), 1000, 1000, errorReporter);
+        sender = new GelfHTTPSender(new URL(uri), 1000, 1000, errorReporter);
 
         boolean success = sender.sendMessage(GELF_MESSAGE);
 
