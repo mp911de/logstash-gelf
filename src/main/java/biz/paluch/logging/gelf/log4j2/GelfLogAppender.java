@@ -205,6 +205,7 @@ public class GelfLogAppender extends AbstractAppender {
             @PluginAttribute("name") String name, @PluginElement("Filter") Filter filter,
             @PluginElement("Field") final GelfLogField[] fields,
             @PluginElement("DynamicMdcFields") final GelfDynamicMdcLogFields[] dynamicFieldArray,
+            @PluginElement("DynamicMdcFieldTypes") final GelfDynamicMdcLogFieldTypes[] dynamicFieldTypeArray,
             @PluginAttribute("graylogHost") String graylogHost, @PluginAttribute("host") String host,
             @PluginAttribute("graylogPort") String graylogPort, @PluginAttribute("port") String port,
             @PluginAttribute("version") String version, @PluginAttribute("extractStackTrace") String extractStackTrace,
@@ -282,6 +283,12 @@ public class GelfLogAppender extends AbstractAppender {
 
         if (additionalFieldTypes != null) {
             ConfigurationSupport.setAdditionalFieldTypes(additionalFieldTypes, mdcGelfMessageAssembler);
+        }
+
+        if (dynamicFieldTypeArray != null) {
+            for (GelfDynamicMdcLogFieldTypes gelfDynamicMdcLogFieldTypes : dynamicFieldTypeArray) {
+                mdcGelfMessageAssembler.setDynamicMdcFieldType(gelfDynamicMdcLogFieldTypes.getRegex(), gelfDynamicMdcLogFieldTypes.getType());
+            }
         }
 
         configureFields(mdcGelfMessageAssembler, fields, dynamicFieldArray);
