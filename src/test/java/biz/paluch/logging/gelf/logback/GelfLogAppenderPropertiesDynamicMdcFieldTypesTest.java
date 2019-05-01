@@ -1,17 +1,17 @@
-package biz.paluch.logging.gelf.log4j2;
+package biz.paluch.logging.gelf.logback;
 
 import biz.paluch.logging.gelf.GelfTestSender;
 import biz.paluch.logging.gelf.intern.GelfMessage;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.MDC;
 
+import java.net.URL;
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Thomas Herzog
  * @since 29.04.19 18:00
  */
-class GelfLogAppenderPropertiesDynamicMdcFieldTest {
+class GelfLogAppenderPropertiesDynamicMdcFieldTypesTest {
 
     private static final String LOG_MESSAGE = "foo bar test log message";
     private static final String MY_MDC_LONG_VALUE_1 = "myMdc.longValue1";
@@ -36,25 +36,33 @@ class GelfLogAppenderPropertiesDynamicMdcFieldTest {
     private static final String STRING_VALUE = "1.0";
     private static final String UNDEFINED_VALUE = "v1.0";
 
-    private LoggerContext loggerContext;
+    private LoggerContext loggerContext = null;
 
     @BeforeEach
     private void beforeEach() throws Exception {
-        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-dynamic-mdcfieltypes.xml");
-        loggerContext = (LoggerContext) LogManager.getContext(false);
-        loggerContext.reconfigure();
+        loggerContext = new ch.qos.logback.classic.LoggerContext();
+        JoranConfigurator configurator = new JoranConfigurator();
+        configurator.setContext(loggerContext);
+
+        URL xmlConfigFile = getClass().getResource("/logback/logback-gelf-with-dynamic-mdcfieldtypes.xml");
+
+        configurator.doConfigure(xmlConfigFile);
+
+        GelfTestSender.getMessages().clear();
+
+        MDC.clear();
     }
 
     @Test
     void testWithRegexMatch() throws Exception {
         // -- Given --
         Logger logger = loggerContext.getLogger(getClass().getName());
-        ThreadContext.put(MY_MDC_LONG_VALUE_1, LONG_VALUE_1.toString());
-        ThreadContext.put(MY_MDC_LONG_VALUE_2, LONG_VALUE_2.toString());
-        ThreadContext.put(MY_MDC_DOUBLE_VALUE_1, DOUBLE_VALUE_1.toString());
-        ThreadContext.put(MY_MDC_DOUBLE_VALUE_2, DOUBLE_VALUE_2.toString());
-        ThreadContext.put(MY_MDC_STRING_VALUE, STRING_VALUE);
-        ThreadContext.put(MY_MDC_UNDEFINED_VALUE, UNDEFINED_VALUE);
+        MDC.put(MY_MDC_LONG_VALUE_1, LONG_VALUE_1.toString());
+        MDC.put(MY_MDC_LONG_VALUE_2, LONG_VALUE_2.toString());
+        MDC.put(MY_MDC_DOUBLE_VALUE_1, DOUBLE_VALUE_1.toString());
+        MDC.put(MY_MDC_DOUBLE_VALUE_2, DOUBLE_VALUE_2.toString());
+        MDC.put(MY_MDC_STRING_VALUE, STRING_VALUE);
+        MDC.put(MY_MDC_UNDEFINED_VALUE, UNDEFINED_VALUE);
 
         // -- When --
         logger.info(LOG_MESSAGE);
@@ -78,7 +86,7 @@ class GelfLogAppenderPropertiesDynamicMdcFieldTest {
     void testWithInvalidType() throws Exception {
         // -- Given --
         Logger logger = loggerContext.getLogger(getClass().getName());
-        ThreadContext.put(MY_MDC_LONG_VALUE_1, "v1.0");
+        MDC.put(MY_MDC_LONG_VALUE_1, "v1.0");
 
         // -- When --
         logger.info(LOG_MESSAGE);

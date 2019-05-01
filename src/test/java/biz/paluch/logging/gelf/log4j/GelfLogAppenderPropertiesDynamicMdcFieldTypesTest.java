@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  * @author Thomas Herzog
  * @since 29.04.19 18:00
  */
-class GelfLogAppenderPropertiesDynamicMdcFieldTest {
+class GelfLogAppenderPropertiesDynamicMdcFieldTypesTest {
 
     private static final String LOG_MESSAGE = "foo bar test log message";
     private static final String MY_MDC_LONG_VALUE_1 = "myMdc.longValue1";
