@@ -9,20 +9,22 @@ import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.apache.logging.log4j.util.Strings;
 
+import java.util.regex.Pattern;
+
 /**
  * Configuration for dynamic log fields pulled from MDC.
  *
- * @author Mark Paluch
+ * @author Thomas Herzog
  */
 @Plugin(name = "DynamicMdcFieldTypes", category = "Core", printObject = true)
-public class GelfDynamicMdcLogFieldTypes {
+public class GelfDynamicMdcFieldType {
 
     private static final Logger LOGGER = StatusLogger.getLogger();
 
     private final String regex;
     private final String type;
 
-    public GelfDynamicMdcLogFieldTypes(String regex, String type) {
+    public GelfDynamicMdcFieldType(String regex, String type) {
         this.regex = regex;
         this.type = type;
     }
@@ -36,15 +38,22 @@ public class GelfDynamicMdcLogFieldTypes {
     }
 
     @PluginFactory
-    public static GelfDynamicMdcLogFieldTypes createField(@PluginConfiguration final Configuration config,
-                                                          @PluginAttribute("regex") String regex,
-                                                          @PluginAttribute("type") String type) {
+    public static GelfDynamicMdcFieldType createField(@PluginConfiguration final Configuration config,
+                                                      @PluginAttribute("regex") String regex,
+                                                      @PluginAttribute("type") String type) {
 
         if (Strings.isEmpty(regex) || Strings.isEmpty(type)) {
-            LOGGER.error(String.format("regex=%s or type=%s is empty", regex, type));
+            LOGGER.error(String.format("regex=%s or type=%s is empty or null", regex, type));
             return null;
+        } else {
+            try {
+                Pattern.compile(regex);
+            } catch (Exception e) {
+                LOGGER.error(String.format("Regex ix invalid: regex=%s", regex));
+                return null;
+            }
         }
 
-        return new GelfDynamicMdcLogFieldTypes(regex, type);
+        return new GelfDynamicMdcFieldType(regex, type);
     }
 }
