@@ -23,7 +23,7 @@ public class GelfREDISSender<T> implements GelfSender {
     private final String redisKey;
     private final Set<Thread> callers = Collections.newSetFromMap(new WeakHashMap<Thread, Boolean>());
 
-    public GelfREDISSender(Pool<Jedis> jedisPool, String redisKey, ErrorReporter errorReporter) throws IOException {
+    public GelfREDISSender(Pool<Jedis> jedisPool, String redisKey, ErrorReporter errorReporter) {
         this.jedisPool = jedisPool;
         this.errorReporter = errorReporter;
         this.redisKey = redisKey;
@@ -61,5 +61,6 @@ public class GelfREDISSender<T> implements GelfSender {
 
     public void close() {
         callers.clear();
+        jedisPool.destroy();
     }
 }
