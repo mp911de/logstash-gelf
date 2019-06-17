@@ -274,11 +274,11 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private void setupDynamicMdcFieldTypes(PropertyProvider propertyProvider) {
         int fieldNumber = 0;
         while (true) {
-            final String property = propertyProvider.getProperty(PropertyProvider.PROPERTY_DYNAMIC_MDC_FIELD_TYPES + fieldNumber);
+            String property = propertyProvider.getProperty(PropertyProvider.PROPERTY_DYNAMIC_MDC_FIELD_TYPES + fieldNumber);
             if (null == property) {
                 break;
             }
-            final int index = property.indexOf('=');
+            int index = property.indexOf('=');
             if (-1 != index) {
 
                 String field = property.substring(0, index);
@@ -295,10 +295,13 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     }
 
     public void setDynamicMdcFieldType(String fieldPattern, String type) {
-        final Pattern pattern = Pattern.compile(fieldPattern);
-        dynamicMdcFieldTypes.put(pattern, type);
+        Pattern pattern = Pattern.compile(fieldPattern);
+        setDynamicMdcFieldType(pattern, type);
     }
 
+    public void setDynamicMdcFieldType(Pattern fieldPattern, String type) {
+        dynamicMdcFieldTypes.put(fieldPattern, type);
+    }
     public void addField(MessageField field) {
         if (!fields.contains(field)) {
             this.fields.add(field);

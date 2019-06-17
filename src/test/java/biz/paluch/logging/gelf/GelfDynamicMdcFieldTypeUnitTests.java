@@ -1,23 +1,11 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package biz.paluch.logging.gelf;
 
 import biz.paluch.logging.gelf.log4j2.GelfDynamicMdcFieldType;
-import org.junit.jupiter.api.Test;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,59 +13,62 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Thomas Herzog
  */
+@RunWith(JUnit4.class)
 public class GelfDynamicMdcFieldTypeUnitTests {
 
-    @Test
-    void testWithNullRegex() {
-        // -- Given --
-        final String regex = null;
-        final String type = "String";
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
-        // -- When --
-        final GelfDynamicMdcFieldType fieldType = GelfDynamicMdcFieldType.createField(null, regex, type);
+    @Test
+    public void testWithNullRegex() {
+        // -- Given --
+        String regex = null;
+        String type = "String";
 
         // -- Then --
-        assertThat(fieldType).isNull();
+        expectedException.expect(IllegalArgumentException.class);
+
+        // -- When --
+        GelfDynamicMdcFieldType.createField(null, regex, type);
     }
 
     @Test
-    void testWithNullType() {
+    public void testWithNullType() {
         // -- Given --
-        final String regex = ".*";
-        final String type = null;
-
-        // -- When --
-        final GelfDynamicMdcFieldType fieldType = GelfDynamicMdcFieldType.createField(null, regex, type);
+        String regex = ".*";
+        String type = null;
 
         // -- Then --
-        assertThat(fieldType).isNull();
+        expectedException.expect(IllegalArgumentException.class);
+
+        // -- When --
+        GelfDynamicMdcFieldType.createField(null, regex, type);
     }
 
     @Test
-    void testWithInvalidRegex() {
+    public void testWithInvalidRegex() {
         // -- Given --
-        final String regex = "*";
-        final String type = "String";
-
-        // -- When --
-        final GelfDynamicMdcFieldType fieldType = GelfDynamicMdcFieldType.createField(null, regex, type);
+        String regex = "*";
+        String type = "String";
 
         // -- Then --
-        assertThat(fieldType).isNull();
+        expectedException.expect(IllegalArgumentException.class);
+
+        GelfDynamicMdcFieldType.createField(null, regex, type);
     }
 
     @Test
-    void testWithValidRegexAndType() {
+    public void testWithValidRegexAndType() {
         // -- Given --
-        final String regex = ".*";
-        final String type = "String";
+        String regex = ".*";
+        String type = "String";
 
         // -- When --
-        final GelfDynamicMdcFieldType fieldType = GelfDynamicMdcFieldType.createField(null, regex, type);
+        GelfDynamicMdcFieldType fieldType = GelfDynamicMdcFieldType.createField(null, regex, type);
 
         // -- Then --
         assertThat(fieldType).isNotNull();
-        assertThat(fieldType.getRegex()).isEqualTo(regex);
+        assertThat(fieldType.getPattern().pattern()).isEqualTo(regex);
         assertThat(fieldType.getType()).isEqualTo(type);
     }
 }

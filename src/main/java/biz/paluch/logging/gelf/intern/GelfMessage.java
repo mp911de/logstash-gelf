@@ -427,7 +427,7 @@ public class GelfMessage {
 
     private String getMatchingDynamicMdcFieldType(String fieldName) {
         String fieldType = null;
-        for (final Map.Entry<Pattern, String> entry : dynamicMdcFieldTypes.entrySet()) {
+        for (Map.Entry<Pattern, String> entry : dynamicMdcFieldTypes.entrySet()) {
             if(entry.getKey().matcher(fieldName).matches()) {
                 fieldType = entry.getValue();
                 break;

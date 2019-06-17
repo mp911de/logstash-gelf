@@ -164,11 +164,11 @@ public class GelfMessageBuilder {
     /**
      * Set dynamic mdc field types
      *
-     * @param dynamicMdcFiledTypes the type map
+     * @param dynamicMdcFieldTypes the type map
      * @return GelfMessageBuilder
      */
-    public GelfMessageBuilder withDynamicMdcFieldTypes(Map<Pattern, String> dynamicMdcFiledTypes) {
-        this.dynamicMdcFieldTypes.putAll(dynamicMdcFiledTypes);
+    public GelfMessageBuilder withDynamicMdcFieldTypes(Map<Pattern, String> dynamicMdcFieldTypes) {
+        this.dynamicMdcFieldTypes.putAll(dynamicMdcFieldTypes);
         return this;
     }
 

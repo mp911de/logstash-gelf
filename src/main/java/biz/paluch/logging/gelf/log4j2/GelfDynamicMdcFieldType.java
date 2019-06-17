@@ -21,16 +21,16 @@ public class GelfDynamicMdcFieldType {
 
     private static final Logger LOGGER = StatusLogger.getLogger();
 
-    private final String regex;
+    private final Pattern pattern;
     private final String type;
 
-    public GelfDynamicMdcFieldType(String regex, String type) {
-        this.regex = regex;
+    public GelfDynamicMdcFieldType(Pattern pattern, String type) {
+        this.pattern = pattern;
         this.type = type;
     }
 
-    public String getRegex() {
-        return regex;
+    public Pattern getPattern() {
+        return pattern;
     }
 
     public String getType() {
@@ -42,18 +42,16 @@ public class GelfDynamicMdcFieldType {
                                                       @PluginAttribute("regex") String regex,
                                                       @PluginAttribute("type") String type) {
 
+        Pattern pattern;
         if (Strings.isEmpty(regex) || Strings.isEmpty(type)) {
-            LOGGER.error(String.format("regex=%s or type=%s is empty or null", regex, type));
-            return null;
-        } else {
-            try {
-                Pattern.compile(regex);
-            } catch (Exception e) {
-                LOGGER.error(String.format("Regex ix invalid: regex=%s", regex));
-                return null;
-            }
+            throw new IllegalArgumentException(String.format("regex=%s or type=%s is empty or null", regex, type));
+        }
+        try {
+            pattern = Pattern.compile(regex);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(String.format("Regex is invalid: regex=%s", regex), e);
         }
 
-        return new GelfDynamicMdcFieldType(regex, type);
+        return new GelfDynamicMdcFieldType(pattern, type);
     }
 }

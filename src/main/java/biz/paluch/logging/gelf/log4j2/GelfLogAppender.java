@@ -287,7 +287,7 @@ public class GelfLogAppender extends AbstractAppender {
 
         if (dynamicFieldTypeArray != null) {
             for (GelfDynamicMdcFieldType gelfDynamicMdcFieldType : dynamicFieldTypeArray) {
-                mdcGelfMessageAssembler.setDynamicMdcFieldType(gelfDynamicMdcFieldType.getRegex(), gelfDynamicMdcFieldType.getType());
+                mdcGelfMessageAssembler.setDynamicMdcFieldType(gelfDynamicMdcFieldType.getPattern(), gelfDynamicMdcFieldType.getType());
             }
         }
 

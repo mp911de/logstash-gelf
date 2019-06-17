@@ -70,7 +70,7 @@ class GelfLogAppenderPropertiesDynamicMdcFieldTypesTest {
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         // -- Then --
-        final String json = gelfMessage.toJson();
+        String json = gelfMessage.toJson();
         HashMap<String, Object> result = new ObjectMapper()
                 .configure(DeserializationFeature.USE_LONG_FOR_INTS, true)
                 .readValue(json, HashMap.class);
@@ -94,7 +94,7 @@ class GelfLogAppenderPropertiesDynamicMdcFieldTypesTest {
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
 
         // -- Then --
-        final String json = gelfMessage.toJson();
+        String json = gelfMessage.toJson();
         HashMap<String, Object> result = new ObjectMapper()
                 .configure(DeserializationFeature.USE_LONG_FOR_INTS, true)
                 .readValue(json, HashMap.class);
