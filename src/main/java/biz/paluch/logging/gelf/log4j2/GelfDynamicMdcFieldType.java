@@ -1,22 +1,20 @@
 package biz.paluch.logging.gelf.log4j2;
 
+import java.util.regex.Pattern;
+
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
-import org.apache.logging.log4j.core.config.plugins.PluginConfiguration;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.apache.logging.log4j.util.Strings;
-
-import java.util.regex.Pattern;
 
 /**
  * Configuration for dynamic log fields pulled from MDC.
  *
  * @author Thomas Herzog
  */
-@Plugin(name = "DynamicMdcFieldTypes", category = "Core", printObject = true)
+@Plugin(name = "DynamicMdcFieldType", category = "Core", printObject = true)
 public class GelfDynamicMdcFieldType {
 
     private static final Logger LOGGER = StatusLogger.getLogger();
@@ -38,20 +36,17 @@ public class GelfDynamicMdcFieldType {
     }
 
     @PluginFactory
-    public static GelfDynamicMdcFieldType createField(@PluginConfiguration final Configuration config,
-                                                      @PluginAttribute("regex") String regex,
-                                                      @PluginAttribute("type") String type) {
+    public static GelfDynamicMdcFieldType createField(@PluginAttribute("regex") String regex,
+            @PluginAttribute("type") String type) {
 
-        Pattern pattern;
-        if (Strings.isEmpty(regex) || Strings.isEmpty(type)) {
-            throw new IllegalArgumentException(String.format("regex=%s or type=%s is empty or null", regex, type));
-        }
-        try {
-            pattern = Pattern.compile(regex);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(String.format("Regex is invalid: regex=%s", regex), e);
+        if (Strings.isEmpty(regex)) {
+            throw new IllegalArgumentException("Regex is empty");
         }
 
-        return new GelfDynamicMdcFieldType(pattern, type);
+        if (Strings.isEmpty(type)) {
+            throw new IllegalArgumentException("Type is empty");
+        }
+
+        return new GelfDynamicMdcFieldType(Pattern.compile(regex), type);
     }
 }

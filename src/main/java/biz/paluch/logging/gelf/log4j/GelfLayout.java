@@ -54,6 +54,8 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * Application,Version,SomeOtherFieldName</li>
  * <li>dynamicMdcFields (Optional): Dynamic MDC Fields allows you to extract MDC values based on one or more regular
  * expressions. Multiple regex are comma-separated. The name of the MDC entry is used as GELF field name. mdc.*,[mdc|MDC]fields</li>
+ * <li>dynamicMdcFieldTypes (Optional): Pattern-based type specification for additional and MDC fields. Key-value pairs are
+ * comma-separated. Supported types: String, long, Long, double, Double. Eg. my_field.*=String,business\..*\.field=double</li>
  * <li>includeFullMdc (Optional): Include all fields from the MDC, default false</li>
  * </ul>
  * <a name="mdcProfiling"></a> <h2>MDC Profiling</h2>
@@ -167,6 +169,10 @@ public class GelfLayout extends Layout {
 
     public void setDynamicMdcFields(String spec) {
         ConfigurationSupport.setDynamicMdcFields(spec, gelfMessageAssembler);
+    }
+
+    public void setDynamicMdcFieldTypes(String spec) {
+        ConfigurationSupport.setDynamicMdcFieldTypes(spec, gelfMessageAssembler);
     }
 
     public boolean isMdcProfiling() {

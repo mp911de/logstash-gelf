@@ -17,7 +17,7 @@ Integer numbers (e.g. `42`) are converted to a long number type. Everything else
 ## Specified types for additional fields
 
 In some rare cases it's required to specify the data type of a particular field to always use the same data type.
-This can be achieved by setting the `additionalFieldTypes` property (e.g. `additionalFieldTypes=field1=String,field2=long,field3=Long,field4=double,field5=Double`).
+This can be achieved by setting the `additionalFieldTypes` property (e.g. `additionalFieldTypes=field1=String,field2=long,field3=Long,field4=double,field5=Double`). For greater flexibility, you can also express field type rules with a Regex-pattern based approach with `dynamicMdcFieldTypes` (e.g. `dynamicMdcFieldTypes=my_field.*=String,business\..*\.field=double`)
 The type setting is only applied to additional (static) fields and MDC fields. System GELF fields are not affected by this setting.
 
 The specified types apply only to the specified fields. Not specified fields follow the default rule, see above. Available types are:

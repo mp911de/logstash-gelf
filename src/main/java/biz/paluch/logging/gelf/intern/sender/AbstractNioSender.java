@@ -52,7 +52,8 @@ public abstract class AbstractNioSender<T extends AbstractSelectableChannel & By
      * @param errorReporter the error reporter.
      * @param host hostname.
      * @param port port number.
-     * @throws UnknownHostException
+     * @exception UnknownHostException if no IP address for the {@code host} could be found, or if a scope_id was specified for
+     *            a global IPv6 address.
      */
     protected AbstractNioSender(ErrorReporter errorReporter, String host, int port) throws UnknownHostException {
 

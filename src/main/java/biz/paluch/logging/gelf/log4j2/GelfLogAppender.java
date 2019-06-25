@@ -34,14 +34,14 @@ import biz.paluch.logging.gelf.intern.*;
  * <li>port (Optional): Port, default 12201</li>
  * <li>version (Optional): GELF Version 1.0 or 1.1, default 1.0</li>
  * <li>originHost (Optional): Originating Hostname, default FQDN Hostname</li>
- * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 = throwable.cause, -1 = root cause]), default false</li>
+ * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 =
+ * throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
  * <li>mdcProfiling (Optional): Perform Profiling (Call-Duration) based on MDC Data. See <a href="#mdcProfiling">MDC
  * Profiling</a>, default false</li>
  * <li>facility (Optional): Name of the Facility, default gelf-java</li>
  * <li>additionalFieldTypes (Optional): Type specification for additional and MDC fields. Supported types: String, long, Long,
- * double, Double and discover (default if not specified, discover field type on parseability). Eg.
- * field=String,field2=double</li>
+ * double, Double and discover (default if not specified, discover field type on parseability). Eg. field=String,field2=double</li>
  * <li>ignoreExceptions (Optional): The default is <code>true</code>, causing exceptions encountered while appending events to
  * be internally logged and then ignored. When set to <code>false</code> exceptions will be propagated to the caller, instead.
  * You must set this to false when wrapping this Appender in a <code>FailoverAppender</code>.</li>
@@ -108,9 +108,7 @@ import biz.paluch.logging.gelf.intern.*;
  * Additionally, you can add the <strong>host</strong>-Field, which can supply you either the FQDN hostname, the simple hostname
  * or the local address.
  * </p>
- * <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" style="border-bottom:1px solid #9eadc0;" summary=
- * "Details for the %host formatter">
- * <tbody>
+ * <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" style="border-bottom:1px solid #9eadc0;" summary="Details for the %host formatter">
  * <tr>
  * <th class="colFirst">Option</th>
  * <th class="colLast">Description</th>
@@ -137,9 +135,15 @@ import biz.paluch.logging.gelf.intern.*;
  * </p>
  * </td>
  * </tr>
- * </tbody>
  * </table>
  *
+ * <h2>MDC Field Typing</h2> In some cases, it's required to use a fixed type for fields transported using GELF. MDC is a
+ * dynamic value source and since types can vary, so also data types in the GELF JSON vary. You can define
+ * {@code DynamicMdcFieldType} rules to declare types with Regex {@link java.util.regex.Pattern}-based rules.
+ * <p>
+ * <code>
+     &gt;DynamicMdcFieldType regex="business\..*\.field" type="double" /&lt;
+ * </code>
  *
  * <a name="mdcProfiling"></a>
  * <h2>MDC Profiling</h2>
@@ -158,6 +162,9 @@ import biz.paluch.logging.gelf.intern.*;
  * </ul>
  *
  * The {@link #append(LogEvent)} method is thread-safe and may be called by different threads at any time.
+ *
+ * @author Mark Paluch
+ * @author Thomas Herzog
  */
 @Plugin(name = "Gelf", category = "Core", elementType = "appender", printObject = true)
 public class GelfLogAppender extends AbstractAppender {
@@ -287,7 +294,8 @@ public class GelfLogAppender extends AbstractAppender {
 
         if (dynamicFieldTypeArray != null) {
             for (GelfDynamicMdcFieldType gelfDynamicMdcFieldType : dynamicFieldTypeArray) {
-                mdcGelfMessageAssembler.setDynamicMdcFieldType(gelfDynamicMdcFieldType.getPattern(), gelfDynamicMdcFieldType.getType());
+                mdcGelfMessageAssembler.setDynamicMdcFieldType(gelfDynamicMdcFieldType.getPattern(),
+                        gelfDynamicMdcFieldType.getType());
             }
         }
 
@@ -306,7 +314,7 @@ public class GelfLogAppender extends AbstractAppender {
     private static void configureFields(MdcGelfMessageAssembler mdcGelfMessageAssembler, GelfLogField[] fields,
             GelfDynamicMdcLogFields[] dynamicFieldArray) {
 
-    	if (fields == null || fields.length == 0) {
+        if (fields == null || fields.length == 0) {
             mdcGelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
                     SourceMethodName, SourceLineNumber, SourceSimpleClassName, LoggerName, Marker));
             return;
@@ -337,7 +345,7 @@ public class GelfLogAppender extends AbstractAppender {
     @Override
     public void append(LogEvent event) {
 
-    	if (event == null) {
+        if (event == null) {
             return;
         }
 

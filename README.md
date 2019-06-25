@@ -129,6 +129,7 @@ log4j.appender.gelf.AdditionalFieldTypes=fieldName1=String,fieldName2=Double,fie
 # This are fields using MDC
 log4j.appender.gelf.MdcFields=mdcField1,mdcField2
 log4j.appender.gelf.DynamicMdcFields=mdc.*,(mdc|MDC)fields
+log4j.appender.gelf.DynamicMdcFieldTypes=my_field.*=String,business\..*\.field=double
 log4j.appender.gelf.IncludeFullMdc=true
 ```
 
@@ -156,6 +157,7 @@ log4j.appender.gelf.IncludeFullMdc=true
     <!-- This are fields using MDC -->
     <param name="MdcFields" value="mdcField1,mdcField2" />
     <param name="DynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
+    <param name="DynamicMdcFieldTypes" value="my_field.*=String,business\..*\.field=double" />
     <param name="IncludeFullMdc" value="true" />
 </appender>
 ```
@@ -238,6 +240,7 @@ host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, th
             <Field name="mdcField2" mdc="mdcField2" /> 
             <DynamicMdcFields regex="mdc.*" />
             <DynamicMdcFields regex="(mdc|MDC)fields" />
+            <DynamicMdcFieldType regex="my_field.*" type="String" />
         </Gelf>
     </Appenders>
     <Loggers>
@@ -278,6 +281,7 @@ Include the library as module (see download above), then add following lines to 
         <!-- This are fields using MDC -->
         <property name="mdcFields" value="mdcField1,mdcField2" />
         <property name="dynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
+        <property name="dynamicMdcFieldTypes" value="my_field.*=String,business\..*\.field=double" />
         <property name="includeFullMdc" value="true" />
     </properties>
 </custom-handler>
@@ -323,6 +327,7 @@ standalone.xml
         <!-- This are fields using MDC -->
         <property name="mdcFields" value="mdcField1,mdcField2" />
         <property name="dynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
+        <property name="dynamicMdcFieldTypes" value="my_field.*=String,business\..*\.field=double" />
         <property name="includeFullMdc" value="true" />
     </properties>
 </custom-handler>
@@ -365,7 +370,7 @@ swarm:
             timestampPattern: "yyyy-MM-dd HH:mm:ss,SSS"
             maximumMessageSize: 8192
             additionalFields: "fieldName1=fieldValue1,fieldName2=fieldValue2"
-            additionalFieldTypes: "fieldName1=String,fieldName2=Double,fieldName3=Long"
+            additionalFieldTypes: "my_field.*=String,business\..*\.field=double"
             MdcFields: "mdcField1,mdcField2"
             dynamicMdcFields: "mdc.*,(mdc|MDC)fields"
             includeFullMdc: true
@@ -407,6 +412,7 @@ logback.xml Example:
         <!-- This are fields using MDC -->
         <mdcFields>mdcField1,mdcField2</mdcFields>
         <dynamicMdcFields>mdc.*,(mdc|MDC)fields</dynamicMdcFields>
+        <dynamicMdcFieldTypes>my_field.*=String,business\..*\.field=double</dynamicMdcFieldTypes>
         <includeFullMdc>true</includeFullMdc>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>

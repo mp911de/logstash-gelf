@@ -1,12 +1,14 @@
 package biz.paluch.logging.gelf.intern;
 
-import static biz.paluch.logging.gelf.intern.JsonWriter.*;
+import static biz.paluch.logging.gelf.intern.JsonWriter.writeKeyValueSeparator;
+import static biz.paluch.logging.gelf.intern.JsonWriter.writeMapEntry;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -22,6 +24,7 @@ import biz.paluch.logging.gelf.intern.ValueDiscovery.Result;
  *
  * @author https://github.com/t0xa/gelfj
  * @author Mark Paluch
+ * @author Thomas Herzog
  * @see <a href="http://docs.graylog.org/en/2.0/pages/gelf.html">http://docs.graylog.org/en/2.0/pages/gelf.html</a>
  */
 public class GelfMessage {
@@ -92,7 +95,7 @@ public class GelfMessage {
     private String facility = DEFAULT_FACILITY;
     private Map<String, String> additonalFields = new HashMap<String, String>();
     private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
-    private Map<Pattern, String> dynamicMdcFieldTypes = new HashMap<Pattern, String>();
+    private Map<Pattern, String> dynamicMdcFieldTypes = Collections.emptyMap();
     private int maximumMessageSize = DEFAULT_MESSAGE_SIZE;
 
     public GelfMessage() {
@@ -512,12 +515,8 @@ public class GelfMessage {
         this.additionalFieldTypes.putAll(additionalFieldTypes);
     }
 
-    public Map<Pattern, String> getDynamicMdcFieldTypes() {
-        return dynamicMdcFieldTypes;
-    }
-
     public void setDynamicMdcFieldTypes(Map<Pattern, String> dynamicMdcFieldTypes) {
-        this.dynamicMdcFieldTypes.putAll(dynamicMdcFieldTypes);
+        this.dynamicMdcFieldTypes = dynamicMdcFieldTypes;
     }
 
     /**

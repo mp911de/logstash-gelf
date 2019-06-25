@@ -20,6 +20,7 @@ import biz.paluch.logging.gelf.intern.PoolingGelfMessageBuilder;
  * exposes commonly used details of log events.
  *
  * @author Mark Paluch
+ * @author Thomas Herzog
  * @since 26.09.13 15:05
  */
 public class GelfMessageAssembler implements HostAndPortProvider {
@@ -51,7 +52,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
 
     private List<MessageField> fields = new ArrayList<MessageField>();
     private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
-    private Map<Pattern, String> dynamicMdcFieldTypes = new HashMap<Pattern, String>();
+    private Map<Pattern, String> dynamicMdcFieldTypes = new LinkedHashMap<Pattern, String>();
 
     private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSS";
 

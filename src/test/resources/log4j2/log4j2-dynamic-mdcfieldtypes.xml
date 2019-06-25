@@ -13,9 +13,9 @@
 			<Field name="server.addr" pattern="%host{address}" />
 			<Field name="fieldName1" literal="fieldValue1" />
 			<Field name="fieldName2" literal="fieldValue2" />
-			<DynamicMdcFieldTypes regex="myMdc.long.*" type="Long" />
-			<DynamicMdcFieldTypes regex="myMdc.double.*" type="Double" />
-			<DynamicMdcFieldTypes regex="myMdc.string.*" type="String" />
+            <DynamicMdcFieldType regex="myMdc.long.*" type="Long"/>
+            <DynamicMdcFieldType regex="myMdc.double.*" type="Double"/>
+            <DynamicMdcFieldType regex="myMdc.string.*" type="String"/>
 			<DynamicMdcFields regex="myMdc.*" />
 		</Gelf>
 

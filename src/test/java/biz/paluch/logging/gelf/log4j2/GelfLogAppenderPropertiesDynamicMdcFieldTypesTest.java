@@ -1,9 +1,9 @@
 package biz.paluch.logging.gelf.log4j2;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.intern.GelfMessage;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.HashMap;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
@@ -12,9 +12,11 @@ import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Thomas Herzog
@@ -40,7 +42,7 @@ class GelfLogAppenderPropertiesDynamicMdcFieldTypesTest {
 
     @BeforeEach
     private void beforeEach() throws Exception {
-        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-dynamic-mdcfieltypes.xml");
+        System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-dynamic-mdcfieldtypes.xml");
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
 
@@ -65,8 +67,7 @@ class GelfLogAppenderPropertiesDynamicMdcFieldTypesTest {
 
         // -- Then --
         String json = gelfMessage.toJson();
-        HashMap<String, Object> result = new ObjectMapper()
-                .configure(DeserializationFeature.USE_LONG_FOR_INTS, true)
+        HashMap<String, Object> result = new ObjectMapper().configure(DeserializationFeature.USE_LONG_FOR_INTS, true)
                 .readValue(json, HashMap.class);
         assertThat(result.get("_" + MY_MDC_LONG_VALUE_1)).isNotNull().isEqualTo(LONG_VALUE_1);
         assertThat(result.get("_" + MY_MDC_LONG_VALUE_2)).isNotNull().isEqualTo(LONG_VALUE_2);
@@ -89,8 +90,7 @@ class GelfLogAppenderPropertiesDynamicMdcFieldTypesTest {
 
         // -- Then --
         String json = gelfMessage.toJson();
-        HashMap<String, Object> result = new ObjectMapper()
-                .configure(DeserializationFeature.USE_LONG_FOR_INTS, true)
+        HashMap<String, Object> result = new ObjectMapper().configure(DeserializationFeature.USE_LONG_FOR_INTS, true)
                 .readValue(json, HashMap.class);
         assertThat(result.get("_" + MY_MDC_LONG_VALUE_1)).isNull();
     }

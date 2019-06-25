@@ -18,6 +18,7 @@ Following settings can be used:
 | additionalFieldTypes | Type specification for additional and MDC fields. Supported types: `String`, `long`, `Long`, `double`, `Double` and `discover` (default if not specified, discover field type on parseability). Eg. field=String,field2=double | `discover` for all additional fields |
 | mdcFields         | Send additional fields whose values are obtained from MDC. Name of the Fields are comma-separated. Example: `mdcFields=Application,Version,SomeOtherFieldName` | none |
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
+| dynamicMdcFieldTypes | Pattern-based type specification for additional and MDC fields. Key-value pairs are comma-separated. Example: `my_field.*=String,business\..*\.field=double` | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
 | maximumMessageSize| Maximum message size (in bytes). If the message size is exceeded, the appender will submit the message in multiple chunks. | `8192` |
 | timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSS` |
@@ -55,6 +56,7 @@ logback.xml Example:
             <additionalFieldTypes>fieldName1=String,fieldName2=Double,fieldName3=Long</additionalFieldTypes>
             <mdcFields>mdcField1,mdcField2</mdcFields>
             <dynamicMdcFields>myMdc.*,[a-z]+Field</dynamicMdcFields>
+            <dynamicMdcFieldTypes>my_field.*=String,business\..*\.field=double</dynamicMdcFieldTypes>
             <includeFullMdc>true</includeFullMdc>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>INFO</level>

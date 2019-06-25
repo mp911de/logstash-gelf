@@ -18,6 +18,7 @@ Following settings can be used:
 | additionalFieldTypes | Type specification for additional and MDC fields. Supported types: `String`, `long`, `Long`, `double`, `Double` and `discover` (default if not specified, discover field type on parseability). Eg. field=String,field2=double | `discover` for all additional fields |
 | mdcFields         | Send additional fields whose values are obtained from MDC. Name of the Fields are comma-separated. Example: `mdcFields=Application,Version,SomeOtherFieldName` | none |
 | dynamicMdcFields  | Dynamic MDC Fields allows you to extract MDC values based on one or more regular expressions. Multiple regexes are comma-separated. The name of the MDC entry is used as GELF field name. | none |
+| dynamicMdcFieldTypes | Pattern-based type specification for additional and MDC fields. Key-value pairs are comma-separated. Example: `my_field.*=String,business\..*\.field=double` | none |
 | includeFullMdc    | Include all fields from the MDC. | `false` |
 | timestampPattern  | Date/time pattern for the `Time` field| `yyyy-MM-dd HH:mm:ss,SSS` |
 
@@ -62,6 +63,7 @@ Properties:
     log4j.appender.file.layout.AdditionalFieldTypes=fieldName1=String,fieldName2=Double,fieldName3=Long
     log4j.appender.file.layout.MdcFields=mdcField1,mdcField2
     log4j.appender.file.layout.DynamicMdcFields=mdc.*,(mdc|MDC)fields
+    log4j.appender.file.layout.DynamicMdcFieldTypes=my_field.*=String,business\..*\.field=double
     log4j.appender.file.layout.IncludeFullMdc=true
 
 
@@ -80,6 +82,7 @@ XML:
             <param name="AdditionalFieldTypes" value="fieldName1=String,fieldName2=Double,fieldName3=Long" />
             <param name="MdcFields" value="mdcField1,mdcField2" />
             <param name="DynamicMdcFields" value="mdc.*,(mdc|MDC)fields" />
+            <param name="DynamicMdcFieldTypes" value="my_field.*=String,business\..*\.field=double" />
             <param name="IncludeFullMdc" value="true" />
         </layout>
     </appender>

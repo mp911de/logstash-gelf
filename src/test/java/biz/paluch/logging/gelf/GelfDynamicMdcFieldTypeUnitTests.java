@@ -1,14 +1,14 @@
 package biz.paluch.logging.gelf;
 
-import biz.paluch.logging.gelf.log4j2.GelfDynamicMdcFieldType;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import biz.paluch.logging.gelf.log4j2.GelfDynamicMdcFieldType;
 
 /**
  * @author Thomas Herzog
@@ -29,7 +29,7 @@ public class GelfDynamicMdcFieldTypeUnitTests {
         expectedException.expect(IllegalArgumentException.class);
 
         // -- When --
-        GelfDynamicMdcFieldType.createField(null, regex, type);
+        GelfDynamicMdcFieldType.createField(regex, type);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class GelfDynamicMdcFieldTypeUnitTests {
         expectedException.expect(IllegalArgumentException.class);
 
         // -- When --
-        GelfDynamicMdcFieldType.createField(null, regex, type);
+        GelfDynamicMdcFieldType.createField(regex, type);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class GelfDynamicMdcFieldTypeUnitTests {
         // -- Then --
         expectedException.expect(IllegalArgumentException.class);
 
-        GelfDynamicMdcFieldType.createField(null, regex, type);
+        GelfDynamicMdcFieldType.createField(regex, type);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class GelfDynamicMdcFieldTypeUnitTests {
         String type = "String";
 
         // -- When --
-        GelfDynamicMdcFieldType fieldType = GelfDynamicMdcFieldType.createField(null, regex, type);
+        GelfDynamicMdcFieldType fieldType = GelfDynamicMdcFieldType.createField(regex, type);
 
         // -- Then --
         assertThat(fieldType).isNotNull();

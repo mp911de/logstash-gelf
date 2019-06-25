@@ -7,10 +7,11 @@ import biz.paluch.logging.gelf.StaticMessageField;
 
 /**
  * @author Mark Paluch
+ * @author Thomas Herzog
  */
 public class ConfigurationSupport {
 
-	public static final String MULTI_VALUE_DELIMITTER = ",";
+    public static final String MULTI_VALUE_DELIMITTER = ",";
     public static final char EQ = '=';
 
     private ConfigurationSupport() {

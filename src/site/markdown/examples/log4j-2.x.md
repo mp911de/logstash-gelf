@@ -52,6 +52,14 @@ In order to do so, use nested Field elements below the Appender element.
     <DynamicMdcFields regex="mdc.*" />
 
 In contrast to the configuration of other log frameworks log4j2 config uses one `DynamicMdcFields` element per regex (not separated by comma).
+
+### Dynamic Field Typing
+
+ In some cases, it's required to use a fixed type for fields transported using GELF. MDC is a
+  dynamic value source and since types can vary, so also data types in the GELF JSON vary. You can define
+  `DynamicMdcFieldType` rules to declare types with Regex `Pattern`-based rules.
+  
+    <DynamicMdcFieldTypeGelfLogAppender.java regex="business\..*\.field" type="double"/>
     
 ### Log-Event fields
 
@@ -83,6 +91,7 @@ XML:
                 <Field name="mdcField2" mdc="mdcField2" /> <!-- This is a field using MDC -->
                 <DynamicMdcFields regex="mdc.*" />
                 <DynamicMdcFields regex="(mdc|MDC)fields" />
+                <DynamicMdcFieldType regex="my_field.*" type="String" />
             </Gelf>
         </Appenders>
         <Loggers>
@@ -91,5 +100,4 @@ XML:
             </Root>
         </Loggers>
     </Configuration>
-      
       
