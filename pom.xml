@@ -57,36 +57,36 @@
         <log4j.version>1.2.14</log4j.version>
         <log4j2.version>2.9.1</log4j2.version>
         <junit.version>4.12</junit.version>
-        <junit5.version>5.3.2</junit5.version>
-        <assertj.version>3.11.1</assertj.version>
-        <mockito.version>2.23.4</mockito.version>
-        <jackson.version>2.9.8</jackson.version>
-        <jedis.version>3.0.1</jedis.version>
-        <jedis-commons-pool2.version>2.4.3</jedis-commons-pool2.version>
+        <junit5.version>5.5.1</junit5.version>
+        <assertj.version>3.13.1</assertj.version>
+        <mockito.version>3.0.0</mockito.version>
+        <jackson.version>2.9.9.2</jackson.version>
+        <jedis.version>3.1.0</jedis.version>
+        <jedis-commons-pool2.version>2.7.0</jedis-commons-pool2.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
         <logback-classic.version>1.1.3</logback-classic.version>
         <org.jboss.logmanager.version>1.5.2.Final</org.jboss.logmanager.version>
-        <arquillian.version>1.4.0.Final</arquillian.version>
+        <arquillian.version>1.4.1.Final</arquillian.version>
         <version.org.wildfly.arquillian>2.1.0.Final</version.org.wildfly.arquillian>
 
         <site-plugin.version>3.6</site-plugin.version>
-        <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
-        <animal-sniffer-plugin.version>1.16</animal-sniffer-plugin.version>
-        <doxia-module-markdown.version>1.7</doxia-module-markdown.version>
-        <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
+        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
+        <animal-sniffer-plugin.version>1.18</animal-sniffer-plugin.version>
+        <doxia-module-markdown.version>1.9</doxia-module-markdown.version>
+        <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <netty-all.version>4.1.32.Final</netty-all.version>
-        <maven-scm-publish-plugin.version>1.1</maven-scm-publish-plugin.version>
+        <netty-all.version>4.1.38.Final</netty-all.version>
+        <maven-scm-publish-plugin.version>3.0.0</maven-scm-publish-plugin.version>
         <tempus-fugit.version>1.1</tempus-fugit.version>
-        <maven-dependency-plugin.version>3.0.2</maven-dependency-plugin.version>
-        <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
-        <maven-scm-provider-gitexe.version>1.9.5</maven-scm-provider-gitexe.version>
-        <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
+        <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+        <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
+        <maven-scm-provider-gitexe.version>1.11.2</maven-scm-provider-gitexe.version>
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <maven.jacoco.version>0.7.9</maven.jacoco.version>
-        <kafka-clients.version>2.1.1</kafka-clients.version>
-        <kafka-junit.version>4.1.3</kafka-junit.version>
+        <kafka-clients.version>2.3.0</kafka-clients.version>
+        <kafka-junit.version>4.1.6</kafka-junit.version>
     </properties>
 
     <developers>
@@ -167,18 +167,6 @@
                         <exclude>**/*IntegrationTest.java</exclude>
                     </excludes>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>1.0.2</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>${junit5.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
 
             <plugin>
@@ -310,7 +298,7 @@
         <dependency>
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
-            <version>3.3.6</version>
+            <version>3.4.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -437,7 +425,7 @@
         <dependency>
             <groupId>org.wildfly.core</groupId>
             <artifactId>wildfly-cli</artifactId>
-            <version>5.0.0.Final</version>
+            <version>10.0.0.Beta2</version>
             <scope>test</scope>
         </dependency>
 
@@ -615,13 +603,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.junit.jupiter</groupId>
-                                <artifactId>junit-jupiter-engine</artifactId>
-                                <version>${junit5.version}</version>
-                            </dependency>
-                        </dependencies>
                     </plugin>
                     <plugin>
                         <artifactId>maven-resources-plugin</artifactId>
