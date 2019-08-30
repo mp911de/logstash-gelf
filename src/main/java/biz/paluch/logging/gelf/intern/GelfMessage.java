@@ -7,10 +7,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
@@ -28,6 +28,8 @@ import biz.paluch.logging.gelf.intern.ValueDiscovery.Result;
  * @see <a href="http://docs.graylog.org/en/2.0/pages/gelf.html">http://docs.graylog.org/en/2.0/pages/gelf.html</a>
  */
 public class GelfMessage {
+
+    private static final Random rand = new Random();
 
     public static final String FIELD_HOST = "host";
     public static final String FIELD_SHORT_MESSAGE = "short_message";
@@ -87,7 +89,6 @@ public class GelfMessage {
 
     private String version = GELF_VERSION;
     private String host;
-    private byte[] hostBytes = NONE;
     private String shortMessage;
     private String fullMessage;
     private long javaTimestamp;
@@ -377,14 +378,14 @@ public class GelfMessage {
     protected ByteBuffer[] sliceDatagrams(ByteBuffer source, int datagrams, ByteBuffer target) {
         int messageLength = source.limit();
 
-        int millis = getCurrentMillis();
+        byte[] msgId = generateMsgId();
 
         // Reuse length of datagrams array since this is supposed to be the correct number of datagrams
         ByteBuffer[] slices = new ByteBuffer[datagrams];
         for (int idx = 0; idx < datagrams; idx++) {
 
             int start = target.position();
-            target.put(GELF_CHUNKED_ID).putInt(millis).put(hostBytes).put((byte) idx).put((byte) datagrams);
+            target.put(GELF_CHUNKED_ID).put(msgId).put((byte) idx).put((byte) datagrams);
 
             int from = idx * maximumMessageSize;
             int to = from + maximumMessageSize;
@@ -402,8 +403,42 @@ public class GelfMessage {
         return slices;
     }
 
-    public int getCurrentMillis() {
-        return (int) System.currentTimeMillis();
+    byte[] generateMsgId() {
+        // Considerations about generating the message ID: The GELF documentation suggests to
+        // "[g]enerate [the id] from millisecond timestamp + hostname for example":
+        // https://docs.graylog.org/en/3.1/pages/gelf.html#chunking
+        //
+        // However, relying on current time in milliseconds on the same system will result in a high
+        // collision probability if lots of messages are generated quickly. Things will be even
+        // worse if multiple servers send to the same log server. Adding the hostname is not
+        // guaranteed to help, and if the hostname is the FQDN it is even unlikely to be unique at
+        // all.
+        //
+        // The GELF module used by Logstash uses the first eight bytes of an MD5 hash of the current
+        // time as floating point, a hyphen, and an eight byte random number:
+        // https://github.com/logstash-plugins/logstash-output-gelf
+        // https://github.com/graylog-labs/gelf-rb/blob/master/lib/gelf/notifier.rb#L239 It probably
+        // doesn't have to be that clever:
+        //
+        // Using the timestamp plus a random number will mean we only have to worry about collision
+        // of random numbers within the same milliseconds. How short can the timestamp be before it
+        // will collide with old timestamps? Every second Graylog will evict expired messaged (5
+        // seconds old) from the pool:
+        // https://github.com/Graylog2/graylog2-server/blob/master/graylog2-server/src/main/java/org/graylog2/inputs/codecs/GelfChunkAggregator.java
+        // Thus, we just need six seconds which will require two bytes. Then we can spend six bytes
+        // on a random number.
+
+        return ByteBuffer.allocate(8).putLong(getRandomLong())
+                // Overwrite the last two bytes with the timestamp.
+                .putShort(6, getCurrentTimeMillis()).array();
+    }
+
+    long getRandomLong() {
+        return rand.nextLong();
+    }
+
+    short getCurrentTimeMillis() {
+        return (short) System.currentTimeMillis();
     }
 
     private byte[] gzipMessage(byte[] message) {
@@ -454,9 +489,6 @@ public class GelfMessage {
 
     public void setHost(String host) {
         this.host = host;
-        if (host != null) {
-            this.hostBytes = lastFourAsciiBytes(host);
-        }
     }
 
     public String getShortMessage() {
@@ -604,9 +636,6 @@ public class GelfMessage {
         if (host != null ? !host.equals(that.host) : that.host != null) {
             return false;
         }
-        if (!Arrays.equals(hostBytes, that.hostBytes)) {
-            return false;
-        }
         if (level != null ? !level.equals(that.level) : that.level != null) {
             return false;
         }
@@ -624,7 +653,6 @@ public class GelfMessage {
     public int hashCode() {
         int result = version != null ? version.hashCode() : 0;
         result = 31 * result + (host != null ? host.hashCode() : 0);
-        result = 31 * result + (hostBytes != null ? Arrays.hashCode(hostBytes) : 0);
         result = 31 * result + (shortMessage != null ? shortMessage.hashCode() : 0);
         result = 31 * result + (fullMessage != null ? fullMessage.hashCode() : 0);
         result = 31 * result + (int) (javaTimestamp ^ (javaTimestamp >>> 32));

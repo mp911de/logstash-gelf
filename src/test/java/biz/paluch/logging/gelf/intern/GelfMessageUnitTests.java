@@ -2,6 +2,8 @@ package biz.paluch.logging.gelf.intern;
 
 import static biz.paluch.logging.gelf.GelfMessageBuilder.newInstance;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -178,6 +180,26 @@ class GelfMessageUnitTests {
         }
     }
 
+    @Test
+    void testGenerateMsgId() {
+        GelfMessage gelfMessage = new GelfMessage() {
+            @Override
+            long getRandomLong() {
+                return 0x8040201008040201L;
+            }
+
+            @Override
+            short getCurrentTimeMillis() {
+                return 0x0603;
+            }
+        };
+
+        byte[] expectedBytes = { (byte) 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x06, 0x03 };
+        byte[] msgId = gelfMessage.generateMsgId();
+        assertEquals(8, msgId.length); // Just to be explicit.
+        assertArrayEquals(expectedBytes, msgId);
+    }
+
     String toString(ByteBuffer allocate) {
         if (allocate.hasArray()) {
             return new String(allocate.array(), 0, allocate.arrayOffset() + allocate.position());
@@ -249,8 +271,8 @@ class GelfMessageUnitTests {
 
         GelfMessage gelfMessage = new GelfMessage() {
             @Override
-            public int getCurrentMillis() {
-                return 1000;
+            byte[] generateMsgId() {
+                return new byte[] { (byte) 128, 64, 32, 16, 8, 4, 2, 1 };
             }
         };
 
