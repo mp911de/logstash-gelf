@@ -378,14 +378,14 @@ public class GelfMessage {
     protected ByteBuffer[] sliceDatagrams(ByteBuffer source, int datagrams, ByteBuffer target) {
         int messageLength = source.limit();
 
-        byte[] msgId = generateMsgId();
+        long msgId = generateMsgId();
 
         // Reuse length of datagrams array since this is supposed to be the correct number of datagrams
         ByteBuffer[] slices = new ByteBuffer[datagrams];
         for (int idx = 0; idx < datagrams; idx++) {
 
             int start = target.position();
-            target.put(GELF_CHUNKED_ID).put(msgId).put((byte) idx).put((byte) datagrams);
+            target.put(GELF_CHUNKED_ID).putLong(msgId).put((byte) idx).put((byte) datagrams);
 
             int from = idx * maximumMessageSize;
             int to = from + maximumMessageSize;
@@ -403,7 +403,7 @@ public class GelfMessage {
         return slices;
     }
 
-    byte[] generateMsgId() {
+    long generateMsgId() {
         // Considerations about generating the message ID: The GELF documentation suggests to
         // "[g]enerate [the id] from millisecond timestamp + hostname for example":
         // https://docs.graylog.org/en/3.1/pages/gelf.html#chunking
@@ -428,17 +428,16 @@ public class GelfMessage {
         // Thus, we just need six seconds which will require two bytes. Then we can spend six bytes
         // on a random number.
 
-        return ByteBuffer.allocate(8).putLong(getRandomLong())
-                // Overwrite the last two bytes with the timestamp.
-                .putShort(6, getCurrentTimeMillis()).array();
+        return (getRandomLong() & 0xFFFFFFFFFFFF0000L) |
+                (getCurrentTimeMillis() & 0xFFFFL);
     }
 
     long getRandomLong() {
         return rand.nextLong();
     }
 
-    short getCurrentTimeMillis() {
-        return (short) System.currentTimeMillis();
+    long getCurrentTimeMillis() {
+        return System.currentTimeMillis();
     }
 
     private byte[] gzipMessage(byte[] message) {
