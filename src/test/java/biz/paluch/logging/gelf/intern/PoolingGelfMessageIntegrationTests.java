@@ -114,8 +114,8 @@ class PoolingGelfMessageIntegrationTests {
 
         GelfMessage gelfMessage = new GelfMessage() {
             @Override
-            byte[] generateMsgId() {
-                return new byte[] { (byte) 128, 64, 32, 16, 8, 4, 2, 1 };
+            long generateMsgId() {
+                return 0x8040201008048683L;
             }
         };
 
@@ -135,8 +135,8 @@ class PoolingGelfMessageIntegrationTests {
 
         PoolingGelfMessage gelfMessage = new PoolingGelfMessage(PoolHolder.threadLocal()) {
             @Override
-            byte[] generateMsgId() {
-                return new byte[] { (byte) 128, 64, 32, 16, 8, 4, 2, 1 };
+            long generateMsgId() {
+                return 0x8040201008048683L;
             }
         };
 
