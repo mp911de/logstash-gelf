@@ -425,11 +425,11 @@ public class GelfMessage {
         // will collide with old timestamps? Every second Graylog will evict expired messaged (5
         // seconds old) from the pool:
         // https://github.com/Graylog2/graylog2-server/blob/master/graylog2-server/src/main/java/org/graylog2/inputs/codecs/GelfChunkAggregator.java
-        // Thus, we just need six seconds which will require two bytes. Then we can spend six bytes
-        // on a random number.
+        // Thus, we just need six seconds which will require 13 bits. Then we can spend the rest on
+        // a random number.
 
-        return (getRandomLong() & 0xFFFFFFFFFFFF0000L) |
-                (getCurrentTimeMillis() & 0xFFFFL);
+        return (getRandomLong() & 0xFFFFFFFFFFFFE000L) |
+                (getCurrentTimeMillis() & 0x1FFFL);
     }
 
     long getRandomLong() {

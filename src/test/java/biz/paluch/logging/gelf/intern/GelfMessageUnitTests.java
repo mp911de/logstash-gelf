@@ -183,16 +183,16 @@ class GelfMessageUnitTests {
         GelfMessage gelfMessage = new GelfMessage() {
             @Override
             long getRandomLong() {
-                return 0x8040201008040201L;
+                return 0x804020100804A201L;
             }
 
             @Override
             long getCurrentTimeMillis() {
-                return 0x90C06030090C8683L;
+                return 0x90C06030090C1683L;
             }
         };
 
-        assertThat(gelfMessage.generateMsgId()).isEqualTo(0x8040201008048683L);
+        assertThat(gelfMessage.generateMsgId()).isEqualTo(0x804020100804B683L);
     }
 
     String toString(ByteBuffer allocate) {
