@@ -31,7 +31,7 @@ public class KafkaGelfSender implements GelfSender {
 
     @Override
     public boolean sendMessage(GelfMessage message) {
-        ProducerRecord<byte[], byte[]> record = new ProducerRecord<byte[], byte[]>(topicName, message.toJson().getBytes());
+        ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(topicName, message.toJson().getBytes());
         boolean hasOffset;
         try {
             Future<RecordMetadata> metadata = kafkaProducer.send(record);

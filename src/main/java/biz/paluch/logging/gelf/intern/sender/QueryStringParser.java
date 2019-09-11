@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Query string parser for {@link URI} query strings.
- * 
+ *
  * @author Mark Paluch
  */
 class QueryStringParser {
@@ -17,7 +17,7 @@ class QueryStringParser {
     private static final Map<String, TimeUnit> TIME_UNIT_MAP;
 
     static {
-        Map<String, TimeUnit> unitMap = new HashMap<String, TimeUnit>();
+        Map<String, TimeUnit> unitMap = new HashMap<>();
         unitMap.put("ns", TimeUnit.NANOSECONDS);
         unitMap.put("us", TimeUnit.MICROSECONDS);
         unitMap.put("ms", TimeUnit.MILLISECONDS);
@@ -30,13 +30,13 @@ class QueryStringParser {
 
     /**
      * Parse the query part of an {@link URI} to a single-valued key-value map. All keys are transformed to lower-case.
-     * 
+     *
      * @param uri
      * @return the key-value map.
      */
     static Map<String, String> parse(URI uri) {
 
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
 
         String queryString = uri.getQuery();
         if (queryString == null && uri.getSchemeSpecificPart() != null && uri.getSchemeSpecificPart().contains("?")) {

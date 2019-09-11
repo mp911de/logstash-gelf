@@ -23,8 +23,8 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
     private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
     private static final byte[] GZIP_ID = new byte[] { 0x1f, 0xffffff8b };
 
-    private final Map<ChunkId, List<Chunk>> chunks = new HashMap<ChunkId, List<Chunk>>();
-    private final List<Object> values = new ArrayList<Object>();
+    private final Map<ChunkId, List<Chunk>> chunks = new HashMap<>();
+    private final List<Object> values = new ArrayList<>();
     private ByteArrayOutputStream intermediate;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -71,7 +71,7 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
                         if (chunks.containsKey(chunkId)) {
                             messageChunks = chunks.get(chunkId);
                         } else {
-                            messageChunks = new ArrayList<Chunk>();
+                            messageChunks = new ArrayList<>();
                             chunks.put(chunkId, messageChunks);
                         }
                         messageChunks.add(new Chunk(message, number));
@@ -145,7 +145,7 @@ public class GelfInboundHandler extends ChannelInboundHandlerAdapter {
 
     public List<Object> getJsonValues() {
         synchronized (values) {
-            return new ArrayList<Object>(values);
+            return new ArrayList<>(values);
         }
     }
 

@@ -75,7 +75,7 @@ public class GelfUtil {
     }
 
     public static Set<String> getMatchingMdcNames(DynamicMdcMessageField field, Set<String> mdcNames) {
-        Set<String> matchingMdcNames = new HashSet<String>();
+        Set<String> matchingMdcNames = new HashSet<>();
 
         for (String mdcName : mdcNames) {
             if (field.getPattern().matcher(mdcName).matches()) {

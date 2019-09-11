@@ -60,7 +60,7 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
             props.put(ProducerConfig.RETRIES_CONFIG, 2);
         }
 
-        KafkaProducer<byte[], byte[]> kafkaProducer = new KafkaProducer<byte[], byte[]>(props);
+        KafkaProducer<byte[], byte[]> kafkaProducer = new KafkaProducer<>(props);
 
         return new KafkaGelfSender(kafkaProducer, kafkaLogTopic, configuration.getErrorReporter());
     }

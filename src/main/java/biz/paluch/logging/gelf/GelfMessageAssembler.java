@@ -50,9 +50,9 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private StackTraceExtraction stackTraceExtraction = StackTraceExtraction.OFF;
     private int maximumMessageSize = 8192;
 
-    private List<MessageField> fields = new ArrayList<MessageField>();
-    private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
-    private Map<Pattern, String> dynamicMdcFieldTypes = new LinkedHashMap<Pattern, String>();
+    private List<MessageField> fields = new ArrayList<>();
+    private Map<String, String> additionalFieldTypes = new HashMap<>();
+    private Map<Pattern, String> dynamicMdcFieldTypes = new LinkedHashMap<>();
 
     private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSS";
 

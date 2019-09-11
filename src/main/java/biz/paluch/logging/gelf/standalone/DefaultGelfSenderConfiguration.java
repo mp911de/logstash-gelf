@@ -18,7 +18,7 @@ public class DefaultGelfSenderConfiguration implements GelfSenderConfiguration {
     private ErrorReporter errorReporter;
     private String host;
     private int port;
-    protected Map<String, Object> specificConfigurations = new HashMap<String, Object>();
+    protected Map<String, Object> specificConfigurations = new HashMap<>();
 
     public DefaultGelfSenderConfiguration() {
         errorReporter = new MessagePostprocessingErrorReporter(new Slf4jErrorReporter());

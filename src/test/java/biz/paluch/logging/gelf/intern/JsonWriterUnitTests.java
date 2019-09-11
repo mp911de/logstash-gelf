@@ -29,7 +29,7 @@ class JsonWriterUnitTests {
     @Test
     void testUtf8Encoding() throws Exception {
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("key", content);
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -43,7 +43,7 @@ class JsonWriterUnitTests {
     @Test
     void testUtf8EncodingWithJacksonEncoding() throws Exception {
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("key", content);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -55,7 +55,7 @@ class JsonWriterUnitTests {
     @Test
     void testTypeEncoding() throws Exception {
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("key", "string");
         map.put("double", Double.MAX_VALUE);
         map.put("doublePosInfinite", Double.POSITIVE_INFINITY);
@@ -63,7 +63,7 @@ class JsonWriterUnitTests {
         map.put("doubleNaN", Double.NaN);
         map.put("int", 1);
 
-        Map<String, Object> expected = new HashMap<String, Object>();
+        Map<String, Object> expected = new HashMap<>();
         expected.put("key", "string");
         expected.put("double", Double.MAX_VALUE);
         expected.put("doublePosInfinite", "Infinite");

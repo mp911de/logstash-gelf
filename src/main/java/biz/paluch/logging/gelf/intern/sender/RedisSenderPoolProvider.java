@@ -20,7 +20,7 @@ import redis.clients.jedis.util.Pool;
 enum RedisSenderPoolProvider {
 
     STANDALONE {
-        private Map<String, JedisPool> standalonePools = new HashMap<String, JedisPool>();
+        private Map<String, JedisPool> standalonePools = new HashMap<>();
 
         @Override
         public String getScheme() {
@@ -59,7 +59,7 @@ enum RedisSenderPoolProvider {
     SENTINEL {
         public static final String MASTER_ID = "masterId";
 
-        private Map<String, JedisSentinelPool> sentinelPools = new HashMap<String, JedisSentinelPool>();
+        private Map<String, JedisSentinelPool> sentinelPools = new HashMap<>();
 
         @Override
         public String getScheme() {
@@ -121,7 +121,7 @@ enum RedisSenderPoolProvider {
         }
 
         protected Set<String> getSentinels(URI hostURI) {
-            Set<String> sentinels = new HashSet<String>();
+            Set<String> sentinels = new HashSet<>();
 
             String[] sentinelHostNames = hostURI.getHost().split("\\,");
             for (String sentinelHostName : sentinelHostNames) {

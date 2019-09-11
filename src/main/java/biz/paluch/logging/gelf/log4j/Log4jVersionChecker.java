@@ -29,9 +29,7 @@ class Log4jVersionChecker {
 
             try {
                 timeStamp = (Long) methodGetTimeStamp.invoke(event);
-            } catch (IllegalAccessException e) {
-                // Just return the current timestamp
-            } catch (InvocationTargetException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 // Just return the current timestamp
             }
         }

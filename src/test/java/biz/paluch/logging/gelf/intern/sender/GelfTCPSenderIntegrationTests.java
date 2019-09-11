@@ -31,7 +31,7 @@ class GelfTCPSenderIntegrationTests {
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
     private final CountDownLatch latch = new CountDownLatch(1);
-    private final Queue<Socket> sockets = new LinkedBlockingQueue<Socket>();
+    private final Queue<Socket> sockets = new LinkedBlockingQueue<>();
     private volatile ServerSocket serverSocket;
     private volatile boolean loopActive = true;
 

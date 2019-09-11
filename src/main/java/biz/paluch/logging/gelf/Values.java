@@ -7,13 +7,13 @@ import java.util.Set;
 
 /**
  * Value object to abstract multiple values mapped by a {@link String} key.
- * 
+ *
  * @author Mark Paluch
  * @since 28.02.14 09:50
  */
 public class Values {
 
-    private Map<String, Object> values = new HashMap<String, Object>();
+    private Map<String, Object> values = new HashMap<>();
 
     public Values() {
     }

@@ -9,7 +9,7 @@ import java.util.logging.*;
  */
 public class TestHandler extends Handler {
 
-    private static List<String> messages = new ArrayList<String>();
+    private static List<String> messages = new ArrayList<>();
 
     public TestHandler() {
         super();

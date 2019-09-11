@@ -28,7 +28,7 @@ class BeanPropertyExtraction {
 
     private static Map<String, Method> createPropertyToMethodMap(Object object) {
         Class<?> beanClass = object.getClass();
-        Map<String, Method> methodMap = new HashMap<String, Method>();
+        Map<String, Method> methodMap = new HashMap<>();
 
         Method[] methods = beanClass.getMethods();
         for (Method method : methods) {
@@ -71,7 +71,7 @@ class BeanPropertyExtraction {
     }
 
     private static Map<String, Object> retrieveValues(Object object, Map<String, Method> methodMap) {
-        Map<String, Object> fields = new HashMap<String, Object>();
+        Map<String, Object> fields = new HashMap<>();
 
         for (Map.Entry<String, Method> entry : methodMap.entrySet()) {
             try {
@@ -81,9 +81,7 @@ class BeanPropertyExtraction {
                     fields.put(entry.getKey(), value);
                 }
 
-            } catch (IllegalAccessException e) {
-                // ignore
-            } catch (InvocationTargetException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 // ignore
             }
 

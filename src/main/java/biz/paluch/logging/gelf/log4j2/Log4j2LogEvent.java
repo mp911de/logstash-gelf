@@ -6,13 +6,7 @@ import java.util.Set;
 
 import org.apache.logging.log4j.Level;
 
-import biz.paluch.logging.gelf.DynamicMdcMessageField;
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.LogEvent;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MdcMessageField;
-import biz.paluch.logging.gelf.MessageField;
-import biz.paluch.logging.gelf.Values;
+import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
@@ -161,7 +155,7 @@ class Log4j2LogEvent implements LogEvent {
     }
 
     private Set<String> getAllMdcNames() {
-        Set<String> mdcNames = new HashSet<String>();
+        Set<String> mdcNames = new HashSet<>();
 
         mdcNames.addAll(logEvent.getContextMap().keySet());
         return mdcNames;

@@ -4,11 +4,7 @@ import static biz.paluch.logging.RuntimeContainerProperties.getProperty;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import biz.paluch.logging.gelf.intern.Closer;
 
@@ -76,7 +72,7 @@ public class LogMessageField implements MessageField {
 
     public static List<LogMessageField> getDefaultMapping(boolean readFromDefaultsFile, NamedLogField... supportedFields) {
 
-        List<LogMessageField> result = new ArrayList<LogMessageField>();
+        List<LogMessageField> result = new ArrayList<>();
         List<NamedLogField> supportedLogFields = Arrays.asList(supportedFields);
 
         if (readFromDefaultsFile) {

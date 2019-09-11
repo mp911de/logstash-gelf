@@ -107,8 +107,8 @@ public final class GelfSenderFactory {
     private static class SenderProviderHolder {
 
         private static ServiceLoader<GelfSenderProvider> gelfSenderProvider = ServiceLoader.load(GelfSenderProvider.class);
-        private static List<GelfSenderProvider> providerList = new ArrayList<GelfSenderProvider>();
-        private static List<GelfSenderProvider> addedProviders = new ArrayList<GelfSenderProvider>();
+        private static List<GelfSenderProvider> providerList = new ArrayList<>();
+        private static List<GelfSenderProvider> addedProviders = new ArrayList<>();
 
         static {
             Iterator<GelfSenderProvider> iter = gelfSenderProvider.iterator();

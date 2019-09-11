@@ -25,8 +25,8 @@ public class GelfTCPSSLSender extends GelfTCPSender {
 
     private final int connectTimeoutMs;
     private final SSLContext sslContext;
-    private final ThreadLocal<ByteBuffer> sslNetworkBuffers = new ThreadLocal<ByteBuffer>();
-    private final ThreadLocal<ByteBuffer> tempBuffers = new ThreadLocal<ByteBuffer>();
+    private final ThreadLocal<ByteBuffer> sslNetworkBuffers = new ThreadLocal<>();
+    private final ThreadLocal<ByteBuffer> tempBuffers = new ThreadLocal<>();
 
     private volatile SSLEngine sslEngine;
 

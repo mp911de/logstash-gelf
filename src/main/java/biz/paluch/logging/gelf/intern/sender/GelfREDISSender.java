@@ -44,18 +44,12 @@ public class GelfREDISSender<T> implements GelfSender {
     }
 
     protected boolean sendMessage0(GelfMessage message) {
-        Jedis jedisClient = null;
-        try {
-            jedisClient = jedisPool.getResource();
+        try (Jedis jedisClient = jedisPool.getResource()) {
             jedisClient.lpush(redisKey, message.toJson(""));
             return true;
         } catch (Exception e) {
             errorReporter.reportError(e.getMessage(), new IOException("Cannot send REDIS data with key URI " + redisKey, e));
             return false;
-        } finally {
-            if (jedisClient != null) {
-                jedisClient.close();
-            }
         }
     }
 

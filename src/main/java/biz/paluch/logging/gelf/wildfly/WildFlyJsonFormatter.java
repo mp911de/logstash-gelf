@@ -89,7 +89,7 @@ public class WildFlyJsonFormatter extends ExtFormatter {
     public static final Set<LogMessageField.NamedLogField> SUPPORTED_FIELDS;
 
     static {
-        Set<LogMessageField.NamedLogField> supportedFields = new LinkedHashSet<LogMessageField.NamedLogField>();
+        Set<LogMessageField.NamedLogField> supportedFields = new LinkedHashSet<>();
 
         supportedFields.add(Time);
         supportedFields.add(Severity);
@@ -124,7 +124,7 @@ public class WildFlyJsonFormatter extends ExtFormatter {
     public void setFields(String fieldSpec) {
 
         String[] properties = fieldSpec.split(MULTI_VALUE_DELIMITTER);
-        List<LogMessageField.NamedLogField> fields = new ArrayList<LogMessageField.NamedLogField>();
+        List<LogMessageField.NamedLogField> fields = new ArrayList<>();
         for (String field : properties) {
 
             LogMessageField.NamedLogField namedLogField = LogMessageField.NamedLogField.byName(field.trim());

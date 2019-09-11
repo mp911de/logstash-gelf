@@ -16,7 +16,7 @@ import io.netty.util.CharsetUtil;
  */
 public class GelfInboundHTTPHandler extends SimpleChannelInboundHandler<Object> {
 
-    private List<Object> values = new ArrayList<Object>();
+    private List<Object> values = new ArrayList<>();
     private HttpRequest httpRequest;
     private HttpContent httpContent;
     private HttpResponseStatus responseStatus = HttpResponseStatus.ACCEPTED;

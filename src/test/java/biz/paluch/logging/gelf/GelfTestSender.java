@@ -11,7 +11,7 @@ import biz.paluch.logging.gelf.intern.GelfSender;
  * @since 27.09.13 07:45
  */
 public class GelfTestSender implements GelfSender {
-    private static List<GelfMessage> messages = new ArrayList<GelfMessage>();
+    private static List<GelfMessage> messages = new ArrayList<>();
 
     @Override
     public boolean sendMessage(GelfMessage message) {

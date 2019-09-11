@@ -162,7 +162,7 @@ public class StackTraceFilter {
             is = getStream(resourceName);
             if (is == null) {
                 verboseLog("No " + resourceName + " resource present, using defaults");
-                suppressedPackages = new HashSet<String>(getDefaults());
+                suppressedPackages = new HashSet<>(getDefaults());
             } else {
                 Properties p = new Properties();
                 p.load(is);
@@ -171,7 +171,7 @@ public class StackTraceFilter {
 
         } catch (IOException e) {
             verboseLog("Could not parse " + resourceName + " resource, using defaults");
-            suppressedPackages = new HashSet<String>(getDefaults());
+            suppressedPackages = new HashSet<>(getDefaults());
         } finally {
             Closer.close(is);
         }
@@ -339,7 +339,7 @@ public class StackTraceFilter {
 
     private static List<Throwable> getThrowables(Throwable t) {
 
-        List<Throwable> throwables = new ArrayList<Throwable>();
+        List<Throwable> throwables = new ArrayList<>();
 
         Throwable current = t;
 
@@ -406,7 +406,7 @@ public class StackTraceFilter {
     static class StackTraceFilterWriter extends FilterWriter {
 
         private final String traceElementPrefix = INDENT + "at ";
-        Set<String> skippedPackages = new HashSet<String>();
+        Set<String> skippedPackages = new HashSet<>();
         int skippedLines;
         boolean endsWithNewLine;
         boolean first = true;

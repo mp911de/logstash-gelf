@@ -12,11 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import biz.paluch.logging.gelf.GelfUtil;
-import biz.paluch.logging.gelf.LogEvent;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.MessageField;
-import biz.paluch.logging.gelf.Values;
+import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
@@ -25,7 +21,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  */
 public class JulLogEvent implements LogEvent {
 
-    private static Map<String, String> threadNameCache = new ConcurrentHashMap<String, String>();
+    private static Map<String, String> threadNameCache = new ConcurrentHashMap<>();
 
     private LogRecord logRecord;
 
@@ -65,11 +61,11 @@ public class JulLogEvent implements LogEvent {
         if (message == null) {
             message = "";
         }
-        
+
         if (record.getResourceBundle() != null && record.getResourceBundle().containsKey(message)) {
             message = record.getResourceBundle().getString(message);
         }
-        
+
         if (parameters != null && parameters.length > 0) {
             String originalMessage = message;
 

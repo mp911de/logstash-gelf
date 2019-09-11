@@ -210,7 +210,7 @@ class Log4jLogEvent implements LogEvent {
     }
 
     private Set<String> getAllMdcNames() {
-        Set<String> mdcNames = new HashSet<String>();
+        Set<String> mdcNames = new HashSet<>();
 
         if (mdc != null) {
             mdcNames.addAll(mdc.keySet());
@@ -219,7 +219,7 @@ class Log4jLogEvent implements LogEvent {
     }
 
     private Set<String> getMatchingMdcNames(DynamicMdcMessageField field, Set<String> mdcNames) {
-        Set<String> matchingMdcNames = new HashSet<String>();
+        Set<String> matchingMdcNames = new HashSet<>();
 
         for (String mdcName : mdcNames) {
             if (field.getPattern().matcher(mdcName).matches()) {

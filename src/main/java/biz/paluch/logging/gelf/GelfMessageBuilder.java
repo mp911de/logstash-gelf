@@ -24,8 +24,8 @@ public class GelfMessageBuilder {
     protected String level;
     protected String facility = GelfMessage.DEFAULT_FACILITY;
     protected int maximumMessageSize = GelfMessage.DEFAULT_MESSAGE_SIZE;
-    protected Map<String, String> additionalFields = new HashMap<String, String>();
-    protected Map<String, String> additionalFieldTypes = new HashMap<String, String>();
+    protected Map<String, String> additionalFields = new HashMap<>();
+    protected Map<String, String> additionalFieldTypes = new HashMap<>();
     protected Map<Pattern, String> dynamicMdcFieldTypes = Collections.emptyMap();
 
     protected GelfMessageBuilder() {

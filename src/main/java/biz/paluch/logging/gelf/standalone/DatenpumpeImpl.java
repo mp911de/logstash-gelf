@@ -27,7 +27,7 @@ public class DatenpumpeImpl implements Datenpumpe {
         if (data == null) {
             throw new IllegalArgumentException("Data map must not be null");
         }
-        Map<String, String> fields = new HashMap<String, String>();
+        Map<String, String> fields = new HashMap<>();
 
         for (Map.Entry<String, Object> entry : data.entrySet()) {
             if (entry.getKey() == null || entry.getValue() == null) {

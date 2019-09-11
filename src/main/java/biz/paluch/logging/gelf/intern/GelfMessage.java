@@ -93,8 +93,8 @@ public class GelfMessage {
     private long javaTimestamp;
     private String level;
     private String facility = DEFAULT_FACILITY;
-    private Map<String, String> additonalFields = new HashMap<String, String>();
-    private Map<String, String> additionalFieldTypes = new HashMap<String, String>();
+    private Map<String, String> additonalFields = new HashMap<>();
+    private Map<String, String> additionalFieldTypes = new HashMap<>();
     private Map<Pattern, String> dynamicMdcFieldTypes = Collections.emptyMap();
     private int maximumMessageSize = DEFAULT_MESSAGE_SIZE;
 
