@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
@@ -28,8 +28,6 @@ import biz.paluch.logging.gelf.intern.ValueDiscovery.Result;
  * @see <a href="http://docs.graylog.org/en/2.0/pages/gelf.html">http://docs.graylog.org/en/2.0/pages/gelf.html</a>
  */
 public class GelfMessage {
-
-    private static final Random rand = new Random();
 
     public static final String FIELD_HOST = "host";
     public static final String FIELD_SHORT_MESSAGE = "short_message";
@@ -433,7 +431,7 @@ public class GelfMessage {
     }
 
     long getRandomLong() {
-        return rand.nextLong();
+        return ThreadLocalRandom.current().nextLong();
     }
 
     long getCurrentTimeMillis() {
