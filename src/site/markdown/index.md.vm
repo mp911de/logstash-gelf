@@ -16,6 +16,8 @@ Provides logging to logstash using the Graylog Extended Logging Format (GELF) 1.
 * [Thorntail (WildFly Swarm 2.x)](examples/wildfly-swarm-thorntail.html)
 * [Logback](examples/logback.html)
 
+`logstash-gelf` requires as of version 1.14.0 Java 7 or higher. Version 1.13.x and older require Java 6.
+
 How to get
 -------------
 

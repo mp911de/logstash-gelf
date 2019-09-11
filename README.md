@@ -18,6 +18,7 @@ Provides logging to logstash using the Graylog Extended Logging Format ([GELF](h
 * [Thorntail (WildFly Swarm 2.x)](#thorntail)
 * [Logback](#logback)
 
+`logstash-gelf` requires as of version 1.14.0 Java 7 or higher. Version 1.13.x and older require Java 6.
 See also http://logging.paluch.biz/ or http://www.graylog2.org/resources/gelf/specification for further documentation.
 
 
@@ -431,7 +432,7 @@ This project is built against following dependencies/versions:
 
 * log4j 1.2.14
 * log4j2 2.9.1
-* Java Util Logging JDK Version 1.6
+* Java Util Logging JDK Version 1.7
 * logback 1.1.3
 * slf4j-api 1.7.25
 * jedis 2.9.0 (includes commons-pool2 2.4.3)
