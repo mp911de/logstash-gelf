@@ -1,5 +1,6 @@
 package biz.paluch.logging.gelf.intern.sender;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +32,8 @@ public class KafkaGelfSender implements GelfSender {
 
     @Override
     public boolean sendMessage(GelfMessage message) {
-        ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(topicName, message.toJson().getBytes());
+        ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(topicName,
+                message.toJson().getBytes(StandardCharsets.UTF_8));
         boolean hasOffset;
         try {
             Future<RecordMetadata> metadata = kafkaProducer.send(record);

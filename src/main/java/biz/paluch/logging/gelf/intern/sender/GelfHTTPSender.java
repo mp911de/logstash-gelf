@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
@@ -58,7 +59,7 @@ public class GelfHTTPSender implements GelfSender {
             connection.addRequestProperty("Content-type", "application/json");
 
             OutputStream outputStream = connection.getOutputStream();
-            outputStream.write(message.toJson().getBytes());
+            outputStream.write(message.toJson().getBytes(StandardCharsets.UTF_8));
             outputStream.close();
 
             int responseCode = connection.getResponseCode();

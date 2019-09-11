@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -125,7 +126,7 @@ public class GelfMessage {
      * @return the JSON string.
      */
     public String toJson(String additionalFieldPrefix) {
-        return new String(toJsonByteArray(additionalFieldPrefix), Charsets.UTF8);
+        return new String(toJsonByteArray(additionalFieldPrefix), StandardCharsets.UTF_8);
     }
 
     private byte[] toJsonByteArray(String additionalFieldPrefix) {
