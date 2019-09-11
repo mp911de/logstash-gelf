@@ -25,6 +25,7 @@ import biz.paluch.logging.gelf.intern.ValueDiscovery.Result;
  * @author https://github.com/t0xa/gelfj
  * @author Mark Paluch
  * @author Thomas Herzog
+ * @author Daniel Lundsgaard Skovenborg
  * @see <a href="http://docs.graylog.org/en/2.0/pages/gelf.html">http://docs.graylog.org/en/2.0/pages/gelf.html</a>
  */
 public class GelfMessage {
@@ -83,7 +84,6 @@ public class GelfMessage {
 
     private static final byte[] GELF_CHUNKED_ID = new byte[] { 0x1e, 0x0f };
     private static final BigDecimal TIME_DIVISOR = new BigDecimal(1000);
-    private static final byte[] NONE = lastFourAsciiBytes("none");
 
     private String version = GELF_VERSION;
     private String host;
@@ -374,6 +374,7 @@ public class GelfMessage {
     }
 
     protected ByteBuffer[] sliceDatagrams(ByteBuffer source, int datagrams, ByteBuffer target) {
+
         int messageLength = source.limit();
 
         long msgId = generateMsgId();
@@ -402,32 +403,30 @@ public class GelfMessage {
     }
 
     long generateMsgId() {
-        // Considerations about generating the message ID: The GELF documentation suggests to
-        // "[g]enerate [the id] from millisecond timestamp + hostname for example":
-        // https://docs.graylog.org/en/3.1/pages/gelf.html#chunking
-        //
-        // However, relying on current time in milliseconds on the same system will result in a high
-        // collision probability if lots of messages are generated quickly. Things will be even
-        // worse if multiple servers send to the same log server. Adding the hostname is not
-        // guaranteed to help, and if the hostname is the FQDN it is even unlikely to be unique at
-        // all.
-        //
-        // The GELF module used by Logstash uses the first eight bytes of an MD5 hash of the current
-        // time as floating point, a hyphen, and an eight byte random number:
-        // https://github.com/logstash-plugins/logstash-output-gelf
-        // https://github.com/graylog-labs/gelf-rb/blob/master/lib/gelf/notifier.rb#L239 It probably
-        // doesn't have to be that clever:
-        //
-        // Using the timestamp plus a random number will mean we only have to worry about collision
-        // of random numbers within the same milliseconds. How short can the timestamp be before it
-        // will collide with old timestamps? Every second Graylog will evict expired messaged (5
-        // seconds old) from the pool:
-        // https://github.com/Graylog2/graylog2-server/blob/master/graylog2-server/src/main/java/org/graylog2/inputs/codecs/GelfChunkAggregator.java
-        // Thus, we just need six seconds which will require 13 bits. Then we can spend the rest on
-        // a random number.
+        /*
+         * Considerations about generating the message ID: The GELF documentation suggests to
+         * "[g]enerate [the id] from millisecond timestamp + hostname for example":
+         * https://docs.graylog.org/en/3.1/pages/gelf.html#chunking
+         *
+         * However, relying on current time in milliseconds on the same system will result in a high collision probability if
+         * lots of messages are generated quickly. Things will be even worse if multiple servers send to the same log server.
+         * Adding the hostname is not guaranteed to help, and if the hostname is the FQDN it is even unlikely to be unique at
+         * all.
+         *
+         * The GELF module used by Logstash uses the first eight bytes of an MD5 hash of the current time as floating point, a
+         * hyphen, and an eight byte random number: https://github.com/logstash-plugins/logstash-output-gelf
+         * https://github.com/graylog-labs/gelf-rb/blob/master/lib/gelf/notifier.rb#L239 It probably doesn't have to be that
+         * clever:
+         *
+         * Using the timestamp plus a random number will mean we only have to worry about collision of random numbers within the
+         * same milliseconds. How short can the timestamp be before it will collide with old timestamps? Every second Graylog
+         * will evict expired messaged (5 seconds old) from the pool:
+         * https://github.com/Graylog2/graylog2-server/blob/master/graylog2-server/src/main/java/org/graylog2/inputs/codecs/
+         * GelfChunkAggregator.java Thus, we just need six seconds which will require 13 bits. Then we can spend the rest on a
+         * random number.
+         */
 
-        return (getRandomLong() & 0xFFFFFFFFFFFFE000L) |
-                (getCurrentTimeMillis() & 0x1FFFL);
+        return (getRandomLong() & 0xFFFFFFFFFFFFE000L) | (getCurrentTimeMillis() & 0x1FFFL);
     }
 
     long getRandomLong() {
@@ -455,15 +454,10 @@ public class GelfMessage {
         }
     }
 
-    private static byte[] lastFourAsciiBytes(String host) {
-        final String shortHost = host.length() >= 4 ? host.substring(host.length() - 4) : host;
-        return Charsets.ascii(shortHost);
-    }
-
     private String getMatchingDynamicMdcFieldType(String fieldName) {
         String fieldType = null;
         for (Map.Entry<Pattern, String> entry : dynamicMdcFieldTypes.entrySet()) {
-            if(entry.getKey().matcher(fieldName).matches()) {
+            if (entry.getKey().matcher(fieldName).matches()) {
                 fieldType = entry.getValue();
                 break;
             }

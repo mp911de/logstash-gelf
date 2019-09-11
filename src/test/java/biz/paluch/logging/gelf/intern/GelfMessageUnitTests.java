@@ -42,7 +42,7 @@ class GelfMessageUnitTests {
     };
 
     @Test
-    void testBuilder() throws Exception {
+    void testBuilder() {
         GelfMessage gelfMessage = buildGelfMessage();
 
         assertThat(gelfMessage.getFacility()).isEqualTo(FACILITY);
@@ -58,7 +58,7 @@ class GelfMessageUnitTests {
     }
 
     @Test
-    void testGelfMessage() throws Exception {
+    void testGelfMessage() {
         GelfMessage gelfMessage = createGelfMessage();
 
         assertThat(gelfMessage.getFacility()).isEqualTo(FACILITY);
@@ -77,7 +77,7 @@ class GelfMessageUnitTests {
     }
 
     @Test
-    void testEncoded() throws Exception {
+    void testEncoded() {
 
         GelfMessage gelfMessage = createGelfMessage();
 
@@ -92,7 +92,7 @@ class GelfMessageUnitTests {
     }
 
     @Test
-    void testTcp() throws Exception {
+    void testTcp() {
 
         GelfMessage gelfMessage = createGelfMessage();
 
@@ -123,7 +123,7 @@ class GelfMessageUnitTests {
         ByteBuffer[] oldWay = gelfMessage.toUDPBuffers();
         ByteBuffer[] newWay = gelfMessage.toUDPBuffers(buffer, buffer2);
 
-        assertThat(newWay.length).isEqualTo(oldWay.length);
+        assertThat(newWay).hasSameSizeAs(oldWay);
 
         for (int i = 0; i < oldWay.length; i++) {
 
@@ -144,7 +144,7 @@ class GelfMessageUnitTests {
     }
 
     @Test
-    void testUdpChunked() throws Exception {
+    void testUdpChunked() {
 
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < 20000; i++) {
@@ -206,16 +206,15 @@ class GelfMessageUnitTests {
     }
 
     @Test
-    void testGelfMessageEmptyField() throws Exception {
+    void testGelfMessageEmptyField() {
         GelfMessage gelfMessage = new GelfMessage();
         gelfMessage.addField("something", null);
 
         assertThat(gelfMessage.toJson().contains("something")).isFalse();
-
     }
 
     @Test
-    void testGelf_v1_0() throws Exception {
+    void testGelf_v1_0() {
 
         GelfMessage gelfMessage = new GelfMessage();
         gelfMessage.setLevel("6");
@@ -227,7 +226,7 @@ class GelfMessageUnitTests {
     }
 
     @Test
-    void testGelf_v1_1() throws Exception {
+    void testGelf_v1_1() {
 
         GelfMessage gelfMessage = new GelfMessage();
         gelfMessage.setLevel("6");
@@ -241,7 +240,7 @@ class GelfMessageUnitTests {
     }
 
     @Test
-    void testGelfMessageEquality() throws Exception {
+    void testGelfMessageEquality() {
         GelfMessage created = createGelfMessage();
         GelfMessage build = buildGelfMessage();
 
@@ -254,7 +253,7 @@ class GelfMessageUnitTests {
     }
 
     @Test
-    void testGelfMessageDefaults() throws Exception {
+    void testGelfMessageDefaults() {
         GelfMessage created = new GelfMessage();
         GelfMessage build = newInstance().build();
 

@@ -34,9 +34,10 @@ class PoolingGelfMessageIntegrationTests {
             put("doubleWithDecimals", "2.1");
             put("int", "2");
             put("exception1", StackTraceFilter.getFilteredStackTrace(new IOException(new Exception(new Exception()))));
-            put("exception2", StackTraceFilter.getFilteredStackTrace(new IllegalStateException(new Exception(new Exception()))));
-            put("exception3", StackTraceFilter.getFilteredStackTrace(new IllegalArgumentException(new Exception(
-                    new IllegalArgumentException()))));
+            put("exception2",
+                    StackTraceFilter.getFilteredStackTrace(new IllegalStateException(new Exception(new Exception()))));
+            put("exception3", StackTraceFilter
+                    .getFilteredStackTrace(new IllegalArgumentException(new Exception(new IllegalArgumentException()))));
         }
     };
 
@@ -151,5 +152,4 @@ class PoolingGelfMessageIntegrationTests {
         gelfMessage.addFields(ADDITIONAL_FIELDS);
         return gelfMessage;
     }
-
 }
