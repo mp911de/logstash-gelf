@@ -96,6 +96,9 @@ public class JulLogEvent implements LogEvent {
     }
 
     private String getThreadName(LogRecord record) {
+        if (record.getThreadID() == Thread.currentThread().getId()) {
+            return Thread.currentThread().getName();
+        }
 
         String cacheKey = "" + record.getThreadID();
         if (threadNameCache.containsKey(cacheKey)) {
@@ -104,13 +107,10 @@ public class JulLogEvent implements LogEvent {
 
         long threadId = record.getThreadID();
         String threadName = "" + record.getThreadID();
-        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-        for (long id : threadMXBean.getAllThreadIds()) {
-            if (id == threadId) {
-                ThreadInfo threadInfo = threadMXBean.getThreadInfo(id);
-                if (threadInfo != null) {
-                    threadName = threadInfo.getThreadName();
-                }
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        for (Thread thread : threadSet) {
+            if (thread.getId() == threadId) {
+                threadName = thread.getName();
                 break;
             }
         }
