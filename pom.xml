@@ -77,7 +77,7 @@
         <doxia-module-markdown.version>1.9</doxia-module-markdown.version>
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <netty-all.version>4.1.38.Final</netty-all.version>
+        <netty-all.version>4.1.42.Final</netty-all.version>
         <maven-scm-publish-plugin.version>3.0.0</maven-scm-publish-plugin.version>
         <tempus-fugit.version>1.1</tempus-fugit.version>
         <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
