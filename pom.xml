@@ -60,7 +60,7 @@
         <junit5.version>5.5.1</junit5.version>
         <assertj.version>3.13.1</assertj.version>
         <mockito.version>3.0.0</mockito.version>
-        <jackson.version>2.9.9.2</jackson.version>
+        <jackson.version>2.9.10.1</jackson.version>
         <jedis.version>3.1.0</jedis.version>
         <jedis-commons-pool2.version>2.7.0</jedis-commons-pool2.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
