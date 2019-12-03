@@ -1,8 +1,5 @@
 package biz.paluch.logging.gelf.jul;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.IllegalFormatException;
@@ -17,6 +14,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author Mark Paluch
+ * @author Loïc Mathieu
  * @since 26.09.13 15:22
  */
 public class JulLogEvent implements LogEvent {
@@ -96,9 +94,6 @@ public class JulLogEvent implements LogEvent {
     }
 
     private String getThreadName(LogRecord record) {
-        if (record.getThreadID() == Thread.currentThread().getId()) {
-            return Thread.currentThread().getName();
-        }
 
         String cacheKey = "" + record.getThreadID();
         if (threadNameCache.containsKey(cacheKey)) {
@@ -106,12 +101,18 @@ public class JulLogEvent implements LogEvent {
         }
 
         long threadId = record.getThreadID();
-        String threadName = "" + record.getThreadID();
-        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        for (Thread thread : threadSet) {
-            if (thread.getId() == threadId) {
-                threadName = thread.getName();
-                break;
+        String threadName = cacheKey;
+
+        Thread currentThread = Thread.currentThread();
+        if (record.getThreadID() == currentThread.getId()) {
+            threadName = currentThread.getName();
+        } else {
+            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+            for (Thread thread : threadSet) {
+                if (thread.getId() == threadId) {
+                    threadName = thread.getName();
+                    break;
+                }
             }
         }
 
