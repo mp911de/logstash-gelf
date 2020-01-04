@@ -25,7 +25,7 @@ public class DynamicMdcMessageField implements MessageField {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
         sb.append(" [regex='").append(regex).append('\'');
         sb.append(']');

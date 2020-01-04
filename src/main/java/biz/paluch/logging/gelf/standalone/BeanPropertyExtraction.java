@@ -18,6 +18,10 @@ class BeanPropertyExtraction {
     public static final Pattern IS_PATTERN = Pattern.compile(IS_REGEX);
     public static final Pattern GET_PATTERN = Pattern.compile(GET_REGEX);
 
+    private BeanPropertyExtraction() {
+        // no instance allowed
+    }
+
     static Map<String, Object> extractProperties(Object object) {
 
         Map<String, Method> methodMap = createPropertyToMethodMap(object);

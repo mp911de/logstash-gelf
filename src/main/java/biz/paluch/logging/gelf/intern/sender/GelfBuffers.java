@@ -9,10 +9,14 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * Utility to create TCP/UDP buffers from a {@link GelfMessage} by working with {@link ByteBuffer}. Buffers are provided by
  * {@link ThreadLocal} and enlarged if the buffer size is exceeded. Enlarged buffers are returned to their originating
  * {@link ThreadLocal}.
- * 
+ *
  * @author Mark Paluch
  */
 class GelfBuffers {
+
+    private GelfBuffers() {
+        // no instance allowed
+    }
 
     /**
      * Create UDP buffers and apply auto-buffer-enlarging, if necessary.
@@ -38,7 +42,7 @@ class GelfBuffers {
 
     /**
      * Create TCP buffer and apply auto-buffer-enlarging, if necessary.
-     * 
+     *
      * @param message
      * @param writeBuffers
      * @return
@@ -55,7 +59,7 @@ class GelfBuffers {
         }
     }
 
-    static private void enlargeBuffer(ThreadLocal<ByteBuffer> buffers) {
+    private static void enlargeBuffer(ThreadLocal<ByteBuffer> buffers) {
 
         ByteBuffer newBuffer = ByteBuffer.allocateDirect(calculateNewBufferSize(buffers.get().capacity()));
         buffers.set(newBuffer);

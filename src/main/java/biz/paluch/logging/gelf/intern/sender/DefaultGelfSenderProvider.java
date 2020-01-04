@@ -48,7 +48,6 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
             boolean keepAlive = QueryStringParser.getString(params, GelfTCPSender.KEEPALIVE, false);
 
             String tcpGraylogHost = QueryStringParser.getHost(uri);
-            SocketFactory socketFactory = SocketFactory.getDefault();
 
             return new GelfTCPSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
                     configuration.getErrorReporter());

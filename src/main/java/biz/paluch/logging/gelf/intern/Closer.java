@@ -12,6 +12,10 @@ import java.net.Socket;
  */
 public class Closer {
 
+    private Closer() {
+        // no instance allowed
+    }
+
     /**
      * Close silently the closeable.
      *
