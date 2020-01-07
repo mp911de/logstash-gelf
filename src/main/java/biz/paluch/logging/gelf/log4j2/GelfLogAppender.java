@@ -198,9 +198,9 @@ public class GelfLogAppender extends AbstractAppender {
         super(name, filter, null, ignoreExceptions);
         this.gelfMessageAssembler = gelfMessageAssembler;
 
-        ErrorReporter errorReporter = getErrorReporter(ignoreExceptions);
+        ErrorReporter myErrorReporter = getErrorReporter(ignoreExceptions);
 
-        this.errorReporter = new MessagePostprocessingErrorReporter(errorReporter);
+        this.errorReporter = new MessagePostprocessingErrorReporter(myErrorReporter);
     }
 
     private ErrorReporter getErrorReporter(boolean ignoreExceptions) {
@@ -228,12 +228,12 @@ public class GelfLogAppender extends AbstractAppender {
         MdcGelfMessageAssembler mdcGelfMessageAssembler = new MdcGelfMessageAssembler();
 
         if (name == null) {
-            LOGGER.error("No name provided for " + GelfLogAppender.class.getSimpleName());
+            LOGGER.error("No name provided for {}", GelfLogAppender.class.getSimpleName());
             return null;
         }
 
         if (Strings.isEmpty(host) && Strings.isEmpty(graylogHost)) {
-            LOGGER.error("No host provided for " + GelfLogAppender.class.getSimpleName());
+            LOGGER.error("No host provided for {}", GelfLogAppender.class.getSimpleName());
             return null;
         }
 
@@ -392,6 +392,6 @@ public class GelfLogAppender extends AbstractAppender {
     }
 
     protected GelfSender createGelfSender() {
-        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.EMPTY_MAP);
+        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.<String, Object>emptyMap());
     }
 }

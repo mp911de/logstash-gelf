@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 
 import biz.paluch.logging.gelf.intern.GelfSender;

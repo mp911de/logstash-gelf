@@ -1,13 +1,13 @@
 package biz.paluch.logging.gelf.log4j2;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;
 
 import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.GelfMessage;
+import org.apache.logging.log4j.util.ReadOnlyStringMap;
 
 /**
  * @author Mark Paluch
@@ -157,7 +157,7 @@ class Log4j2LogEvent implements LogEvent {
     private Set<String> getAllMdcNames() {
         Set<String> mdcNames = new HashSet<>();
 
-        mdcNames.addAll(logEvent.getContextMap().keySet());
+        mdcNames.addAll(logEvent.getContextData().toMap().keySet());
         return mdcNames;
     }
 
@@ -171,9 +171,9 @@ class Log4j2LogEvent implements LogEvent {
 
     @Override
     public String getMdcValue(String mdcName) {
-        Map<String, String> mdcPropertyMap = logEvent.getContextMap();
-        if (null != mdcPropertyMap && mdcPropertyMap.containsKey(mdcName)) {
-            return mdcPropertyMap.get(mdcName);
+        ReadOnlyStringMap contextData = logEvent.getContextData();
+        if (null != contextData && contextData.containsKey(mdcName)) {
+            return contextData.getValue(mdcName);
         }
 
         return null;

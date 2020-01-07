@@ -92,6 +92,7 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
         this.enabled = enabled;
     }
 
+    @Override
     protected void initializeDefaultFields() {
         gelfMessageAssembler.addFields(LogMessageField.getDefaultMapping(Time, Severity, ThreadName, SourceClassName,
                 SourceMethodName, SourceSimpleClassName, LoggerName, NDC));
@@ -112,24 +113,9 @@ public class JBoss7GelfLogHandler extends biz.paluch.logging.gelf.jul.GelfLogHan
         return new MdcGelfMessageAssembler();
     }
 
+    @Override
     protected GelfMessage createGelfMessage(final LogRecord record) {
         return getGelfMessageAssembler().createGelfMessage(new JBoss7JulLogEvent((ExtLogRecord) record));
-    }
-
-    public void setAdditionalFields(String fieldSpec) {
-        super.setAdditionalFields(fieldSpec);
-    }
-
-    public void setMdcFields(String fieldSpec) {
-        super.setMdcFields(fieldSpec);
-    }
-
-    public void setDynamicMdcFields(String fieldSpec) {
-        super.setDynamicMdcFields(fieldSpec);
-    }
-
-    public void setDynamicMdcFieldTypes(String fieldSpec) {
-        super.setDynamicMdcFieldTypes(fieldSpec);
     }
 
     public boolean isMdcProfiling() {

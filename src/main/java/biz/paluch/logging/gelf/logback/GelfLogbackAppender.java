@@ -122,7 +122,7 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
     }
 
     protected GelfSender createGelfSender() {
-        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.EMPTY_MAP);
+        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.<String, Object>emptyMap());
     }
 
     @Override

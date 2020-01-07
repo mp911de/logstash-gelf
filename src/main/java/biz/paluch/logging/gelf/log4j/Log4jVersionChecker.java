@@ -22,6 +22,10 @@ class Log4jVersionChecker {
         }
     }
 
+    private Log4jVersionChecker() {
+        // no instance allowed
+    }
+
     public static long getTimeStamp(LoggingEvent event) {
 
         long timeStamp = 0;

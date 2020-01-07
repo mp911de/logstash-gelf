@@ -85,7 +85,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
         try {
             if (null != filter) {
                 final Class clazz = ClassLoader.getSystemClassLoader().loadClass(filter);
-                setFilter((Filter) clazz.newInstance());
+                setFilter((Filter) clazz.getDeclaredConstructor().newInstance());
             }
         } catch (final Exception e) {
             // ignore
@@ -103,6 +103,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
 
     @Override
     public void flush() {
+        // nothing to do
     }
 
     @Override
@@ -140,7 +141,7 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
     }
 
     protected GelfSender createGelfSender() {
-        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.EMPTY_MAP);
+        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.<String, Object>emptyMap());
     }
 
     @Override

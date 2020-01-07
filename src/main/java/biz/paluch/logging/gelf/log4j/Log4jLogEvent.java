@@ -31,19 +31,20 @@ class Log4jLogEvent implements LogEvent {
     }
 
     private Map getMdc(LoggingEvent loggingEvent) {
-        Map mdc = null;
+        Map myMdc = null;
 
         try {
             if (mdcCopy != null) {
-                mdc = (Map) mdcCopy.get(loggingEvent);
+                myMdc = (Map) mdcCopy.get(loggingEvent);
             }
         } catch (IllegalAccessException e) {
+            // ignore, return null
         }
 
-        if (mdc == null) {
-            mdc = MDC.getContext();
+        if (myMdc == null) {
+            myMdc = MDC.getContext();
         }
-        return mdc;
+        return myMdc;
     }
 
     @Override

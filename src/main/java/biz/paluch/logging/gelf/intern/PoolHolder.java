@@ -40,7 +40,7 @@ abstract class PoolHolder {
 
     private static class NoOpPoolHolder extends PoolHolder {
 
-        private final static NoOpPoolHolder instance = new NoOpPoolHolder();
+        private static final NoOpPoolHolder instance = new NoOpPoolHolder();
 
         public static PoolHolder noop() {
             return instance;

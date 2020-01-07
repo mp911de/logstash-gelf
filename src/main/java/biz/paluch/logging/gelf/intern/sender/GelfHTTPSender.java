@@ -82,5 +82,6 @@ public class GelfHTTPSender implements GelfSender {
 
     @Override
     public void close() {
+        // nothing to do
     }
 }

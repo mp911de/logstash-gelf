@@ -86,33 +86,33 @@ public class GelfMessageAssembler implements HostAndPortProvider {
             host = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_HOST);
         }
 
-        String port = propertyProvider.getProperty(PropertyProvider.PROPERTY_PORT);
-        if (port == null) {
-            port = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_PORT);
+        String myPort = propertyProvider.getProperty(PropertyProvider.PROPERTY_PORT);
+        if (myPort == null) {
+            myPort = propertyProvider.getProperty(PropertyProvider.PROPERTY_GRAYLOG_PORT);
         }
 
-        if (port != null && !"".equals(port)) {
-            this.port = Integer.parseInt(port);
+        if (myPort != null && !"".equals(myPort)) {
+            this.port = Integer.parseInt(myPort);
         }
 
         originHost = propertyProvider.getProperty(PropertyProvider.PROPERTY_ORIGIN_HOST);
         setExtractStackTrace(propertyProvider.getProperty(PropertyProvider.PROPERTY_EXTRACT_STACKTRACE));
         setFilterStackTrace("true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FILTER_STACK_TRACE)));
 
-        String includeLogMessageParameters = propertyProvider
+        String myIncludeLogMessageParameters = propertyProvider
                 .getProperty(PropertyProvider.PROPERTY_INCLUDE_LOG_MESSAGE_PARAMETERS);
-        if (includeLogMessageParameters != null && !includeLogMessageParameters.trim().equals("")) {
-            setIncludeLogMessageParameters("true".equalsIgnoreCase(includeLogMessageParameters));
+        if (myIncludeLogMessageParameters != null && !myIncludeLogMessageParameters.trim().equals("")) {
+            setIncludeLogMessageParameters("true".equalsIgnoreCase(myIncludeLogMessageParameters));
         }
 
         setupStaticFields(propertyProvider);
         setupAdditionalFieldTypes(propertyProvider);
         setupDynamicMdcFieldTypes(propertyProvider);
         facility = propertyProvider.getProperty(PropertyProvider.PROPERTY_FACILITY);
-        String version = propertyProvider.getProperty(PropertyProvider.PROPERTY_VERSION);
+        String myVersion = propertyProvider.getProperty(PropertyProvider.PROPERTY_VERSION);
 
-        if (version != null && !"".equals(version)) {
-            this.version = version;
+        if (myVersion != null && !"".equals(myVersion)) {
+            this.version = myVersion;
         }
 
         String messageSize = propertyProvider.getProperty(PropertyProvider.PROPERTY_MAX_MESSAGE_SIZE);
@@ -120,9 +120,9 @@ public class GelfMessageAssembler implements HostAndPortProvider {
             maximumMessageSize = Integer.parseInt(messageSize);
         }
 
-        String timestampPattern = propertyProvider.getProperty(PropertyProvider.PROPERTY_TIMESTAMP_PATTERN);
-        if (timestampPattern != null && !"".equals(timestampPattern)) {
-            this.timestampPattern = timestampPattern;
+        String myTimestampPattern = propertyProvider.getProperty(PropertyProvider.PROPERTY_TIMESTAMP_PATTERN);
+        if (myTimestampPattern != null && !"".equals(myTimestampPattern)) {
+            this.timestampPattern = myTimestampPattern;
         }
     }
 
