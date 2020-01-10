@@ -70,12 +70,12 @@ public abstract class AbstractNioSender<T extends AbstractSelectableChannel & By
         ByteBuffer byteBuffer = readBuffers.get();
         byteBuffer.clear();
 
-        T channel = channel();
+        T myChannel = channel();
 
-        if (channel != null && channel.isOpen() && isConnected(channel)) {
+        if (myChannel != null && myChannel.isOpen() && isConnected(myChannel)) {
 
             try {
-                return channel.read(byteBuffer) >= 0;
+                return myChannel.read(byteBuffer) >= 0;
             } catch (PortUnreachableException e) {
                 errorReporter.reportError("Port " + getHost() + ":" + getPort() + " not reachable", e);
             } catch (IOException e) {
