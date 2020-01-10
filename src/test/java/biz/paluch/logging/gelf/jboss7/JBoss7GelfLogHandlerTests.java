@@ -1,22 +1,21 @@
 package biz.paluch.logging.gelf.jboss7;
 
-import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.getJBoss7GelfLogHandler;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
+import biz.paluch.logging.gelf.GelfTestSender;
+import biz.paluch.logging.gelf.LogMessageField;
+import biz.paluch.logging.gelf.intern.GelfMessage;
 import org.jboss.logmanager.MDC;
 import org.jboss.logmanager.NDC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import biz.paluch.logging.gelf.GelfTestSender;
-import biz.paluch.logging.gelf.LogMessageField;
-import biz.paluch.logging.gelf.intern.GelfMessage;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
+import static biz.paluch.logging.gelf.jboss7.JBoss7LogTestUtil.getJBoss7GelfLogHandler;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Mark Paluch
@@ -135,47 +134,6 @@ class JBoss7GelfLogHandlerTests {
     }
 
     @Test
-    void testSimpleWithMsgFormatSubstitution() throws Exception {
-
-        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
-
-        Logger logger = Logger.getLogger(getClass().getName());
-        logger.addHandler(handler);
-
-        String logMessage = "foo bar test log message {0}";
-        String expectedMessage = "foo bar test log message aaa";
-        logger.log(Level.INFO, logMessage, new String[] { "aaa" });
-        assertThat(GelfTestSender.getMessages()).hasSize(1);
-
-        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-
-        assertThat(gelfMessage.getFullMessage()).isEqualTo(expectedMessage);
-        assertThat(gelfMessage.getShortMessage()).isEqualTo(expectedMessage);
-        assertThat(gelfMessage.getLevel()).isEqualTo("6");
-        assertThat(gelfMessage.getMaximumMessageSize()).isEqualTo(8192);
-    }
-
-    @Test
-    void testSimpleWithStringFormatSubstitution() throws Exception {
-
-        JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
-
-        Logger logger = Logger.getLogger(getClass().getName());
-        logger.addHandler(handler);
-
-        String logMessage = "foo bar test log message %s";
-        String expectedMessage = "foo bar test log message aaa";
-
-        logger.log(Level.INFO, logMessage, new String[] { "aaa" });
-        assertThat(GelfTestSender.getMessages()).hasSize(1);
-
-        GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
-
-        assertThat(gelfMessage.getFullMessage()).isEqualTo(expectedMessage);
-        assertThat(gelfMessage.getShortMessage()).isEqualTo(expectedMessage);
-    }
-
-    @Test
     void testFields() throws Exception {
 
         JBoss7GelfLogHandler handler = getJBoss7GelfLogHandler();
@@ -200,6 +158,7 @@ class JBoss7GelfLogHandlerTests {
     void testWrongConfig() throws Exception {
 
         assertThrows(IllegalArgumentException.class, new Executable() {
+
             @Override
             public void execute() throws Throwable {
                 JBoss7GelfLogHandler handler = new JBoss7GelfLogHandler();

@@ -68,14 +68,15 @@ public class JulLogEvent implements LogEvent {
             String originalMessage = message;
 
             // by default, using {0}, {1}, etc. -> MessageFormat
-
-            try {
-                message = MessageFormat.format(message, parameters);
-            } catch (IllegalArgumentException e) {
-                // leaving message as it is to avoid compatibility problems
-                message = record.getMessage();
-            } catch (NullPointerException e) {
-                // ignore
+            if(message.contains("{")) {
+                try {
+                    message = MessageFormat.format(message, parameters);
+                } catch (IllegalArgumentException e) {
+                    // leaving message as it is to avoid compatibility problems
+                    message = record.getMessage();
+                } catch (NullPointerException e) {
+                    // ignore
+                }
             }
 
             if (message.equals(originalMessage)) {
