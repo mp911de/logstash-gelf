@@ -4,7 +4,6 @@ define REDIS1_CONF
 daemonize yes
 port 6479
 bind 0.0.0.0
-protected-mode no
 pidfile work/redis1-6479.pid
 logfile work/redis1-6479.log
 save ""
@@ -16,7 +15,6 @@ endef
 define REDIS_SENTINEL1
 port 26379
 bind 0.0.0.0
-protected-mode no
 daemonize yes
 sentinel monitor mymaster 127.0.0.1 6479 1
 sentinel down-after-milliseconds mymaster 2000
