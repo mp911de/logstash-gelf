@@ -22,10 +22,10 @@ matrix:
       env: JDK_RELEASE='Oracle JDK 9'
 # Java 11
     - env: JDK_RELEASE='Oracle JDK 11'
-      install: . ./src/test/bash/install-jdk.sh -f 11 -l GPL
+      install: wget https://github.com/sormuras/bach/raw/master/install-jdk.sh && . ./install-jdk.sh -f 11 -l GPL
 # Java 13
     - env: JDK_RELEASE='Oracle JDK 13'
-      install: . ./src/test/bash/install-jdk.sh -f 13 -l GPL
+      install: wget https://github.com/sormuras/bach/raw/master/install-jdk.sh && . ./install-jdk.sh -f 13 -l GPL
 
 before_install:
   - src/test/bash/create_certificates.sh
