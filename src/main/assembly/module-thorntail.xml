@@ -4,7 +4,7 @@
     <resources>
         <artifact name="${project.groupId}:${project.artifactId}:${project.version}" />
         <artifact name="redis.clients:jedis:${jedis.version}" />
-        <artifact name="org.apache.commons:commons-pool2:${jedis-commons-pool2.version}" />
+        <artifact name="org.apache.commons:commons-pool2:${commons-pool2.version}" />
     </resources>
 
     <dependencies>
