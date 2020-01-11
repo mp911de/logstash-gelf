@@ -309,15 +309,15 @@ public class GelfMessage {
 
         if (messageBytes.length > maximumMessageSize) {
             // calculate the length of the datagrams array
-            int datagrams_length = messageBytes.length / maximumMessageSize;
+            int datagramsLength = messageBytes.length / maximumMessageSize;
             // In case of a remainder, due to the integer division, add a extra datagram
             if (messageBytes.length % maximumMessageSize != 0) {
-                datagrams_length++;
+                datagramsLength++;
             }
 
-            ByteBuffer targetBuffer = ByteBuffer.allocate(messageBytes.length + (datagrams_length * 12));
+            ByteBuffer targetBuffer = ByteBuffer.allocate(messageBytes.length + (datagramsLength * 12));
 
-            return sliceDatagrams(ByteBuffer.wrap(messageBytes), datagrams_length, targetBuffer);
+            return sliceDatagrams(ByteBuffer.wrap(messageBytes), datagramsLength, targetBuffer);
         }
 
         ByteBuffer[] datagrams = new ByteBuffer[1];
@@ -335,14 +335,14 @@ public class GelfMessage {
 
         if (tempBuffer.position() > maximumMessageSize) {
 
-            int diagrams_length = tempBuffer.position() / maximumMessageSize;
+            int diagramsLength = tempBuffer.position() / maximumMessageSize;
             // In case of a remainder, due to the integer division, add a extra datagram
             if (tempBuffer.position() % maximumMessageSize != 0) {
-                diagrams_length++;
+                diagramsLength++;
             }
 
             buffer.clear();
-            return sliceDatagrams((ByteBuffer) tempBuffer.flip(), diagrams_length, buffer);
+            return sliceDatagrams((ByteBuffer) tempBuffer.flip(), diagramsLength, buffer);
         }
 
         return new ByteBuffer[] { (ByteBuffer) tempBuffer.flip() };
@@ -451,7 +451,7 @@ public class GelfMessage {
             Closer.close(bos);
             return zipped;
         } catch (IOException e) {
-            return null;
+            throw new IllegalStateException();
         }
     }
 

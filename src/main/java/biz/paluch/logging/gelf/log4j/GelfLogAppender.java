@@ -103,7 +103,7 @@ public class GelfLogAppender extends AppenderSkeleton implements ErrorReporter {
     }
 
     protected GelfSender createGelfSender() {
-        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.EMPTY_MAP);
+        return GelfSenderFactory.createSender(gelfMessageAssembler, errorReporter, Collections.<String, Object>emptyMap());
     }
 
     @Override

@@ -405,7 +405,7 @@ public class StackTraceFilter {
 
     static class StackTraceFilterWriter extends FilterWriter {
 
-        private final String traceElementPrefix = INDENT + "at ";
+        private static final String traceElementPrefix = INDENT + "at ";
         Set<String> skippedPackages = new HashSet<>();
         int skippedLines;
         boolean endsWithNewLine;

@@ -37,10 +37,8 @@ class LogbackLogEvent implements LogEvent {
     public Throwable getThrowable() {
         Throwable result = null;
         IThrowableProxy throwableProxy = loggingEvent.getThrowableProxy();
-        if (null != throwableProxy) {
-            if (throwableProxy instanceof ThrowableProxy) {
-                result = ((ThrowableProxy) throwableProxy).getThrowable();
-            }
+        if (throwableProxy instanceof ThrowableProxy) {
+            result = ((ThrowableProxy) throwableProxy).getThrowable();
         }
         return result;
     }

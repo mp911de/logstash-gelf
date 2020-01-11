@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Writer to write an object in JSON representation. Strings are UTF-8 encoded with a fast-path implementation. UTF-8 characters
  * are escaped with using control sequences {@code \t, \b, ...} or UTF-8 escape sequences {@code \u0aD5}.
- * 
+ *
  * @author Mark Paluch
  */
 class JsonWriter {
@@ -29,7 +29,7 @@ class JsonWriter {
 
     private static final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
     private static final byte[] HEX_BYTES;
-    
+
     static {
         int len = HEX_CHARS.length;
         HEX_BYTES = new byte[len];
@@ -38,9 +38,13 @@ class JsonWriter {
         }
     }
 
+    private JsonWriter() {
+        // no instance allowed
+    }
+
     /**
      * Start JSON object.
-     * 
+     *
      * @param out
      */
     public static void writeObjectStart(OutputAccessor out) {
@@ -49,7 +53,7 @@ class JsonWriter {
 
     /**
      * End JSON object.
-     * 
+     *
      * @param out
      */
     public static void writeObjectEnd(OutputAccessor out) {
@@ -58,7 +62,7 @@ class JsonWriter {
 
     /**
      * Write key-value separator
-     * 
+     *
      * @param out
      */
     public static void writeKeyValueSeparator(OutputAccessor out) {
@@ -67,7 +71,7 @@ class JsonWriter {
 
     /**
      * Utility method to write a {@link Map} into a JSON representation.
-     * 
+     *
      * @param out
      * @param map
      */
@@ -93,7 +97,7 @@ class JsonWriter {
 
     /**
      * Write a map entry.
-     * 
+     *
      * @param out
      * @param key
      * @param value
@@ -179,7 +183,7 @@ class JsonWriter {
 
         if (value instanceof Boolean) {
 
-            if ((Boolean) value) {
+            if ((boolean) value) {
                 out.write(TRUE);
             } else {
                 out.write(FALSE);
@@ -279,7 +283,7 @@ class JsonWriter {
 
     /**
      * Write a UTF escape sequence using either an one or two-byte seqience.
-     * 
+     *
      * @param out the output
      * @param charToEscape the character to escape.
      */
@@ -304,7 +308,7 @@ class JsonWriter {
     /**
      * Determine if {@code c} lies within the range of values defined for
      * <a href="http://unicode.org/glossary/#surrogate_code_point">Surrogate Code Point</a>.
-     * 
+     *
      * @param c the character to check.
      * @return {@code true} if {@code c} lies within the range of values defined for
      *         <a href="http://unicode.org/glossary/#surrogate_code_point">Surrogate Code Point</a>. {@code false} otherwise.

@@ -122,7 +122,7 @@ public class GelfLayout extends Layout {
 
     @Override
     public void activateOptions() {
-
+        // nothing to do
     }
 
     public void setFields(String fieldSpec) {

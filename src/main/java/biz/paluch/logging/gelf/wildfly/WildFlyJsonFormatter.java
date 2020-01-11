@@ -104,13 +104,6 @@ public class WildFlyJsonFormatter extends ExtFormatter {
         SUPPORTED_FIELDS = Collections.unmodifiableSet(supportedFields);
     }
 
-    /**
-     * Create a new instance of the {@link WildFlyJsonFormatter}.
-     */
-    public WildFlyJsonFormatter() {
-
-    }
-
     @Override
     public String format(ExtLogRecord extLogRecord) {
         if (!wasSetFieldsCalled) {

@@ -2,11 +2,9 @@ package biz.paluch.logging.gelf.log4j2;
 
 import java.util.regex.Pattern;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
-import org.apache.logging.log4j.status.StatusLogger;
 import org.apache.logging.log4j.util.Strings;
 
 /**
@@ -16,8 +14,6 @@ import org.apache.logging.log4j.util.Strings;
  */
 @Plugin(name = "DynamicMdcFieldType", category = "Core", printObject = true)
 public class GelfDynamicMdcFieldType {
-
-    private static final Logger LOGGER = StatusLogger.getLogger();
 
     private final Pattern pattern;
     private final String type;

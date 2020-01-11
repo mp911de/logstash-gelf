@@ -199,6 +199,6 @@ public class JulLogEvent implements LogEvent {
 
     @Override
     public Set<String> getMdcNames() {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 }

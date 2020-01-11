@@ -107,7 +107,7 @@ enum RedisSenderPoolProvider {
             if (hostURI.getQuery() != null) {
                 String[] keyValues = hostURI.getQuery().split("\\&");
                 for (String keyValue : keyValues) {
-                    String parts[] = keyValue.split("\\=");
+                    String[] parts = keyValue.split("\\=");
                     if (parts.length != 2) {
                         continue;
                     }

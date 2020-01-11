@@ -25,7 +25,7 @@ public class Values {
     }
 
     public boolean hasValues() {
-        return size() != 0;
+        return ! values.isEmpty();
     }
 
     public int size() {

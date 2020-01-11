@@ -23,10 +23,12 @@ class PoolingGelfMessage extends GelfMessage {
         this.poolHolder = poolHolder;
     }
 
+    @Override
     public void toJson(ByteBuffer byteBuffer, String additionalFieldPrefix) {
         toJson(OutputAccessor.from(poolHolder.getOutputAccessorPoolHolder(), byteBuffer), additionalFieldPrefix);
     }
 
+    @Override
     public ByteBuffer[] toUDPBuffers(ByteBuffer buffer, ByteBuffer tempBuffer) {
 
         try {
@@ -52,14 +54,14 @@ class PoolingGelfMessage extends GelfMessage {
 
         if (tempBuffer.position() > getMaximumMessageSize()) {
 
-            int diagrams_length = tempBuffer.position() / getMaximumMessageSize();
+            int diagramsLength = tempBuffer.position() / getMaximumMessageSize();
             // In case of a remainder, due to the integer division, add a extra datagram
             if (tempBuffer.position() % getMaximumMessageSize() != 0) {
-                diagrams_length++;
+                diagramsLength++;
             }
 
             buffer.clear();
-            return sliceDatagrams((ByteBuffer) tempBuffer.flip(), diagrams_length, buffer);
+            return sliceDatagrams((ByteBuffer) tempBuffer.flip(), diagramsLength, buffer);
         } else {
             ByteBuffer[] byteBuffers = poolHolder.getSingleBuffer();
             byteBuffers[0] = (ByteBuffer) tempBuffer.flip();

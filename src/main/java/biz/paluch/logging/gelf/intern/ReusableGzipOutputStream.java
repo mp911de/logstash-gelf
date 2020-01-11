@@ -57,6 +57,7 @@ class ReusableGzipOutputStream extends DeflaterOutputStream {
      * @param len the length of the data
      * @exception IOException If an I/O error has occurred.
      */
+    @Override
     public synchronized void write(byte[] buf, int off, int len) throws IOException {
         super.write(buf, off, len);
         crc.update(buf, off, len);
@@ -68,6 +69,7 @@ class ReusableGzipOutputStream extends DeflaterOutputStream {
      *
      * @exception IOException if an I/O error has occurred
      */
+    @Override
     public void finish() throws IOException {
         if (!def.finished()) {
             def.finish();
@@ -111,7 +113,7 @@ class ReusableGzipOutputStream extends DeflaterOutputStream {
     /*
      * Writes GZIP member trailer to a byte array, starting at a given offset.
      */
-    private void writeTrailer(byte[] buf, int offset) throws IOException {
+    private void writeTrailer(byte[] buf, int offset) {
         writeInt((int) crc.getValue(), buf, offset); // CRC-32 of uncompr. data
         writeInt(def.getTotalIn(), buf, offset + 4); // Number of uncompr. bytes
     }
@@ -119,7 +121,7 @@ class ReusableGzipOutputStream extends DeflaterOutputStream {
     /*
      * Writes integer in Intel byte order to a byte array, starting at a given offset.
      */
-    private void writeInt(int i, byte[] buf, int offset) throws IOException {
+    private void writeInt(int i, byte[] buf, int offset) {
         writeShort(i & 0xffff, buf, offset);
         writeShort((i >> 16) & 0xffff, buf, offset + 2);
     }
@@ -127,7 +129,7 @@ class ReusableGzipOutputStream extends DeflaterOutputStream {
     /*
      * Writes short integer in Intel byte order to a byte array, starting at a given offset
      */
-    private void writeShort(int s, byte[] buf, int offset) throws IOException {
+    private void writeShort(int s, byte[] buf, int offset) {
         buf[offset] = (byte) (s & 0xff);
         buf[offset + 1] = (byte) ((s >> 8) & 0xff);
     }

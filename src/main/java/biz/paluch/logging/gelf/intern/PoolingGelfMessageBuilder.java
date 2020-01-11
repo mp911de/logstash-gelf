@@ -71,6 +71,7 @@ public class PoolingGelfMessageBuilder extends GelfMessageBuilder {
      *
      * @return GelfMessage
      */
+    @Override
     public GelfMessage build() {
 
         GelfMessage gelfMessage = new PoolingGelfMessage(shortMessage, fullMessage, javaTimestamp, level, poolHolder);

@@ -67,6 +67,7 @@ public class GelfTCPSSLSender extends GelfTCPSender {
         return false;
     }
 
+    @Override
     protected boolean isConnected() throws IOException {
 
         SocketChannel socketChannel = channel();
@@ -124,7 +125,8 @@ public class GelfTCPSSLSender extends GelfTCPSender {
 
         ByteBuffer networkBuffer = this.sslNetworkBuffers.get();
         if (networkBuffer == null) {
-            this.sslNetworkBuffers.set(networkBuffer = ByteBuffer.allocateDirect(sslSession.getPacketBufferSize()));
+            networkBuffer = ByteBuffer.allocateDirect(sslSession.getPacketBufferSize());
+            this.sslNetworkBuffers.set(networkBuffer);
         }
         networkBuffer.clear();
         return networkBuffer;
@@ -134,7 +136,8 @@ public class GelfTCPSSLSender extends GelfTCPSender {
 
         ByteBuffer tempBuffer = this.tempBuffers.get();
         if (tempBuffer == null) {
-            this.tempBuffers.set(tempBuffer = ByteBuffer.allocateDirect(sslSession.getApplicationBufferSize()));
+            tempBuffer = ByteBuffer.allocateDirect(sslSession.getApplicationBufferSize());
+            this.tempBuffers.set(tempBuffer);
         }
         tempBuffer.clear();
         return tempBuffer;

@@ -20,6 +20,10 @@ import biz.paluch.logging.gelf.intern.sender.RedisGelfSenderProvider;
  */
 public final class GelfSenderFactory {
 
+    private GelfSenderFactory() {
+        // no instance allowed
+    }
+
     /**
      * Create a GelfSender based on the configuration.
      *

@@ -26,8 +26,7 @@ class BeanPropertyExtraction {
 
         Map<String, Method> methodMap = createPropertyToMethodMap(object);
 
-        Map<String, Object> fields = retrieveValues(object, methodMap);
-        return fields;
+        return retrieveValues(object, methodMap);
     }
 
     private static Map<String, Method> createPropertyToMethodMap(Object object) {

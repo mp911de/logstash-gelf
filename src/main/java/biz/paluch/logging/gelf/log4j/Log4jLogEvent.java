@@ -38,6 +38,7 @@ class Log4jLogEvent implements LogEvent {
                 mdc = (Map) mdcCopy.get(loggingEvent);
             }
         } catch (IllegalAccessException e) {
+            // ignore, return null
         }
 
         if (mdc == null) {

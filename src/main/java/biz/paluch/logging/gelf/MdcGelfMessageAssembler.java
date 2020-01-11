@@ -6,7 +6,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * Message-Assembler using MDC.
- * 
+ *
  * @author Mark Paluch
  * @since 26.09.13 15:05
  */
@@ -20,6 +20,7 @@ public class MdcGelfMessageAssembler extends GelfMessageAssembler {
     private boolean mdcProfiling;
     private boolean includeFullMdc;
 
+    @Override
     public void initialize(PropertyProvider propertyProvider) {
 
         super.initialize(propertyProvider);
@@ -28,6 +29,7 @@ public class MdcGelfMessageAssembler extends GelfMessageAssembler {
 
     }
 
+    @Override
     public GelfMessage createGelfMessage(LogEvent logEvent) {
 
         GelfMessage gelfMessage = super.createGelfMessage(logEvent);

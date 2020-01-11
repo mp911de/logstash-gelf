@@ -34,8 +34,8 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
         Map<String, String> options = QueryStringParser.parse(uri);
 
         Properties props = new Properties();
-        for (String key : options.keySet()) {
-            props.setProperty(key, options.get(key));
+        for (Map.Entry<String, String> entry : options.entrySet()) {
+            props.setProperty(entry.getKey(), entry.getValue());
         }
 
         String brokers = getBrokerServers(configuration);
@@ -72,8 +72,14 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
 
         if (uri.getHost() != null) {
             brokers = uri.getHost();
-            int port = uri.getPort() > 0 ? uri.getPort() : configuration.getPort() > 0 ? configuration.getPort()
-                    : BROKER_DEFAULT_PORT;
+            int port;
+            if (uri.getPort() > 0) {
+                port = uri.getPort();
+            } else if (configuration.getPort() > 0) {
+                port = configuration.getPort();
+            } else {
+                port = BROKER_DEFAULT_PORT;
+            }
             brokers += ":" + port;
 
         } else {

@@ -28,6 +28,10 @@ class QueryStringParser {
         TIME_UNIT_MAP = Collections.unmodifiableMap(unitMap);
     }
 
+    private QueryStringParser() {
+        // no instance allowed
+    }
+
     /**
      * Parse the query part of an {@link URI} to a single-valued key-value map. All keys are transformed to lower-case.
      *
@@ -115,7 +119,7 @@ class QueryStringParser {
         }
 
         if (host.contains("?")) {
-            host = host.substring(0, host.indexOf("?"));
+            host = host.substring(0, host.indexOf('?'));
         }
         return host;
     }
