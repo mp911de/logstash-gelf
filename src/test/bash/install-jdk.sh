@@ -23,7 +23,7 @@ set -o errexit
 
 function initialize() {
     readonly script_name="$(basename "${BASH_SOURCE[0]}")"
-    readonly script_version='2019-05-02'
+    readonly script_version='2019-12-16'
 
     dry=false
     silent=false
@@ -31,7 +31,7 @@ function initialize() {
     emit_java_home=false
 
     feature='ea'
-    license='GPL'
+    license='GPL' # Force GPLv2+CE
     os='?'
     url='?'
     workspace="${HOME}"
@@ -42,7 +42,7 @@ function initialize() {
 function usage() {
 cat << EOF
 Usage: ${script_name} [OPTION]...
-Download and extract the latest-and-greatest JDK from java.net or Oracle.
+Download and extract latest-and-greatest JDK from https://jdk.java.net
 
 Version: ${script_version}
 Options:
@@ -52,9 +52,8 @@ Options:
   -e|--emit-java-home       Print value of "JAVA_HOME" to stdout (ignores silent mode)
   -v|--verbose              Displays verbose output
 
-  -f|--feature 9|10|...|ea  JDK feature release number, defaults to "ea"
-  -l|--license GPL|BCL      License defaults to "GPL", BCL also indicates OTN-LA for Oracle Java SE
-  -o|--os linux-x64|osx-x64 Operating system identifier (works best with GPL license)
+  -f|--feature 11|12|...|ea JDK feature release number, defaults to "ea"
+  -o|--os linux-x64|osx-x64 Operating system identifier
   -u|--url "https://..."    Use custom JDK archive (provided as .tar.gz file)
   -w|--workspace PATH       Working directory defaults to \${HOME} [${HOME}]
   -t|--target PATH          Target directory, defaults to first component of the tarball
@@ -119,7 +118,8 @@ function parse_options() {
                 shift
                 ;;
             -l|-L|--license)
-                license="$1"
+                # license="$1"
+                say "Ignoring license option: $1 -- using GPLv2+CE by default"
                 verbose "license=${license}"
                 shift
                 ;;
@@ -159,11 +159,11 @@ function determine_latest_jdk() {
     local curl_result
     local url
 
-    verbose "Determine latest JDK feature release number"
-    number=9
+    number=15
+    verbose "Determine latest JDK feature release number, starting with ${number}"
     while [[ ${number} != 99 ]]
     do
-      url=http://jdk.java.net/${number}
+      url="https://jdk.java.net/${number}"
       curl_result=$(curl -o /dev/null --silent --head --write-out %{http_code} ${url})
       if [[ ${curl_result} -ge 400 ]]; then
         break
@@ -183,31 +183,26 @@ function perform_sanity_checks() {
     if [[ ${feature} -lt 9 ]] || [[ ${feature} -gt ${latest_jdk} ]]; then
         script_exit "Expected feature release number in range of 9 to ${latest_jdk}, but got: ${feature}" 3
     fi
-    if [[ ${feature} -gt 11 ]] && [[ ${license} == 'BCL' ]]; then
-        script_exit "BCL licensed downloads are only supported up to JDK 11, but got: ${feature}" 3
-    fi
     if [[ -d "$target" ]]; then
         script_exit "Target directory must not exist, but it does: $(du -hs '${target}')" 3
     fi
 }
 
 function determine_url() {
+    local JAVA_NET="https://jdk.java.net/${feature}"
     local DOWNLOAD='https://download.java.net/java'
-    local ORACLE='http://download.oracle.com/otn-pub/java/jdk'
 
-    # Archived feature or official GA build?
-    case "${feature}-${license}" in
-        9-GPL) url="${DOWNLOAD}/GA/jdk9/9.0.4/binaries/openjdk-9.0.4_${os}_bin.tar.gz"; return;;
-        9-BCL) url="${ORACLE}/9.0.4+11/c2514751926b4512b076cc82f959763f/jdk-9.0.4_${os}_bin.tar.gz"; return;;
-       10-GPL) url="${DOWNLOAD}/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_${os}_bin.tar.gz"; return;;
-       10-BCL) url="${ORACLE}/10.0.2+13/19aef61b38124481863b1413dce1855f/jdk-10.0.2_${os}_bin.tar.gz"; return;;
-       11-GPL) url="${DOWNLOAD}/GA/jdk11/9/GPL/openjdk-11.0.2_${os}_bin.tar.gz"; return;;
-       11-BCL) url="${ORACLE}/11.0.2+9/f51449fcd52f4d52b93a989c5c56ed3c/jdk-11.0.2_${os}_bin.tar.gz"; return;;
-       12-GPL) url="${DOWNLOAD}/GA/jdk12.0.1/69cfe15208a647278a19ef0990eea691/12/GPL/openjdk-12.0.1_${os}_bin.tar.gz"; return;;
+    # An official GA build or an archived feature? Use predefined URL
+    case "${feature}" in
+        9) url="${DOWNLOAD}/GA/jdk9/9.0.4/binaries/openjdk-9.0.4_${os}_bin.tar.gz"; return;;
+       10) url="${DOWNLOAD}/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_${os}_bin.tar.gz"; return;;
+       11) url="${DOWNLOAD}/GA/jdk11/9/GPL/openjdk-11.0.2_${os}_bin.tar.gz"; return;;
+       12) url="${DOWNLOAD}/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_${os}_bin.tar.gz"; return;;
+       13) url="${DOWNLOAD}/GA/jdk13.0.1/cec27d702aa74d5a8630c65ae61e4305/9/GPL/openjdk-13.0.1_${os}_bin.tar.gz"; return;;
+    #  14) is still available from its EA/RC location determined below
     esac
 
-    # EA or RC or GA build?
-    local JAVA_NET="http://jdk.java.net/${feature}"
+    # EA or RC build? Grab URL from HTML source of jdk.java.net/${feature}
     local candidates=$(wget --quiet --output-document - ${JAVA_NET} | grep -Eo 'href[[:space:]]*=[[:space:]]*"[^\"]+"' | grep -Eo '(http|https)://[^"]+')
     url=$(echo "${candidates}" | grep -Eo "${DOWNLOAD}/.+/jdk${feature}/.*${license}/.*jdk-${feature}.+${os}_bin(.tar.gz|.zip)$" || true)
 
@@ -233,7 +228,6 @@ function prepare_variables() {
         license='<overridden by custom url>'
         os='<overridden by custom url>'
     fi
-    archive="${workspace}/$(basename ${url})"
     status=$(curl -o /dev/null --silent --head --write-out %{http_code} ${url})
 }
 
@@ -241,28 +235,22 @@ function print_variables() {
 cat << EOF
 Variables:
   feature = ${feature}
-  license = ${license}
        os = ${os}
       url = ${url}
    status = ${status}
-  archive = ${archive}
 EOF
 }
 
 function download_and_extract_and_set_target() {
     local quiet='--quiet'; if [[ ${verbose} == true ]]; then quiet=''; fi
-    local local="--directory-prefix ${workspace}"
+    local local="--directory-prefix ${workspace} --output-document=jdk.tar.gz"
     local remote='--timestamping --continue'
     local wget_options="${quiet} ${local} ${remote}"
-    local tar_options="--file ${archive}"
+    local tar_options="--file jdk.tar.gz"
 
     say "Downloading JDK from ${url}..."
     verbose "Using wget options: ${wget_options}"
-    if [[ ${license} == 'GPL' ]]; then
-        wget ${wget_options} ${url}
-    else
-        wget ${wget_options} --header "Cookie: oraclelicense=accept-securebackup-cookie" ${url}
-    fi
+    wget ${wget_options} ${url}
 
     if [[ ${os} == 'windows-x64' ]]; then
         script_exit "Extracting archives on Windows isn't supported, yet" 4
@@ -276,18 +264,19 @@ function download_and_extract_and_set_target() {
         else
             target="${workspace}"/$(tar --list ${tar_options} | head -2 | tail -1 | cut -f 2 -d '/' -)/Contents/Home
         fi
+        verbose "Set target to: ${target}"
     else
+        echo "Using custom target: ${target}"
         if [[ "$OSTYPE" != "darwin"* ]]; then
             mkdir --parents "${target}"
             tar --extract ${tar_options} -C "${target}" --strip-components=1
         else
             mkdir -p "${target}"
-            tar --extract ${tar_options} -C "${target}" --strip-components=4 # . / <jdk> / Contents / Home
+            tar --extract ${tar_options} -C "${target}" --strip-components=4
         fi
     fi
 
     if [[ ${verbose} == true ]]; then
-        echo "Set target to: ${target}"
         echo "Content of target directory:"
         ls "${target}"
         echo "Content of release file:"
@@ -295,11 +284,16 @@ function download_and_extract_and_set_target() {
     fi
 
     # Link to system certificates
-    # http://openjdk.java.net/jeps/319
+    # https://openjdk.java.net/jeps/319
     # https://bugs.openjdk.java.net/browse/JDK-8196141
     if [[ ${cacerts} == true ]]; then
-        mv "${target}/lib/security/cacerts" "${target}/lib/security/cacerts.jdk"
-        ln -s /etc/ssl/certs/java/cacerts "${target}/lib/security/cacerts"
+        local directory="${target}/lib/security/cacerts"
+        if [[ -f "${directory}" ]]; then
+            mv "${directory}" "${directory}.jdk"
+            ln -s /etc/ssl/certs/java/cacerts "${directory}"
+        else
+            verbose "Directory ${directory} doesn't exist, didn't link system CA certificates."
+        fi
     fi
 }
 
@@ -318,7 +312,7 @@ function main() {
     export JAVA_HOME=$(cd "${target}"; pwd)
     export PATH=${JAVA_HOME}/bin:$PATH
 
-    if [[ ${silent} == false ]]; then java -version; fi
+    if [[ ${silent} == false ]]; then java -Xmx100m -version; fi
     if [[ ${emit_java_home} == true ]]; then echo "${JAVA_HOME}"; fi
 }
 
