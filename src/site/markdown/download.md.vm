@@ -45,8 +45,8 @@ Using logstash-gelf on your classpath
   the dependencies listed below to your classpath.
 
     logstash-gelf-${logstash-gelf-release-version}.jar
-    jedis-3.0.1.jar (optional for Redis usage)
-    commons-pool2-2.4.3.jar (optional for Redis usage)
+    jedis-3.2.0.jar (optional for Redis usage)
+    commons-pool2-2.7.0.jar (optional for Redis usage)
     kafka-clients-2.1.0.jar (optional for Kafka usage)
 
 You can do this from the command line or a manifest file.

@@ -33,7 +33,7 @@ class GelfLogHandlerRedisIntegrationTests {
     private Jedis jedis;
 
     @BeforeEach
-    void before() throws Exception {
+    void before() {
         // enable the test with -Dtest.withRedis=true
         assumeTrue(Sockets.isOpen("localhost", 6479));
 
@@ -63,7 +63,6 @@ class GelfLogHandlerRedisIntegrationTests {
         assertThat(map.get("full_message")).isEqualTo(expectedMessage);
         assertThat(map.get("short_message")).isEqualTo(expectedMessage);
         assertThat(map.get("fieldName1")).isEqualTo("fieldValue1");
-
     }
 
     @Test
@@ -87,7 +86,6 @@ class GelfLogHandlerRedisIntegrationTests {
         assertThat(map.get("full_message")).isEqualTo(expectedMessage);
         assertThat(map.get("short_message")).isEqualTo(expectedMessage);
         assertThat(map.get("fieldName1")).isEqualTo("fieldValue1");
-
     }
 
     @Test
@@ -120,7 +118,7 @@ class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    void uriWithoutHost() throws Exception {
+    void uriWithoutHost() {
 
         String uri = "redis:///#list";
 
@@ -134,11 +132,10 @@ class GelfLogHandlerRedisIntegrationTests {
                 new RedisGelfSenderProvider().create(configuration);
             }
         });
-
     }
 
     @Test
-    void uriWithoutFragment() throws Exception {
+    void uriWithoutFragment() {
 
         String uri = "redis://host/";
 
@@ -155,7 +152,7 @@ class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    void uriWithoutFragment2() throws Exception {
+    void uriWithoutFragment2() {
 
         String uri = "redis://host";
 
@@ -172,7 +169,7 @@ class GelfLogHandlerRedisIntegrationTests {
     }
 
     @Test
-    void uriWithoutFragment3() throws Exception {
+    void uriWithoutFragment3() {
 
         String uri = "redis://host#";
 

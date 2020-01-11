@@ -49,6 +49,8 @@ public class JBoss7JulLogEvent extends JulLogEvent {
                 return null;
             case SourceLineNumber:
                 return getSourceLineNumber();
+            case ThreadName:
+                return this.extLogRecord.getThreadName();
         }
         return super.getValue(field);
     }
