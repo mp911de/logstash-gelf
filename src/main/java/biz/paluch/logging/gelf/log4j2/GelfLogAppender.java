@@ -198,9 +198,9 @@ public class GelfLogAppender extends AbstractAppender {
         super(name, filter, null, ignoreExceptions);
         this.gelfMessageAssembler = gelfMessageAssembler;
 
-        ErrorReporter myErrorReporter = getErrorReporter(ignoreExceptions);
+        ErrorReporter errorReporter = getErrorReporter(ignoreExceptions);
 
-        this.errorReporter = new MessagePostprocessingErrorReporter(myErrorReporter);
+        this.errorReporter = new MessagePostprocessingErrorReporter(errorReporter);
     }
 
     private ErrorReporter getErrorReporter(boolean ignoreExceptions) {

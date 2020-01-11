@@ -13,35 +13,35 @@ import java.util.Set;
  */
 public class Values {
 
-    private Map<String, Object> keyValueMap = new HashMap<>();
+    private Map<String, Object> values = new HashMap<>();
 
     public Values() {
     }
 
     public Values(String name, Object value) {
         if (name != null && value != null) {
-            keyValueMap.put(name, value);
+            values.put(name, value);
         }
     }
 
     public boolean hasValues() {
-        return ! keyValueMap.isEmpty();
+        return ! values.isEmpty();
     }
 
     public int size() {
-        return keyValueMap.size();
+        return values.size();
     }
 
     public Set<String> getEntryNames() {
-        return Collections.unmodifiableSet(keyValueMap.keySet());
+        return Collections.unmodifiableSet(values.keySet());
     }
 
     public void setValue(String key, Object value) {
-        keyValueMap.put(key, value);
+        values.put(key, value);
     }
 
     @SuppressWarnings("unchecked")
 	public <T> T getValue(String key) {
-        return (T) keyValueMap.get(key);
+        return (T) values.get(key);
     }
 }

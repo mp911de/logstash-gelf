@@ -170,14 +170,14 @@ public class GelfMessage {
 
         if (!isEmpty(getLevel())) {
             if (GELF_VERSION_1_1.equals(version)) {
-                int myLevel;
+                int level;
                 try {
-                    myLevel = Integer.parseInt(getLevel());
+                    level = Integer.parseInt(getLevel());
                 } catch (NumberFormatException ex) {
                     // fallback on the default value
-                    myLevel = DEFAUL_LEVEL;
+                    level = DEFAUL_LEVEL;
                 }
-                hasFields = writeIfNotEmpty(out, hasFields, FIELD_LEVEL, myLevel);
+                hasFields = writeIfNotEmpty(out, hasFields, FIELD_LEVEL, level);
             } else {
                 hasFields = writeIfNotEmpty(out, hasFields, FIELD_LEVEL, getLevel());
             }
