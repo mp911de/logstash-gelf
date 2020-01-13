@@ -68,7 +68,7 @@
         <arquillian.version>1.4.1.Final</arquillian.version>
         <version.org.wildfly.arquillian>2.1.0.Final</version.org.wildfly.arquillian>
 
-        <site-plugin.version>3.6</site-plugin.version>
+        <site-plugin.version>3.8.2</site-plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
@@ -482,10 +482,10 @@
                             <report>dependency-info</report>
                             <report>dependencies</report>
                             <report>scm</report>
-                            <report>issue-tracking</report>
-                            <report>cim</report>
+                            <report>issue-management</report>
+                            <report>ci-management</report>
                             <report>dependency-management</report>
-                            <report>project-team</report>
+                            <report>team</report>
                             <report>summary</report>
                         </reports>
                     </reportSet>
