@@ -44,6 +44,10 @@
         </site>
     </distributionManagement>
 
+    <prerequisites>
+        <maven>3.5.0</maven>
+    </prerequisites>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -80,11 +84,12 @@
         <netty-all.version>4.1.43.Final</netty-all.version>
         <maven-scm-publish-plugin.version>3.0.0</maven-scm-publish-plugin.version>
         <tempus-fugit.version>1.1</tempus-fugit.version>
+        <maven-assembly-plugin.version>3.2.0</maven-assembly-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
-        <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
         <maven-scm-provider-gitexe.version>1.11.2</maven-scm-provider-gitexe.version>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
-        <maven.jacoco.version>0.7.9</maven.jacoco.version>
+        <maven.jacoco.version>0.8.5</maven.jacoco.version>
         <kafka-clients.version>2.3.0</kafka-clients.version>
         <kafka-junit.version>4.1.6</kafka-junit.version>
     </properties>
@@ -143,6 +148,12 @@
                     </descriptors>
                     <attach>true</attach>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
             </plugin>
 
             <plugin>
@@ -688,7 +699,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.7</version>
+                        <version>3.0.0</version>
                         <executions>
                             <execution>
                                 <id>add-source</id>
@@ -706,7 +717,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.4.0</version>
+                        <version>1.6.0</version>
                         <executions>
                             <execution>
                                 <id>run-benchmarks</id>
