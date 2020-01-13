@@ -13,8 +13,11 @@ import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
+ * {@link LogEvent} implementation for a Java Util Logging {@link LogRecord}.
+ *
  * @author Mark Paluch
  * @author Loïc Mathieu
+ * @author Ralf Thaenert
  * @since 26.09.13 15:22
  */
 public class JulLogEvent implements LogEvent {
@@ -68,7 +71,7 @@ public class JulLogEvent implements LogEvent {
             String originalMessage = message;
 
             // by default, using {0}, {1}, etc. -> MessageFormat
-            if(message.contains("{")) {
+            if (message.indexOf('{') != -1) {
                 try {
                     message = MessageFormat.format(message, parameters);
                 } catch (IllegalArgumentException e) {
