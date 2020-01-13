@@ -14,3 +14,5 @@ categories:
     label: "type/docs"
   - title: 📦 Dependency updates
     label: "type: dependency-upgrade"
+  - title: 📦 Other
+    label: "type: task"
