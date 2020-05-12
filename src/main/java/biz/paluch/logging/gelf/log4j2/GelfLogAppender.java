@@ -4,6 +4,7 @@ import static biz.paluch.logging.gelf.LogMessageField.NamedLogField.*;
 import static org.apache.logging.log4j.core.layout.PatternLayout.newBuilder;
 
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
@@ -375,19 +376,23 @@ public class GelfLogAppender extends AbstractAppender {
     }
 
     @Override
-    public void stop() {
+    protected boolean stop(long timeout, TimeUnit timeUnit, boolean changeLifeCycleState) {
+
         if (null != gelfSender) {
             Closer.close(gelfSender);
             gelfSender = null;
         }
-        super.stop();
+
+        return super.stop(timeout, timeUnit, changeLifeCycleState);
     }
 
     @Override
     public void start() {
+
         if (null == gelfSender) {
             gelfSender = createGelfSender();
         }
+
         super.start();
     }
 
