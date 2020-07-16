@@ -38,7 +38,7 @@ enum RedisSenderPoolProvider {
         @Override
         public synchronized Pool<Jedis> getJedisPool(URI hostURI, int configuredPort, int timeoutMs) {
             String lowerCasedConnectionString = hostURI.toString().toLowerCase();
-            String cleanConnectionString = lowerCasedConnectionString.substring(0, lowerCasedConnectionString.length()
+            final String cleanConnectionString = lowerCasedConnectionString.substring(0, lowerCasedConnectionString.length()
                     - hostURI.getFragment().length());
 
             if (!standalonePools.containsKey(cleanConnectionString)) {
@@ -49,8 +49,16 @@ enum RedisSenderPoolProvider {
                     database = Integer.parseInt(hostURI.getPath().split("/", 2)[1]);
                 }
                 int port = hostURI.getPort() > 0 ? hostURI.getPort() : configuredPort;
-                JedisPool newPool = new JedisPool(new JedisPoolConfig(), hostURI.getHost(), port, timeoutMs, password, database);
+                JedisPool newPool = new JedisPool(new JedisPoolConfig(), hostURI.getHost(), port, timeoutMs, password
+                  , database){
 
+                    @Override
+                    public void destroy()
+                    {
+                        super.destroy();
+                        standalonePools.remove(cleanConnectionString);
+                    }
+                };
                 standalonePools.put(cleanConnectionString, newPool);
             }
             return standalonePools.get(cleanConnectionString);
@@ -77,10 +85,10 @@ enum RedisSenderPoolProvider {
         @Override
         public Pool<Jedis> getJedisPool(URI hostURI, int configuredPort, int timeoutMs) {
             String lowerCasedConnectionString = hostURI.toString().toLowerCase();
-            String cleanConnectionString = lowerCasedConnectionString.substring(0, lowerCasedConnectionString.length()
+            final String cleanConnectionString = lowerCasedConnectionString.substring(0, lowerCasedConnectionString.length()
                     - hostURI.getFragment().length());
 
-            Set<String> sentinels = getSentinels(hostURI);
+            final Set<String> sentinels = getSentinels(hostURI);
             String masterName = getMasterName(hostURI);
 
             // No logging for Jedis Sentinel at all.
@@ -94,7 +102,14 @@ enum RedisSenderPoolProvider {
                     database = Integer.parseInt(hostURI.getPath().split("/", 2)[1]);
                 }
                 JedisSentinelPool newPool = new JedisSentinelPool(masterName, sentinels, new JedisPoolConfig(), timeoutMs,
-                        password, database);
+                        password, database){
+                    @Override
+                    public void destroy()
+                    {
+                        super.destroy();
+                        sentinelPools.remove(cleanConnectionString);
+                    }
+                };
 
                 sentinelPools.put(cleanConnectionString, newPool);
             }
