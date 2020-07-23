@@ -23,11 +23,18 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
     public static final String READ_TIMEOUT = "readTimeout";
     public static final String RETRIES = "deliveryAttempts";
     public static final String KEEPALIVE = "keepAlive";
+    public static final String WRITE_BACKOFF_TIME = "writeBackoffTime";
+    public static final String WRITE_BACKOFF_THRESHOLD = "writeBackoffThreshold";
+    public static final String MAX_WRITE_BACKOFF_TIME = "maxWriteBackoffTime";
 
     private final int readTimeoutMs;
     private final int connectTimeoutMs;
     private final boolean keepAlive;
     private final int deliveryAttempts;
+
+    private final int writeBackoffTimeMs;
+    private final int writeBackoffThreshold;
+    private final int maxWriteBackoffTimeMs;
 
     private final Object ioLock = new Object();
 
@@ -64,12 +71,24 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
     public GelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, int deliveryAttempts,
             boolean keepAlive, ErrorReporter errorReporter) throws IOException {
 
+        this(host, port, connectTimeoutMs, readTimeoutMs, deliveryAttempts, keepAlive, 50, 10, connectTimeoutMs, errorReporter);
+    }
+
+    public GelfTCPSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, int deliveryAttempts,
+                         boolean keepAlive,
+                         int writeBackoffTimeMs, int writeBackoffThreshold, int maxWriteBackoffTimeMs,
+                         ErrorReporter errorReporter) throws IOException {
+
         super(errorReporter, host, port);
 
         this.connectTimeoutMs = connectTimeoutMs;
         this.readTimeoutMs = readTimeoutMs;
         this.keepAlive = keepAlive;
         this.deliveryAttempts = deliveryAttempts < 1 ? Integer.MAX_VALUE : deliveryAttempts;
+
+        this.writeBackoffTimeMs = writeBackoffTimeMs;
+        this.writeBackoffThreshold = writeBackoffThreshold;
+        this.maxWriteBackoffTimeMs = maxWriteBackoffTimeMs;
 
         this.setChannel(createSocketChannel(readTimeoutMs, keepAlive));
     }
@@ -130,6 +149,8 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
     }
 
     protected void write(ByteBuffer buffer) throws IOException {
+        int nothingWrittenTimesInRow = 0;
+        int totalSleepTimeMs = 0;
 
         while (buffer.hasRemaining()) {
             int written = channel().write(buffer);
@@ -138,8 +159,33 @@ public class GelfTCPSender extends AbstractNioSender<SocketChannel> implements G
                 // indicator the socket was closed
                 Closer.close(channel());
                 throw new SocketException("Cannot write buffer to channel");
+            } if (written == 0) {
+                nothingWrittenTimesInRow++;
+                if (nothingWrittenTimesInRow > writeBackoffThreshold) {
+                    if (totalSleepTimeMs > maxWriteBackoffTimeMs) {
+                        Closer.close(channel());
+                        throw new SocketException("Cannot write buffer to channel, no progress in writing");
+                    }
+                    totalSleepTimeMs += sleep(writeBackoffTimeMs);
+                }
+            } else { // written > 0
+                nothingWrittenTimesInRow = 0;
             }
         }
+    }
+
+    private static long sleep(long millis) {
+        long startTime = System.nanoTime();
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        long sleepTimeMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+        if (sleepTimeMs < 0) {
+            sleepTimeMs = 0;
+        }
+        return sleepTimeMs;
     }
 
     protected boolean connect() throws IOException {

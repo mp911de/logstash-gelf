@@ -9,6 +9,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -34,6 +36,7 @@ class GelfTCPSenderIntegrationTests {
     private final Queue<Socket> sockets = new LinkedBlockingQueue<>();
     private volatile ServerSocket serverSocket;
     private volatile boolean loopActive = true;
+    private volatile boolean readFromServerSocket = true;
 
     private Thread thread;
 
@@ -64,7 +67,9 @@ class GelfTCPSenderIntegrationTests {
                         InputStream inputStream = socket.getInputStream();
 
                         while (!socket.isClosed()) {
-                            IOUtils.copy(inputStream, out);
+                            if (readFromServerSocket) {
+                                IOUtils.copy(inputStream, out);
+                            }
                             Thread.sleep(1);
 
                             if (latch.getCount() == 0) {
@@ -164,6 +169,31 @@ class GelfTCPSenderIntegrationTests {
         serverSocket = new ServerSocket(PORT);
 
         assertThat(sender.sendMessage(gelfMessage)).isTrue();
+
+        sender.close();
+    }
+
+    @Test
+    void sendToNonConsumingPort() throws Exception {
+
+        serverSocket.setReceiveBufferSize(100);
+        readFromServerSocket = false; // emulate read delays on a server side
+        thread.start();
+        final List<String> errors = new ArrayList<>();
+
+        SmallBufferTCPSender sender = new SmallBufferTCPSender("localhost", PORT, 1000, 1000, new ErrorReporter() {
+            @Override
+            public void reportError(String message, Exception e) {
+                errors.add(message);
+            }
+        });
+
+        GelfMessage gelfMessage = new GelfMessage("hello", StringUtils.repeat("hello", 100000), PORT, "7");
+
+        sender.sendMessage(gelfMessage);
+
+        assertThat(errors).hasSize(1);
+        assertThat(errors).containsOnly("Cannot write buffer to channel, no progress in writing");
 
         sender.close();
     }
