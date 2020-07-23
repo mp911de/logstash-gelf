@@ -53,7 +53,7 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
             String tcpGraylogHost = QueryStringParser.getHost(uri);
 
             return new GelfTCPSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
-                    writeBackoffTimeMs, writeBackoffThreshold, maxWriteBackoffTimeMs,
+                    new ConstantBackOff(writeBackoffTimeMs), writeBackoffThreshold, maxWriteBackoffTimeMs,
                     configuration.getErrorReporter());
         }
     };

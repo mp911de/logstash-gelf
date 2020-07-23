@@ -17,7 +17,10 @@ The TCP transport for logstash-gelf allows to configure TCP-specific options. Op
 * `readTimeout` Socket Read-Timeout (SO_TIMEOUT). The unit can be specified as suffix (see below). A timeout of zero is interpreted as an infinite timeout. Defaults to `2s`. 
 * `connectionTimeout` Socket Connection-Timeout (SO_TIMEOUT). The unit can be specified as suffix (see below). A timeout of zero is interpreted as an infinite timeout. Defaults to `2s`.
 * `deliveryAttempts` Number of Delivery-Attempts. Will retry to deliver the message and reconnect if necessary. A number of zero is interpreted as an infinite attempts. Defaults to `1`.   
-* `keepAlive` Enable TCP keepAlive. Defaults to `false`.   
+* `keepAlive` Enable TCP keepAlive. Defaults to `false`. 
+* `writeBackoffTime` Delay between subsequent attempts to write to a socket when a backoff is activated. Backoff is activated if a socket sender buffer is full and several attempts to write to the socket are unsuccessful due to it. The unit can be specified as suffix (see below). Defaults to `50ms`. 
+* `writeBackoffThreshold` Attempts to write to a socket before a backoff will be activated. Defaults to `10`. 
+* `maxWriteBackoffTime` Maximum time spent for awaiting during a backoff for a single message send operation. The unit can be specified as suffix (see below). Default equals to `connectionTimeout`. 
 
 ## SSL
 
