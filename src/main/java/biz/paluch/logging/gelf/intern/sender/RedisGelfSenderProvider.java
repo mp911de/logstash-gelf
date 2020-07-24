@@ -47,7 +47,7 @@ public class RedisGelfSenderProvider implements GelfSenderProvider {
             throw new IllegalArgumentException("Redis URI must specify host");
         }
 
-        Pool<Jedis> pool = RedisSenderPoolProvider.getJedisPool(hostUri, port);
-        return new GelfREDISSender(pool, hostUri.getFragment(), configuration.getErrorReporter());
+        Pool<Jedis> pool = RedisPoolHolder.getInstance().getJedisPool(hostUri, port);
+        return new GelfREDISSender<>(pool, hostUri.getFragment(), configuration.getErrorReporter());
     }
 }
