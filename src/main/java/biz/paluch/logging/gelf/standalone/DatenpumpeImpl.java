@@ -10,13 +10,18 @@ import biz.paluch.logging.gelf.intern.GelfSenderConfiguration;
 import biz.paluch.logging.gelf.intern.GelfSenderFactory;
 
 /**
+ * Default implementation of {@link Datenpumpe}.
+ *
  * @author Mark Paluch
  * @since 31.07.14 08:47
  */
 public class DatenpumpeImpl implements Datenpumpe {
 
-    private GelfSenderConfiguration gelfSenderConfiguration;
-    private GelfSender gelfSender = null;
+    private final GelfSenderConfiguration gelfSenderConfiguration;
+
+    private final Object mutex = new Object();
+
+    private volatile GelfSender gelfSender = null;
 
     public DatenpumpeImpl(GelfSenderConfiguration gelfSenderConfiguration) {
         this.gelfSenderConfiguration = gelfSenderConfiguration;
@@ -49,7 +54,11 @@ public class DatenpumpeImpl implements Datenpumpe {
         }
 
         if (gelfSender == null) {
-            gelfSender = GelfSenderFactory.createSender(gelfSenderConfiguration);
+            synchronized (mutex) {
+                if (gelfSender == null) {
+                    gelfSender = GelfSenderFactory.createSender(gelfSenderConfiguration);
+                }
+            }
         }
 
         gelfSender.sendMessage(gelfMessage);
@@ -69,7 +78,12 @@ public class DatenpumpeImpl implements Datenpumpe {
 
     public void close() {
         if (gelfSender != null) {
-            gelfSender.close();
+            synchronized (mutex) {
+                if (gelfSender != null) {
+                    gelfSender.close();
+                    gelfSender = null;
+                }
+            }
         }
     }
 }

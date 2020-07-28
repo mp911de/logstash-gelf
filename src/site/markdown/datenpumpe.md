@@ -60,6 +60,33 @@ Or more sophisticated (using reflection to retrieve the fields from your model):
         }
     }
 
+Setup:
+
+    GelfSenderConfiguration senderConfiguration = new GelfSenderConfiguration() {
+    
+        @Override
+        public int getPort() {
+            return 12201;
+        }
+    
+        @Override
+        public String getHost() {
+            return "tcp:myhost";
+        }
+    
+        @Override
+        public ErrorReporter getErrorReporter() {
+            return new Slf4jErrorReporter();
+        }
+    
+        @Override
+        public Map<String, Object> getSpecificConfigurations() {
+            return Collections.emptyMap();
+        }
+    };
+
+    Datenpumpe datenpumpe = new DatenpumpeImpl(senderConfiguration);
+
 This results in a Gelf message like:
 
     { "timestamp": 1406797244.645,
