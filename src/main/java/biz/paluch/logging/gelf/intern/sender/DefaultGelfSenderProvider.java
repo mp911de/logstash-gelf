@@ -53,7 +53,9 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
             String tcpGraylogHost = QueryStringParser.getHost(uri);
 
             return new GelfTCPSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
-                    new ConstantBackOff(writeBackoffTimeMs), writeBackoffThreshold, maxWriteBackoffTimeMs,
+                    new BoundedBackOff(new ConstantBackOff(writeBackoffTimeMs, TimeUnit.MILLISECONDS), maxWriteBackoffTimeMs,
+                            TimeUnit.MILLISECONDS),
+                    writeBackoffThreshold,
                     configuration.getErrorReporter());
         }
     };
@@ -73,10 +75,18 @@ public class DefaultGelfSenderProvider implements GelfSenderProvider {
             int deliveryAttempts = QueryStringParser.getInt(params, GelfTCPSender.RETRIES, 1);
             boolean keepAlive = QueryStringParser.getString(params, GelfTCPSender.KEEPALIVE, false);
 
+            int writeBackoffTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.WRITE_BACKOFF_TIME, 50);
+            int writeBackoffThreshold = QueryStringParser.getInt(params, GelfTCPSender.WRITE_BACKOFF_THRESHOLD, 10);
+            int maxWriteBackoffTimeMs = (int) QueryStringParser.getTimeAsMs(params, GelfTCPSender.MAX_WRITE_BACKOFF_TIME,
+                    connectionTimeMs);
+
             String tcpGraylogHost = QueryStringParser.getHost(uri);
 
             try {
                 return new GelfTCPSSLSender(tcpGraylogHost, port, connectionTimeMs, readTimeMs, deliveryAttempts, keepAlive,
+                        new BoundedBackOff(new ConstantBackOff(writeBackoffTimeMs, TimeUnit.MILLISECONDS),
+                                maxWriteBackoffTimeMs, TimeUnit.MILLISECONDS),
+                        writeBackoffThreshold,
                         configuration.getErrorReporter(), SSLContext.getDefault());
             } catch (NoSuchAlgorithmException e) {
                 throw new IllegalStateException(e);

@@ -1,19 +1,28 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-public class ConstantBackOff implements BackOff {
-    private final int backoffTimeMs;
+import java.util.concurrent.TimeUnit;
 
-    public ConstantBackOff(int backoffTimeMs) {
-        this.backoffTimeMs = backoffTimeMs;
+/**
+ * Constant {@link BackOff} implementation.
+ *
+ * @author Mark Paluch
+ */
+class ConstantBackOff implements BackOff, BackOffExecution {
+
+    private final long backoffTimeMs;
+
+    public ConstantBackOff(long backoffTime, TimeUnit timeUnit) {
+        this.backoffTimeMs = timeUnit.toMillis(backoffTime);
+    }
+
+    @Override
+    public long nextBackOff() {
+        return backoffTimeMs;
     }
 
     @Override
     public BackOffExecution start() {
-        return new BackOffExecution() {
-            @Override
-            public int nextBackOff() {
-                return backoffTimeMs;
-            }
-        };
+        return this;
     }
+
 }

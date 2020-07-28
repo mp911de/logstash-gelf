@@ -52,6 +52,31 @@ public class GelfTCPSSLSender extends GelfTCPSender {
         this.sslContext = sslContext;
     }
 
+    /**
+     * @param host the host, must not be {@literal null}.
+     * @param port the port.
+     * @param connectTimeoutMs connection timeout, in {@link TimeUnit#MILLISECONDS}.
+     * @param readTimeoutMs read timeout, in {@link TimeUnit#MILLISECONDS}.
+     * @param deliveryAttempts number of delivery attempts.
+     * @param keepAlive {@literal true} to enable TCP keep-alive.
+     * @param backoff Backoff strategy to activate if a socket sender buffer is full and several attempts to write to the socket
+     *        are unsuccessful due to it.
+     * @param writeBackoffThreshold attempts to write to a socket before a backoff will be activated.
+     * @param errorReporter the error reporter, must not be {@literal null}.
+     * @param sslContext the SSL context, must not be {@literal null}.
+     * @throws IOException in case of I/O errors
+     */
+    public GelfTCPSSLSender(String host, int port, int connectTimeoutMs, int readTimeoutMs, int deliveryAttempts,
+            boolean keepAlive, BackOff backoff, int writeBackoffThreshold, ErrorReporter errorReporter, SSLContext sslContext)
+            throws IOException {
+
+        super(host, port, connectTimeoutMs, readTimeoutMs, deliveryAttempts, keepAlive, backoff, writeBackoffThreshold,
+                errorReporter);
+
+        this.connectTimeoutMs = connectTimeoutMs;
+        this.sslContext = sslContext;
+    }
+
     @Override
     protected boolean connect() throws IOException {
         if (super.connect()) {
