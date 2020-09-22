@@ -70,7 +70,7 @@ class ValueDiscoveryUnitTests {
     void doubleWithChars() {
 
         assertThat(ValueDiscovery.discover("2e5")).isEqualTo(Result.DOUBLE);
-        assertThat(ValueDiscovery.discover("2e5.1")).isEqualTo(Result.DOUBLE);
+        assertThat(ValueDiscovery.discover("2e5.1")).isEqualTo(Result.STRING);
         assertThat(ValueDiscovery.discover("1.2.3")).isEqualTo(Result.STRING);
         assertThat(ValueDiscovery.discover("A")).isEqualTo(Result.STRING);
         assertThat(ValueDiscovery.discover("9.156013e-002")).isEqualTo(Result.DOUBLE);
@@ -80,8 +80,56 @@ class ValueDiscoveryUnitTests {
 
     @Test
     void shouldDiscoverStringExceedingLength() {
-
-        assertThat(ValueDiscovery.discover("11111111111111111111111111111111")).isEqualTo(Result.LONG);
+        assertThat(ValueDiscovery.discover("1111111111111111111")).isEqualTo(Result.LONG);
+        assertThat(ValueDiscovery.discover("11111111111111111111")).isEqualTo(Result.STRING);
         assertThat(ValueDiscovery.discover("111111111111111111111111111111111")).isEqualTo(Result.STRING);
     }
+
+    @Test
+    void testString() {
+        assertThat(ValueDiscovery.discover("deadbeef")).isEqualTo(ValueDiscovery.Result.STRING);
+    }
+
+    @Test
+    void testHexString() {
+        assertThat(ValueDiscovery.discover("0xdeadbeef")).isEqualTo(Result.LONG);
+    }
+
+    @Test
+    void testStringWithLeadingZeroAndHex() {
+        assertThat(ValueDiscovery.discover("0deadbeef")).isEqualTo(ValueDiscovery.Result.STRING);
+        assertThat(ValueDiscovery.discover("0123")).isEqualTo(ValueDiscovery.Result.STRING);
+    }
+
+    @Test
+    void testStringZeroAndP() {
+        assertThat(ValueDiscovery.discover("0p")).isEqualTo(ValueDiscovery.Result.STRING);
+    }
+
+    @Test
+    void testStringZeroAndX() {
+        assertThat(ValueDiscovery.discover("0x")).isEqualTo(ValueDiscovery.Result.STRING);
+    }
+
+    @Test
+    void testStringZeroXP() {
+        assertThat(ValueDiscovery.discover("0xp")).isEqualTo(ValueDiscovery.Result.STRING);
+    }
+
+    @Test
+    void testInfinity() {
+        assertThat(ValueDiscovery.discover("Infinity")).isEqualTo(ValueDiscovery.Result.DOUBLE);
+        assertThat(ValueDiscovery.discover("+Infinity")).isEqualTo(ValueDiscovery.Result.DOUBLE);
+        assertThat(ValueDiscovery.discover("-Infinity")).isEqualTo(ValueDiscovery.Result.DOUBLE);
+        assertThat(ValueDiscovery.discover("Infinity1")).isEqualTo(ValueDiscovery.Result.STRING);
+    }
+
+    @Test
+    void testNaN() {
+        assertThat(ValueDiscovery.discover("NaN")).isEqualTo(ValueDiscovery.Result.DOUBLE);
+        assertThat(ValueDiscovery.discover("+NaN")).isEqualTo(ValueDiscovery.Result.STRING);
+        assertThat(ValueDiscovery.discover("-NaN")).isEqualTo(ValueDiscovery.Result.STRING);
+        assertThat(ValueDiscovery.discover("NaN1")).isEqualTo(ValueDiscovery.Result.STRING);
+    }
+
 }
