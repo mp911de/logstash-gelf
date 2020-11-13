@@ -57,6 +57,11 @@ public class GelfHTTPSender implements GelfSender {
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.addRequestProperty("Content-type", "application/json");
+            String userInfo = url.getUserInfo(); // contains user:password
+            if (userInfo != null) {
+                String encodedString = Base64Coder.encodeString(userInfo);
+                connection.setRequestProperty("Authorization", "Basic " + encodedString);
+            }
 
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(message.toJson().getBytes(StandardCharsets.UTF_8));
