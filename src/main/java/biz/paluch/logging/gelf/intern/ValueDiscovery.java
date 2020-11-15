@@ -7,8 +7,10 @@ import java.util.regex.Pattern;
  * {@link Result#DOUBLE} or {@link Result#STRING} type.
  *
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Wolfgang Jung
  */
 class ValueDiscovery {
+
     private static final Pattern longPattern = Pattern.compile("^(0x[0-9a-fA-F]+)|[+\\-]?0|[+\\-]?[1-9][0-9]{0,18}$");
     private static final Pattern doublePattern = Pattern.compile("^[+\\-]?(([0-9]*\\.[0-9]+([eE][+-]?[0-9]+)?)|([1-9][0-9]{0,18}([eE][+-]?[0-9]+)?)|(0x[0-9a-fA-F]+\\.[0-9a-fA-F]+[pP][+\\-]?[0-9]+))$");
 

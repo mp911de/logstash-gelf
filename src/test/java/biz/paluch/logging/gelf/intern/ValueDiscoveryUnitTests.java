@@ -7,7 +7,10 @@ import org.junit.jupiter.api.Test;
 import biz.paluch.logging.gelf.intern.ValueDiscovery.Result;
 
 /**
+ * Unit tests for {@link ValueDiscovery}.
+ *
  * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
+ * @author Wolfgang Jung
  */
 class ValueDiscoveryUnitTests {
 
