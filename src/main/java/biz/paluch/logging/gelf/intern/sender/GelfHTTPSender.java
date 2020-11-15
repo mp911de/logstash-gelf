@@ -15,6 +15,7 @@ import biz.paluch.logging.gelf.intern.GelfSender;
  *
  * @author Aleksandar Stojadinovic
  * @author Patrick Brueckner
+ * @author kenche
  * @since 1.9
  */
 public class GelfHTTPSender implements GelfSender {
