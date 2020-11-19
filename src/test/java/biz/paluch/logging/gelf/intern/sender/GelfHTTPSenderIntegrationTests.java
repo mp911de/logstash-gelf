@@ -144,4 +144,19 @@ class GelfHTTPSenderIntegrationTests {
         verify(errorReporter, times(1)).reportError(anyString(), ArgumentMatchers.<Exception> isNull());
     }
 
+    @Test
+    void sendMessageFailureUserInfoTest() throws IOException {
+
+        server.setReturnStatus(HttpResponseStatus.INTERNAL_SERVER_ERROR);
+
+        String uri = "http://foo:(.*bar)@127.0.0.1:19394"; // unreachable host, and a regex
+        GelfHTTPSender sender = new GelfHTTPSender(new URL(uri), 1000, 1000, errorReporter);
+
+        boolean success = sender.sendMessage(GELF_MESSAGE);
+
+        assertThat(success).isFalse();
+        verify(errorReporter, times(1)).reportError(
+                ArgumentMatchers.eq("Cannot send data to http://127.0.0.1:19394"), ArgumentMatchers.<Exception> isNotNull());
+    }
+
 }
