@@ -284,4 +284,12 @@ public class GelfLogHandler extends Handler implements ErrorReporter {
     public void setVersion(String version) {
         gelfMessageAssembler.setVersion(version);
     }
+
+    public boolean isFullMessageTraceOnly() {
+        return gelfMessageAssembler.isFullMessageTraceOnly();
+    }
+
+    public void setFullMessageTraceOnly(boolean fullMessageTraceOnly) {
+        gelfMessageAssembler.setFullMessageTraceOnly(fullMessageTraceOnly);
+    }
 }

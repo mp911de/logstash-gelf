@@ -37,6 +37,7 @@ public interface PropertyProvider {
     String PROPERTY_ADDITIONAL_FIELD_TYPES = "additionalFieldTypes";
     String PROPERTY_DYNAMIC_MDC_FIELD_TYPES = "dynamicMdcFieldTypes";
     String PROPERTY_TIMESTAMP_PATTERN = "timestampPattern";
+    String PROPERTY_FULL_MESSAGE_TRACE_ONLY = "fullMessageTraceOnly";
 
     String PROPERTY_FILTER = "filter";
     String PROPERTY_LEVEL = "level";

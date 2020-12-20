@@ -42,6 +42,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
  * <li>extractStackTrace (Optional): Post Stack-Trace to StackTrace field (true/false/throwable reference [0 = throwable, 1 =
  * throwable.cause, -1 = root cause]), default false</li>
  * <li>filterStackTrace (Optional): Perform Stack-Trace filtering (true/false), default false</li>
+ * <li>fullMessageTraceOnly (Optional): Use GELF's full_message field exclusively for stack traces, default false</li>
  * <li>includeLocation (Optional): Include source code location, default true</li>
  * <li>includeLogMessageParameters (Optional): Include message parameters from the log event (see
  * {@link LogRecord#getParameters()}, default true</li>
@@ -110,6 +111,11 @@ public class GelfFormatter extends Formatter {
         val = manager.getProperty(cname + ".filterStackTrace");
         if (val != null) {
             setFilterStackTrace(Boolean.valueOf(val));
+        }
+
+        val = manager.getProperty(cname + ".fullMessageTraceOnly");
+        if (val != null) {
+            setFullMessageTraceOnly(Boolean.valueOf(val));
         }
 
         val = manager.getProperty(cname + ".includeLogMessageParameters");
@@ -225,6 +231,14 @@ public class GelfFormatter extends Formatter {
 
     public void setFilterStackTrace(boolean filterStackTrace) {
         gelfMessageAssembler.setFilterStackTrace(filterStackTrace);
+    }
+
+    public boolean isFullMessageTraceOnly() {
+        return gelfMessageAssembler.isFullMessageTraceOnly();
+    }
+
+    public void setFullMessageTraceOnly(boolean fullMessageTraceOnly) {
+        gelfMessageAssembler.setFullMessageTraceOnly(fullMessageTraceOnly);
     }
 
     public boolean isIncludeLogMessageParameters() {

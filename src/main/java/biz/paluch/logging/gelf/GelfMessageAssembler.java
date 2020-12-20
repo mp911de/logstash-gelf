@@ -55,6 +55,7 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     private Map<Pattern, String> dynamicMdcFieldTypes = new LinkedHashMap<>();
 
     private String timestampPattern = "yyyy-MM-dd HH:mm:ss,SSS";
+    private boolean fullMessageTraceOnly = false;
 
     private final ThreadLocal<PoolingGelfMessageBuilder> builders;
 
@@ -124,6 +125,8 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         if (timestampPattern != null && !"".equals(timestampPattern)) {
             this.timestampPattern = timestampPattern;
         }
+
+        setFullMessageTraceOnly("true".equalsIgnoreCase(propertyProvider.getProperty(PropertyProvider.PROPERTY_FULL_MESSAGE_TRACE_ONLY)));
     }
 
     /**
@@ -148,7 +151,11 @@ public class GelfMessageAssembler implements HostAndPortProvider {
             shortMessage = message.substring(0, MAX_SHORT_MESSAGE_LENGTH - 1);
         }
 
-        builder.withShortMessage(shortMessage).withFullMessage(message).withJavaTimestamp(logEvent.getLogTimestamp());
+        builder.withShortMessage(shortMessage);
+        if (!isFullMessageTraceOnly()) {
+            builder.withFullMessage(message);
+        }
+        builder.withJavaTimestamp(logEvent.getLogTimestamp());
         builder.withLevel(logEvent.getSyslogLevel());
         builder.withVersion(getVersion());
         builder.withAdditionalFieldTypes(additionalFieldTypes);
@@ -226,12 +233,19 @@ public class GelfMessageAssembler implements HostAndPortProvider {
     }
 
     private void addStackTrace(Throwable thrown, GelfMessageBuilder builder) {
+        String trace;
         if (stackTraceExtraction.isFilter()) {
-            builder.withField(FIELD_STACK_TRACE, StackTraceFilter.getFilteredStackTrace(thrown, stackTraceExtraction.getRef()));
+            trace = StackTraceFilter.getFilteredStackTrace(thrown, stackTraceExtraction.getRef());
         } else {
             final StringWriter sw = new StringWriter();
             StackTraceFilter.getThrowable(thrown, stackTraceExtraction.getRef()).printStackTrace(new PrintWriter(sw));
-            builder.withField(FIELD_STACK_TRACE, sw.toString());
+            trace = sw.toString();
+        }
+
+        if (!isFullMessageTraceOnly()) {
+            builder.withField(FIELD_STACK_TRACE, trace);
+        } else {
+            builder.withFullMessage(trace);
         }
     }
 
@@ -434,6 +448,14 @@ public class GelfMessageAssembler implements HostAndPortProvider {
         }
 
         this.version = version;
+    }
+
+    public boolean isFullMessageTraceOnly() {
+        return fullMessageTraceOnly;
+    }
+
+    public void setFullMessageTraceOnly(boolean fullMessageTraceOnly) {
+        this.fullMessageTraceOnly = fullMessageTraceOnly;
     }
 
     static class StackTraceExtraction {
