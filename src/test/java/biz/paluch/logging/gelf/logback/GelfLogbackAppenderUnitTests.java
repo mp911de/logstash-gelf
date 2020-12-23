@@ -34,6 +34,7 @@ class GelfLogbackAppenderUnitTests {
         sut.setIncludeFullMdc(true);
         sut.setMdcFields("");
         sut.setMdcProfiling(true);
+        sut.setFullMessageTraceOnly(true);
 
         assertThat(sut.getFacility()).isEqualTo(FACILITY);
         assertThat(sut.getGraylogHost()).isEqualTo(HOST);
@@ -48,6 +49,7 @@ class GelfLogbackAppenderUnitTests {
         assertThat(sut.isFilterStackTrace()).isTrue();
         assertThat(sut.isIncludeFullMdc()).isTrue();
         assertThat(sut.isMdcProfiling()).isTrue();
+        assertThat(sut.isFullMessageTraceOnly()).isTrue();
     }
 
     @Test

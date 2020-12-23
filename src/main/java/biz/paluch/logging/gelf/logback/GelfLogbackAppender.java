@@ -266,4 +266,12 @@ public class GelfLogbackAppender extends AppenderBase<ILoggingEvent> implements 
         gelfMessageAssembler.setVersion(version);
     }
 
+    public boolean isFullMessageTraceOnly() {
+        return gelfMessageAssembler.isFullMessageTraceOnly();
+    }
+
+    public void setFullMessageTraceOnly(boolean fullMessageTraceOnly) {
+        gelfMessageAssembler.setFullMessageTraceOnly(fullMessageTraceOnly);
+    }
+
 }
