@@ -101,3 +101,27 @@ XML:
         </Loggers>
     </Configuration>
       
+YAML:
+
+    rootLogger.level = INFO
+    rootLogger.appenderRef.gelf.ref = GelfAppender
+
+    appender.gelf.type = Gelf
+    appender.gelf.name = GelfAppender
+    appender.gelf.host = udp:localhost
+    appender.gelf.port = 12201
+    appender.gelf.version = 1.0
+    appender.gelf.includeFullMdc = true
+    appender.gelf.mdcProfiling = true
+    appender.gelf.maximumMessageSize = 32768
+    appender.gelf.dynamicMdcFields.type=DynamicMdcFields
+    appender.gelf.dynamicMdcFields.regex=mdc.*,(mdc|MDC)fields
+    appender.gelf.fieldName2.type = Field
+    appender.gelf.fieldName2.name = fieldName2
+    appender.gelf.fieldName2.literal = fieldName2 # This is a static field
+    appender.gelf.className.type = Field
+    appender.gelf.className.name = className
+    appender.gelf.className.pattern = %C
+    appender.gelf.lineNumber.type = Field
+    appender.gelf.lineNumber.name = lineNumber
+    appender.gelf.lineNumber.pattern = %line
