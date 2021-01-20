@@ -115,8 +115,9 @@ YAML:
         includeFullMdc: true
         mdcProfiling: true
         maximumMessageSize: 32768
-        dynamicMdcFields.type: DynamicMdcFields
-        dynamicMdcFields.regex: "mdc.*,(mdc|MDC)fields"
+        dynamicMdcFields:
+            type: DynamicMdcFields
+            regex: "mdc.*,(mdc|MDC)fields"
 
         fieldName2:
             type: Field
@@ -127,6 +128,7 @@ YAML:
             type: Field
             name: className
             pattern: "%C"
+            
         lineNumber:
             type: Field
             name: lineNumber
