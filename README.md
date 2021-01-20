@@ -252,6 +252,41 @@ host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, th
 </Configuration>    
 ```    
 
+**YAML**
+```yaml
+rootLogger:
+    level: INFO
+    appenderRef.gelf.ref: GelfAppender
+
+appender.gelf:
+    type: Gelf
+    name: GelfAppender
+    host: udp:localhost
+    port: 12201
+    version: 1.0
+    includeFullMdc: true
+    mdcProfiling: true
+    maximumMessageSize: 32768
+    dynamicMdcFields:
+        type: DynamicMdcFields
+        regex: "mdc.*,(mdc|MDC)fields"
+
+    fieldName2:
+        type: Field
+        name: fieldName2
+        literal: fieldName2 # This is a static field
+
+    className:
+        type: Field
+        name: className
+        pattern: "%C"
+        
+    lineNumber:
+        type: Field
+        name: lineNumber
+        pattern: "%line"
+```
+
 <a name="jbossas7"/>
 
 JBoss AS7 configuration
