@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.util.ReadOnlyStringMap;
 
 import biz.paluch.logging.gelf.*;
 import biz.paluch.logging.gelf.intern.GelfMessage;
-import org.apache.logging.log4j.util.ReadOnlyStringMap;
 
 /**
  * @author Mark Paluch
@@ -173,7 +173,11 @@ class Log4j2LogEvent implements LogEvent {
     public String getMdcValue(String mdcName) {
         ReadOnlyStringMap contextData = logEvent.getContextData();
         if (null != contextData && contextData.containsKey(mdcName)) {
-            return contextData.getValue(mdcName);
+            // Values in the context data are not guaranteed to be String, e.g. if
+            // log4j2.threadContextMap is set to
+            // org.apache.logging.log4j.spi.CopyOnWriteSortedArrayThreadContextMap
+            Object value = contextData.getValue(mdcName);
+            return value != null ? value.toString() : null;
         }
 
         return null;
