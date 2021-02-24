@@ -67,26 +67,57 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
 
     private static String getBrokerServers(GelfSenderConfiguration configuration) {
 
-        URI uri = URI.create(configuration.getHost());
-        String brokers;
+        // extract the host part from uri and put in an array
+        // so each host can be validated using the URI
+        String kafkaPrefix = KafkaContants.KAFKA_SCHEME + "://";
+        // skip prefix
+        String hostsPart = configuration.getHost().substring( kafkaPrefix.length() );
 
-        if (uri.getHost() != null) {
-            brokers = uri.getHost();
-            int port;
-            if (uri.getPort() > 0) {
-                port = uri.getPort();
-            } else if (configuration.getPort() > 0) {
-                port = configuration.getPort();
-            } else {
-                port = BROKER_DEFAULT_PORT;
+        // assuming hostsPart ends with either # or ?
+        int pos;
+        for(pos=0; pos<hostsPart.length(); pos++) {
+            switch(hostsPart.charAt(pos)) {
+                case '#':
+                case '?':
+                    break;
+                default:
+                    continue;
             }
-            brokers += ":" + port;
-
-        } else {
-            brokers = uri.getAuthority();
+            break;
         }
 
-        if (brokers == null || brokers.isEmpty()) {
+        String suffix=hostsPart.substring(pos);
+        hostsPart=hostsPart.substring(0, pos);
+
+        String brokers = "";
+        String[] hosts = new String[0];
+        if (hostsPart.length()>0)
+            hosts = hostsPart.split(",");
+        if (hosts.length>0) for(String host: hosts) {
+            String broker;
+            String tmp = kafkaPrefix + host + suffix;
+            URI uri = URI.create(tmp);
+            if (uri.getHost() != null) {
+                broker = uri.getHost();
+                int port;
+                if (uri.getPort() > 0) {
+                    port = uri.getPort();
+                } else if (configuration.getPort() > 0) {
+                    port = configuration.getPort();
+                } else {
+                    port = BROKER_DEFAULT_PORT;
+                }
+                broker += ":" + port;
+
+            } else {
+                broker = uri.getAuthority();
+            }
+            if (brokers.length()>0)
+                brokers += ",";
+            brokers += broker;
+        }
+
+        if (brokers.isEmpty()) {
             throw new IllegalArgumentException("Kafka URI must specify bootstrap.servers.");
         }
 
