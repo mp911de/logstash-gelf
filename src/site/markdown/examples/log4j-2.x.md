@@ -102,6 +102,7 @@ XML:
     </Configuration>
       
 YAML:
+
     rootLogger:
         level: INFO
         appenderRef.gelf.ref: GelfAppender

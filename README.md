@@ -253,6 +253,7 @@ host{["fqdn"<br/>"simple"<br/>"address"]} | Outputs either the FQDN hostname, th
 ```    
 
 **YAML**
+
 ```yaml
 rootLogger:
     level: INFO
