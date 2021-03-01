@@ -37,6 +37,7 @@ public class GelfMessage {
     public static final String FIELD_TIMESTAMP = "timestamp";
     public static final String FIELD_LEVEL = "level";
     public static final String FIELD_FACILITY = "facility";
+    public static final String FIELD_VERSION = "version";
     public static final String ID_NAME = "id";
 
     /**
@@ -153,6 +154,10 @@ public class GelfMessage {
         JsonWriter.writeObjectStart(out);
 
         boolean hasFields = writeIfNotEmpty(out, false, FIELD_HOST, getHost());
+
+        if (!isEmpty(version) && !GELF_VERSION_1_0.equals(version)) {
+            hasFields = writeIfNotEmpty(out, hasFields, FIELD_VERSION, version);
+        }
 
         if (!isEmpty(shortMessage)) {
             hasFields = writeIfNotEmpty(out, hasFields, FIELD_SHORT_MESSAGE, getShortMessage());

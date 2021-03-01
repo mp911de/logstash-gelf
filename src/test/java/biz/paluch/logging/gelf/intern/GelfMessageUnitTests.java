@@ -236,6 +236,7 @@ class GelfMessageUnitTests {
         assertThat(gelfMessage.getVersion()).isEqualTo(GelfMessage.GELF_VERSION_1_1);
         assertThat(gelfMessage.toJson()).contains("\"level\":6");
         assertThat(gelfMessage.toJson()).contains("\"timestamp\":123.456");
+        assertThat(gelfMessage.toJson()).contains("\"version\":\"1.1\"");
 
     }
 
