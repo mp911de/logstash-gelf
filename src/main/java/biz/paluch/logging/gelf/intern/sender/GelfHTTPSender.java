@@ -76,7 +76,12 @@ public class GelfHTTPSender implements GelfSender {
             errorReporter.reportError("Server responded with unexpected status code: " + responseCode, null);
 
         } catch (IOException e) {
-            errorReporter.reportError("Cannot send data to " + url, e);
+            String cleanUrl = url.toString();
+            String userInfo = url.getUserInfo();
+            if (userInfo != null) {
+                cleanUrl = cleanUrl.replace(userInfo + "@", "");
+            }
+            errorReporter.reportError("Cannot send data to " + cleanUrl, e);
         } finally {
             // disconnecting HttpURLConnection here to avoid underlying premature underlying Socket being closed.
             if (connection != null) {
