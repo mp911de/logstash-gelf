@@ -3,9 +3,13 @@ package biz.paluch.logging.gelf.intern.sender;
 import java.net.URI;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
+
+import com.sun.tools.javac.util.StringUtils;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.message.DeleteAclsRequestData.DeleteAclsFilter;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 
 import biz.paluch.logging.gelf.intern.GelfSender;
@@ -65,15 +69,25 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
         return new KafkaGelfSender(kafkaProducer, kafkaLogTopic, configuration.getErrorReporter());
     }
 
+   
+
     private static String getBrokerServers(GelfSenderConfiguration configuration) {
 
         // extract the host part from uri and put in an array
         // so each host can be validated using the URI
-        String kafkaPrefix = KafkaContants.KAFKA_SCHEME + "://";
-        // skip prefix
-        String hostsPart = configuration.getHost().substring( kafkaPrefix.length() );
 
-        // assuming hostsPart ends with either # or ?
+        // from https://docs.oracle.com/javase/7/docs/api/java/net/URI.html
+        // A hierarchical URI is subject to further parsing according to the syntax
+        // [scheme:][//authority][path][?query][#fragment]
+        String hconf = configuration.getHost();
+
+        // in order to arrive here, there have to be a kafka scheme
+        // get the scheme part
+        String scheme = URI.create(hconf).getScheme()+"://";
+        // and then begining of host
+        String hostsPart = hconf.substring( scheme.length() );
+
+        // hostsPart ends with either # or ?
         int pos;
         for(pos=0; pos<hostsPart.length(); pos++) {
             switch(hostsPart.charAt(pos)) {
@@ -85,7 +99,6 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
             }
             break;
         }
-
         String suffix=hostsPart.substring(pos);
         hostsPart=hostsPart.substring(0, pos);
 
@@ -95,7 +108,7 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
             hosts = hostsPart.split(",");
         if (hosts.length>0) for(String host: hosts) {
             String broker;
-            String tmp = kafkaPrefix + host + suffix;
+            String tmp = scheme + host + suffix;
             URI uri = URI.create(tmp);
             if (uri.getHost() != null) {
                 broker = uri.getHost();
@@ -116,7 +129,6 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
                 brokers += ",";
             brokers += broker;
         }
-
         if (brokers.isEmpty()) {
             throw new IllegalArgumentException("Kafka URI must specify bootstrap.servers.");
         }
