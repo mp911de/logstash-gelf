@@ -10,6 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
+import org.apache.logging.log4j.util.PropertiesUtil;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,16 +28,25 @@ class GelfLogAppenderKafkaIntegrationTests {
 
     private static final String KAFKA_LOG_TOPIC = "kafka-log-topic";
 
+    @AfterEach
+    void tearDown() {
+        System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
+        PropertiesUtil.getProperties().reload();
+        ((LoggerContext) LogManager.getContext(false)).reconfigure();
+    }
+
     @Test
     void testKafkaSender() throws Exception {
 
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-gelf-with-kafka.xml");
+        PropertiesUtil.getProperties().reload();
 
         EphemeralKafkaBroker broker = EphemeralKafkaBroker.create(9092);
         KafkaHelper helper = KafkaHelper.createFor(broker);
         broker.start().get(30, TimeUnit.SECONDS);
 
         LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+        PropertiesUtil.getProperties().reload();
         loggerContext.reconfigure();
         Logger logger = loggerContext.getLogger(getClass().getName());
 

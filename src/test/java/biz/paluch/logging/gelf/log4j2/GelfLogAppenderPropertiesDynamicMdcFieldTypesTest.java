@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
+import org.apache.logging.log4j.util.PropertiesUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +44,7 @@ class GelfLogAppenderPropertiesDynamicMdcFieldTypesTest {
     @BeforeEach
     private void beforeEach() throws Exception {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-dynamic-mdcfieldtypes.xml");
+        PropertiesUtil.getProperties().reload();
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
 

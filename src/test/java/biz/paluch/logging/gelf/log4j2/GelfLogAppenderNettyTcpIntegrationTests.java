@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
+import org.apache.logging.log4j.util.PropertiesUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +45,7 @@ class GelfLogAppenderNettyTcpIntegrationTests {
     @BeforeAll
     static void setupClass() throws Exception {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-netty-tcp.xml");
+        PropertiesUtil.getProperties().reload();
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
         server.run();
@@ -52,6 +54,7 @@ class GelfLogAppenderNettyTcpIntegrationTests {
     @AfterAll
     static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
+        PropertiesUtil.getProperties().reload();
         loggerContext.reconfigure();
         server.close();
     }

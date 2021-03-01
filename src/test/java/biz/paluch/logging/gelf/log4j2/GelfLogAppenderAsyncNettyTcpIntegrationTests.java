@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
+import org.apache.logging.log4j.util.PropertiesUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +43,7 @@ class GelfLogAppenderAsyncNettyTcpIntegrationTests {
     @BeforeAll
     static void setupClass() throws Exception {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-async-netty-tcp.xml");
+        PropertiesUtil.getProperties().reload();
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
         server.run();
@@ -50,6 +52,7 @@ class GelfLogAppenderAsyncNettyTcpIntegrationTests {
     @AfterAll
     static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
+        PropertiesUtil.getProperties().reload();
         loggerContext.reconfigure();
         server.close();
     }
@@ -59,7 +62,6 @@ class GelfLogAppenderAsyncNettyTcpIntegrationTests {
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
         server.clear();
-
     }
 
     @Test
@@ -94,42 +96,6 @@ class GelfLogAppenderAsyncNettyTcpIntegrationTests {
         assertThat(jsonValue.get(GelfMessage.FIELD_FACILITY)).isEqualTo("logstash-gelf");
         assertThat(jsonValue.get("_fieldName1")).isEqualTo("fieldValue1");
         assertThat(jsonValue.get("_fieldName2")).isEqualTo("fieldValue2");
-
-    }
-
-    @Test
-    void testWithoutLocation() throws Exception {
-
-        Logger logger = loggerContext.getLogger("async.nolocation");
-
-        logger.info(LOG_MESSAGE);
-
-        waitForGelf();
-
-        List jsonValues = server.getJsonValues();
-        assertThat(jsonValues).hasSize(1);
-
-        Map<String, Object> jsonValue = (Map<String, Object>) jsonValues.get(0);
-
-        assertThat(jsonValue.get(GelfMessage.FIELD_HOST)).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
-        assertThat(jsonValue.get("_server.simple")).isEqualTo(RuntimeContainer.HOSTNAME);
-        assertThat(jsonValue.get("_server.fqdn")).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
-        assertThat(jsonValue.get("_server")).isEqualTo(RuntimeContainer.FQDN_HOSTNAME);
-        assertThat(jsonValue.get("_server.addr")).isEqualTo(RuntimeContainer.ADDRESS);
-
-        assertThat(jsonValue.get("_className")).isEqualTo("?");
-        assertThat(jsonValue.get("_simpleClassName")).isEqualTo("?");
-
-        assertThat(jsonValue.get(GelfMessage.FIELD_FULL_MESSAGE)).isEqualTo(EXPECTED_LOG_MESSAGE);
-        assertThat(jsonValue.get(GelfMessage.FIELD_SHORT_MESSAGE)).isEqualTo(EXPECTED_LOG_MESSAGE);
-
-        assertThat(jsonValue.get("_level")).isEqualTo("INFO");
-        assertThat(jsonValue.get(GelfMessage.FIELD_LEVEL)).isEqualTo("6");
-
-        assertThat(jsonValue.get(GelfMessage.FIELD_FACILITY)).isEqualTo("logstash-gelf");
-        assertThat(jsonValue.get("_fieldName1")).isEqualTo("fieldValue1");
-        assertThat(jsonValue.get("_fieldName2")).isEqualTo("fieldValue2");
-
     }
 
     private void waitForGelf() throws InterruptedException, TimeoutException {

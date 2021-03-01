@@ -10,6 +10,7 @@ import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import org.apache.logging.log4j.spi.ObjectThreadContextMap;
+import org.apache.logging.log4j.util.PropertiesUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +21,10 @@ import biz.paluch.logging.gelf.JsonUtil;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
- * @author Mark Paluch, Daniel Lundsgaard Skovenborg
+ * @author Daniel Lundsgaard Skovenborg
  */
 class GelfLogAppenderNonStringMdcTests {
+
     private static final String LOG_MESSAGE = "foo bar test log message";
 
     private static LoggerContext loggerContext;
@@ -31,6 +33,7 @@ class GelfLogAppenderNonStringMdcTests {
     static void setupClass() {
         System.setProperty("log4j2.threadContextMap", "org.apache.logging.log4j.spi.CopyOnWriteSortedArrayThreadContextMap");
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-dynamic-mdc.xml");
+        PropertiesUtil.getProperties().reload();
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
     }
@@ -39,6 +42,7 @@ class GelfLogAppenderNonStringMdcTests {
     static void afterClass() throws Exception {
         System.clearProperty("log4j2.threadContextMap");
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
+        PropertiesUtil.getProperties().reload();
         loggerContext.reconfigure();
         // Assert that setup worked.
         assert ThreadContext.getThreadContextMap() instanceof ObjectThreadContextMap;
@@ -70,12 +74,12 @@ class GelfLogAppenderNonStringMdcTests {
         GelfMessage gelfMessage = GelfTestSender.getMessages().get(0);
         Map<String, Object> jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
-        assertThat(jsonObject.get("myMdcs")).isEqualTo("String");
-        assertThat(jsonObject.get("myMdcl")).isEqualTo(1);
-        assertThat(jsonObject.get("myMdci")).isEqualTo(2);
+        assertThat(jsonObject).containsEntry("myMdcs", "String");
+        assertThat(jsonObject).containsEntry("myMdcl", 1);
+        assertThat(jsonObject).containsEntry("myMdci", 2);
 
-        assertThat(jsonObject.get("myMdcd")).isEqualTo(2.1);
-        assertThat(jsonObject.get("myMdcf")).isEqualTo(2.2);
+        assertThat(jsonObject).containsEntry("myMdcd", 2.1);
+        assertThat(jsonObject).containsEntry("myMdcf", 2.2);
 
         ThreadContext.put("myMdcl", "1.1");
         ThreadContext.put("myMdci", "2.1");
@@ -89,11 +93,11 @@ class GelfLogAppenderNonStringMdcTests {
         gelfMessage = GelfTestSender.getMessages().get(0);
         jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
-        assertThat(jsonObject.get("myMdcl")).isEqualTo(1);
-        assertThat(jsonObject.get("myMdci")).isEqualTo(2);
+        assertThat(jsonObject).containsEntry("myMdcl", 1);
+        assertThat(jsonObject).containsEntry("myMdci", 2);
 
-        assertThat(jsonObject.get("myMdcd")).isNull();
-        assertThat(jsonObject.get("myMdcf")).isEqualTo(0.0);
+        assertThat(jsonObject).doesNotContainKey("myMdcd");
+        assertThat(jsonObject).containsEntry("myMdcf", 0.0);
 
         ThreadContext.put("myMdcl", "b");
         ThreadContext.put("myMdci", "a");
@@ -105,7 +109,8 @@ class GelfLogAppenderNonStringMdcTests {
         gelfMessage = GelfTestSender.getMessages().get(0);
         jsonObject = JsonUtil.parseToMap(gelfMessage.toJson(""));
 
-        assertThat(jsonObject.get("myMdcl")).isNull();
-        assertThat(jsonObject.get("myMdci")).isEqualTo(0);
+        assertThat(jsonObject).doesNotContainKey("myMdcl");
+        assertThat(jsonObject).containsEntry("myMdci", 0);
     }
+
 }

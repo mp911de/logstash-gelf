@@ -8,6 +8,7 @@ import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
+import org.apache.logging.log4j.util.PropertiesUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +31,7 @@ class GelfLogAppenderMinimalTests {
     @BeforeAll
     static void beforeClass() {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-minimal.xml");
+        PropertiesUtil.getProperties().reload();
         loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
     }
@@ -37,6 +39,7 @@ class GelfLogAppenderMinimalTests {
     @AfterAll
     static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
+        PropertiesUtil.getProperties().reload();
         loggerContext.reconfigure();
     }
 

@@ -11,6 +11,7 @@ import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
  * @author Mark Paluch
+ * @author Daniel Lundsgaard Skovenborg
  */
 class Log4j2LogEvent implements LogEvent {
 

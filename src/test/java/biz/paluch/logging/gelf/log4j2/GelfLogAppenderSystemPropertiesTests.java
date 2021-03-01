@@ -7,6 +7,7 @@ import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
+import org.apache.logging.log4j.util.PropertiesUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +32,7 @@ class GelfLogAppenderSystemPropertiesTests {
     @BeforeAll
     static void setupClass() {
         System.setProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "log4j2/log4j2-systemproperties.xml");
+        PropertiesUtil.getProperties().reload();
         loggerContext = (LoggerContext) LogManager.getContext(false);
 
     }
@@ -38,6 +40,7 @@ class GelfLogAppenderSystemPropertiesTests {
     @AfterAll
     static void afterClass() throws Exception {
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
+        PropertiesUtil.getProperties().reload();
         loggerContext.reconfigure();
     }
 
@@ -52,6 +55,7 @@ class GelfLogAppenderSystemPropertiesTests {
     void setup() {
         GelfTestSender.getMessages().clear();
         ThreadContext.clearAll();
+        PropertiesUtil.getProperties().reload();
         loggerContext.reconfigure();
     }
 
