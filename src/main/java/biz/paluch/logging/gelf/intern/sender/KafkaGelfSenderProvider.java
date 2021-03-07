@@ -3,9 +3,11 @@ package biz.paluch.logging.gelf.intern.sender;
 import java.net.URI;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.message.DeleteAclsRequestData.DeleteAclsFilter;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 
 import biz.paluch.logging.gelf.intern.GelfSender;
@@ -65,28 +67,67 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
         return new KafkaGelfSender(kafkaProducer, kafkaLogTopic, configuration.getErrorReporter());
     }
 
+   
+
     private static String getBrokerServers(GelfSenderConfiguration configuration) {
 
-        URI uri = URI.create(configuration.getHost());
-        String brokers;
+        // extract the host part from uri and put in an array
+        // so each host can be validated using the URI
 
-        if (uri.getHost() != null) {
-            brokers = uri.getHost();
-            int port;
-            if (uri.getPort() > 0) {
-                port = uri.getPort();
-            } else if (configuration.getPort() > 0) {
-                port = configuration.getPort();
-            } else {
-                port = BROKER_DEFAULT_PORT;
+        // from https://docs.oracle.com/javase/7/docs/api/java/net/URI.html
+        // A hierarchical URI is subject to further parsing according to the syntax
+        // [scheme:][//authority][path][?query][#fragment]
+        String hconf = configuration.getHost();
+
+        // in order to arrive here, there have to be a kafka scheme
+        // get the scheme part
+        String scheme = URI.create(hconf).getScheme()+"://";
+        // and then begining of host
+        String hostsPart = hconf.substring( scheme.length() );
+
+        // hostsPart ends with either # or ?
+        int pos;
+        for(pos=0; pos<hostsPart.length(); pos++) {
+            switch(hostsPart.charAt(pos)) {
+                case '#':
+                case '?':
+                    break;
+                default:
+                    continue;
             }
-            brokers += ":" + port;
-
-        } else {
-            brokers = uri.getAuthority();
+            break;
         }
+        String suffix=hostsPart.substring(pos);
+        hostsPart=hostsPart.substring(0, pos);
 
-        if (brokers == null || brokers.isEmpty()) {
+        String brokers = "";
+        String[] hosts = new String[0];
+        if (hostsPart.length()>0)
+            hosts = hostsPart.split(",");
+        if (hosts.length>0) for(String host: hosts) {
+            String broker;
+            String tmp = scheme + host + suffix;
+            URI uri = URI.create(tmp);
+            if (uri.getHost() != null) {
+                broker = uri.getHost();
+                int port;
+                if (uri.getPort() > 0) {
+                    port = uri.getPort();
+                } else if (configuration.getPort() > 0) {
+                    port = configuration.getPort();
+                } else {
+                    port = BROKER_DEFAULT_PORT;
+                }
+                broker += ":" + port;
+
+            } else {
+                broker = uri.getAuthority();
+            }
+            if (brokers.length()>0)
+                brokers += ",";
+            brokers += broker;
+        }
+        if (brokers.isEmpty()) {
             throw new IllegalArgumentException("Kafka URI must specify bootstrap.servers.");
         }
 
