@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
-import com.sun.tools.javac.util.StringUtils;
-
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.message.DeleteAclsRequestData.DeleteAclsFilter;
