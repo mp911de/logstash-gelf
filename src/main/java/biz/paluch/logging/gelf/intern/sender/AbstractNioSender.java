@@ -78,6 +78,7 @@ public abstract class AbstractNioSender<T extends AbstractSelectableChannel & By
                 return myChannel.read(byteBuffer) >= 0;
             } catch (PortUnreachableException e) {
                 errorReporter.reportError("Port " + getHost() + ":" + getPort() + " not reachable", e);
+                Closer.close(channel());
             } catch (IOException e) {
                 errorReporter.reportError("Cannot verify whether channel to " + getHost() + ":" + getPort() + " is connected: "
                         + e.getMessage(), e);
