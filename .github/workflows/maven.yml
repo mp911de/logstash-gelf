@@ -38,4 +38,4 @@ jobs:
         SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
       run: mvn -B deploy -P sonatype-oss-snapshot -s .github/settings.xml
-      if: secrets.SONATYPE_USER != '' && secrets.SONATYPE_PASSWORD != ''
+      if: ${{ secrets.SONATYPE_USER }} != '' && ${{ secrets.SONATYPE_PASSWORD }} != ''
