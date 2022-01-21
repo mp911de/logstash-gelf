@@ -35,5 +35,5 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: ${{ inputs.artifact_name }}
-        path: ${{ inputs.artifact_path }}
+        name: jar-${{ matrix.java }}
+        path: target/logstash-gelf-*.jar
