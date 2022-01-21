@@ -3,11 +3,9 @@ package biz.paluch.logging.gelf.intern.sender;
 import java.net.URI;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Scanner;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.message.DeleteAclsRequestData.DeleteAclsFilter;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 
 import biz.paluch.logging.gelf.intern.GelfSender;
@@ -67,8 +65,6 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
         return new KafkaGelfSender(kafkaProducer, kafkaLogTopic, configuration.getErrorReporter());
     }
 
-   
-
     private static String getBrokerServers(GelfSenderConfiguration configuration) {
 
         // extract the host part from uri and put in an array
@@ -81,57 +77,64 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
 
         // in order to arrive here, there have to be a kafka scheme
         // get the scheme part
-        String scheme = URI.create(hconf).getScheme()+"://";
+        String scheme = URI.create(hconf).getScheme() + "://";
         // and then begining of host
-        String hostsPart = hconf.substring( scheme.length() );
+        String hostsPart = hconf.substring(scheme.length());
 
         // hostsPart ends with either # or ?
-        int pos;
-        for(pos=0; pos<hostsPart.length(); pos++) {
-            switch(hostsPart.charAt(pos)) {
+        int pos = findHostPartEnd(hostsPart);
+
+        String suffix = hostsPart.substring(pos);
+        hostsPart = hostsPart.substring(0, pos);
+
+        String brokers = "";
+        String[] hosts = new String[0];
+        if (hostsPart.length() > 0)
+            hosts = hostsPart.split(",");
+        if (hosts.length > 0)
+            for (String host : hosts) {
+                String broker;
+                String tmp = scheme + host + suffix;
+                URI uri = URI.create(tmp);
+                if (uri.getHost() != null) {
+                    broker = uri.getHost();
+                    int port;
+                    if (uri.getPort() > 0) {
+                        port = uri.getPort();
+                    } else if (configuration.getPort() > 0) {
+                        port = configuration.getPort();
+                    } else {
+                        port = BROKER_DEFAULT_PORT;
+                    }
+                    broker += ":" + port;
+
+                } else {
+                    broker = uri.getAuthority();
+                }
+                if (brokers.length() > 0)
+                    brokers += ",";
+                brokers += broker;
+            }
+        if (brokers.isEmpty()) {
+            throw new IllegalArgumentException("Kafka URI must specify bootstrap.servers.");
+        }
+
+        return brokers;
+    }
+
+    private static int findHostPartEnd(String hostsPart) {
+        for (int pos = 0; pos < hostsPart.length(); pos++) {
+            switch (hostsPart.charAt(pos)) {
                 case '#':
                 case '?':
                     break;
                 default:
                     continue;
             }
-            break;
-        }
-        String suffix=hostsPart.substring(pos);
-        hostsPart=hostsPart.substring(0, pos);
-
-        String brokers = "";
-        String[] hosts = new String[0];
-        if (hostsPart.length()>0)
-            hosts = hostsPart.split(",");
-        if (hosts.length>0) for(String host: hosts) {
-            String broker;
-            String tmp = scheme + host + suffix;
-            URI uri = URI.create(tmp);
-            if (uri.getHost() != null) {
-                broker = uri.getHost();
-                int port;
-                if (uri.getPort() > 0) {
-                    port = uri.getPort();
-                } else if (configuration.getPort() > 0) {
-                    port = configuration.getPort();
-                } else {
-                    port = BROKER_DEFAULT_PORT;
-                }
-                broker += ":" + port;
-
-            } else {
-                broker = uri.getAuthority();
-            }
-            if (brokers.length()>0)
-                brokers += ",";
-            brokers += broker;
-        }
-        if (brokers.isEmpty()) {
-            throw new IllegalArgumentException("Kafka URI must specify bootstrap.servers.");
+            return pos;
         }
 
-        return brokers;
+        return hostsPart.length();
     }
 
     private static String getTopic(URI uri) {
@@ -144,4 +147,5 @@ public class KafkaGelfSenderProvider implements GelfSenderProvider {
 
         return fragment;
     }
+
 }
