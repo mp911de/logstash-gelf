@@ -9,7 +9,7 @@
     </parent>
 
     <groupId>biz.paluch.logging</groupId>
-    <version>1.14.2-SNAPSHOT</version>
+    <version>1.15.0-SNAPSHOT</version>
     <artifactId>logstash-gelf</artifactId>
 
     <name>logstash logging connectors</name>
