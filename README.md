@@ -462,18 +462,6 @@ logback.xml Example:
 </configuration>
 ```
 
-Versions/Dependencies
----------------------
-This project is built against following dependencies/versions:
-
-* log4j 1.2.14
-* log4j2 2.9.1
-* Java Util Logging JDK Version 1.7
-* logback 1.1.3
-* slf4j-api 1.7.25
-* jedis 2.9.0 (includes commons-pool2 2.4.3)
-* kafka-clients 2.1.0
-
 License
 -------
 * [The MIT License (MIT)](http://opensource.org/licenses/MIT)
