@@ -48,7 +48,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.compiler.source>1.7</maven.compiler.source>
-        <logstash-gelf-release-version>1.14.1</logstash-gelf-release-version>
+        <logstash-gelf-release-version>1.15.0</logstash-gelf-release-version>
 
         <github.site.upload.skip>true</github.site.upload.skip>
         <test.withRedis>false</test.withRedis>
