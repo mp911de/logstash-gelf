@@ -37,7 +37,7 @@ class GelfUDPSenderUnitTests {
 
         udpSender.sendMessage(new GelfMessage());
 
-        verifyZeroInteractions(errorReporter);
+        verifyNoInteractions(errorReporter);
     }
 
     @Test

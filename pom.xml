@@ -43,10 +43,6 @@
         </site>
     </distributionManagement>
 
-    <prerequisites>
-        <maven>3.5.0</maven>
-    </prerequisites>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -58,16 +54,16 @@
         <test.withRedis>false</test.withRedis>
 
         <!-- Versions -->
-        <log4j.version>1.2.14</log4j.version>
-        <log4j2.version>2.16.0</log4j2.version>
+        <log4j.version>1.2.17</log4j.version>
+        <log4j2.version>2.17.1</log4j2.version>
         <junit5.version>5.5.2</junit5.version>
-        <assertj.version>3.14.0</assertj.version>
-        <mockito.version>3.2.4</mockito.version>
-        <jackson.version>2.10.5.1</jackson.version>
-        <jedis.version>3.2.0</jedis.version>
-        <commons-pool2.version>2.7.0</commons-pool2.version>
+        <assertj.version>3.22.0</assertj.version>
+        <mockito.version>4.2.0</mockito.version>
+        <jackson.version>2.13.1</jackson.version>
+        <jedis.version>3.8.0</jedis.version>
+        <commons-pool2.version>2.11.1</commons-pool2.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
-        <logback-classic.version>1.2.0</logback-classic.version>
+        <logback-classic.version>1.2.10</logback-classic.version>
         <org.jboss.logmanager.version>1.5.2.Final</org.jboss.logmanager.version>
         <arquillian.version>1.5.0.Final</arquillian.version>
         <org.wildfly.arquillian.version>2.2.0.Final</org.wildfly.arquillian.version>
@@ -80,17 +76,17 @@
         <doxia-module-markdown.version>1.9</doxia-module-markdown.version>
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <netty-all.version>4.1.43.Final</netty-all.version>
+        <netty-bom.version>4.1.73.Final</netty-bom.version>
         <maven-scm-publish-plugin.version>3.0.0</maven-scm-publish-plugin.version>
         <tempus-fugit.version>1.1</tempus-fugit.version>
-        <maven-assembly-plugin.version>3.2.0</maven-assembly-plugin.version>
+        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
-        <maven-scm-provider-gitexe.version>1.11.2</maven-scm-provider-gitexe.version>
-        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
-        <maven.jacoco.version>0.8.5</maven.jacoco.version>
-        <kafka-clients.version>2.3.0</kafka-clients.version>
-        <kafka-junit.version>4.1.6</kafka-junit.version>
+        <maven-dependency-plugin.version>3.2.0</maven-dependency-plugin.version>
+        <maven-scm-provider-gitexe.version>1.12.2</maven-scm-provider-gitexe.version>
+        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
+        <maven.jacoco.version>0.8.7</maven.jacoco.version>
+        <kafka-clients.version>2.8.0</kafka-clients.version>
+        <kafka-junit.version>4.2.0</kafka-junit.version>
     </properties>
 
     <developers>
@@ -278,6 +274,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-bom</artifactId>
+                <version>${netty-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -380,7 +384,6 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>${netty-all.version}</version>
             <scope>test</scope>
         </dependency>
 

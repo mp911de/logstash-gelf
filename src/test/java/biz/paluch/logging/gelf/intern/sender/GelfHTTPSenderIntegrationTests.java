@@ -1,10 +1,10 @@
 package biz.paluch.logging.gelf.intern.sender;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.io.IOException;
 import java.net.URL;
@@ -74,7 +74,7 @@ class GelfHTTPSenderIntegrationTests {
         boolean success = sender.sendMessage(gelfMessage);
 
         assertThat(success).isTrue();
-        verifyZeroInteractions(errorReporter);
+        verifyNoInteractions(errorReporter);
 
         List<Object> jsonValues = server.getJsonValues();
         assertThat(jsonValues).hasSize(1);
@@ -96,7 +96,7 @@ class GelfHTTPSenderIntegrationTests {
         boolean success = sender.sendMessage(gelfMessage);
 
         assertThat(success).isTrue();
-        verifyZeroInteractions(errorReporter);
+        verifyNoInteractions(errorReporter);
 
         List<Object> jsonValues = server.getJsonValues();
         assertThat(jsonValues).hasSize(1);

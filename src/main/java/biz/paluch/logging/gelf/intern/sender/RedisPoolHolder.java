@@ -88,7 +88,7 @@ class RedisPoolHolder {
              * @param hostURI
              * @param configuredPort
              * @param timeoutMs
-             * @return Pool<Jedis>
+             * @return Pool of Jedis
              */
             @Override
             public redis.clients.jedis.util.Pool<Jedis> createPool(URI hostURI, int configuredPort, int timeoutMs) {
@@ -121,7 +121,7 @@ class RedisPoolHolder {
              * @param hostURI
              * @param configuredPort
              * @param timeoutMs
-             * @return Pool<Jedis>
+             * @return Pool of Jedis
              */
             @Override
             public redis.clients.jedis.util.Pool<Jedis> createPool(URI hostURI, int configuredPort, int timeoutMs) {
@@ -222,7 +222,7 @@ class RedisPoolHolder {
         }
 
         @Override
-        public void initPool(GenericObjectPoolConfig poolConfig, PooledObjectFactory<Jedis> factory) {
+        public void initPool(GenericObjectPoolConfig<Jedis> poolConfig, PooledObjectFactory<Jedis> factory) {
             delegate.initPool(poolConfig, factory);
         }
 
