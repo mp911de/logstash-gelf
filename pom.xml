@@ -68,12 +68,12 @@
         <arquillian.version>1.5.0.Final</arquillian.version>
         <org.wildfly.arquillian.version>2.2.0.Final</org.wildfly.arquillian.version>
 
-        <site-plugin.version>3.8.2</site-plugin.version>
+        <site-plugin.version>3.10.0</site-plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.0.0-M4</maven-failsafe-plugin.version>
         <animal-sniffer-plugin.version>1.18</animal-sniffer-plugin.version>
-        <doxia-module-markdown.version>1.9</doxia-module-markdown.version>
+        <doxia-module-markdown.version>1.11.1</doxia-module-markdown.version>
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <netty-bom.version>4.1.73.Final</netty-bom.version>
