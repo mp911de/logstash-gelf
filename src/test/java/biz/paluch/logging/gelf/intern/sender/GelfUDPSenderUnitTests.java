@@ -1,15 +1,12 @@
 package biz.paluch.logging.gelf.intern.sender;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import java.net.DatagramSocket;
-import java.net.UnknownHostException;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -19,6 +16,8 @@ import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
+ * Unit tests for {@link GelfUDPSender}.
+ *
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
@@ -43,12 +42,8 @@ class GelfUDPSenderUnitTests {
     @Test
     void unknownHostShouldThrowException() throws Exception {
 
-        assertThrows(UnknownHostException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                new GelfUDPSender("unknown.host.unknown", 65534, errorReporter);
-            }
-        });
+        new GelfUDPSender("unknown.host.unknown", 65534, errorReporter);
+        verify(errorReporter).reportError(anyString(), any(Exception.class));
     }
 
     @Test
@@ -106,4 +101,5 @@ class GelfUDPSenderUnitTests {
         Random random = new Random();
         return random.nextInt(50000) + 1024;
     }
+
 }

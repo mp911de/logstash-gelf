@@ -1,7 +1,7 @@
 package biz.paluch.logging.gelf.intern.sender;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -11,7 +11,6 @@ import static org.mockito.Mockito.verify;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.util.Random;
@@ -28,6 +27,8 @@ import biz.paluch.logging.gelf.intern.ErrorReporter;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 
 /**
+ * Unit tests for {@link GelfTCPSender}.
+ *
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
@@ -79,14 +80,10 @@ class GelfTCPSenderUnitTests {
     }
 
     @Test
-    void unknownHostShouldThrowException() throws Exception {
+    void unknownHostShouldReportError() throws Exception {
 
-        try {
-            new GelfTCPSender("unknown.host.unknown", 65534, 100, 100, errorReporter);
-            fail("Missing UnknownHostException");
-        } catch (UnknownHostException e) {
-            assertThat(e).isInstanceOf(UnknownHostException.class);
-        }
+        new GelfTCPSender("unknown.host.unknown", 65534, 100, 100, errorReporter);
+        verify(errorReporter).reportError(anyString(), any(Exception.class));
     }
 
     @Test
@@ -210,5 +207,7 @@ class GelfTCPSenderUnitTests {
         protected void write(ByteBuffer buffer) throws IOException {
             this.buffer = buffer;
         }
+
     }
+
 }

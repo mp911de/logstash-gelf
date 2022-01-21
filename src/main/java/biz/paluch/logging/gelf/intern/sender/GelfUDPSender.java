@@ -2,9 +2,9 @@ package biz.paluch.logging.gelf.intern.sender;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.nio.channels.UnresolvedAddressException;
 
 import biz.paluch.logging.gelf.intern.Closer;
 import biz.paluch.logging.gelf.intern.ErrorReporter;
@@ -93,7 +93,7 @@ public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements
         try {
             DatagramChannel connect = channel().connect(inetSocketAddress);
             setChannel(connect);
-        } catch (SocketException e) {
+        } catch (UnresolvedAddressException | IOException e) {
             reportError(e.getMessage(), e);
         }
     }

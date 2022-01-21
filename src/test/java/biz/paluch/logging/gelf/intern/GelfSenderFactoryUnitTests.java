@@ -18,12 +18,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import biz.paluch.logging.gelf.GelfMessageAssembler;
 
 /**
+ * Unit tests for {@link GelfSenderFactory}.
+ *
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
@@ -72,7 +75,8 @@ class GelfSenderFactoryUnitTests {
     void testCreateSenderFailUdp() throws Exception {
 
         GelfSender result = GelfSenderFactory.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
-        assertThat(result).isNull();
+        assertThat(result).isNotNull();
+        verify(errorReporter).reportError(anyString(), ArgumentMatchers.<Exception> any());
     }
 
     @Test
@@ -81,7 +85,8 @@ class GelfSenderFactoryUnitTests {
         reset(assembler);
         when(assembler.getHost()).thenReturn("tcp:" + THE_HOST);
         GelfSender result = GelfSenderFactory.createSender(assembler, errorReporter, Collections.EMPTY_MAP);
-        assertThat(result).isNull();
+        assertThat(result).isNotNull();
+        verify(errorReporter).reportError(anyString(), ArgumentMatchers.<Exception> any());
     }
 
     @Test

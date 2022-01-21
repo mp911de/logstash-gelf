@@ -58,7 +58,11 @@ public abstract class AbstractNioSender<T extends AbstractSelectableChannel & By
     protected AbstractNioSender(ErrorReporter errorReporter, String host, int port) throws UnknownHostException {
 
         // validate first address succeeds.
-        InetAddress.getByName(host);
+        try {
+            InetAddress.getByName(host);
+        } catch (UnknownHostException e) {
+            errorReporter.reportError("Cannot resolve " + host, e);
+        }
         this.errorReporter = errorReporter;
         this.host = host;
         this.port = port;
