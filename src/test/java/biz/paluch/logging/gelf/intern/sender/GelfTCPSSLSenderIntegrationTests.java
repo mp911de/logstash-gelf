@@ -49,7 +49,7 @@ class GelfTCPSSLSenderIntegrationTests {
 
         final SslContext sslContext = SslContextBuilder.forServer(kmf).build();
 
-        GelfTCPSSLSenderIntegrationTests.sslContext = SSLContext.getInstance("TLSv1");
+        GelfTCPSSLSenderIntegrationTests.sslContext = SSLContext.getInstance("TLSv1.3");
         GelfTCPSSLSenderIntegrationTests.sslContext.init(new KeyManager[0], tmf.getTrustManagers(), null);
 
         server.run(new ChannelInitializer<Channel>() {
