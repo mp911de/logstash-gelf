@@ -35,5 +35,5 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: jar-${{ matrix.java }}
+        name: build-jdk-${{ matrix.java }}
         path: target/logstash-gelf-*.jar
