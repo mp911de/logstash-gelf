@@ -119,18 +119,10 @@ YAML:
         dynamicMdcFields:
             type: DynamicMdcFields
             regex: "mdc.*,(mdc|MDC)fields"
-
-        fieldName2:
-            type: Field
-            name: fieldName2
-            literal: fieldName2 # This is a static field
-
-        className:
-            type: Field
-            name: className
-            pattern: "%C"
-            
-        lineNumber:
-            type: Field
-            name: lineNumber
-            pattern: "%line"
+        field:
+            - name: fieldName2
+              literal: fieldName2 # This is a static field
+            - name: className
+              pattern: "%C"
+            - name: lineNumber
+              pattern: "%line"
