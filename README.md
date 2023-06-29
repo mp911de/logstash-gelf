@@ -1,5 +1,8 @@
 logstash-gelf
 =========================
+              
+
+**This project is now archived, after a decade of maintenance, with 36 releases and several occasional contributors. The project is feature complete, and we see little issue traffic. With me being the sole maintainer, it is about time to turn off the lights here and move on to free up time for other duties. K, thx, good bye.**
 
 [![Join the chat at https://gitter.im/mp911de/logstash-gelf](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mp911de/logstash-gelf?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
