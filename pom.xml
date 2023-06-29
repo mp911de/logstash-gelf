@@ -48,7 +48,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.compiler.source>1.7</maven.compiler.source>
-        <logstash-gelf-release-version>1.15.0</logstash-gelf-release-version>
+        <logstash-gelf-release-version>1.15.1</logstash-gelf-release-version>
 
         <github.site.upload.skip>true</github.site.upload.skip>
         <test.withRedis>false</test.withRedis>
@@ -155,6 +155,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>${maven-dependency-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
             </plugin>
 
             <plugin>
