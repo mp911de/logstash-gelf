@@ -8,7 +8,8 @@
     </resources>
 
     <dependencies>
-        <module name="org.apache.log4j" />
+        <module name="org.apache.log4j" optional="true"/>
+        <module name="org.apache.logging.log4j" optional="true"/>
         <module name="org.slf4j" />
         <module name="javax.api" />
         <module name="org.jboss.logmanager" />
