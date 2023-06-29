@@ -3,20 +3,16 @@ logstash-gelf
 
 [![Join the chat at https://gitter.im/mp911de/logstash-gelf](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mp911de/logstash-gelf?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build Status](https://api.travis-ci.org/mp911de/logstash-gelf.svg)](https://travis-ci.org/mp911de/logstash-gelf)
-[![codecov](https://codecov.io/gh/mp911de/logstash-gelf/branch/main/graph/badge.svg)](https://codecov.io/gh/mp911de/logstash-gelf)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/biz.paluch.logging/logstash-gelf/badge.svg)](https://maven-badges.herokuapp.com/maven-central/biz.paluch.logging/logstash-gelf)
 
 Provides logging to logstash using the Graylog Extended Logging Format ([GELF](http://www.graylog2.org/resources/gelf/specification) 1.0 and 1.1) for using with:
 
-* [Java Util Logging](#jul)
-* [Glassfish/Payara](#payara)
-* [log4j 1.2.x](#log4j)
-* [log4j 2.x](#log4j2)
-* [JBoss AS7](#jbossas7)
-* [WildFly](#wildfly)
-* [Thorntail (WildFly Swarm 2.x)](#thorntail)
-* [Logback](#logback)
+* [Java Util Logging](#java-util-logging-gelf-configuration)
+* [Glassfish/Payara](#glassfishpayara-configuration)
+* [log4j 2.x](#log4j2-gelf-configuration)
+* [WildFly](#wildfly-configuration)
+* [Thorntail (WildFly Swarm 2.x)](#thorntail-wildfly-swarm-2x-configuration)
+* [Logback](#logback-gelf-configuration)
 
 `logstash-gelf` requires as of version 1.14.0 Java 7 or higher. Version 1.13.x and older require Java 6.
 See also http://logging.paluch.biz/ or http://www.graylog2.org/resources/gelf/specification for further documentation.
