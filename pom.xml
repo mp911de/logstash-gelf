@@ -69,21 +69,21 @@
         <org.wildfly.arquillian.version>2.2.0.Final</org.wildfly.arquillian.version>
 
         <site-plugin.version>3.10.0</site-plugin.version>
-        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M4</maven-failsafe-plugin.version>
+        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
         <animal-sniffer-plugin.version>1.18</animal-sniffer-plugin.version>
-        <doxia-module-markdown.version>1.11.1</doxia-module-markdown.version>
+        <doxia-module-markdown.version>1.12.0</doxia-module-markdown.version>
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
-        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <netty-bom.version>4.1.73.Final</netty-bom.version>
-        <maven-scm-publish-plugin.version>3.0.0</maven-scm-publish-plugin.version>
+        <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
+        <netty-bom.version>4.1.94.Final</netty-bom.version>
+        <maven-scm-publish-plugin.version>3.2.1</maven-scm-publish-plugin.version>
         <tempus-fugit.version>1.1</tempus-fugit.version>
-        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-dependency-plugin.version>3.2.0</maven-dependency-plugin.version>
-        <maven-scm-provider-gitexe.version>1.12.2</maven-scm-provider-gitexe.version>
-        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
+        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
+        <maven-scm-provider-gitexe.version>2.0.1</maven-scm-provider-gitexe.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven.jacoco.version>0.8.7</maven.jacoco.version>
         <kafka-clients.version>2.8.0</kafka-clients.version>
         <kafka-junit.version>4.2.0</kafka-junit.version>
