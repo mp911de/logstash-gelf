@@ -35,7 +35,6 @@ public class GelfUDPSender extends AbstractNioSender<DatagramChannel> implements
 
     public GelfUDPSender(String host, int port, ErrorReporter errorReporter) throws IOException {
         super(errorReporter, host, port);
-        connect();
     }
 
     public boolean sendMessage(GelfMessage message) {
